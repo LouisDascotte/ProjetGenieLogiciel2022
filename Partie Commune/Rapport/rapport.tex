@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage{svg}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{amssymb,amsmath,amsfonts,amssymb,amsthm,cases,enumerate,graphicx,enumitem}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\graphicspath{images/}
+
+\usepackage{blindtext}
+
+\usepackage{subfiles} % Best loaded last in the preamble
+
+\title{Rapport de projet de Génie Logiciel}
+\author{ }
+\date{ }
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        
+        {\Large Université de Mons}\\[1ex]
+        {\Large Faculté des sciences}\\[1ex]
+        {\Large Département d'Informatique}\\[2.5cm]
+        
+        \newcommand{\HRule}{\rule{\linewidth}{0.3mm}}
+        % Title
+        \HRule \\[0.3cm]
+        { \LARGE \bfseries Ecovia \\[0.3cm]}
+        { \LARGE \bfseries Rapport de projet de Génie Logiciel \\[0.1cm]} % Commenter si pas besoin
+        \HRule \\[1.5cm]
+        
+        % Author and supervisor
+        \begin{minipage}[t]{0.45\textwidth}
+            \begin{flushleft} \large
+                \emph{Professeur:}\\
+                Hadrien \textsc{Mélot}\\
+                \emph{Assistants:}\\
+                Gauvain \textsc{Devillez}\\
+                Jérémy \textsc{Dubrulle}\\
+                Sébastien \textsc{Bonte}\\
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.45\textwidth}
+            \begin{flushright} \large
+                \emph{Auteurs:} \\
+                Godwill \textsc{LOUHOU} \\
+                Gilles \textsc{Jaunart} \\
+                Jeremie \textsc{Delnatte} \\
+                Louis \textsc{Dascotte}
+            \end{flushright}
+        \end{minipage}\\[2ex]
+        
+        \vfill
+        
+        % Bottom of the page
+        \begin{center}
+            \begin{tabular}[t]{c c c}
+                \includegraphics[height=1.5cm]{images/logoumons.jpg} &
+                \hspace{0.3cm} &
+                \includegraphics[height=1.5cm]{images/logofs.jpg}
+            \end{tabular}
+        \end{center}~\\
+        
+        {\large Année académique 2022-2023}
+        
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+\subfile{sections/intro}
+
+\section{Modèle de données relationnelles}
+\subfile{sections/erd_description.tex}
+
+\section{Maquette - partie client}
+\subfile{sections/maquette_desc}
+\section{Maquette - partie fournisseur}
+\subfile{sections/maquette_desc_fournisseur}
+\section{Extension 7 : facturation et paiements d'acomptes - LOUHOU Godwill}
+\subfile{sections/ext7.tex}
+\section{Outro}
+\subfile{sections/outro}
+
+\end{document}

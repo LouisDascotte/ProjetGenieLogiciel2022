@@ -1,0 +1,228 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2022.12.8)  18 DEC 2022 10:35
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./seq.tex
+(seq.tex
+LaTeX2e <2022-06-01> patch level 5
+L3 programming layer <2022-09-28>
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
+Document Class: report 2021/10/04 v1.4n Standard LaTeX document class
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@chapter=\count186
+\c@section=\count187
+\c@subsection=\count188
+\c@subsubsection=\count189
+\c@paragraph=\count190
+\c@subparagraph=\count191
+\c@figure=\count192
+\c@table=\count193
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+\stockwidth=\dimen139
+\stockheight=\dimen140
+))
+\Gin@req@height=\dimen141
+\Gin@req@width=\dimen142
+)
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def
+File: l3backend-pdftex.def 2022-09-28 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count194
+\l__pdf_internal_box=\box51
+) (seq.aux
+
+LaTeX Warning: Label `fig:cancelContract' multiply defined.
+
+)
+\openout1 = `seq.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count195
+\scratchdimen=\dimen143
+\scratchbox=\box52
+\nofMPsegments=\count196
+\nofMParguments=\count197
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count198
+\MPscratchDim=\dimen144
+\MPnumerator=\count199
+\makeMPintoPDFobject=\count266
+\everyMPtoPDFconversion=\toks18
+)
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\louda\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 7.
+
+
+LaTeX Warning: No \author given.
+
+[1
+
+{C:/Users/louda/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+<./images//Log In (Supplier).jpg, id=7, 803.0pt x 413.545pt>
+File: ./images//Log In (Supplier).jpg Graphic file (type jpg)
+<use ./images//Log In (Supplier).jpg>
+Package pdftex.def Info: ./images//Log In (Supplier).jpg  used on input line 18
+.
+(pdftex.def)             Requested size: 448.50105pt x 230.98415pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 18--19
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--22
+
+ []
+
+<./images//Link consumption.jpg, id=8, 1140.26pt x 1067.99pt>
+File: ./images//Link consumption.jpg Graphic file (type jpg)
+<use ./images//Link consumption.jpg>
+Package pdftex.def Info: ./images//Link consumption.jpg  used on input line 30.
+
+(pdftex.def)             Requested size: 448.50105pt x 420.067pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 30--31
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--34
+
+ []
+
+[1 <./images//Log In (Supplier).jpg>]
+<./images//process query.jpg, id=14, 941.5175pt x 630.355pt>
+File: ./images//process query.jpg Graphic file (type jpg)
+<use ./images//process query.jpg>
+Package pdftex.def Info: ./images//process query.jpg  used on input line 44.
+(pdftex.def)             Requested size: 448.50105pt x 300.27777pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 44--45
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--48
+
+ []
+
+[2 <./images//Link consumption.jpg>]
+<./images//New Contract.jpg, id=18, 1844.8925pt x 218.8175pt>
+File: ./images//New Contract.jpg Graphic file (type jpg)
+<use ./images//New Contract.jpg>
+Package pdftex.def Info: ./images//New Contract.jpg  used on input line 51.
+(pdftex.def)             Requested size: 448.50105pt x 53.19505pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 51--52
+ [][] 
+ []
+
+<./images//Cancel Contract.jpg, id=19, 918.43124pt x 206.7725pt>
+File: ./images//Cancel Contract.jpg Graphic file (type jpg)
+<use ./images//Cancel Contract.jpg>
+Package pdftex.def Info: ./images//Cancel Contract.jpg  used on input line 58.
+(pdftex.def)             Requested size: 448.50105pt x 100.9755pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 58--59
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./images//Edit Meter.jpg, id=20, 1393.205pt x 641.39626pt>
+File: ./images//Edit Meter.jpg Graphic file (type jpg)
+<use ./images//Edit Meter.jpg>
+Package pdftex.def Info: ./images//Edit Meter.jpg  used on input line 65.
+(pdftex.def)             Requested size: 448.50105pt x 206.47435pt.
+
+Overfull \hbox (103.50105pt too wide) in paragraph at lines 65--66
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./images//process query.jpg> <./images//New Contract.jpg>] [4 <./images//Ca
+ncel Contract.jpg> <./images//Edit Meter.jpg>] (seq.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 1413 strings out of 475385
+ 24629 string characters out of 2776907
+ 364308 words of memory out of 3000000
+ 22821 multiletter control sequences out of 15000+600000
+ 473206 words of font info for 41 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 55i,7n,62p,367b,234s stack positions out of 10000i,1000n,20000p,200000b,80000s
+<C:/Users/louda/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb><C:/Users/louda/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmr10.pfb><C:/Users/louda/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmr12.pfb><C:/Users/louda/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr17.pfb>
+Output written on seq.pdf (5 pages, 984329 bytes).
+PDF statistics:
+ 44 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+

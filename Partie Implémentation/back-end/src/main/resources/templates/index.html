@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<body xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <form method="POST" th:action="@{/api/client/register}">
+        <div><label>Firstname : <input name="firstName" type="text"/></label></div>
+        <div><label>Lastname : <input name="lastName" type="text"/></label></div>
+        <div><label>phoneNo : <input name="phoneNo" type="text"/></label></div>
+        <div><label>Email : <input name="email" type="email"/></label></div>
+        <div><label>Password : <input name="password" type="password"/></label></div>
+        <div><input type="submit" value="Sign In"/></div>
+    </form>
+</body>

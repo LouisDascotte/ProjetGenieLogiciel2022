@@ -1,0 +1,32 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+
+\noindent \textbf{Table CLIENT} : \\ La table des clients contient les informations des clients qui se créent un compte. On y retrouve l'identifiant du client en clé primaire, ainsi que diverses informations comme son nom, son prénom, ses coordonnées, la langue qu'il utilise. 
+\\
+\textbf{Tables CLIENT{\_}LOGIN \& EMPLOYEE{\_}LOGIN} : \\ Les tables \textbf{CLIENT{\_}LOGIN} et \textbf{EMPLOYEE{\_}LOGIN} permetent aux l'utilisateur de s'identifier avec leur identifiant et leur mot de passe. Si les informations correspondent, alors on peut accéder aux informations et au compte. On utilise comme clé primaire de la table \textbf{CLIENT{\_}LOGIN} son adresse mail car elle est unique à chaque utilisateur, et pour la table \textbf{EMPLOYEE{\_}LOGIN} l'identifiant d'utilisateur.
+\\
+\textbf{Table EMPLOYEE} : \\ La table des employés reprend les éléments importants représentant l'utilisateur employé. On y retrouve l'identifiant de fournisseur qui permet d'être en relation avec la table SUPPLIER, l'identifiant de compte et la langue de l'utilisateur.
+\\
+\textbf{Table SUPPLIER} : \\ La table des fournsseurs permet de représenter les fournisseurs d'énergie, avec leur identifiant unique en tant que clé primaire. 
+\\
+\textbf{Table OFFERS} : \\ Cette table contient les informations des offres énergétiques. Elle a un identifiant unique en clé primaire.
+\\
+\textbf{Table COUNTER{\_}ALLOCATION{\_}HISTORY} : \\ Cette table représente l'historique d'allocation des compteurs, avec leur date d'allocation et expiration, le contrat qui y est lié et ainsi de suite. Cela permet d'éviter d'allouer un compteur à plusieurs clients au même moment, ou bien d'allouer un compteur plusieurs fois au même moment.
+\\
+\textbf{Table EMPLOYEE{\_}ACCOUNT} : \\ Table représentant les comptes des employés. Elle a comme clé primaire un identifiant unique. On y retrouve des éléments permettant de gérer le compte de l'employé.
+\\
+\textbf{Table CLIENT{\_}ACCOUNT} : \\ Table représentant le compte d'un utilisateur. Elle est identifiée par un identifiant unique qui permet de la distinguer des autres. Elle contient des informations comme la date de création du compte, le dernier accès effectué, une référence vers la table des adresses, et des références vers les portefeuilles. 
+\\
+\textbf{Table PORTFOLIO} : \\ Table représentant les portefeuilles du client. On y retrouve des références vers les contrats et les points de fourniture. 
+\\
+\textbf{Table SUPPLY{\_}POINT} : \\ Cette table représente les points de fourniture. Elle est identifiée par l'EAN, car il est unique et invariable. On trouve une référence vers la table des adresses. Il y a également le statut, qui permet de savoir si le point de fourniture est actif ou non. L'énergie liée au point de fourniture est également indiquée.
+\\
+\textbf{Table ADDRESS} : \\ Cette table contient les adresses utilisées pour les contrats et le compte client, ainsi que dans le portfolio. La clé primaire est un ID unique à chaque adresse.
+\\
+\textbf{Table NOTIFICATIONS} :\\ Cette table contient les notifications. Chaque notification est identifiée par un ID unique. On retrouve en informations la date de la notification, l'identifiant de l'expediteur et du receveur, ainsi que le contenu de la notification et le statut (lu, non lu).
+\\
+\textbf{Table CONTRACT} : \\ Cette table contient les contrats entre les fournisseurs et les clients. Chaque contract possède un ID unique. On y retrouve le type de contrat, des références vers les compteurs concernés, une référence vers l'offre du contrat, vers le client et le fournisseur. 
+
+
+\end{document}

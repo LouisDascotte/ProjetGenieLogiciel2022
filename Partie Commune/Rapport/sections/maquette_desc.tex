@@ -1,0 +1,265 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+\subsection{Présentation de la maquette}
+La maquette du site a été réalisée avec l'outil en ligne Figma, et le logo du site généré par IA grâce à Dall-E.
+Cette section expliquera et décrira les différentes fonctionnalités de la maquette du côté d'un client. Les descriptions ne seront pas poussées car le site et les options sont suffisament explicites en elles-mêmes. Par ailleurs, les fenêtres en pop-up seront décrites dans les pages "parents" de ces fenêtres.
+
+\subsection{Liste de fenêtres accessibles : }
+
+\begin{itemize}
+    \item \textbf{Page d'accueil}
+    \item \textbf{Page de connexion}
+    \item \textbf{Page d'inscription}
+    \item \textbf{Page de réussite de création de compte}
+    \item \textbf{Page de réinitialisation de mot de passe}
+    \item \textbf{Page de création de nouveau mot de passe}
+    \item \textbf{Page de gestion de portefeuilles}
+    \item \textbf{Menu de la barre latérale}
+    \item \textbf{Menu d'utilisateur}
+    \item \textbf{Page de création de portefeuille}
+    \item \textbf{Page de gestion des compteurs}
+    \item \textbf{Page de saisie manuelle de consommation de compteur}
+    \item \textbf{Page d'historique d'assignation de compteur}
+    \item \textbf{Page de profil}
+    \item \textbf{Page de notifications}
+    \item \textbf{Page de préférences}
+    \item \textbf{Page de gestion de portefeuille}
+    \item \textbf{Page d'historique de consommation}
+    \item \textbf{Page de gestion des contrats}
+    \item \textbf{Page de visualisation de contrats}
+    \item \textbf{Page de demande de nouveau contrat}
+    \item \textbf{Page de sélection d'offre}
+\end{itemize}
+ 
+\subsection{Description des pages et des boutons :} 
+
+\subsubsection{Page d'accueil} 
+\noindent \textbf{Accès :} page sur laquelle arrive tout utilisateur qui se connecte. Il est également possible d'y accèder en revenant en arrière depuis différentes pages, et depuis le bouton \textbf{"General overview"} dans le menu latéral. Cette page contient les informations de base du portfolio favoris. La page est vide si l'utilisateur n'a pas encore de portefeuille créé.  \\
+\textbf{Contenu :} Un menu latéral contenant 5 boutons, un graphique pour observer la consommation, avec plusieurs boutons pour manipuler les données du graphe. Enfin, un menu déroulant en haut à droite permet d'accéder à certaines pages du site. \\
+\begin{itemize}
+    \item \textbf{Bouton de sélection de portfolio} : permet de sélectioner un portfolio à afficher sur la page d'acceuil. Cela permet un accès aux données de consommation plus rapidement que d'aller dans les menus prévus à cet effet.
+    \item \textbf{Bouton "General overview"} : permet de retourner sur la page d'acceuil lorsqu'on se trouve dans un autre menu. 
+    \item \textbf{Bouton "Manage portfolios"} : permet d'accéder à la page de gestion des portefeuilles.
+    \item \textbf{Bouton "Manage meters"} : permet d'accéder à la page de gestion des compteurs. 
+    \item \textbf{Bouton "Manage contracts"} : permet d'accéder à la page de gestion des contrats.
+    \item \textbf{Le graphique et ses différents boutons} : les différents boutons permettent de manipuler les données du graphe, que ce soit l'affichage de la consommation du gaz, de l'electricité ou de l'eau. 
+    \item \textbf{Menu déroulant en haut à droite} : contient plusieurs boutons différents qui seront décrits ci-dessous :
+        \begin{itemize}
+            \item \textbf{Bouton "Profile"} : permet d'accéder à la page de profil. 
+            \item \textbf{Bouton "Notifications"} : permet d'accéder à la page de notifications.
+            \item \textbf{Bouton "Preferences"} : permet d'accéder à la page des paramètres. 
+            \item \textbf{Bouton "Disconnect"} : permet de se déconnecter.
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Page de connexion} 
+\noindent \textbf{Accès} : page sur laquelle arrive un utilisateur lors de son accès au site si sa session est fermée, ou qu'il se connecte pour la première fois. \\
+\textbf{Contenu} : deux champs de textes, deux boutons, un lien hypertexte, un selecteur de langue. 
+\begin{itemize}
+    \item \textbf{Champ de texte "Id/email"} : permet d'entrer son identifiant ou son mail pour se connecter.
+    \item \textbf{Champ de texte "Password"} : permet d'entrer son mot de passe pour se connecter. 
+    \item \textbf{Bouton "Login"} : permet d'initier la vérification des informations de connexion. Si les identifiants sont corrects, l'utilisateur accède à la page d'acceuil. Sinon, un message d'erreur apparaît et l'utilisateur doit recommencer.
+    \item \textbf{Bouton "Register New Account"} : permet d'accéder à la page de création de nouveau compte.
+    \item \textbf{Lien "Forgot your password ?"} : permet d'accéder à la page de réinitialisation de mot de passe.
+    \item \textbf{Bouton de sélection de langue} : permet de sélectionner la langue d'affichage du site.
+\end{itemize}
+
+\subsubsection{Page d'inscription} 
+\noindent \textbf{Accès} : page sur laquelle arrive un utilisateur s'il n'a pas de compte, après avoir cliqué sur le bouton \textbf{"Register new account"} depuis la page de connexion. \\
+\textbf{Contenu :} plusieurs champs de texte permettant l'entrée des données nécessaires à la création d'un compte. Nous ne détaillerons pas le contenu attendu dans chaque champ, celui-ci étant inscrit sur la maquette.
+\begin{itemize}
+	\item \textbf{Champs de texte} : permettent d'entrer les données nécessaires à la création du compte.
+	\item \textbf{Bouton "Sign up"} : permet d'envoyer les données au serveur et ainsi d'initier la création de compte. L'utilisateur est renvoyé 
+    \item \textbf{Lien "Already registered [...] log in."} : permet de retourner sur le menu de connexion si l'utilisateur a déjà un compte.
+    \item \textbf{Bouton de sélection de langue} : permet de sélectionner la langue d'affichage du site.
+\end{itemize}
+
+\subsubsection{Page de réussite de création de compte}
+\noindent \textbf{Accès} : page sur laquelle est redirigé un utilisateur depuis la page de création de compte si celle ci est un succès. \\ 
+\textbf{Contenu} : un lien hypertexte sur lequel l'utilisateur peut cliquer s'il n'est pas automatiquement redirigé. 
+\begin{itemize}
+    \item \textbf{Lien "Click here to be redirected"} : permet à l'utilisateur d'accèder à la page d'acceuil s'il n'est pas automatiquement redirigé. 
+\end{itemize}
+
+\subsubsection{Page de réinitialisation de mot de passe} 
+\noindent \textbf{Accès} : page sur laquelle arrive un utilisateur depuis la page de connexion s'il clique sur le lien "Forgot your password ?". \\
+\textbf{Contenu} : champ de texte où entrer l'adresse email pour recevoir le lien de réinitialisation de mot de passe.
+\begin{itemize}
+    \item \textbf{Champ de texte} : l'utilisateur entre son adresse mail pour recevoir le lien de réinitialisation.
+    \item \textbf{Lien "you remember your password ?"} : permet à une utilisateur de retourner sur la page de connexion s'il est arrivé sur cette page par erreur. 
+    \item \textbf{Bouton de sélection de langue} : permet de sélectionner la langue d'affichage du site.
+\end{itemize}
+
+\subsubsection{Page de création de nouveau mot de passe}
+\noindent \textbf{Accès} : page sur laquelle arrive un utilisateur qui a cliqué sur le lien de réinitialisation de mot de passe. \\
+\textbf{Contenu} : deux champs de textes où entrer le nouveau mot de passe, un bouton pour confirmer.
+\begin{itemize}
+    \item \textbf{Champs de texte} : l'utilisateur doit y entrer son nouveau mot de passe et le confirmer dans le champ du dessous.
+    \item \textbf{Bouton "Confirm"} : l'utilisateur utilise ce bouton pour confirmer son nouveau mot de passe.
+\end{itemize}
+
+\subsubsection{Page de gestion des portefeuilles}
+\noindent \textbf{Accès} : l'utilisateur accède à cette page depuis le menu latéral gauche, en cliquant sur le bouton \textbf{"Manage portfolios"}. \\
+\textbf{Contenu} : cette page contient une liste des différents portefeuilles, avec l'option de les supprimer à chaque portfeuille. Une fenêtre pop-up de confirmation apparaît lorsque l'on clique sur le bouton de suppression. Un bouton \textbf{"Create portfolio"} permet à l'utilisateur de créer un nouveau portfeuille. 
+\begin{itemize}
+    \item \textbf{Bouton "Portfolio"} : permet à l'utilisateur d'accèder aux informations de son portfeuille. Cela le mènera vers la page de gestion de portefeuille. 
+    \item \textbf{Bouton "Create portfolio"} : permet à l'utilisateur de créer un nouveau portfeuille en accédant à la page de création de portefeuille.
+\end{itemize}
+
+\subsubsection{Menu de la barre latérale}
+\noindent \textbf{Accès} : l'utilisateur peut y accéder depuis toutes les pages du site, en cliquant sur l'icône en haut à gauche.\\
+\textbf{Contenu} : ce menu contient 4 boutons. 
+\begin{itemize}
+    \item \textbf{Bouton de sélection des portefeuilles} : ce bouton permet de choisir le portefeuille pour lequel afficher le graphique. Si l'utilisateur n'a pas encore créé de portefeuille, ce bouton sera vide, sans possibilité de sélection. Il affichera '-'.
+    \item \textbf{Bouton "General Overview"} : ce bouton permet d'accéder à la page d'acceuil "general overview".
+    \item \textbf{Bouton "Manage portfolios"} : ce bouton permet d'accéder à la page de gestion des portefeuilles.
+    \item \textbf{Bouton "Manage meters"} : ce bouton permet d'accéder à la page de gestion des compteurs.
+    \item \textbf{Bouton "Manage contracts"} : ce bouton permet d'accéder à la page de gestion des contrats.
+\end{itemize}
+
+\subsubsection{Menu d'utilisateur}
+\noindent \textbf{Accès} : accessible depuis toutes les pages du site en haut à droite. \\
+\textbf{Contenu} : bouton permettant de sélectionner divers paramètres. 
+\begin{itemize}
+    \item \textbf{Bouton "Profile"} : permet d'accéder à la page d'informations d'utilisateur.
+    \item \textbf{Bouton "Notifications"} : permet d'accéder à la page de notifications.
+    \item \textbf{Bouton "Preferences"} : permet d'accéder à la page des paramètres.
+    \item \textbf{Bouton "Disconnect"} : permet de se déconnecter du site.
+    \item \textbf{Icône d'utilisateur} : icône représentant l'utilisateur, avec une pastille de notifications. 
+    \item \textbf{Nom d'utilisateur} : nom de l'utilisateur.
+\end{itemize}
+
+\subsubsection{Page de création de portfeuille}
+\noindent \textbf{Accès} : l'utilisateur accéde à cette page depuis le menu de gestion des portefeuilles.\\
+\textbf{Contenu} : cette page contient des boutons et champs de textes permettant de créer un portefeuille. L'utilisateur peut compléter le nom du portefeuille, le point de fourniture, le fournisseur et le type de contrat.
+\begin{itemize}
+    \item \textbf{Champ de texte "portfolio name"} : permet d'entrer le nom du portefeuille. 
+    \item \textbf{Boutons "add supply point, supplier, address, contract type"} : boutons permettant de compléter les informations du portefeuille. 
+    \item \textbf{Bouton "Create portfolio"} : permet d'envoyer la requête au serveur et de créer le portefeuille. 
+    \item \textbf{Bouton "Cancer"} : permet d'annuler la création de portefeuille, amenant l'utilisateur sur la page précédente.
+\end{itemize}
+
+\subsubsection{Page de gestion des compteurs}
+\noindent \textbf{Accès} : l'utlisateur accéde à cette page à travers le menu latéral en cliquant sur le bouton "Manage meters". \\
+\textbf{Contenu} : Cette page permet de gérer les compteurs. On y retrouve une liste de compteurs et un bouton pour accéder à l'historique d'assignation. 
+\begin{itemize}
+    \item \textbf{Liste de boutons de compteurs} : permet à l'utilisateur d'entrer les données manuelles de consommation lorsqu'il clique sur un compteur. 
+    \item \textbf{Bouton "Assignement history"} : permet d'accéder à l'historique d'assignation des compteurs. 
+\end{itemize}
+
+\subsubsection{Page de saisie manuelle de consommation de compteur}
+\noindent \textbf{Accès} : l'utilisateur accède à cette page en cliquant sur un des compteurs de la liste des compteurs de la page de gestion de compteurs. \\
+\textbf{Contenu} : cette page permet d'entrer les valeurs de consommation de compteur en fonction de la date. On y retrouve donc un sélecteur de date et une zone de texte pour la consommation, ainsi que les boutons de confirmation et d'annulation. 
+\begin{itemize}
+    \item \textbf{Sélecteur de date} : permet de sélectionner la date du relevé de consommation du compteur
+    \item \textbf{Zone de texte} : permet d'entrer la consommation en kWh. 
+    \item \textbf{Boutons "Confirm data" et "Cancel"} : permettent respectivement de valider les entrées de données ou d'annuler l'opération.
+\end{itemize}
+
+\subsubsection{Page d'historique d'assignation de compteur}
+\noindent \textbf{Accès} : accessible depuis la page de gestion des compteurs, en appuyant sur le bouton "Assignement history". \\
+\textbf{Contenu} : cette page contient un historique d'assignation des compteurs sous forme de tableau.
+
+
+\subsubsection{Page de profil}
+\noindent \textbf{Accès} : l'utilisateur accède à cette page depuis le menu d'utilisateur, depuis toutes les pages du site. \\
+\textbf{Contenu} : on y retrouve les informations de l'utilisateur. Celui ci peut les modifier en cliquant sur le bouton en forme de crayon.
+\begin{itemize}
+    \item \textbf{Boutons et zones de texte} : l'utilisateur peut changer les données des zones de texte en appuyant sur l'icône en forme de crayon.
+    \item \textbf{Bouton "Save changes"} : permet à l'utilisateur de sauvegarder les modifications.
+\end{itemize}
+
+
+\subsubsection{Page de notifications}
+\noindent \textbf{Accès} : accessible depuis le menu d'utilisateur depuis n'importe quelle page. \\
+\textbf{Contenu} : contient une liste des notifications reçues.
+\begin{itemize}
+    \item \textbf{Cases de sélection} : permettent de sélectionner les notifications pour effectuer des opérations telles que les marquer comme lues ou bien les supprimer. 
+    \item \textbf{Notification} : séparées en 2 : partie avec raison de la notification, et la 2e avec la date.
+    \item \textbf{Boutons "Mark as read" et "Delete"} : respectivement marquent les notifications séléctionnées comme lues ou bien les supprime.
+\end{itemize}
+
+\subsubsection{Page de préférences}
+\noindent \textbf{Accès} : accessible depuis le menu d'utilisateur depuis n'importe quelle page. \\
+\textbf{Contenu} : permet de sélectionner la langue de l'application, de changer son mot de passe, le portefeuille préféré ainsi que de passer en dark mode. 
+\begin{itemize}
+    \item \textbf{Selecteur de langue} : permet de choisir la langue que l'on préfére utiliser.
+    \item \textbf{Importateur de langue} : permet à l'utlisateur d'importer directement sur l'application un fichier de la langue de son choix. Il effectuera l'opération depuis la fenêtre de pop-up apparaissant après clic sur le bouton.
+    \item \textbf{Changement de mot de passe} : permet de changer son mot de passe, en entrant l'ancien mot de passe, puis le nouveau, et en le confirmant.
+    \item \textbf{Selecteur de portfeuille} : permet de choisir le portefeuille affiché par défaut sur la page d'acceuil. 
+    \item \textbf{Case de mode} : permet de passer du mode clair au mode sombre.
+\end{itemize}
+
+\subsubsection{Page de gestion de portefeuille}
+\noindent \textbf{Accès} : l'utlisateur arrive sur cette page après avoir cliqué sur un des portefeuilles présents dans la liste du menu de gestion de portefeuilles. \\
+\textbf{Contenu} : cette page permet de gérer les informations du portefeuille sélectionné, telles que le numéro EAN, le fournisseur ou le type de contrat. On peut les consulter ou les modifier. On a d'abord un menu qui présente les points de fournitures, et des boutons pour gérer chaque point de fourniture.
+\begin{itemize}
+    \item \textbf{Titre du portfeuille} : le titre du portefeuille est modifiable en cliquant sur le bouton en forme de crayon à droite du titre.
+    \item \textbf{Points de fourniture} : le point de fourniture est affiché par son numéro EAN. A droite de celui ci, on retrouve 3 boutons :
+        \begin{itemize}
+            \item \textbf{Bouton d'édition} : premier bouton en partant de la gauche, en forme de crayon. Permet de modifier les paramètres du point de fourniture à travers une fenêtre pop-up. 
+            \item \textbf{Bouton de suppression} : deuxième bouton en partant de la gauche, en forme de poubelle. Permet de supprimer le point de fourniture. Une fenêtre pop-up permet de confirmer le choix de la suppression.
+            \item \textbf{Bouton d'historique} : dernier bouton en partant de la gauche, en forme de planche presse-papier. Permet d'accéder à la page de l'historique de consommation. 
+            \item \textbf{Bouton de création} : bouton en forme de '+'. Permet d'accéder à la création de point de fourniture via une fenêtre pop-up 
+                \begin{itemize}
+                    \item \textbf{Zone de texte "Add EAN"} : permet d'entrer le numéro EAN du point de fourniture.
+                    \item \textbf{Bouton de sélection "Add supplier"} : permet de sélectionner un fournisseur.
+                    \item \textbf{Bouton de sélection "Add contract type"} : permet de sélectonner un type de contrat.
+                \end{itemize}
+        \end{itemize}
+    \item \textbf{Détails} : affiche des détails sur le portefeuille, donc l'adresse de la propriété liée aux points de fourniture.
+\end{itemize}
+
+
+\subsubsection{Page d'historique de consommation}
+\noindent \textbf{Accès} : depuis la page de gestion de portefeuille, en appuyant sur l'icône en forme de presse papier. \\
+\textbf{Contenu} : on y retrouve un historique de la consommation sous forme de tableau ou de graphique. Il est également possible d'exporter l'historique de consommation.
+\begin{itemize}
+    \item \textbf{Nom du point de fourniture} : le point de fourniture est indiqué tout en haut (numéro EAN)
+    \item \textbf{Graphique/Tableau} : reprend les valeurs de la consommation selon la date. 
+    \item \textbf{Case de sélection de type d'affichage} : cocher cette case permet d'avoir l'affichage sous forme de graphique plutôt qu'en tableau.
+    \item \textbf{Bouton "Export consumption history"} : bouton permettant d'exporter l'historique de consommation grâce à une fenêtre pop-up :
+        \begin{itemize}
+            \item \textbf{Sélecteur de date de début}
+            \item \textbf{Sélecteur de date de fin}
+            \item \textbf{Sélecteur de granularité temporelle}
+            \item \textbf{Sélecteur de type de fichier}
+            \item \textbf{Bouton de téléchargement}
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Page de gestion des contrats}
+\noindent \textbf{Accès} : accessible depuis le menu latéral, depuis n'importe quelle page du site. \\
+\textbf{Contenu} :  Affiche une liste des contrats de l'utilisateur. Il est également possible de faire une requête de nouveau contrat.
+\begin{itemize}
+    \item \textbf{Liste de contrats} : permet de voir les détails du contrat, envoyant l'utilisateur sur la page de vue du contrat.
+    \item \textbf{Bouton "New contract request"} : permet d'introduire une demande de nouveau contrat. Renvoie l'utilisateur sur la page de requête de nouveau contrat.
+\end{itemize}
+
+\subsubsection{Page de visualisation de contrat}
+\noindent \textbf{Accès} : accessible en cliquant sur un contrat de la liste des contrats de la page de gestion des contrats. \\
+\textbf{Contenu} : contient les informations sur le contrat : son identifiant, les détails du client, les caractéristiques techniques et l'offre du client. Il est également possible d'introduire une demande d'annulation de contrat.
+\begin{itemize}
+    \item \textbf{Zones d'informations} : plusieurs informations réparties en sections. 
+    \item \textbf{Bouton "Cancel contract"} : permet de demander une annulation de contrat qui sera envoyée au fournisseur. Une fenêtre pop-up demandera la confirmation de l'action. 
+\end{itemize}
+
+\subsubsection{Page de demande de nouveau contrat}
+\noindent \textbf{Accès} : accessible depuis la page de gestion des contrats. \\
+\textbf{Contenu} : formulaire composé de champs de textes et de sélecteurs.
+\begin{itemize}
+    \item \textbf{Champs de texte} : plusieurs champs de textes pour entrer les informations comme le nom, l'adresse, les numéros EAN.
+    \item \textbf{Sélecteurs} : permettent de sélectionner le type de contrat, le type de compteur et le pays.
+\end{itemize}
+
+\subsubsection{Page de sélection d'offre}
+\noindent \textbf{Accès} : accessible depuis la page de demande de nouveau contrat, en cliquant sur le bouton de confirmation. \\
+\textbf{Contenu} : une caroussel permettant de faire défiler les offres de fournisseurs disponibles. Une fois que l'utilisateur clique sur un des éléments, il peut confirmer son choix en cliquant sur le bouton "confirm request". Il aura alors un message de confirmation de la demande de contrat.
+\begin{itemize}
+    \item \textbf{Caroussel d'éléments} : un caroussel comprenant les offres des fournisseurs avec le coût mensuel et la durée du contrat. Les éléments sont sélectionnables.
+    \item \textbf{Boutons de confirmation et d'annulation} : permettent respectivement de valider la demande de nouveau contrat ou de l'annuler.
+\end{itemize}
+
+\newpage
+\end{document}

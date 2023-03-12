@@ -1,0 +1,218 @@
+\documentclass[../rapport.tex]{subfiles}
+\begin{document}
+\subsection{Description de l'extension}
+Cette extension permet au client de gérer ses factures, de les consulter, ainsi que de modifier la somme des acomptes qu'il verse à la fin de chaque mois. Il pourra modifier ses informations de paiement, ainsi que choisir entre un prélèvement automatique ou un paiement manuel. 
+
+\subsection{Use Case Diagram}
+\subsubsection{Description des use cases}
+\noindent \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre: & Manage invoices \\
+    \hline
+    Description : & L'utilisateur souhaite voir ses factures annuelles et acomptes mensuels. \\
+    \hline
+    Acteur(s) principal(aux) : & Client et fournisseur. \\
+    \hline
+    Précondition : & L'utilisateur est connecté dans l'application. \\
+    \hline
+    Post condition : & L'utilisateur est dans le menu des factures. \\
+    \hline
+    Scénario principal : & \begin{enumerate}[left=0pt, topsep=0pt]
+        \item l'utilisateur clique sur le bouton de gestion des factures
+        \item l'utilisateur est redirigé vers la page de gestion des factures qui lui affiche une liste de toutes les factures. 
+    \end{enumerate} \nointerlineskip\\
+    \hline
+    Trigger : & Lorsque l'utilisateur clique sur le bouton \textbf{Manage invoices} \\ 
+    \hline
+    Fréquence d'utilisation : & Peu fréquent. \\
+    \hline
+\end{tabular}
+\\ \\ \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre : & View invoice \\
+    \hline
+    Description : & l'utilisateur souhaite voir le détail d'une facture. \\
+    \hline
+    Acteur(s) principal(aux) : & Client et fournisseur \\
+    \hline
+    Préconditions : & L'utilisateur est dans le menu des factures. \\
+    \hline
+    Post conditions : & L'utilisateur consulte les détails de la facture. \\
+    \hline 
+    Scénario principal : & \begin{enumerate}[left=0pt, topsep=0pt]
+        \item L'application redirige l'utilisateur vers une nouvelle page et affiche les informations de la facture. 
+    \end{enumerate} \nointerlineskip \\
+    \hline 
+    Trigger : & Lorsque l'utilisateur clique sur un contrat de la liste des contrats. \\
+    \hline 
+    Frequence d'usage : & Peu fréquent. \\
+    \hline
+\end{tabular}
+\\ \\ \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre : & View monthly advance payments \\
+    \hline
+    Description : & L'utilisateur souhaite consulter les acomptes mensuels.\\
+    \hline
+    Acteur(s) principal(aux) : & Client et fournisseur\\
+    \hline
+    Préconditions : & L'utilisateur est connecté à l'application. L'utlilisateur a cliqué sur le bouton "view monthly advance payments".\\
+    \hline 
+    Post conditions : & \ \\
+    \hline 
+    Scénario principal : & \begin{enumerate}
+        \item L'utilisateur clique sur le bouton "view monthly advance payment"
+        \item L'utilisateur arrive sur la page, avec une liste des acomptes. 
+    \end{enumerate} \nointerlineskip \\
+    \hline
+    Trigger : & Lorsque l'utlilisateur clique sur le bouton "view monthly advance payments". \\
+    \hline 
+    Fréquence d'usage : & Peu fréquent.  \\
+    \hline
+\end{tabular}
+\\ \\ \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre : & View monthly advance payment  \\
+    \hline
+    Description : & L'utilisateur souhaite voir les détails d'un acompte. Il a séléctionné un des acomptes de la liste. \\
+    \hline
+    Acteur(s) principal(aux) : & Client et fournisseur\\
+    \hline
+    Préconditions : & L'utilisateur est sur la page "view monthly advance payments", et a cliqué sur un des acomptes de la liste.\\
+    \hline 
+    Post conditions : & L'utilisateur se retrouve sur la page de l'acompte avec les informations de celui ci.\\
+    \hline 
+    Scénario principal : & \begin{enumerate}
+        \item L'utilisateur clique sur un des acomptes de la liste
+        \item Il peut consulter les informations de l'acompte.
+    \end{enumerate} \nointerlineskip \\
+    \hline
+    Trigger : & L'utilisateur clique sur un acompte de la liste. \\
+    \hline
+    Frequence d'usage : & Peu fréquent.\\
+    \hline
+\end{tabular}
+\\ \\ \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre : & Edit advance payments preferences \\
+    \hline
+    Description : & L'utilisateur souhaite changer la somme du paiement des acomptes. L'utilisateur peut alors voir la somme des acomptes proposés par le fournisseur, et également proposer le prix qu'il souhaite s'il est compris dans les +/- 20 \% de celui proposé par le fournisseur. \\
+    \hline
+    Acteur(s) principal(aux) : & Client et fournisseur\\
+    \hline
+    Préconditions : & L'utilisateur est connecté et il a cliqué sur le bouton "change advance payments preferences"\\
+    \hline 
+    Post conditions : & Les préférences de paiements des acomptes ont été modifiées.\\
+    \hline 
+    Scénario principal : & \begin{enumerate}
+        \item L'utilisateur a cliqué sur le bouton pour accèder à cette page
+        \item Il change le prix de l'acompte
+        \item Il entre son mot de passe pour confirmer la modification du paiement d'acompte
+    \end{enumerate} \nointerlineskip \\
+    \hline
+    Trigger : & La bouton "change advance payments preferences"\\
+    \hline
+    Frequence d'usage : & Peu fréquent\\
+    \hline
+\end{tabular}
+\\ \\ \\
+\begin{tabular}{|r|p{9cm}|}
+    \hline
+    Titre : & Edit billing informations\\
+    \hline
+    Description : & L'utilisateur souhaite modifier les informations de paiements de factures et acomptes. \\
+    \hline
+    Acteur(s) principal(aux) : & Client \\
+    \hline
+    Préconditions : & L'utilisateur est connecté et a cliqué sur le bouton dans le menu d'utilisateur.\\
+    \hline 
+    Post conditions : & Les informations de paiement ont été changées et sauvegardées.\\
+    \hline 
+    Scénario principal : & \begin{enumerate}
+        \item l'utilisateur entre ses coordonnées bancaires dans le formulaire
+        \item il clique sur le bouton de sauvegarde 
+    \end{enumerate} \nointerlineskip \\
+    \hline
+    Scénario alternatif : & \begin{enumerate}
+        \item l'utilisateur coche l'option de payer manuellement. 
+        \item il a donc la fenêtre pop-up avec les informations pour faire un paiement manuel grâce au QR code ou à l'IBAN.
+    \end{enumerate} \nointerlineskip \\
+    \hline 
+    Scénario alternatif 2 : & \begin{enumerate}
+        \item l'utilisateur a coché l'option pour payer manuellement
+        \item l'utilisateur lie l'application avec son application bancaire, et est donc redirigé sur le portail de sa banque.
+    \end{enumerate} \nointerlineskip \\
+    \hline
+    Trigger : & Le bouton "edit billing informations" depuis le menu d'utilisateur\\
+    \hline
+    Frequence d'usage : & Peu fréquent\\
+    \hline
+\end{tabular}
+
+\subsection{Description de la maquette}
+\subsubsection{Menu d'utilisateur}
+\noindent \textbf{Accès} : l'utilisateur peut y accèder depuis n'importe quelle page de l'application en cliquant sur son profil en haut à droite de la page. \\
+\textbf{Contenu} : ce menu contient plusieurs boutons comme détaillé dans la partie commune, avec en plus le bouton "Billing informations". 
+
+\subsubsection{Menu latéral gauche}
+\noindent \textbf{Accès} : accessible depuis n'importe quelle page du site. \\
+\textbf{Contenu} : même contenu que pour la partie commune, avec un seul bouton en plus : "Manage invoices".
+
+\subsubsection{Page d'information de facturation}
+\noindent \textbf{Accès} : accès depuis le menu d'utilisateur depuis n'importe quelle page. \\
+\textbf{Contenu} : cette page contient des zones de texte pour entrer les données de paiement de l'utilisateur. Il y a une case cochable pour pouvoir payer manuellement, plutôt qu'automatiquement. 
+\begin{itemize}
+    \item \textbf{Zones de texte} : permettent d'entrer les informations de paiement.
+    \item \textbf{Case de paiement manuel} : cocher cette case permet de passer en paiement manuel. Cela flouttera les informations de paiement automatique, et fera apparaître un bouton pour afficher les informations de paiement manuel dans une fenêtre pop-up, qui contient un QR code, un IBAN, et un bouton pour lier l'application à l'application bancaire de l'utilisateur.
+    \item \textbf{Bouton "save changes"} : bouton pour sauvegarder les modifications des informations de paiement.
+\end{itemize}
+
+\subsubsection{Page d'historique de factures annuelles}
+\noindent \textbf{Accès} : depuis le menu latéral gauche, en cliquant sur le bouton "Manage invoices".\\
+\textbf{Contenu} : cette page contient une liste des factures, ainsi qu'un bouton pour aller vers les acomptes.
+\begin{itemize}
+    \item \textbf{Liste des factures} : liste des factures sur lesquelles l'utilisateur peut cliquer pour voir les détails.
+    \item \textbf{Bouton "see monthly advance payments"} : permet d'accéder à la page des acomptes.
+\end{itemize}
+
+\subsubsection{Page de vue de facture}
+\noindent \textbf{Accès} : accessible depuis la page d'historique des factures. \\
+\textbf{Contenu} : contient les informations de la facture.
+\begin{itemize}
+    \item \textbf{Informations} : plusieurs zones de texte avec les informations de la facture.
+    \item \textbf{Bouton "Show payments informations"} : bouton affichant les informations de paiement dans une pop-up pour faire un paiement manuel. 
+\end{itemize}
+
+\subsubsection{Page d'historique des acomptes}
+\noindent \textbf{Accès} : accessible depuis la page d'historique des factures en cliquant sur le bouton prévu à cet effet. \\
+\textbf{Contenu} : cette page contient une liste des acomptes effectués et à venir pour l'utilisateur. Il y a également un bouton pour changer les paramètres de paiement des acomptes.
+\begin{itemize}
+    \item \textbf{Liste des acomptes} : en cliquant sur un des éléments, on accède aux détails de l'acompte.
+    \item \textbf{Bouton "change advance payments preferences"} : permet d'accéder à la page de réglages des paramètres de paiements.
+\end{itemize}
+
+\subsubsection{Page de vue des acomptes}
+\noindent \textbf{Accès} : accessible depuis la page d'historique des acomptes.\\
+\textbf{Contenu} : contient les informations à propos de l'acompte sélectionné. 
+\begin{itemize}
+    \item \textbf{Informations} : contient des zones de textes avec les informations de l'acompte.
+    \item \textbf{Bouton "show payments informations"} : bouton qui affiche dans une fenêtre pop-up les informations pour réaliser un paiement manuel.
+\end{itemize}
+
+\subsubsection{Page de préférences d'acomptes}
+\noindent \textbf{Accès} : accessible depuis la page d'historique des acomptes. \\
+\textbf{Contenu} : cette page contient les préférences de paiement des acomptes. L'utilisateur peut y régler le montant à payer, ainsi que voir le coût annuel, et le coût proposé par le fournisseur.
+\begin{itemize}
+    \item \textbf{Informations} : zones de textes affichant les informations de l'acompte.
+    \item \textbf{Zone de texte} : entrée pour changer le montant de l'acompte. Ce montant est accepté s'il vaut le montant proposé par le fournisseur à +/- 20 \% .
+    \item \textbf{Entrée de mot de passe} : zone de texte pour entrer le mot de passe, permettant de sécuriser le changement de montant.
+    \item \textbf{Bouton "save preferences"} : permet de sauvegarder les modifications apportées par l'utilisateur.
+\end{itemize}
+
+\end{document}
+

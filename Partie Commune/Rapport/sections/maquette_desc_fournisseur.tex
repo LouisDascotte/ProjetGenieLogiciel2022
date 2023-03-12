@@ -1,0 +1,211 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+
+\subsection{Présentation de la maquette}
+La maquette a été réalisée avec les mêmes outils que la maquette client. Il y a de nombreuses variations et pages différentes de la version client. 
+
+\subsection{Liste de fenêtres accessibles : }
+
+\subsection{Description des pages et des boutons :}
+
+\subsubsection{Page d'acceuil}
+\noindent \textbf{Accès} :  accessible lors de la connexion au site, et depuis le menu latéral gauche en cliquant sur le bouton "welcome page".\\
+\textbf{Contenu }: cette page ne contient que l'heure et la date pour l'application fournisseur.
+\begin{itemize}
+    \item \textbf{Date et heure} : date et heure locale. 
+\end{itemize}
+
+\subsubsection{Menu latéral gauche}
+\noindent \textbf{Accès} :  depuis n'importe quelle page du site\\
+\textbf{Contenu }: divers boutons pour accéder aux différentes pages du site.
+\begin{itemize}
+    \item \textbf{Bouton "manage consumption"} : bouton permettant d'accéder à la page de gestion de consommation.
+    \item \textbf{Bouton "manage clients"} : bouton permettant d'accéder à la page de gestion des clients.
+    \item \textbf{Bouton "manage contracts"} : bouton permettant d'accéder à la page de gestion des contrats.
+    \item \textbf{Bouton "Welcome page"} : bouton permettant d'accéder à l'acceuil.
+\end{itemize}
+
+
+\subsubsection{Menu d'utilisateur}
+\noindent \textbf{Accès} : depuis n'importe quelle page du site \\
+\textbf{Contenu }: permet d'accéder aux paramètres, aux notifications ainsi que de se déconnecter.
+\begin{itemize}
+    \item \textbf{Notifications} : permet d'accéder à la page des notifications. 
+    \item \textbf{Preferences} : permet d'accéder à la page des paramètres.
+    \item \textbf{Disconnect} : permet de se déconnecter.
+\end{itemize}
+
+\subsubsection{Page de connexion}
+\noindent \textbf{Accès} :  en cliquant sur le lien menant au site.\\
+\textbf{Contenu }: permet de se connecter au site.
+\begin{itemize} 
+    \item \textbf{Champs de texte} : permettent d'entrer l'identifiant ainsi que le mot de passe de l'employé pour se connecter.
+    \item \textbf{Boutons} : contient les boutons similaires à ceux présents sur la page de connexion de client : réinitialisation de mot de passe, sélecteur de langue.
+\end{itemize}
+
+\subsubsection{Réinitialisation de mot de passe}
+\noindent \textbf{Accès} :  depuis la page de connexion, en cliquant sur le bouton d'oubli de mot de passe.\\
+\textbf{Contenu }: permet de faire la demande de réinitialisation de mot de passe.
+\begin{itemize}
+    \item \textbf{Champ de texte} : permet d'entrer l'identifiant de connexion pour faire la requête de réinitialisation de mot de passe.
+    \item \textbf{Lien "remember password"} : lien permettant de retourner à la connexion si l'utilisateur se rappelle de son mot de passe ou qu'il a cliqué sur la réinitialisation de mot de passe par erreur.
+\end{itemize}
+
+\subsubsection{Création de nouveau mot de passe}
+\noindent \textbf{Accès} : depuis le lien reçu après demande de réinitialisation de mot de passe \\
+\textbf{Contenu }: permet de changer son mot de passe en en entrant un nouveau.
+\begin{itemize}
+    \item \textbf{Champs de texte} : les champs de textes permettent d'entrer le nouveau mot de passe à 2 reprises, pour confirmer le nouveau mot de passe choisi.
+\end{itemize}
+
+
+\subsubsection{Page des paramètres}
+\noindent \textbf{Accès} :  depuis le menu d'utilisateur, sur toutes les pages\\
+\textbf{Contenu }: contient les différents paramètres de l'employé. Permet de changer et importer une nouvelle langue, de changer le mot de passe et de passer du mode clair au mode sombre.
+\begin{itemize}
+    \item \textbf{Bouton de sélection de langue} : permet de sélectionner le langage de l'application.
+    \item \textbf{Bouton d'importation de langage} : permet d'importer une langue manuellement. Une fenêtre pop-up s'ouvre, permettant de sélectionner le fichier et de confirmation l'importation?
+    \item \textbf{Changement de mot de passe} : champs de textes pour modifier le mot de passe.
+    \item \textbf{Case de changement de mode} : permet de passer du mode clair au mode sombre et inversement
+\end{itemize}
+
+\subsubsection{Page de gestion des consommations}
+\noindent \textbf{Accès} : depuis le menu latéral, donc depuis toutes les pages \\
+\textbf{Contenu }: contient une liste contenant tous les compteurs attribués.
+\begin{itemize}
+    \item \textbf{Liste des compteurs} : une liste des compteurs attribués.
+    \item \textbf{Bouton d'import de données} : bouton permettant d'importer les données de consommations manuellement. Le bouton redirige vers la page d'import de données.
+\end{itemize}
+
+\subsubsection{Page de gestion de consommation}
+\noindent \textbf{Accès} :  depuis la page de gestion des consommations, en cliquant sur un compteur.\\
+\textbf{Contenu }: contient une liste des consommations triées par date. 
+\begin{itemize}
+    \item \textbf{Liste des consommations} : liste des données de consommation triées par date. 
+    \item \textbf{Cases de sélection} : à gauche de chaque entrée de consommation, une case permet de sélectionner les entrées, pour ensuite supprimer en groupe les données en les sélectionnant puis en appyant sur le bouton de suppression.
+    \item \textbf{Bouton d'édition} : à droite de chaque élément de la liste, on retrouve un bouton en forme de crayon permettant d'accéder à la page d'édition de la consommation. 
+    \item \textbf{Bouton de suppression} : permet la suppression rapide d'un élément de la liste. Une fenêtre pop-up apparaît pour demander confirmation de la suppression.
+    \item \textbf{Bouton d'import de données} : redirige l'utilisateur sur la page d'import de données.
+\end{itemize}
+
+\subsubsection{Page d'importation de données}
+\noindent \textbf{Accès} : Il existe deux pages d'importation de données. Celles-ci ayant la même fonction, elles seront toutes deux décrites dans cette section. On accède à cette page depuis : \begin{itemize}
+    \item Soit depuis la page de gestion de consommations, auquel cas l'import de données pourra concerner plusieurs compteurs à la fois 
+    \item Soit depuis la page de gestion de consommation, après avoir cliqué sur un compteur, et avoir cliqué sur le bouton "Import date". Dans ce cas, seul un compteur sera concerné.
+\end{itemize}
+\textbf{Contenu }: Cette page permet d'importer un fichier contenant les données de consommation.
+\begin{itemize}
+    \item \textbf{Bouton d'importation} : permet de sélectionner le fichier à importer.
+    \item \textbf{Bouton confirmer} : permet de confirmer l'import de données.
+    \item \textbf{Pop-up de données redondantes} : si plusieurs données ont la même date d'entrée, une fenêtre pop-up permettra à l'utilisateur de choisir entre : \begin{itemize}
+            \item \textbf{Ignorer} les doublons, et donc garder les anciennes données des dates doubles
+            \item \textbf{Ecraser} les doublons, ayant pour conséquence de remplacer les données aux dates doubles 
+            \item \textbf{Annuler} l'opération.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Page d'édition de la consommation}
+\noindent \textbf{Accès} : depuis la page de gestion de consommation, en cliquant sur le bouton en forme de crayon. \\
+\textbf{Contenu }: un bouton pour importer les données sensées remplacer les anciennes.
+\begin{itemize}
+    \item \textbf{Bouton import data} : permet de sélectionner le fichier de données à importer.
+    \item \textbf{Bouton "confirm changes"} : permet de confirmer les modifications
+\end{itemize}
+
+
+\subsubsection{Page de gestion des contrats}
+\noindent \textbf{Accès} :  depuis le menu latéral, accessible depuis toutes les pages de l'application.\\
+\textbf{Contenu }: contient une liste des contrats du fournisseur. 
+\begin{itemize}
+    \item \textbf{Liste des contrats} : liste d'éléments représentants les contrats. En cliquant sur un contrat, l'utilisateur accède à la page de détail des contrats.
+    \item \textbf{Bouton "New contract"} : permet d'accéder à la page de création de nouveau contrat.
+    \item \textbf{Bouton "Contract requests"} : permet d'accéder à la page de gestion des demandes de contrats.
+\end{itemize}
+
+
+\subsubsection{Page de vue de contrat}
+\noindent \textbf{Accès} : depuis la page de gestion des contrats. \\
+\textbf{Contenu }: affiche des informations sur le contrat sélectionné. Permet de l'éditer, ou de l'annuler.
+\begin{itemize} 
+    \item \textbf{Informations} : plusieurs informations sur le contrat sont affichées.
+    \item \textbf{Bouton d'édition de contrat} : permet d'éditer le contrat. Change les zones de textes en champs de textes modifiables. Des boutons pour confirmer les modifications ou les annuler deviennent disponibles.
+    \item \textbf{Bouton de suppression de contrat} : bouton pour supprimer un contrat. Usuellement utilisé après une requête d'annulation de contrat par le client. Une fenêtre pop-up de confirmation apparaîtra pour confirmer la suppression du contrat.
+\end{itemize}
+
+\subsubsection{Page de nouveau contrat}
+\noindent \textbf{Accès} :  depuis la page de gestion des contrats.\\
+\textbf{Contenu }: Permet de créer un nouveau contrat en entrant manuellement les données du client et du contrat.  
+\begin{itemize}
+    \item \textbf{Champs de texte} : permettent d'entrer les informations du client
+    \item \textbf{Sélecteurs} : permettent de sélectionner le type de contrat, le type de compteur et l'offre du contrat.
+\end{itemize}
+
+\subsubsection{Page de gestion des demandes de contrats}
+\noindent \textbf{Accès} : depuis le menu de gestion des contrats  \\
+\textbf{Contenu }: contient une liste des demandes de contrats. En cliquant sur la demande on contrat, l'utilisateur arrive sur la page de gestion de demande de contrat.
+\begin{itemize}
+    \item \textbf{Liste de demandes de contrats}
+\end{itemize}
+
+\subsubsection{Page de gestion de demande de contrat}
+\noindent \textbf{Accès} : depuis la page de gestion des demandes de contrat \\
+\textbf{Contenu }: contient les informations de la demande de contrat. Permet au fournisseur d'accepter ou de refuser le contrat demandé par le client.
+\begin{itemize}
+    \item \textbf{Informations} : zones de textes reprenant les informations remplies par le client.
+    \item \textbf{Bouton "Deny request"} : bouton pour refuser la demande de contrat. Une fenêtre pop-up de confirmation demandera de confirmer le choix.
+    \item \textbf{Bouton "Accept request"} : bouton pour accepter la demande de contrat. Une fenêtre op-up de confirmation demandera de confirmer le choix.
+\end{itemize}
+
+\subsubsection{Page de gestion des clients}
+\noindent \textbf{Accès} : depuis le menu latéral gauche, accessible depuis toutes les pages \\
+\textbf{Contenu }: contient une liste des clients ainsi qu'un bouton pour en ajouter des nouveaux.
+\begin{itemize}
+    \item \textbf{Liste des clients}: liste d'entités représentant les clients. Cliquer sur un des clients permettra sa gestion et son affichage.
+    \item \textbf{Bouton "Add client"} : bouton permettant d'accéder à la page d'ajout de nouveau client.
+\end{itemize}
+
+\subsubsection{Page d'ajout de nouveau client}
+\noindent \textbf{Accès} :  depuis la page de gestion des clients\\
+\textbf{Contenu }: contient des champs de texte pour les informations sur le nouveau client.
+\begin{itemize}
+    \item \textbf{Zones de texte} : permettent d'entrer les données du client.
+    \item \textbf{Bouton "add client"} : permet de valider l'ajout du client.
+\end{itemize}
+
+\subsubsection{Page de visualisation de client}
+\noindent \textbf{Accès} :  depuis la page de gestion des clients\\
+\textbf{Contenu }: affiche les informations du client sélectionné. Permet de lui associer des compteurs ainsi que de voir ceux déjà associés. Il est également possible de supprimer le client.
+\begin{itemize}
+    \item \textbf{Informations} : affichage d'informations sur le client
+    \item \textbf{Bouton "Link meter"} : permet d'accéder à la page d'association de compteur pour le client sélectionné.
+    \item \textbf{Bouton "View linked meters} : permet de voir les compteurs associés au client, sous forme d'une fenêtre pop-up.
+    \item \textbf{Bouton "remove client"} : permet de supprimer le client. Une fenêtre pop-up apparaît pour confirmer la suppression.
+\end{itemize}
+
+
+\subsubsection{Page d'association de compteur à un client}
+\noindent \textbf{Accès} :  depuis la page de visualisation de client\\
+\textbf{Contenu }: permet d'associer un compteur à un client pour une durée déterminée.
+\begin{itemize}
+    \item \textbf{Sélecteur de date de début et de fin} : l'utilisateur sélectionne les dates d'allocation du compteur.
+    \item \textbf{Champ de texte} : permet d'entrer le numéro du compteur (EAN) pour l'identifier.
+    \item \textbf{Bouton "confirm link"} : permet de confirmer l'association du compteur au client.
+\end{itemize}
+
+\subsubsection{Page des notifications}
+\noindent \textbf{Accès} :  depuis le menu d'utilisateur, depuis toutes les pages du site\\
+\textbf{Contenu }: liste des notifications reçues par le fournisseur.
+\begin{itemize}
+    \item \textbf{Liste des notifications} : représentées sous forme de liste, et triées par date. Cliquer sur la notification permet de la voir plus en détail.
+    \item \textbf{Case à cocher} : permettent de sélectionner les notifications pour les marquer comme lues ou les supprimer en une seule action.
+\end{itemize}
+
+\subsubsection{Page de visualisation de notification}
+\noindent \textbf{Accès} :  depuis la page des notifications\\
+\textbf{Contenu }: contient des informations sur la notification, telles que le contenu, l'expediteur et l'objet.
+\begin{itemize}
+    \item \textbf{Informations} : informations sur la notification.
+\end{itemize}
+\end{document}
+

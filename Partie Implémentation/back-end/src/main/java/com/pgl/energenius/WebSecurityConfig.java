@@ -3,6 +3,7 @@ package com.pgl.energenius;
 import com.pgl.energenius.Services.ClientLoginService;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -11,12 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -29,20 +32,19 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
+        .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/api/client/register", "/api/client").permitAll()
+                        .requestMatchers("/", "/api/client/register", "/api/client", "/api/client/testing").permitAll()
                         .anyRequest().authenticated() // retirer .authenticated() et ajouter .hasRole("CLIENT")
                 )
                 .formLogin((form) -> form
-                        .loginPage("/login")
+                        .loginPage("http://localhost:3000/login")
                         .usernameParameter("email")
                         .permitAll()
                         .defaultSuccessUrl("/hello", true)
                 )
-                .logout((logout) -> logout.permitAll());
-
-        return http.build();
+                .logout((logout) -> logout.permitAll()).build();
     }
 
     @Bean
@@ -56,5 +58,16 @@ public class WebSecurityConfig {
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean 
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "OPTIONS"));
+        //configuration.setAllowedHeaders(List.of(""));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

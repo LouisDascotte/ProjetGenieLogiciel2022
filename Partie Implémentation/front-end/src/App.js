@@ -19,6 +19,7 @@ import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
+import CoffeeTest from './pages/CoffeeTest';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Stack direction="row">
               <Routes>
                   <Route path='/' element={<Navigate to="/login"/>}/>
+                  <Route path="/coffee" exact element={<CoffeeTest/>}/>
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
                   <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
                   <Route path='/newpasswdsuccess' exact element={<NewPasswordSuccess/>}/>

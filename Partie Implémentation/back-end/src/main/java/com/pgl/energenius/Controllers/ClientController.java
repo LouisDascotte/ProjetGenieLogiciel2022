@@ -41,6 +41,11 @@ public class ClientController {
         return new ResponseEntity<List<Client>>(clientService.allClients(), HttpStatus.OK);
     }
 
+    @GetMapping(path="/testing")
+    public String getMsg(){
+        return "Test réussi";
+    }
+
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded")
     public ResponseEntity<Client> register(ClientDto clientDto) {
         Client client = new Client(

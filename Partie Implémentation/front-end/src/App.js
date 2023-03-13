@@ -27,7 +27,7 @@ function App() {
           <Stack direction="row">
               <Routes>
                   <Route path='/' element={<Navigate to="/login"/>}/>
-                  <Route path="/coffee" exact element={<CoffeeTest/>}/>
+                  <Route path="/coffee" exact element={<CoffeeTest/>}/> 
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
                   <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
                   <Route path='/newpasswdsuccess' exact element={<NewPasswordSuccess/>}/>

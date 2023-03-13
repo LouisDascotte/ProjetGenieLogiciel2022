@@ -41,6 +41,7 @@ public class ClientController {
         return new ResponseEntity<List<Client>>(clientService.allClients(), HttpStatus.OK);
     }
 
+    // mapping de test
     @GetMapping(path="/testing")
     public String getMsg(){
         return "Test réussi";

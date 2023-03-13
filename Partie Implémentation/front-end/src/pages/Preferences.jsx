@@ -9,7 +9,7 @@ const Preferences = () => {
   const pageAddress = "/preferences";
   const pageName = "Preferences";
   return (
-    <Stack direction='row' sx={{width:"100%"}}>
+    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>

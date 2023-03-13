@@ -29,7 +29,7 @@ const SideMenu = () => {
     const { collapseSidebar } = useProSidebar();
     return (
     
-    <div>
+    
         <Sidebar style={{ height:"100%"}}>
             <Menu>
                 <MenuItem
@@ -65,7 +65,7 @@ const SideMenu = () => {
                 <Link to="/manage-invoices" className='link'><MenuItem icon={<ReceiptOutlinedIcon />} >Manage invoices</MenuItem></Link>
             </Menu>
         </Sidebar>
-    </div>
+    
   );
 
 };

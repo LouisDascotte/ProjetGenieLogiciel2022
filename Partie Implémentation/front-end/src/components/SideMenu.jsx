@@ -1,23 +1,15 @@
-import React from 'react'
-import {OutlinedInput, Button, ButtonGroup, Stack, Box, Divider, Select, FormControl, InputLabel } from '@mui/material';
-import { categories } from '../utils/constants';
-import { useState } from 'react'; 
-import ManagePortfolios from '../pages/ManagePortfolios';
-import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
-import { BrowserRouter, Routes , Route, Link} from 'react-router-dom';
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MainPage from '../pages/MainPage';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import WalletOutlinedIcon from '@mui/icons-material/WalletOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
+import InsertedChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import WalletOutlinedIcon from '@mui/icons-material/WalletOutlined';
+import { Box, Divider, FormControl, InputLabel, Select } from '@mui/material';
+import React, { useState } from 'react';
+import { Menu, MenuItem, Sidebar, useProSidebar } from 'react-pro-sidebar';
+import { Link } from 'react-router-dom';
 
 const SideMenu = () => {
     const [page, setPage] = useState("");
@@ -63,6 +55,7 @@ const SideMenu = () => {
                 <Link to="/manage-meters" className='link'><MenuItem icon={<ElectricMeterOutlinedIcon />}>Manage meters</MenuItem></Link>
                 <Link to="/manage-contracts" className='link'><MenuItem icon={<AssignmentIndOutlinedIcon />}>Manage contracts</MenuItem></Link>
                 <Link to="/manage-invoices" className='link'><MenuItem icon={<ReceiptOutlinedIcon />} >Manage invoices</MenuItem></Link>
+                <Link to="/stats" className='link'><MenuItem icon={<InsertedChartOutlinedIcon />}>Statistical analysis</MenuItem></Link>
             </Menu>
         </Sidebar>
     

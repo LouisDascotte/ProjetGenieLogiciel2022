@@ -1,24 +1,23 @@
-import React from 'react';
-import NavigationBar from './components/NavigationBar';
-import SideMenu from './components/SideMenu';
-import MainPage from './pages/MainPage';
 import { Stack } from "@mui/material";
-import { BrowserRouter, Routes , Route, Navigate} from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import MainPage from './pages/MainPage';
 
-import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
-import ManagePortfolios from './pages/ManagePortfolios';
-import ManageMeters from './pages/ManageMeters';
-import ManageInvoices from './pages/ManageInvoices';
+import CreateNewPassword from './pages/CreateNewPassword';
+import LoginPage from './pages/LoginPage';
 import ManageContracts from './pages/ManageContracts';
+import ManageInvoices from './pages/ManageInvoices';
+import ManageMeters from './pages/ManageMeters';
+import ManagePortfolios from './pages/ManagePortfolios';
+import NewPasswordSuccess from './pages/NewPasswordSuccess';
+import Notifications from './pages/Notifications';
 import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
-import Notifications from './pages/Notifications';
-import LoginPage from './pages/LoginPage';
 import RegisterNewAccount from './pages/RegisterNewAccount';
-import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
-import CreateNewPassword from './pages/CreateNewPassword';
-import NewPasswordSuccess from './pages/NewPasswordSuccess';
+import ResetPassword from './pages/ResetPassword';
+import Stats from './pages/StatisticalAnalysis';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   return (
@@ -40,6 +39,8 @@ function App() {
                   <Route path="/notifications" exact element={<Notifications/>}/>
                   <Route path="/register-account" exact element={<RegisterNewAccount/>}/>
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
+                  <Route path='/stats' exact element={<Stats/>}/>
+                  <Route path="*" element={<ErrorPage/>}/>
               </Routes>
           </Stack>
       </BrowserRouter>

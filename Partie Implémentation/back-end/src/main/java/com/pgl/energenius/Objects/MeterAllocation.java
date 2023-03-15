@@ -3,7 +3,7 @@ package com.pgl.energenius.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor

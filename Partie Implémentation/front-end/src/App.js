@@ -30,7 +30,7 @@ function App() {
                   <Route path="/coffee" exact element={<CoffeeTest/>}/> 
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
                   <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
-                  <Route path='/newpasswdsuccess' exact element={<NewPasswordSuccess/>}/>
+                  <Route path='/create-pass-success' exact element={<NewPasswordSuccess/>}/>
                   <Route path="/main-page" exact element={<MainPage/>}/>
                   <Route path="/login" exact element={<LoginPage/>}/>
                   <Route path="/manage-portfolios" exact element={<ManagePortfolios/>}/>

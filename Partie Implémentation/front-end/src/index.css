@@ -46,3 +46,8 @@ code {
 .login-logo{
   margin-top: 30px ;
 }
+
+.regex-validator{
+  color: red; 
+  
+}

@@ -14,7 +14,7 @@ import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import LoginPage from './pages/LoginPage';
-import RegisterNewAccount from './pages/RegisterNewAccount';
+import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
@@ -42,7 +42,7 @@ function App() {
                   <Route path="/preferences" exact element={<Preferences/>}/>
                   <Route path="/profile" exact element={<Profile/>}/>
                   <Route path="/notifications" exact element={<Notifications/>}/>
-                  <Route path="/register-account" exact element={<RegisterNewAccount/>}/>
+                  <Route path="/register-account" exact element={<RegisterPage/>}/>
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
               </Routes>
           </Stack>

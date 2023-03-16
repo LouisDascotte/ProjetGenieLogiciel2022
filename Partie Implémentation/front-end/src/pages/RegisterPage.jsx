@@ -1,9 +1,10 @@
 import {React, useState} from 'react'
-import {createTheme, Button, styled ,Typography, Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
+import {Alert, createTheme, Button, styled ,Typography, Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
+import { useRegisterFieldValidator } from '../components/hooks/useRegisterFieldValidator';
 
 
 // Styling part
@@ -36,10 +37,11 @@ const CssTextField = styled(TextField)({
 });
 
 
-const RegisterNewAccount = () => {
+const RegisterPage = () => {
 
   const [form, setForm]=useState(
     {
+      type:"register",
       firstName:"",
       lastName:"",
       email:"",
@@ -56,11 +58,11 @@ const RegisterNewAccount = () => {
 
   const navigate = useNavigate();
 
-  const{errors, validateForm, onBlurField} = useLoginFieldValidator(form);
+  const{errors, validateForm, onBlurField} = useRegisterFieldValidator(form);
 
   const onSubmitForm = e => {
     e.preventDefault(); 
-    const {isValid} = validateForm( {form, errors, forceTouchErrors:true});
+    const {isValid} = validateForm( {form, errors, forceTouchErrors:true}, "register");
     if (!isValid){
       return;
     }
@@ -69,6 +71,7 @@ const RegisterNewAccount = () => {
   }
 
   const onUpdateField=e=>{
+    console.log(form);
     const field = e.target.name; 
     const nextFormState= {
       ...form, 
@@ -95,7 +98,7 @@ const RegisterNewAccount = () => {
     direction="column"
     alignItems="center"
     justifyContent="center"
-    style={{ minHeight: '100vh', margin:'auto' }}>
+    style={{ minHeight: '100vh', margin:'auto', height:"auto"}}>
       <Grid 
       width={'90%'}>
         <Card 
@@ -121,7 +124,7 @@ const RegisterNewAccount = () => {
             sx={{mt:1, color:'#262626'}}>
               Register an account
               </Typography>       
-            <form onSubmit={onSubmitForm}> 
+            <form onSubmit={onSubmitForm} align="center"> 
             <Box 
             width='100%'>
               <Grid 
@@ -141,8 +144,13 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='firstName' 
                   value={form.firstName} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.firstName.dirty && errors.firstName.error ? (
+                    <Alert severity='error' sx={{width:'75%'}}>{errors.firstName.message}</Alert>
+                      ) : null}
                 </Grid>
+                
                 <Grid 
                 item xs={6} 
                 align='center'>
@@ -154,7 +162,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='lastName' 
                   value={form.lastName} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.lastName.dirty && errors.lastName.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.lastName.message}</Alert>
+                      ) : null}
                 </Grid> 
               </Grid>
             </Box>
@@ -179,7 +191,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='email' 
                   value={form.email} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.email.dirty && errors.email.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.email.message}</Alert>
+                      ) : null}
                 </Grid>
                 <Grid 
                 item 
@@ -194,7 +210,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='phoneNumber' 
                   value={form.phoneNumber} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.phoneNumber.dirty && errors.phoneNumber.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.phoneNumber.message}</Alert>
+                      ) : null}
                 </Grid> 
               </Grid>
             </Box>
@@ -217,7 +237,11 @@ const RegisterNewAccount = () => {
                   margin='normal'
                   name='address' 
                   value={form.address} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.address.dirty && errors.address.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.address.message}</Alert>
+                      ) : null}
                 </Grid>
                 <Grid 
                 item xs={6} 
@@ -230,7 +254,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='city' 
                   value={form.city} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.city.dirty && errors.city.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.city.message}</Alert>
+                      ) : null}
                 </Grid> 
               </Grid>
             </Box>
@@ -262,7 +290,11 @@ const RegisterNewAccount = () => {
                     margin='normal' 
                     name='country' 
                     value={form.country} 
-                    onChange={onUpdateField}/>
+                    onChange={onUpdateField}
+                    onBlur={onBlurField}/>
+                    {errors.country.dirty && errors.country.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.country.message}</Alert>
+                      ) : null}
                   </Grid>
                   <Grid 
                   item 
@@ -276,7 +308,11 @@ const RegisterNewAccount = () => {
                     margin='normal' 
                     name='postalCode' 
                     value={form.postalCode} 
-                    onChange={onUpdateField}/>
+                    onChange={onUpdateField}
+                    onBlur={onBlurField}/>
+                    {errors.postalCode.dirty && errors.postalCode.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.postalCode.message}</Alert>
+                      ) : null}
                   </Grid>
                 </Grid>
                 <Grid 
@@ -291,7 +327,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name="language"
                   value={form.language}
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.language.dirty && errors.language.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.language.message}</Alert>
+                      ) : null}
                 </Grid> 
               </Grid>
             </Box>
@@ -316,7 +356,11 @@ const RegisterNewAccount = () => {
                   margin='normal' 
                   name='password' 
                   value={form.password} 
-                  onChange={onUpdateField}/>
+                  onChange={onUpdateField}
+                  onBlur={onBlurField}/>
+                  {errors.password.dirty && errors.password.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.password.message}</Alert>
+                      ) : null}
                 </Grid>
                 <Grid 
                 item 
@@ -331,25 +375,26 @@ const RegisterNewAccount = () => {
                   name="confirmPassword"
                   value={form.confirmPassword}
                   onChange={onUpdateField} 
-                  margin='normal'/>
+                  margin='normal'
+                  onBlur={onBlurField}/>
+                  {errors.confirmPassword.dirty && errors.confirmPassword.error ? (
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.confirmPassword.message}</Alert>
+                      ) : null}
                 </Grid> 
               </Grid>
             </Box>
             <ThemeProvider 
             theme={theme}>
-              <Link 
-              to='/registration-success' 
-              className='link-4' 
-              style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
+             
                 
-                <Button 
-                variant='contained' 
-                color='primary' 
-                sx={{mt:2, width:'100%', mb:2}}
-                type='submit'>
-                  Sign up
-                  </Button>
-              </Link>
+              <Button 
+              variant='contained' 
+              color='primary' 
+              sx={{mt:2, width:'80%', mb:2}}
+              type='submit'>
+                Sign up
+                </Button>
+              
             </ThemeProvider>
             <Box 
             sx={{mb:2}}>
@@ -370,7 +415,7 @@ const RegisterNewAccount = () => {
   )
 }
 
-export default RegisterNewAccount
+export default RegisterPage
 
 /**
  * <Grid container

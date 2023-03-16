@@ -23,7 +23,7 @@ import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined
 
 
 const SideMenu = () => {
-    const { collapseSidebar } = useProSidebar();
+    const { collapseSidebar } = useProSidebar(); 
     const [page, setPage] = useState("");
     const changePage = (event) => {
         setPage(event.target.value);

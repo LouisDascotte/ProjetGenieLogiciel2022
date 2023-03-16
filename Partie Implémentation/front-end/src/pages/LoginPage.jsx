@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SideMenu from '../components/SideMenu';
-import {createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
+import {Alert, createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
@@ -103,11 +103,17 @@ const LoginPage = () => {
                 sx={{width:'80%'}} 
                 name='email' 
                 value={form.email} 
-                onChange={onUpdateField}/>
+                onChange={onUpdateField}
+                onBlur={onBlurField}/>
                 {errors.email.dirty && errors.email.error ? (
-                        <p className='regex-validator'>
-                          {errors.email.message}
-                        </p>
+                    <Alert 
+                    severity='error' 
+                    margin='normal' 
+                    textAlign='center'
+                    sx={{width:"75%", textAlign:"center"}} 
+                    align="center">
+                      {errors.email.message}
+                      </Alert>
                       ) : null}
               <CssTextField 
                 type='password' 
@@ -119,11 +125,10 @@ const LoginPage = () => {
                 sx={{width:'80%'}} 
                 value={form.password} 
                 name='password' 
-                onChange={onUpdateField}/>
+                onChange={onUpdateField}
+                onBlur={onBlurField}/>
                 {errors.password.dirty && errors.password.error ? (
-                        <p className='regex-validator'>
-                          {errors.password.message}
-                        </p>
+                    <Alert severity='error' sx={{width:"75%"}}>{errors.password.message}</Alert>
                       ) : null}
             
             <ThemeProvider 

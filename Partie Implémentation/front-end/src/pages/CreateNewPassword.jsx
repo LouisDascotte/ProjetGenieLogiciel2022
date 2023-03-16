@@ -53,7 +53,7 @@ const CreateNewPassword = () => {
 
   const onSubmitForm = e => {
     e.preventDefault();
-    const {isValid} = validateForm( { form, errors, forceTouchErrors: true});
+    const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "confirmPassword");
     if (!isValid)
       return; 
     alert(JSON.stringify(form, null, 2));

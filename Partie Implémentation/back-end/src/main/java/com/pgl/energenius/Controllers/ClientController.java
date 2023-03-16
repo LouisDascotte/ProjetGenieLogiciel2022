@@ -3,9 +3,11 @@ package com.pgl.energenius.Controllers;
 import com.pgl.energenius.Objects.Client;
 import com.pgl.energenius.Objects.ClientDto;
 import com.pgl.energenius.Objects.ClientLogin;
+import com.pgl.energenius.Objects.Portfolio;
 import com.pgl.energenius.Repositories.ClientLoginRepository;
 import com.pgl.energenius.Repositories.ClientRepository;
 import com.pgl.energenius.Services.ClientService;
+import com.pgl.energenius.Services.PortfolioService;
 import com.pgl.energenius.WebSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    private ClientService clientService;
+    private PortfolioService portfolioService;
 
     @Autowired
     private ClientRepository clientRepository;
@@ -36,9 +38,10 @@ public class ClientController {
     @Autowired
     private ClientLoginRepository clientLoginRepository;
 
-    @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        return new ResponseEntity<List<Client>>(clientService.allClients(), HttpStatus.OK);
+    // mapping de test
+    @GetMapping(path="/testing")
+    public String getMsg(){
+        return "Test réussi";
     }
 
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded")
@@ -65,5 +68,14 @@ public class ClientController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         return ((UserDetails) authentication.getPrincipal()).getUsername();
+    }
+
+    @GetMapping("/portfolios")
+    public ResponseEntity<List<Portfolio>> getPortfolios() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Client client = ((ClientLogin) authentication.getPrincipal()).getClient();
+
+        List<Portfolio> portfolios = portfolioService.clientPortfolios(client);
+        return new ResponseEntity<>(portfolios, HttpStatus.OK);
     }
 }

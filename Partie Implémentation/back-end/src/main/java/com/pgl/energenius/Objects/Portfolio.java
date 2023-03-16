@@ -21,9 +21,7 @@ public class Portfolio {
     @DBRef(lazy = true)
     private Client client;
 
-//    @DBRef(lazy = true)
     private Address address;
-
     private String name;
     private List<SupplyPoint> supplyPoints;
 

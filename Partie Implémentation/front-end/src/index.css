@@ -47,6 +47,11 @@ code {
   margin-top: 30px ;
 }
 
+.regex-validator{
+  color: red; 
+  
+}
+
 .errorText{
   color: #9bcc6c;
   font-weight: 900;

@@ -3,18 +3,20 @@ package com.pgl.energenius.Objects;
 import com.pgl.energenius.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "clients")
 public class Client {
 
@@ -24,8 +26,13 @@ public class Client {
     private String firstName;
     private String lastName;
     private String phoneNo;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date lastAccess; // à quoi ça sert ? TODO
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date creationDate; // pareil TODO
+
     private Address address;
     private ClientStatus status;
 
@@ -45,7 +52,7 @@ public class Client {
         this.address = address;
         this.language = language;
         id = new ObjectId();
-        creationDate = Date.valueOf(LocalDate.now());
+        creationDate = new Date(System.currentTimeMillis());
         lastAccess = creationDate;
         status = null; // TODO
         favoritePortfolio = null; // TODO

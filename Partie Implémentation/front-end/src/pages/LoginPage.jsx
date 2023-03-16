@@ -22,6 +22,7 @@ const LoginPage = () => {
   const [form, setForm] = useState({
     email:"",
     password:"",
+    
   });
 
 
@@ -29,7 +30,8 @@ const LoginPage = () => {
 
   const onSubmitForm = e => {
     e.preventDefault();
-    const {isValid} = validateForm( { form, errors, forceTouchErrors: true});
+    const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
+    console.log(isValid);
     if (!isValid)
       return; 
     alert(JSON.stringify(form, null, 2));
@@ -42,6 +44,7 @@ const LoginPage = () => {
       ...form, 
       [field] : e.target.value,
     };
+    
     setForm(nextFormState);
     if (errors[field].dirty){
       validateForm({
@@ -90,7 +93,7 @@ const LoginPage = () => {
             </Typography>
             <form 
               align='center' 
-              style={{textAlign:'center'}}>
+              style={{textAlign:'center'}} onSubmit={onSubmitForm}>
               <CssTextField 
                 className='login-textfield'
                 size='small' 
@@ -125,19 +128,14 @@ const LoginPage = () => {
             
             <ThemeProvider 
               theme={theme}>
-              <Link 
-                to='/main-page' 
-                className='link-4' 
-                style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
                 <Button 
                   variant='contained' 
                   color='primary' 
                   type='submit'
-                  sx={{mt:2, width:'100%', mb:5}} 
-                  onClick={onSubmitForm}>
+                  sx={{mt:2, width:'80%', mb:5}} 
+                  >
                   Login
                 </Button>
-              </Link>
             </ThemeProvider>
             </form>
             <Link 

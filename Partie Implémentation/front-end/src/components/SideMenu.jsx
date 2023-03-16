@@ -19,14 +19,17 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 
-const SideMenu = () => {
-    const [page, setPage] = useState("");
 
+
+
+const SideMenu = () => {
+    const { collapseSidebar } = useProSidebar();
+    const [page, setPage] = useState("");
     const changePage = (event) => {
         setPage(event.target.value);
         
     }
-    const { collapseSidebar } = useProSidebar();
+    
     return (
     
     
@@ -42,7 +45,8 @@ const SideMenu = () => {
                         
                         
                 </MenuItem>
-                <MenuItem icon={<WalletOutlinedIcon/>}><Box sx={{ minWidth: 120 }}>
+                <MenuItem icon={<WalletOutlinedIcon/>}>
+                    <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth size="small" margin="normal">
                             <InputLabel margin="normal" id="select-portfolio-label">Portfolio :</InputLabel>
                                 <Select
@@ -56,13 +60,36 @@ const SideMenu = () => {
                                 <MenuItem value={"/portfolio1"}>Porfolio 1</MenuItem>                    
                                 </Select>
                             </FormControl>
-                        </Box></MenuItem>
-                <MenuItem> <Divider/></MenuItem>
-                <Link to="/main-page" className='link'><MenuItem icon={<VisibilityOutlinedIcon />}>General overview</MenuItem></Link>
-                <Link to="/manage-portfolios" className='link'><MenuItem icon={<AccountBalanceWalletOutlinedIcon />}>Manage portfolios</MenuItem></Link>
-                <Link to="/manage-meters" className='link'><MenuItem icon={<ElectricMeterOutlinedIcon />}>Manage meters</MenuItem></Link>
-                <Link to="/manage-contracts" className='link'><MenuItem icon={<AssignmentIndOutlinedIcon />}>Manage contracts</MenuItem></Link>
-                <Link to="/manage-invoices" className='link'><MenuItem icon={<ReceiptOutlinedIcon />} >Manage invoices</MenuItem></Link>
+                        </Box>
+                    </MenuItem>
+                <MenuItem onClick={()=>{}}> 
+                    <Divider/>
+                </MenuItem>
+                <Link to="/main-page" className='link' >
+                    <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
+                        General overview
+                    </MenuItem>
+                </Link>
+                <Link to="/manage-portfolios" className='link'>
+                    <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
+                        Manage portfolios
+                    </MenuItem>
+                </Link>
+                <Link to="/manage-meters" className='link'>
+                    <MenuItem icon={<ElectricMeterOutlinedIcon />}>
+                        Manage meters
+                    </MenuItem>
+                </Link>
+                <Link to="/manage-contracts" className='link'>
+                    <MenuItem icon={<AssignmentIndOutlinedIcon />}>
+                        Manage contracts
+                    </MenuItem>
+                </Link>
+                <Link to="/manage-invoices" className='link'>
+                    <MenuItem icon={<ReceiptOutlinedIcon />} >
+                        Manage invoices
+                    </MenuItem>
+                </Link>
             </Menu>
         </Sidebar>
     

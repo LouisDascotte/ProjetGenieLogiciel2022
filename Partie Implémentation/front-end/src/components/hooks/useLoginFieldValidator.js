@@ -31,7 +31,7 @@ export const useLoginFieldValidator = form => {
     },
   });
 
-  const validateForm = ({ form, field, errors, forceTouchErrors = false }) => {
+  const validateForm = ({ form, field, errors, forceTouchErrors = false}, value) => {
     let isValid = true;
 
     // Create a deep copy of the errors
@@ -58,9 +58,7 @@ export const useLoginFieldValidator = form => {
       if (!!passwordMessage) isValid = false;
     }
 
-    if (
-      nextErrors.confirmPassword.dirty &&
-      (field ? field === "confirmPassword" : true)
+    if (nextErrors.confirmPassword.dirty && (field ? field === "confirmPassword" : true) && (value != "login")
     ) {
       const confirmPasswordMessage = confirmPasswordValidator(
         confirmPassword,

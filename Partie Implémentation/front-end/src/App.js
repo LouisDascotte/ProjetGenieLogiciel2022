@@ -3,7 +3,7 @@ import NavigationBar from './components/NavigationBar';
 import SideMenu from './components/SideMenu';
 import MainPage from './pages/MainPage';
 import { Stack } from "@mui/material";
-import { BrowserRouter, Routes , Route, Navigate} from 'react-router-dom';
+import { BrowserRouter, Routes , Route, Navigate, useLocation} from 'react-router-dom';
 
 import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
 import ManagePortfolios from './pages/ManagePortfolios';
@@ -22,10 +22,12 @@ import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest';
 
 function App() {
+    
   return (
       <BrowserRouter>
           <Stack direction="row">
               <Routes>
+                    
                   <Route path='/' element={<Navigate to="/login"/>}/>
                   <Route path="/coffee" exact element={<CoffeeTest/>}/> 
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>

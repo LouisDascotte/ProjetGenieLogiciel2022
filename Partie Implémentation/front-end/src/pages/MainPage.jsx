@@ -11,7 +11,7 @@ import ReactECharts from 'echarts-for-react';
 
 const MainPage = () => {
   // hardcoded const in order to test the "create portfolio message"
-  const hasCreatedPortfolios = false; 
+  const hasCreatedPortfolios = true; 
   const pageAddress = "/main-page";
   const pageName = "General overview";
   return (
@@ -24,7 +24,7 @@ const MainPage = () => {
         <Stack direction='row' justifyContent='center' paddingTop='10%'>
           { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
           // 'Portfolio graphic' replaces an actual portfolio infographic for now
-          hasCreatedPortfolios ? <ReactECharts option={this.getOption()}/> : <PortfolioPlaceHolder/>
+          hasCreatedPortfolios ? <PortfolioMainGraph/> : <PortfolioPlaceHolder/>
           }
         </Stack>
       </Stack>

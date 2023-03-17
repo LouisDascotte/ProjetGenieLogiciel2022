@@ -60,3 +60,7 @@ code {
   sans-serif;
   text-align: center;
 }
+
+.scale{
+  transform: scale(1.2);
+}

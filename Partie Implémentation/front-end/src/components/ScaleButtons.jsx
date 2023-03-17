@@ -1,4 +1,4 @@
-import { ToggleButton, ToggleButtonGroup, Stack } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Stack, TextField } from '@mui/material';
 import React from 'react';
 
 
@@ -12,11 +12,13 @@ const ScaleButtons = ({ scale, setScale }) => {
     
     return (
         <Stack direction="row" spacing={2}>
+            
         <ToggleButtonGroup
             value={value}
             exclusive
             onChange={handleChange}
             aria-label="text alignment"
+            color='primary'
         >
             <ToggleButton value="day" aria-label="justified">
             1D

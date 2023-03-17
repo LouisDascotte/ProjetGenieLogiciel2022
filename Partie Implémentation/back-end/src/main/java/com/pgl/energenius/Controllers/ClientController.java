@@ -30,9 +30,6 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    private PortfolioService portfolioService;
-
-    @Autowired
     private ClientRepository clientRepository;
 
     @Autowired
@@ -61,21 +58,5 @@ public class ClientController {
         clientLoginRepository.save(clientLogin);
 
         return new ResponseEntity<>(client, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/context")
-    public String getCurrentUserContext() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        return ((UserDetails) authentication.getPrincipal()).getUsername();
-    }
-
-    @GetMapping("/portfolios")
-    public ResponseEntity<List<Portfolio>> getPortfolios() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Client client = ((ClientLogin) authentication.getPrincipal()).getClient();
-
-        List<Portfolio> portfolios = portfolioService.clientPortfolios(client);
-        return new ResponseEntity<>(portfolios, HttpStatus.OK);
     }
 }

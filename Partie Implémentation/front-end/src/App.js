@@ -1,10 +1,8 @@
 import { Stack } from "@mui/material";
 import React from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import MainPage from './pages/MainPage';
-import { Stack } from "@mui/material";
-import { BrowserRouter, Routes , Route, Navigate, useLocation} from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+import MainPage from './pages/MainPage';
 import CreateNewPassword from './pages/CreateNewPassword';
 import LoginPage from './pages/LoginPage';
 import ManageContracts from './pages/ManageContracts';
@@ -15,14 +13,12 @@ import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import Notifications from './pages/Notifications';
 import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
-import Notifications from './pages/Notifications';
-import LoginPage from './pages/LoginPage';
 import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
-import CreateNewPassword from './pages/CreateNewPassword';
-import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest';
+import StatAnalysis from './pages/StatAnalysis';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
     
@@ -47,7 +43,7 @@ function App() {
                   <Route path="/notifications" exact element={<Notifications/>}/>
                   <Route path="/register-account" exact element={<RegisterPage/>}/>
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
-                  <Route path='/stats' exact element={<Stats/>}/>
+                  <Route path='/stats' exact element={<StatAnalysis/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
               </Routes>
           </Stack>

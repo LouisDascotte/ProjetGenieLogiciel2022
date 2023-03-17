@@ -19,6 +19,7 @@ import RegistrationSuccess from './pages/RegistrationSuccess';
 import CoffeeTest from './pages/CoffeeTest';
 import StatAnalysis from './pages/StatAnalysis';
 import ErrorPage from './pages/ErrorPage';
+import Testing from './pages/Testing';
 
 function App() {
     
@@ -45,6 +46,7 @@ function App() {
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
                   <Route path='/stats' exact element={<StatAnalysis/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
+                  <Route path='/Test' exact element={<Testing/>}/>
               </Routes>
           </Stack>
       </BrowserRouter>

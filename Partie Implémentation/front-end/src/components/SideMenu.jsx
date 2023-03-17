@@ -82,7 +82,16 @@ const SideMenu = () => {
                         Manage invoices
                     </MenuItem>
                 </Link>
-                <Link to="/stats" className='link'><MenuItem icon={<InsertedChartOutlinedIcon />}>Statistical analysis</MenuItem></Link>
+                <Link to="/stats" className='link'>
+                    <MenuItem icon={<InsertedChartOutlinedIcon />} >
+                        Statistical analysis
+                    </MenuItem>
+                </Link>
+                <Link to="/test" className='link'>
+                    <MenuItem icon={<InsertedChartOutlinedIcon />} >
+                        Test
+                    </MenuItem>
+                </Link>
             </Menu>
         </Sidebar>
     

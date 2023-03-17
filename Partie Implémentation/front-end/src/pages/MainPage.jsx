@@ -24,7 +24,7 @@ const MainPage = () => {
         <Stack direction='row' justifyContent='center' paddingTop='10%'>
           { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
           // 'Portfolio graphic' replaces an actual portfolio infographic for now
-          <PortfolioMainGraph/>
+          hasCreatedPortfolios ? <PortfolioMainGraph/> : <PortfolioPlaceHolder/>
           }
         </Stack>
       </Stack>

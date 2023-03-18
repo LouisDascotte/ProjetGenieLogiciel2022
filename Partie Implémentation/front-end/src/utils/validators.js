@@ -57,7 +57,7 @@ export const addressValidator = address => {
 export const cityValidator = city => {
   if (!city){
     return "A city is required";
-  } else if (! /[0-9]/.test(city)){
+  } else if (/[0-9]/.test(city)){
     return "Enter a correct city";
   }
   return "";
@@ -66,7 +66,7 @@ export const cityValidator = city => {
 export const postalCodeValidator = postalCode => {
   if (!postalCode){
     return "A postal code is required";
-  } else if (! /[A-Za-z]/.test(postalCode)){
+  } else if (/[A-Za-z]/.test(postalCode)){
     return "Enter a correct postal code ";
   }
 

@@ -46,7 +46,7 @@ const LoginPage = () => {
       console.log(JSON.stringify(response?.data));
       /*const accessToken = response?.data?.accessToken; // TODO
       const roles = response?.data?.roles; // TODO*/
-      setAuth({form, roles, accessToken})
+      setAuth({form})
     } catch(err){
       if(!err?.response){
         console.log("No server response.");

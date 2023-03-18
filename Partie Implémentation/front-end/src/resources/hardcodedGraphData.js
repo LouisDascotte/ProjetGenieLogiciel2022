@@ -85,6 +85,6 @@ export const datas = [
       uv: 3490,
       pv: 4300,
       amt: 2100,
-    },] }, {id : "/"}
+    },] }, {id : ""}
   
 ];

@@ -73,9 +73,6 @@ const MainPage = () => {
                                     label="Portfolio :"
                                     onChange={handleChange}
                                     >
-                                    <MenuItem value="/">
-                                        <em>None</em>
-                                    </MenuItem>
                                     <MenuItem value={"data1"}>Portfolio 1</MenuItem>
                                     <MenuItem value={"data2"}>Portfolio 2</MenuItem>                    
                                     </Select>

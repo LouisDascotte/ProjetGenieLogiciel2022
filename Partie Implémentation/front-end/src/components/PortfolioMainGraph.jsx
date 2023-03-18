@@ -12,7 +12,7 @@ const PortfolioMainGraph = (portfolio) => {
   
   return (
   <Stack direction='row' justifyContent='center' paddingTop='10%'>
-    {dataset.id == "/" ? <PortfolioPlaceHolder/> : <Card sx={{boxShadow:'5px 5px 5px #A9A9A9'}}>
+    {dataset.id == "" ? <PortfolioPlaceHolder/> : <Card sx={{boxShadow:'5px 5px 5px #A9A9A9'}}>
         <BarChart
           width={700}
           height={500}

@@ -10,8 +10,8 @@ const TopMenu = ({pageAddress, pageName}) => {
   return (
     <Stack sx={{display:'flex', width:"100%"}}>
       <Grid container direction="row">
-        <Grid item xs={1}>
-          <Link to={'/main-page'} className='link' display='flex'><img src={logo} alt='logo' width={50} height={50}/></Link>
+        <Grid item xs={1} sx={{mt:1, ml:1}}>
+          <Link to={'/main-page'} className='link' display='flex'><img src={logo} alt='logo' width={50} height={50} /></Link>
         </Grid>
         <Grid item xs align='center'>
           <h1 className='title'>{pageName}</h1>

@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
-import SideMenu from '../components/SideMenu';
-import {Alert, createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
+import React, { useState, useContext, useEffect, useRef } from 'react'
+import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
-import AccountMenu from '../components/AccountMenu';
-import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
-import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
-import TopMenu from '../components/TopMenu';
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
 import { theme, CssTextField} from '../utils/style';
-import {createBrowserHistory} from "history";
+import axios from "../api/axios";
+import AuthContext from "../context/AuthProvider";
 
 
+const LOGIN_URL = "/api/client/login";
 
 const LoginPage = () => {
-
-  // LOGIC PART
-
   
 
+  // LOGIC PART OF THE LOGIN PAGE 
+
   const navigate = useNavigate();
+  const {setAuth} = useContext(AuthContext);
 
 
   const [form, setForm] = useState({
@@ -30,13 +28,33 @@ const LoginPage = () => {
 
   const {errors, validateForm, onBlurField} = useLoginFieldValidator(form);
 
-  const onSubmitForm = e => {
+  const onSubmitForm = async (e) => {
     e.preventDefault();
     const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
     console.log(isValid);
     if (!isValid)
       return; 
     alert(JSON.stringify(form, null, 2));
+    try{
+      const response = await axios.post(LOGIN_URL, JSON.stringify({
+        email : form.email, 
+        password : form.password
+      }), {
+        headers : {"Content-Type":"application/json"}, 
+        withCredentials: true
+      }); 
+      console.log(JSON.stringify(response?.data));
+      /*const accessToken = response?.data?.accessToken; // TODO
+      const roles = response?.data?.roles; // TODO*/
+      setAuth({form, roles, accessToken})
+    } catch(err){
+      if(!err?.response){
+        console.log("No server response.");
+      } else {
+        console.log("Login failed");
+      }
+    }
+    
     navigate("/main-page");
   };
 

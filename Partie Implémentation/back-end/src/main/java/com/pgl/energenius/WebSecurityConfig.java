@@ -36,12 +36,12 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/api/client/register", "/api/client", "/api/client/testing").permitAll() // ajout de la page testing
                         .anyRequest()//.authenticated() // retirer .authenticated() et ajouter .hasRole("CLIENT")
-                )/* .formLogin((form) -> form
+                ) .formLogin((form) -> form
                         .loginPage("/login")
                         .usernameParameter("email")
                         .permitAll()
-                        .defaultSuccessUrl("/hello", true)
-                ) */
+                        //.defaultSuccessUrl("/hello", true)
+                ) 
                 
                 .logout((logout) -> logout.permitAll()).build();
     }

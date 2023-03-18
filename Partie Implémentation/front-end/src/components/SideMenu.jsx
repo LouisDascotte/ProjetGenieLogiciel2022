@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Divider, Select, FormControl, InputLabel } from '@mui/material';
+import {Box, Stack, Divider, Select, FormControl, InputLabel } from '@mui/material';
 import { useState } from 'react'; 
 import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
 import {  Link} from 'react-router-dom';
@@ -14,7 +14,7 @@ import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined
 
 
 
-const SideMenu = () => {
+const SideMenu = (mainPage) => {
     const { collapseSidebar } = useProSidebar(); 
     const [page, setPage] = useState("");
     const changePage = (event) => {
@@ -25,7 +25,7 @@ const SideMenu = () => {
     return (
     
     
-        <Sidebar style={{ height:"100%"}}>
+       <Sidebar style={{ height:"100vh"}}>
             <Menu>
                 <MenuItem
                     icon= {<MenuOutlinedIcon/>}
@@ -37,23 +37,7 @@ const SideMenu = () => {
                         
                         
                 </MenuItem>
-                <MenuItem icon={<WalletOutlinedIcon/>}>
-                    <Box sx={{ minWidth: 120 }}>
-                            <FormControl fullWidth size="small" margin="normal">
-                            <InputLabel margin="normal" id="select-portfolio-label">Portfolio :</InputLabel>
-                                <Select
-                                labelId="portfolio-select-label"
-                                id="portfolio-select"
-                                value={page}
-                                label="Portfolio :"
-                                onChange={changePage}
-                                >
-                                <MenuItem value={"/"}>None</MenuItem>
-                                <MenuItem value={"/portfolio1"}>Porfolio 1</MenuItem>                    
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </MenuItem>
+                
                 <MenuItem onClick={()=>{}}> 
                     <Divider/>
                 </MenuItem>
@@ -84,7 +68,6 @@ const SideMenu = () => {
                 </Link>
             </Menu>
         </Sidebar>
-    
   );
 
 };

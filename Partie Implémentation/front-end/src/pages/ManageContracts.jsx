@@ -27,7 +27,7 @@ const ManageContracts = () => {
   const pageName = "Manage contracts";
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-      <SideMenu/>
+      <SideMenu mainPage={"false"} />
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>

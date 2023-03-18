@@ -2,7 +2,7 @@ import React from 'react';
 import NavigationBar from './components/NavigationBar';
 import SideMenu from './components/SideMenu';
 import MainPage from './pages/MainPage';
-import { Stack } from "@mui/material";
+import { Stack, Grid } from "@mui/material";
 import { BrowserRouter, Routes , Route, Navigate, useLocation} from 'react-router-dom';
 
 import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
@@ -20,15 +20,15 @@ import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest';
+import {createBrowserHistory} from "history"; 
 
 function App() {
-    
+    let history = createBrowserHistory();
+    console.log(history.location);
   return (
-      <BrowserRouter>
-          <Stack direction="row">
-              <Routes>
-                    
-                  <Route path='/' element={<Navigate to="/login"/>}/>
+      <BrowserRouter >
+              <Routes>   
+                  <Route path='/' element={<Navigate to="/login"/>}></Route>
                   <Route path="/coffee" exact element={<CoffeeTest/>}/> 
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
                   <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
@@ -45,10 +45,15 @@ function App() {
                   <Route path="/register-account" exact element={<RegisterPage/>}/>
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
               </Routes>
-          </Stack>
+            
       </BrowserRouter>
 
   );
 };
 
 export default App
+
+/**
+ * {history.location.pathname == "/" || history.location.pathname == "/login" || history.location.pathname == "/registration-success"
+            || history.location.pathname =="/create-pass" || history.location.pathname == "/create-pass-success" || history.location.pathname == "/reset-passwd" || history.location.pathname == "/coffee"? null : <SideMenu/>}
+ */

@@ -55,3 +55,24 @@ code {
 .list-button{
   background-color: #d9d9d9;
 }
+
+#container {
+  height: 100%; 
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#left {
+  width:auto;
+  display:flex;
+}
+
+#content{
+  width: auto;
+  display:flex-inline;
+  flex-direction: row;
+  flex-shrink: 1;
+  flex-grow:1;
+  resize: horizontal;
+}

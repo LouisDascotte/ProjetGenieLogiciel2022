@@ -15,6 +15,7 @@ import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined
 import {Select, FormControl, InputLabel } from '@mui/material';
 import {  Link} from 'react-router-dom';
 import { useForceUpdate } from '../components/hooks/useForceUpdate';
+import {createBrowserHistory} from "history";
 
 
 
@@ -44,6 +45,8 @@ const MainPage = () => {
             setHasSelectedPortfolio(true);
         }
     })
+
+    
 
     return (
         <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>

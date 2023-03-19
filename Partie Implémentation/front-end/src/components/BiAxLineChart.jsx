@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { ConsPerWeek as data1} from '../resources/demo-data';
 import { Card } from '@mui/material';
 
-export default class Example extends PureComponent {
+export default class BiAx extends PureComponent {
 
   render() {
     return (

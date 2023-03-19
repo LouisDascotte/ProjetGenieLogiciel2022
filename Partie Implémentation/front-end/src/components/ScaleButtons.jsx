@@ -1,4 +1,4 @@
-import { ToggleButton, ToggleButtonGroup, Stack, TextField } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 
 
@@ -11,8 +11,9 @@ const ScaleButtons = ({ scale, setScale }) => {
     };
     
     return (
-        <Stack direction="row" spacing={2}>
-            
+        <Stack direction="row" spacing={2} alignItems='center' >
+            <Typography variant="h6" component="div" gutterBottom> Show {value} 
+            </Typography>
         <ToggleButtonGroup
             value={value}
             exclusive

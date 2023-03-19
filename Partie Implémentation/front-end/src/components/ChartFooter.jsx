@@ -17,7 +17,9 @@ export default function ChartFooter() {
 
     return (
       <ThemeProvider theme={theme}>
-        <Grid container direction='row' justifyContent="center" alignItems="center" >
+        <Grid container direction='row'
+        justifyContent="center"
+        alignItems="center" >
           <Grid item container xs={4} md={4} rowSpacing={2} >
             <Grid item >
               {/* Gas convert */}
@@ -60,11 +62,10 @@ export default function ChartFooter() {
           </Grid>
 
           <Grid item xs={4} md={4} >
-            <p>Other options</p>
             <FormControl>
-              <FormControlLabel control={<Switch defaultChecked={true} color='primary' />} label='Add Water Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={false} color='primary' />} label='Add Electricity Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={false} color='primary' />} label='Add Gas Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Add Water Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={false} color='primary' size="small" />} label='Add Electricity Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={false} color='primary' size="small" />} label='Add Gas Consumption' labelPlacement='end' />
             </FormControl>
           </Grid>
         </Grid>

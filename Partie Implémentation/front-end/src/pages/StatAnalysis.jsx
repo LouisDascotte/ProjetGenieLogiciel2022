@@ -24,7 +24,7 @@ const StatAnalysis = () => {
         <SideMenu/>
         <Stack sx={{display:'flex', width:"100%"}}>
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-          <Stack sx={{height:"90%", justifyContent:'center', alignItems:'center'}}>
+          <Stack sx={{height:"40%", justifyContent:'center', alignItems:'center'}}>
             <BiAxLineChart />
           </Stack>
         </Stack>

@@ -2,35 +2,40 @@ import { Card, Grid, Stack } from '@mui/material';
 import React from 'react';
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
-import DatePickers from '../components/DatePickers';
-import ScaleButtons from '../components/ScaleButtons';
 import BiAxLineChart from '../components/BiAxLineChart';
 import ChartFooter from '../components/ChartFooter';
+import ChartHeader from '../components/ChartHeader';
 
 
 const Testing = () => {
   const pageName = "test";
 	const pageAddress = "/test";
   return (
-    <Stack direction='column' sx={{width:"100%"}}>
-      <Stack direction='column' spacing={6} sx={{height:"90%", justifyContent:'center', alignItems:'center'}}>
-        <Grid container 
-        justifyContent='space-between'
-        paddingTop={6}
-        paddingLeft={4}
-        paddingRight={4}
-        >
-          <Grid item>
-            <ScaleButtons />
+
+    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
+      <SideMenu/>
+      <Stack sx={{display:'flex', width:"100%"}}>
+        <TopMenu pageAddress={pageAddress} pageName={pageName}/>
+        
+          <Grid container
+          direction='column'
+          alignItems='center'
+          justifyContent='flex-start'
+          >
+            <Grid item >
+              <ChartHeader />
+            </Grid>
+            <Grid item >
+              <BiAxLineChart />
+            </Grid>
+            <Grid item >
+              <ChartFooter />
+            </Grid>
           </Grid>
-          <Grid item>
-            <DatePickers />
-          </Grid>
-        </Grid>
-        <BiAxLineChart />
-        <ChartFooter />
-      </Stack>
+        </Stack>
     </Stack>
+   
+
   );
 }
 export default Testing

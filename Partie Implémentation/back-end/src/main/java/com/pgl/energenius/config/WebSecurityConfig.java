@@ -1,4 +1,4 @@
-package com.pgl.energenius;
+package com.pgl.energenius.config;
 
 import com.pgl.energenius.Services.ClientLoginService;
 import java.util.Arrays;
@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                 
                 .logout((logout) -> logout.permitAll()).build();
     }
+
 
     @Bean
     public AuthenticationProvider authProvider() {

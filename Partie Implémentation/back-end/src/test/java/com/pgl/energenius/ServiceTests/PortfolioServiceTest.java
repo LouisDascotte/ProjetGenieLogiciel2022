@@ -24,6 +24,7 @@ public class PortfolioServiceTest {
     @InjectMocks
     PortfolioService portfolioService;
 
+    // TODO inutile ?
     @Test
     public void clientPortfolios_should_return_all_portfolios_of_client() {
 
@@ -40,7 +41,5 @@ public class PortfolioServiceTest {
 
         assertEquals(portfolios, portfolioService.clientPortfolios(client));
     }
-
-
 
 }

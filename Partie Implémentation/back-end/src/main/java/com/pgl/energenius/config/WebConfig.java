@@ -1,4 +1,4 @@
-package com.pgl.energenius;
+package com.pgl.energenius.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

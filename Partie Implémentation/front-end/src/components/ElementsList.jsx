@@ -13,10 +13,10 @@ const ElementsList = () => {
   }
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
-      <List style={{maxHeight: '100%', overflow: 'auto'}}>
+      <List style={{maxHeight: '100%', overflow: 'auto', backgroundColor:'#f3f4f6'}}>
         {generate(<ListItem>
-          <ListItemButton>
-            <ListItemText primary="Bouton test"/>
+          <ListItemButton textAlign='center'>
+            <ListItemText primary="Bouton test" className='list-button'/>
           </ListItemButton>
           <IconButton>
               <DeleteIcon/>

@@ -1,7 +1,8 @@
 import { Stack } from "@mui/material";
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-
+import NavigationBar from './components/NavigationBar';
+import SideMenu from './components/SideMenu';
 import MainPage from './pages/MainPage';
 import CreateNewPassword from './pages/CreateNewPassword';
 import LoginPage from './pages/LoginPage';
@@ -20,15 +21,15 @@ import CoffeeTest from './pages/CoffeeTest';
 import StatAnalysis from './pages/StatAnalysis';
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
+import {createBrowserHistory} from "history"; 
 
 function App() {
-    
+    let history = createBrowserHistory();
+    console.log(history.location);
   return (
-      <BrowserRouter>
-          <Stack direction="row">
-              <Routes>
-                    
-                  <Route path='/' element={<Navigate to="/login"/>}/>
+      <BrowserRouter >
+              <Routes>   
+                  <Route path='/' element={<Navigate to="/login"/>}></Route>
                   <Route path="/coffee" exact element={<CoffeeTest/>}/> 
                   <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
                   <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
@@ -48,10 +49,15 @@ function App() {
                   <Route path="*" element={<ErrorPage/>}/>
                   <Route path='/Test' exact element={<Testing/>}/>
               </Routes>
-          </Stack>
+            
       </BrowserRouter>
 
   );
 };
 
 export default App
+
+/**
+ * {history.location.pathname == "/" || history.location.pathname == "/login" || history.location.pathname == "/registration-success"
+            || history.location.pathname =="/create-pass" || history.location.pathname == "/create-pass-success" || history.location.pathname == "/reset-passwd" || history.location.pathname == "/coffee"? null : <SideMenu/>}
+ */

@@ -2,7 +2,7 @@ import {React, useState} from 'react'
 import {Alert, createTheme, Button, styled ,Typography, Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from '../api/axios';
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
 import { useRegisterFieldValidator } from '../components/hooks/useRegisterFieldValidator';
 
@@ -36,6 +36,8 @@ const CssTextField = styled(TextField)({
   },
 });
 
+const REGISTER_URL = "/api/client/register"; // endpoint for the registration in the back end part
+
 
 const RegisterPage = () => {
 
@@ -60,14 +62,45 @@ const RegisterPage = () => {
 
   const{errors, validateForm, onBlurField} = useRegisterFieldValidator(form);
 
-  const onSubmitForm = e => {
+  const onSubmitForm = async (e) => {
     e.preventDefault(); 
     const {isValid} = validateForm( {form, errors, forceTouchErrors:true}, "register");
     if (!isValid){
       return;
     }
     alert(JSON.stringify(form, null, 2));
-    navigate("/registration-success");
+
+    // inspired by Dave Gray 
+
+    try{
+      const response = await axios.post(REGISTER_URL, JSON.stringify({
+        firstName : form.firstName, 
+        lastName : form.lastName, 
+        email : form.email, 
+        phoneNumber : form.phoneNumber, 
+        address : form.address, 
+        city : form.city, 
+        country : form.country,
+        postalCode : form.postalCode, 
+        language : form.language, 
+        password : form.password,
+         //firstName, lastName, email, phoneNumber, address, city, country, postalCode, language, password
+      }), {
+        headers : {"Content-Type" : "application/json", },
+        //withCredentials: true
+      }); 
+      console.log(JSON.stringify(response));
+      navigate("/registration-success"); 
+      // TODO : Clean input fields 
+    } catch (err) {
+      if (!err?.response) {
+        console.log("no serv response");
+      } else {
+        console.log("registration failed");
+      }
+    }
+
+    
   }
 
   const onUpdateField=e=>{

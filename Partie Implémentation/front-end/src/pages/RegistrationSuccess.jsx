@@ -38,11 +38,11 @@ const RegistrationSuccess = () => {
             <img className='login-logo' src={logo} alt='logo' width={70} height={70}/>
             <Typography className='typo' variant="h4">Registration successful!</Typography>
             <ThemeProvider theme={theme}>
-              <Link to='/main-page' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
+              <Link to='/login' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
                 <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:3}}>Welcome</Button>
               </Link>
             </ThemeProvider>
-            <Link className='link-2' to='/main-page'>
+            <Link className='link-2' to='/login'>
               <Typography variant="h7" >Click here if you're not redirected.</Typography>
             </Link>
           </Stack>

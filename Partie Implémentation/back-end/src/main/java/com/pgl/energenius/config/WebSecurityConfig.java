@@ -34,14 +34,14 @@ public class WebSecurityConfig {
         return http.csrf().disable()
         .cors(Customizer.withDefaults()) // ajout de cette ligne selon la documentation pour permettre les requêtes cors
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/api/client/register", "/api/client", "/api/client/testing").permitAll() // ajout de la page testing
+                        .requestMatchers("/", "/api/client/register", "/api/client", "/api/client/testing", "/api/portfolio", "/api/portfolio/all", "api/portfolio/add", "/api/portfolio/hard-folio").permitAll() // ajout de la page testing
                         .anyRequest()//.authenticated() // retirer .authenticated() et ajouter .hasRole("CLIENT")
-                ) .formLogin((form) -> form
+                ) /* .formLogin((form) -> form
                         .loginPage("/login")
                         .usernameParameter("email")
                         .permitAll()
                         //.defaultSuccessUrl("/hello", true)
-                ) 
+                ) */
                 
                 .logout((logout) -> logout.permitAll()).build();
     }

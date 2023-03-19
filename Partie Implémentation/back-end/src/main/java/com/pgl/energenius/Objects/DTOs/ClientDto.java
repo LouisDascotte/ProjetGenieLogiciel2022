@@ -1,4 +1,4 @@
-package com.pgl.energenius.Objects;
+package com.pgl.energenius.Objects.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,12 +19,12 @@ public class ClientDto {
     @JsonProperty("lastName")
     private String lastName;
 
+    @JsonProperty("email")
+    private String email;
+
     @NotBlank
     @JsonProperty("phoneNumber")
     private String phoneNumber;
-
-    @JsonProperty("email")
-    private String email;
 
     @JsonProperty("address")
     private String address;
@@ -32,14 +32,15 @@ public class ClientDto {
     @JsonProperty("city")
     private String city; 
 
-    @JsonProperty("language")
-    private String language; 
-
     @JsonProperty("country")
     private String country; 
 
+
     @JsonProperty("postalCode")
     private String postalCode; 
+
+    @JsonProperty("language")
+    private String language; 
 
     @NotBlank
     @Size(min = 8)

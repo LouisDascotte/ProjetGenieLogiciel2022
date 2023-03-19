@@ -16,10 +16,10 @@ import {Select, FormControl, InputLabel } from '@mui/material';
 import {  Link} from 'react-router-dom';
 import { useForceUpdate } from '../components/hooks/useForceUpdate';
 import {createBrowserHistory} from "history";
+import axios from "../api/axios";
 
 
-
-
+const API_URL = "/api/portfolio/all";
 
 
 const MainPage = () => {
@@ -27,6 +27,11 @@ const MainPage = () => {
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
     const [page, setPage] = useState("");
 
+    const fetchData = axios.get(API_URL).then(function(response) {
+        console.log(response);
+    });
+
+    console.log(fetchData);
 
     const pageAddress = "/main-page";
     const pageName = "General overview";
@@ -115,7 +120,7 @@ const MainPage = () => {
             </Sidebar>
         <Stack sx={{display:'flex', width:"100%"}}>  
             <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
-            <Stack direction='row' justifyContent='center' paddingTop='10%'>
+            <Stack direction='row' justifyContent='center'>
                 { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
                 // 'Portfolio graphic' replaces an actual portfolio infographic for now
                 hasSelectedPortfolio ? <PortfolioMainGraph portfolio={page}/> : <PortfolioPlaceHolder/>

@@ -2,12 +2,11 @@ package com.pgl.energenius.Controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import com.pgl.energenius.Objects.Client;
-import com.pgl.energenius.Objects.ClientDto;
 import com.pgl.energenius.Objects.ClientLogin;
+import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.Repositories.ClientLoginRepository;
 import com.pgl.energenius.Repositories.ClientRepository;
 import com.pgl.energenius.config.WebSecurityConfig;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,17 +41,17 @@ public class ClientController {
         Client client = new Client(
                 clientDto.getFirstName(),
                 clientDto.getLastName(),
+                clientDto.getEmail(),
                 clientDto.getPhoneNumber(), // changé pour les tests
                 clientDto.getAddress(),
                 clientDto.getCity(),
                 clientDto.getCountry(), 
-                clientDto.getPostalCode(), 
-                clientDto.getEmail(),  
-                clientDto.getLanguage()); // TODO*/
+                clientDto.getPostalCode(),
+                clientDto.getLanguage());                
+                  
+                 // TODO*/
 
         clientRepository.save(client);
-        log.info("Value of : " + clientDto.getAddress());
-        log.info("value of : " + clientDto.getPassword());
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
                 WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
 

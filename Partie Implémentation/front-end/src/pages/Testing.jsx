@@ -24,7 +24,7 @@ const Testing = () => {
             <ScaleButtons />
           </Grid>
           <Grid item>
-            {/*<DatePickers />*/}
+            <DatePickers />
           </Grid>
         </Grid>
         <BiAxLineChart />

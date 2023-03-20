@@ -5,17 +5,19 @@ import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.enums.OfferType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@AllArgsConstructor
-@Document(collection = "offers")
 /**
  * Offer that the supplier makes
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "offers")
 public class Offer {
 
     /**
@@ -48,7 +50,6 @@ public class Offer {
      * The type of the contract
      */
     private ContractType contractType;
-    // Ajouter une zone ou l'offre est accessible ? TODO
 
     /**
      * The supplier in the offer

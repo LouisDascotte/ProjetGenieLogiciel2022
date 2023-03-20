@@ -1,12 +1,14 @@
 package com.pgl.energenius.Objects;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "languages")
 /**
  * The languages used by the app
  */
+@AllArgsConstructor
+@Document(collection = "languages")
 public class Language {
 
     /**

@@ -44,10 +44,10 @@ public class Client {
     private String phoneNo;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date lastAccess; // à quoi ça sert ? TODO
+    private Date lastAccess;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date creationDate; // pareil TODO
+    private Date creationDate;
 
     /**
      * The address of the client
@@ -62,7 +62,7 @@ public class Client {
      * The language that the client usually uses
      */
     @DBRef(lazy = true)
-    private Language language; // enum ou ref vers table language ? TODO
+    private Language language;
 
     /**
      * The favorite portfolio of the client
@@ -102,18 +102,4 @@ public class Client {
         darkMode = false;
         notifications = new ArrayList<>();
     }
-//
-//
-//    public Client(String firstName, String lastName, String email, String phoneNumber, String address, String city, String country, String postalCode, String language){
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.phoneNumber = phoneNumber;
-//        this.address = address;
-//        this.language = language;
-//        this.email = email;
-//        this.country = country;
-//        this.city = city;
-//        this.postalCode = postalCode;
-//        this.id = new ObjectId();
-//    }
 }

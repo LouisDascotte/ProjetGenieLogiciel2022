@@ -5,12 +5,13 @@ import lombok.Data;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
 /**
  * The allocation of a meter
  */
+@Data
+@AllArgsConstructor
 public class MeterAllocation {
+
     /**
      * The EAN of the meter
      */

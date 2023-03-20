@@ -23,7 +23,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
+/**
+ * This class provides configuration for Spring Security to secure the application's endpoints and handle
+ * authentication using JWT. It also sets up CORS configuration for cross-origin requests.
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -34,6 +37,12 @@ public class WebSecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    /**
+     * Configures the security filter chain.
+     * @param http the HttpSecurity object used for configuration
+     * @return the SecurityFilterChain object representing the security filter chain
+     * @throws Exception if an error occurs while configuring security
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -58,7 +67,10 @@ public class WebSecurityConfig {
                 .build();
     }
 
-
+    /**
+     * Configures Spring Security to use DaoAuthenticationProvider with the clientLoginService and the BCryptPasswordEncoder.
+     * @return an AuthenticationProvider object for Spring Security to use
+     */
     @Bean
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -67,13 +79,20 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
-
+    /**
+     * Returns a BCryptPasswordEncoder object for password encoding.
+     * @return a BCryptPasswordEncoder object for password encoding
+     */
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean // ajout de la configuration CORS 
+    /**
+     * Sets up CORS configuration for cross-origin requests.
+     * @return a CorsConfigurationSource object for CORS configuration
+     */
+    @Bean
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));

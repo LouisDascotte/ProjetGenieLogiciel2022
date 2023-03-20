@@ -10,12 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@Document(collection = "employees")
 /**
  * Employee of a supplier
  */
+@Data
+@AllArgsConstructor
+@Document(collection = "employees")
 public class Employee {
 
     /**

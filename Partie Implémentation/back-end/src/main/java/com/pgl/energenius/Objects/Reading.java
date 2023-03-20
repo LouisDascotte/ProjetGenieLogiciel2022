@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 /**
  * The reading of a meter
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Reading {
 
     /**

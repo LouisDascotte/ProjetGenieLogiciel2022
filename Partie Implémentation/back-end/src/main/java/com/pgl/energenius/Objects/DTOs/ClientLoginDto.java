@@ -1,11 +1,15 @@
 package com.pgl.energenius.Objects.DTOs;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
 /**
- * Client Login
+ * Client Login Data Transfer Object
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientLoginDto {
 
     /**

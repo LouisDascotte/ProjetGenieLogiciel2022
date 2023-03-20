@@ -3,16 +3,13 @@ package com.pgl.energenius.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * The address of a client
+ */
 @Data
 @AllArgsConstructor
-//@Document(collection = "addresses")
-/**
- * The address of an client
- */
 public class Address {
 
-//    @Id
-//    private ObjectId id;
     /**
      * The city of the client
      */
@@ -42,14 +39,4 @@ public class Address {
      * The country of the client
      */
     private String country;
-
-//    public Address(String city, String street, int houseNo, int box, int postalCode, String country) {
-//        id = new ObjectId();
-//        this.city = city;
-//        this.street = street;
-//        this.houseNo = houseNo;
-//        this.box = box;
-//        this.postalCode = postalCode;
-//        this.country = country;
-//    }
 }

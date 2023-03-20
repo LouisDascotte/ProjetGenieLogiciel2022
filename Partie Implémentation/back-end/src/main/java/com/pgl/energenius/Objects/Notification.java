@@ -6,11 +6,11 @@ import org.bson.types.ObjectId;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
 /**
  * Notification
  */
+@Data
+@AllArgsConstructor
 public class Notification {
 
     /**

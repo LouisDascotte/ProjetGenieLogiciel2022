@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The PortfolioController class handles all HTTP requests related to Portfolios.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/client")
@@ -42,6 +45,11 @@ public class PortfolioController {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
+    /**
+     * This method returns all portfolios of the connected client.
+     *
+     * @return A list of portfolios owned by the client
+     */
     @GetMapping("/all")
     public ResponseEntity<List<Portfolio>> getPortfolios() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,32 +62,30 @@ public class PortfolioController {
         return new ResponseEntity<>(portfolios, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path="/test")
-    public String getMsg(){
-        return "Test réussi";
-    }
-
-    @CrossOrigin(origins="http://localhost:3000")
-    @PostMapping(path="/add", consumes="application/json")
+    /**
+     * This method adds a portfolio to the database.
+     *
+     * @param portfolioDto The portfolio to add
+     * @return A message confirming that the portfolio was added
+     */
+    @PostMapping("/create")
     @ResponseBody
-    public String createFolio(@RequestBody PortfolioDto portfolioDto){
-        Portfolio portfolio = new Portfolio(
-            portfolioDto.getClient(), 
-            portfolioDto.getAddress(), 
-            portfolioDto.getName());
+    public String createPortfolio(@RequestBody PortfolioDto portfolioDto){
+        Portfolio portfolio = new Portfolio();
+//            portfolioDto.getClient(),
+//            portfolioDto.getAddress(), TODO
+//            portfolioDto.getName());
         log.info("Activated");
         portfolioRepository.save(portfolio);
         return "Portfolio Added";
     }
 
-    @GetMapping("/hard-folio")
-    public ResponseEntity<List<Portfolio>> getHardFolio() {
-        Client client = null; 
-        List<Portfolio> portfolios = portfolioService.clientPortfolios(client);
-        return new ResponseEntity<>(portfolios, HttpStatus.OK);
-    }
-
+    /**
+     * Retrieves the consumption readings for a portfolio.
+     *
+     * @param portfolioId the ID of the portfolio to retrieve the consumption readings for
+     * @return the consumption readings for the portfolio
+     */
     @GetMapping("/consumption")
     public ResponseEntity<HashMap<EnergyType, List<Reading>>> getConsumption(@RequestBody ObjectId portfolioId) {
 

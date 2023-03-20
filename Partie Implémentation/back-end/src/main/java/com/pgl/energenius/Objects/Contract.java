@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@Document(collection = "contracts")
 /**
  * The contract of a client
  */
+@Data
+@AllArgsConstructor
+@Document(collection = "contracts")
 public class Contract {
 
     /**

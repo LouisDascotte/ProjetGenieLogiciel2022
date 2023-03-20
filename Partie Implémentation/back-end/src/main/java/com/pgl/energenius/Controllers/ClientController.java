@@ -17,14 +17,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * The ClientController class handles all HTTP requests related to Clients
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/client")
@@ -43,6 +40,12 @@ public class ClientController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * POST method to register a new client.
+     *
+     * @param clientDto The client's information.
+     * @return A message indicating that the registration has been successfully completed.
+     */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/auth/register")
     @ResponseBody
@@ -69,7 +72,13 @@ public class ClientController {
         return "Correctly done" ;
     }
 
-    @PostMapping("/auth/login")
+    /**
+     * GET method to log in the client.
+     *
+     * @param clientLoginDto The client's login credentials.
+     * @return A ResponseEntity containing the client's login information and the authentication token.
+     */
+    @GetMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {

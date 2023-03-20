@@ -13,13 +13,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Meter of a client
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "meters")
-/**
- * Meter of a client
- */
 public class Meter {
 
     /**

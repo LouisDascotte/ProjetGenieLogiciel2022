@@ -4,15 +4,13 @@ import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.SupplyPointType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 /**
  * Supply point
  */
+@Data
+@AllArgsConstructor
 public class SupplyPoint {
 
     /**

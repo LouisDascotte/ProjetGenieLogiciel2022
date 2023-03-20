@@ -2,16 +2,18 @@ package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@AllArgsConstructor
-@Document(collection = "suppliers")
 /**
  * A supplier
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "suppliers")
 public class Supplier {
 
     /**

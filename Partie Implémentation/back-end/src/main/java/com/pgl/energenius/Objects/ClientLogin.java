@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * The login information of a client
+ */
 @Data
 @AllArgsConstructor
 @Document("client_logins")
-
-/**
- * The login informations of a client
- */
 public class ClientLogin implements UserDetails {
 
     /**
@@ -33,7 +32,7 @@ public class ClientLogin implements UserDetails {
     private String password;
 
     /**
-     * The client that uses the informations
+     * The client that uses the information
      */
     @DBRef
     private Client client;

@@ -4,12 +4,14 @@ package com.pgl.energenius.Objects.DTOs;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Portfolio Data Transfer Object
+ */
 @Data
 @AllArgsConstructor
-/**
- * Client Portfolio
- */
+@NoArgsConstructor
 public class PortfolioDto {
 
   /**
@@ -29,6 +31,4 @@ public class PortfolioDto {
    */
   @JsonProperty("name")
   private String name;
-
-  public PortfolioDto(){}
 }

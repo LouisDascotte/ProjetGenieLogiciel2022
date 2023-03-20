@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Client Data Transfert Object
+ */
 @Data
 @AllArgsConstructor
-/**
- * Client
- */
+@NoArgsConstructor
 public class ClientDto {
 
     /**
@@ -79,6 +81,4 @@ public class ClientDto {
     @Size(min = 8)
     @JsonProperty("password")
     private String password;
-
-    public ClientDto(){}
 }

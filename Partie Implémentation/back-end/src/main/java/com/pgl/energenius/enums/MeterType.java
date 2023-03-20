@@ -1,7 +1,7 @@
 package com.pgl.energenius.enums;
 
 /**
- * The type of a meter
+ * The type of meter
  */
 public enum MeterType {
     // TODO

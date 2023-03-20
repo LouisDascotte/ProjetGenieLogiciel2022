@@ -2,6 +2,7 @@ package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -10,12 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@Document(collection = "portfolios")
 /**
  * The portfolio of a client
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "portfolios")
 public class Portfolio {
 
     /**
@@ -28,12 +30,12 @@ public class Portfolio {
      * The client that owns the portfolio
      */
     @DBRef(lazy = true)
-    private Client client_;
+    private Client client;
 
     /**
      * The address of the client that owns the portfolio
      */
-    private Address address_;
+    private Address address;
     /**
      * The name of the portfolio
      */
@@ -44,12 +46,6 @@ public class Portfolio {
      */
     private List<SupplyPoint> supplyPoints;
 
-
-    private String address; // added for tests
-    @DBRef(lazy = true)
-    private String client;
-
-
     /**
      * Create a portfolio
      * @param client
@@ -58,16 +54,9 @@ public class Portfolio {
      */
     public Portfolio(Client client, Address address, String name) {
         id = new ObjectId();
-        this.client_ = client;
-        this.address_ = address;
+        this.client = client;
+        this.address = address;
         this.name = name;
         supplyPoints = new ArrayList<>();
-    }
-
-    public Portfolio(String client, String address, String name){
-        id = new ObjectId();
-        this.client = client; 
-        this.address = address; 
-        this.name = name; 
     }
 }

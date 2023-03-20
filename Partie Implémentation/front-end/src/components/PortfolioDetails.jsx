@@ -2,7 +2,11 @@ import React from 'react'
 
 const PortfolioDetails = () => {
   return (
-    <div>PortfolioDetails</div>
+    <Grid>
+      <Grid item xs={12}>
+        
+      </Grid>
+    </Grid>
   )
 }
 

@@ -2,9 +2,10 @@ import { Card, Grid, Stack } from '@mui/material';
 import React from 'react';
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
-import BiAxLineChart from '../components/BiAxLineChart';
 import ChartFooter from '../components/ChartFooter';
 import ChartHeader from '../components/ChartHeader';
+import BiAx from '../components/BiAx';
+import { BiAxLineChart } from '../components/BiAx';
 
 
 const Testing = () => {
@@ -16,22 +17,11 @@ const Testing = () => {
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        
-          <Grid container
-          direction='column'
-          alignItems='center'
-          justifyContent='flex-start'
-          >
-            <Grid item >
-              <ChartHeader />
-            </Grid>
-            <Grid item >
-              <BiAxLineChart />
-            </Grid>
-            <Grid item >
-              <ChartFooter />
-            </Grid>
-          </Grid>
+        <Stack sx={{height:"80%", justifyContent:'start', alignItems:'center'}}>
+            <ChartHeader />
+            <BiAx/>
+            <ChartFooter />
+          </Stack>
         </Stack>
     </Stack>
    

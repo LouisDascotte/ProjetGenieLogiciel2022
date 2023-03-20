@@ -1,13 +1,21 @@
 import DatePicker from 'react-datepicker';
 import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
+import { addWeeks, subWeeks } from 'date-fns';
 import "react-datepicker/dist/react-datepicker.css";
-import { frFR } from '@mui/material/locale';
 
 const WeekDatePicker = ({onChange }) => {
-
+  /*
+  On the first datepicker, the minDate is set to 2022-01-01 and the maxDate is set to 8 weeks before the second datepicker.
+  On the second datepicker, the minDate is set to 8 weeks after the first datepicker and the maxDate is set to 52 weeks after the first datepicker or 2022-12-31, whichever is earlier.
+  */
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const minDate = new Date("2022-01-01");
+  const maxDate = new Date("2022-12-31");
+  const minTime = 8;
+  const maxTime = 52;
+
   return (
     <Grid container
     direction='row'
@@ -24,7 +32,8 @@ const WeekDatePicker = ({onChange }) => {
         onChange={(date) => setStartDate(date)}
         selectsStart
         startDate={startDate}
-        endDate={endDate}
+        minDate={minDate}
+        maxDate={subWeeks(endDate, minTime)}
         locale="fr-FR"
         dateFormat="dd/MM/yyyy"
         showWeekNumbers
@@ -38,8 +47,9 @@ const WeekDatePicker = ({onChange }) => {
         selected={endDate}
         onChange={(date) => setEndDate(date)}
         selectsEnd
-        startDate={startDate}
         endDate={endDate}
+        minDate={addWeeks(startDate, minTime)}
+        maxDate={new Date(Math.min.apply(null, [maxDate, addWeeks(startDate, maxTime)]))}
         dateFormat="dd/MM/yyyy"
         showWeekNumbers
       ></DatePicker>

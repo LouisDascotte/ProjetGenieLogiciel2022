@@ -2,7 +2,8 @@ import React from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack,Card, Box, Grid, Button, ThemeProvider, createTheme} from '@mui/material';
 import TopMenu from '../components/TopMenu';
-import BiAxLineChart from '../components/BiAxLineChart';
+import BiAx from '../components/BiAx';
+import { BiAxLineChart } from '../components/BiAx';
 
 const StatAnalysis = () => {
     const theme = createTheme({
@@ -25,7 +26,7 @@ const StatAnalysis = () => {
         <Stack sx={{display:'flex', width:"100%"}}>
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Stack sx={{height:"40%", justifyContent:'center', alignItems:'center'}}>
-            <BiAxLineChart />
+            <BiAx/>
           </Stack>
         </Stack>
       </Stack>

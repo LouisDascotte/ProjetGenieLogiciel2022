@@ -3,7 +3,6 @@ import { Box, Stack , Grid, Divider } from '@mui/material';
 import { Link } from "react-router-dom";
 import logo from '../resources/logo.png';
 import AccountMenu from './AccountMenu';
-import {Image} from "mui-image";
 
 // pageAddress is now useless, keeping it in case i need it in the future
 const TopMenu = ({pageAddress, pageName}) => {

@@ -21,11 +21,8 @@ import CoffeeTest from './pages/CoffeeTest';
 import StatAnalysis from './pages/StatAnalysis';
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
-import {createBrowserHistory} from "history"; 
 
 function App() {
-    let history = createBrowserHistory();
-    console.log(history.location);
   return (
       <BrowserRouter >
               <Routes>   

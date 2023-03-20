@@ -1,5 +1,6 @@
 package com.pgl.energenius.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pgl.energenius.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,11 +34,11 @@ public class Client {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date creationDate; // pareil TODO
 
-    private Address address_;
+    private Address address;
     private ClientStatus status;
 
     @DBRef(lazy = true)
-    private Language language_; // enum ou ref vers table language ? TODO
+    private Language language; // enum ou ref vers table language ? TODO
 
     @DBRef(lazy = true)
     private Portfolio favoritePortfolio;
@@ -45,23 +46,12 @@ public class Client {
     private Boolean darkMode;
     private List<Notification> notifications;
 
-    
-    // Ajouté par Godwill pour le test du register. Peut être modifié plus tard par Jerem 
-    private String phoneNumber;
-    private String email;
-    private String address; 
-    private String language;
-    private String country;
-    private String city;
-    private String postalCode;
-    private String password; 
-
     public Client(String firstName, String lastName, String phoneNo, Address address, Language language) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNo = phoneNo;
-        this.address_ = address;
-        this.language_ = language;
+        this.address = address;
+        this.language = language;
         id = new ObjectId();
         creationDate = new Date(System.currentTimeMillis());
         lastAccess = creationDate;
@@ -70,18 +60,18 @@ public class Client {
         darkMode = false;
         notifications = new ArrayList<>();
     }
-
-
-    public Client(String firstName, String lastName, String email, String phoneNumber, String address, String city, String country, String postalCode, String language){
-        this.firstName = firstName; 
-        this.lastName = lastName; 
-        this.phoneNumber = phoneNumber; 
-        this.address = address; 
-        this.language = language; 
-        this.email = email; 
-        this.country = country; 
-        this.city = city; 
-        this.postalCode = postalCode; 
-        this.id = new ObjectId(); 
-    }
+//
+//
+//    public Client(String firstName, String lastName, String email, String phoneNumber, String address, String city, String country, String postalCode, String language){
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.phoneNumber = phoneNumber;
+//        this.address = address;
+//        this.language = language;
+//        this.email = email;
+//        this.country = country;
+//        this.city = city;
+//        this.postalCode = postalCode;
+//        this.id = new ObjectId();
+//    }
 }

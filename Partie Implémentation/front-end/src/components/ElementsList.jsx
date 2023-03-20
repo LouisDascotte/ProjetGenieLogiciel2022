@@ -5,7 +5,7 @@ import { FixedSizeList} from 'react-window';
 
 const ElementsList = () => {
   function generate(element) {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((value) =>
+    return [0, 1, 2, 3, 4].map((value) =>
       React.cloneElement(element, {
         key: value,
       }),
@@ -13,15 +13,21 @@ const ElementsList = () => {
   }
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
-      <List style={{maxHeight: '100%', overflow: 'auto', backgroundColor:'#f3f4f6'}}>
-        {generate(<ListItem>
-          <ListItemButton textAlign='center'>
-            <ListItemText primary="Bouton test" className='list-button'/>
-          </ListItemButton>
-          <IconButton>
+      <List style={{maxHeight: '100%', overflow: 'auto'}}>
+        {generate(
+          <ListItem>
+            <ListItemButton 
+              textAlign='center'
+              style={{backgroundColor:"#fff"}}>
+              <ListItemText 
+                primary="Bouton test" 
+                className='list-button'/>
+            </ListItemButton>
+            <IconButton>
               <DeleteIcon/>
             </IconButton>
-        </ListItem>)}
+          </ListItem>
+        )}
       </List>
     </Box>
   );

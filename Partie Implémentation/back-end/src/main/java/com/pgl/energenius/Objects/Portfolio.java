@@ -19,17 +19,29 @@ public class Portfolio {
     private ObjectId id;
 
     @DBRef(lazy = true)
-    private Client client;
+    private Client client_;
 
-    private Address address;
+    private Address address_;
     private String name;
     private List<SupplyPoint> supplyPoints;
 
+    private String address; // added for tests
+    @DBRef(lazy = true)
+    private String client; 
+
+
     public Portfolio(Client client, Address address, String name) {
         id = new ObjectId();
-        this.client = client;
-        this.address = address;
+        this.client_ = client;
+        this.address_ = address;
         this.name = name;
         supplyPoints = new ArrayList<>();
+    }
+
+    public Portfolio(String client, String address, String name){
+        id = new ObjectId();
+        this.client = client; 
+        this.address = address; 
+        this.name = name; 
     }
 }

@@ -4,6 +4,7 @@ import com.pgl.energenius.Services.ClientLoginService;
 import java.util.Arrays;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +14,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,26 +27,35 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    
 
     @Autowired
     private ClientLoginService clientLoginService;
 
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http.csrf().disable()
-        .cors(Customizer.withDefaults()) // ajout de cette ligne selon la documentation pour permettre les requêtes cors
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/api/client/register", "/api/client", "/api/client/testing").permitAll() // ajout de la page testing
-                        .anyRequest()//.authenticated() // retirer .authenticated() et ajouter .hasRole("CLIENT")
-                ) .formLogin((form) -> form
-                        .loginPage("/login")
-                        .usernameParameter("email")
-                        .permitAll()
-                        //.defaultSuccessUrl("/hello", true)
-                ) 
-                
-                .logout((logout) -> logout.permitAll()).build();
+//                .cors().disable()
+                .cors(Customizer.withDefaults())
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(((request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage())))
+                .and()
+
+                .authorizeHttpRequests()
+                .requestMatchers("/api/client/auth/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
 

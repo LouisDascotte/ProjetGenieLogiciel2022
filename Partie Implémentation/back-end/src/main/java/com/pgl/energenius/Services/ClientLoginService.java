@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ClientLoginService implements UserDetailsService {
 
@@ -16,10 +18,7 @@ public class ClientLoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        ClientLogin clientLogin = clientLoginRepository.findByEmail(email);
-
-        if (clientLogin == null)
-            throw new UsernameNotFoundException("No client found with email address : " + email);
-        return clientLogin;
+        Optional<ClientLogin> clientLoginOpt = clientLoginRepository.findByEmail(email);
+        return clientLoginOpt.orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
     }
 }

@@ -19,7 +19,7 @@ import {createBrowserHistory} from "history";
 import axios from "../api/axios";
 
 
-const API_URL = "/api/portfolio/all";
+const API_URL = "/api/client/all";
 
 
 const MainPage = () => {

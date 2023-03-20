@@ -7,14 +7,26 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+/**
+ * Client Portfolio
+ */
 public class PortfolioDto {
 
+  /**
+   * The client that owns the portfolio
+   */
   @JsonProperty("client")
-  private String client; 
+  private String client;
 
+  /**
+   * The address of the client
+   */
   @JsonProperty("address")
-  private String address; 
+  private String address;
 
+  /**
+   * The name of the portfolio
+   */
   @JsonProperty("name")
   private String name;
 

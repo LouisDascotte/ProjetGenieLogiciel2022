@@ -13,21 +13,58 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @Document(collection = "offers")
+/**
+ * Offer that the supplier makes
+ */
 public class Offer {
 
+    /**
+     * The ID of the offer
+     */
     @Id
     private ObjectId id;
 
+    /**
+     * The type of the offer
+     */
     private OfferType offerType;
+
+    /**
+     * The type of the meter used in the offer
+     */
     private MeterType meterType;
+
+    /**
+     * The length of the contract
+     */
     private int contractLength;
+
+    /**
+     * The offer's cost
+     */
     private int cost;
+
+    /**
+     * The type of the contract
+     */
     private ContractType contractType;
     // Ajouter une zone ou l'offre est accessible ? TODO
 
+    /**
+     * The supplier in the offer
+     */
     @DBRef(lazy = true)
     private Supplier supplier;
 
+    /**
+     * Create an offer
+     * @param offerType
+     * @param meterType
+     * @param contractLength
+     * @param cost
+     * @param contractType
+     * @param supplier
+     */
     public Offer(OfferType offerType, MeterType meterType, int contractLength, int cost, ContractType contractType, Supplier supplier) {
         id = new ObjectId();
         this.offerType = offerType;

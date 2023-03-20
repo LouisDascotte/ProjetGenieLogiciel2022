@@ -13,23 +13,49 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Document(collection = "portfolios")
+/**
+ * The portfolio of a client
+ */
 public class Portfolio {
 
+    /**
+     * The ID of the portfolio
+     */
     @Id
     private ObjectId id;
 
+    /**
+     * The client that owns the portfolio
+     */
     @DBRef(lazy = true)
     private Client client_;
 
+    /**
+     * The address of the client that owns the portfolio
+     */
     private Address address_;
+    /**
+     * The name of the portfolio
+     */
     private String name;
+
+    /**
+     * The list of the supply points that are in the portfolio
+     */
     private List<SupplyPoint> supplyPoints;
+
 
     private String address; // added for tests
     @DBRef(lazy = true)
-    private String client; 
+    private String client;
 
 
+    /**
+     * Create a portfolio
+     * @param client
+     * @param address
+     * @param name
+     */
     public Portfolio(Client client, Address address, String name) {
         id = new ObjectId();
         this.client_ = client;

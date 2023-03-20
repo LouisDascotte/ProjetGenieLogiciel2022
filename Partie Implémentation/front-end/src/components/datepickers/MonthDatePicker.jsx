@@ -1,13 +1,18 @@
 import DatePicker from 'react-datepicker';
 import React, { useState } from 'react';
-import {addMonths} from 'date-fns';
+import {addMonths, subMonths} from 'date-fns';
 import { Grid, Typography } from '@mui/material';
 import "react-datepicker/dist/react-datepicker.css";
 
 const MonthDatePicker = ({onChange }) => {
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const minDate = new Date("2022-01-01");
+  const maxDate = new Date("2022-12-31");
+  const minTime = 6;
+  const maxTime = 24;
+
+  const [startDate, setStartDate] = useState(minDate);
+  const [endDate, setEndDate] = useState(new Date(addMonths(startDate, minTime)));
   
   return (
     <Grid container
@@ -25,6 +30,8 @@ const MonthDatePicker = ({onChange }) => {
         onChange={(date) => setStartDate(date)}
         selectsStart
         startDate={startDate}
+        minDate={minDate}
+        maxDate={subMonths(endDate, minTime)}
         dateFormat="MM/yyyy"
         showMonthYearPicker
       ></DatePicker>
@@ -38,7 +45,8 @@ const MonthDatePicker = ({onChange }) => {
         onChange={(date) => setEndDate(date)}
         selectsEnd
         endDate={endDate}
-        maxDate={addMonths(new Date(), 24)}
+        minDate={addMonths(startDate, minTime)}
+        maxDate={new Date(Math.min.apply(null, [maxDate, addMonths(startDate, maxTime)]))}
         dateFormat="MM/yyyy"
         showMonthYearPicker
       ></DatePicker>

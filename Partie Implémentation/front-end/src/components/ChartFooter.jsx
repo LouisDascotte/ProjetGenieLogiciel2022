@@ -46,7 +46,6 @@ export default function ChartFooter() {
               </Grid>
             </Grid>
           </Grid>
-
           <Grid item xs={4} md={4} >
             <FormControl>
               <RadioGroup 
@@ -63,9 +62,9 @@ export default function ChartFooter() {
 
           <Grid item xs={4} md={4} >
             <FormControl>
-              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Add Water Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={false} color='primary' size="small" />} label='Add Electricity Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={false} color='primary' size="small" />} label='Add Gas Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Water Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Electricity Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Gas Consumption' labelPlacement='end' />
             </FormControl>
           </Grid>
         </Grid>

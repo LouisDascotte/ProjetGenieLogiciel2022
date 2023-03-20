@@ -14,8 +14,8 @@ const DayDatePicker = ({onChange }) => {
   const maxDate = new Date("2022-12-31");
   const minTime = 14;
   const maxTime = 60;
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date(addDays(new Date(), 30)));
+  const [startDate, setStartDate] = useState(minDate);
+  const [endDate, setEndDate] = useState(new Date(addDays(startDate, 30)));
   return (
     <Grid container
     direction='row'

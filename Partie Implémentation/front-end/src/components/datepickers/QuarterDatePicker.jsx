@@ -6,8 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const QuarterDatePicker = ({onChange }) => {
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const minDate = new Date("2022-01-01");
+  const maxDate = new Date();
+  const minTime = 6;
+  const maxTime = 18;
+
+  const [startDate, setStartDate] = useState(minDate);
+  const [endDate, setEndDate] = useState(maxDate);
 
   return (
     <Grid container

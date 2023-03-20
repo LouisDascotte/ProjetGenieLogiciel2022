@@ -14,7 +14,7 @@ import ScaleButtons from './ScaleButtons.jsx';
 const ChartHeader = () => {
   
   const [scale, setScale] = useState('month');
-
+  
   switch (scale) {
     case "day":
       return (

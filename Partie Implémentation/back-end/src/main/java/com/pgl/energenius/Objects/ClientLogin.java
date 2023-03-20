@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,12 +22,14 @@ public class ClientLogin implements UserDetails {
 
     private String password;
 
-    @DBRef(lazy = true)
+    @DBRef
     private Client client;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add((GrantedAuthority) () -> "ROLE_CLIENT");
+        return roles;
     }
 
     @Override

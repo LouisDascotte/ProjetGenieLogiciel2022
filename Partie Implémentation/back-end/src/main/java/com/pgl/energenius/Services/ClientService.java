@@ -23,7 +23,7 @@ public class ClientService {
         return clientRepository.findById(id);
     }
 
-    public Client getClient2(String email){
-        return clientRepository.findByEmail(email);
-    }
+//    public Client getClient2(String email){
+//        return clientRepository.findByEmail(email);
+//    }
 }

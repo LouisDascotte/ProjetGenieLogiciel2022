@@ -116,13 +116,4 @@ public class PortfolioController {
 
         return new ResponseEntity<>(readings, HttpStatus.OK);
     }
-
-    @PostMapping("/portfolio/create")
-    public ResponseEntity<Portfolio> createPortfolio() {
-
-
-
-
-        return new ResponseEntity<>(null, HttpStatus.CREATED); // TODO changer null
-    }
 }

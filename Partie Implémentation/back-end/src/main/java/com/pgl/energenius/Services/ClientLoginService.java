@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * This class provides services related to ClientLoginRepository.
+ */
 @Service
 public class ClientLoginService implements UserDetailsService {
 

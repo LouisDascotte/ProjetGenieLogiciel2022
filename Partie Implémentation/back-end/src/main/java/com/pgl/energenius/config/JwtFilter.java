@@ -18,6 +18,10 @@ import java.io.IOException;
 
 import static org.springframework.util.StringUtils.hasText;
 
+/**
+ * This class represents a filter for validating and authorizing user requests using JWT authentication.
+ * It extends the {@link OncePerRequestFilter} class and is annotated with {@link Component}.
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 

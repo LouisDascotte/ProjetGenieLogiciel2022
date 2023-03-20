@@ -5,24 +5,24 @@ import { FixedSizeList} from 'react-window';
 
 const PortfoliosList = () => {
   const [portfolios, setPortfolios] = useState({});
+
+  // For now, usage of a hardcoded portfolio. Will later be replaced with an axios GET request to get the details.
+  
+
   
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
       <List style={{maxHeight: '100%', overflow: 'auto'}}>
-        {generate(
-          <ListItem>
-            <ListItemButton 
-              textAlign='center'
-              style={{backgroundColor:"#fff"}}>
-              <ListItemText 
-                primary="Bouton test" 
-                className='list-button'/>
-            </ListItemButton>
-            <IconButton>
-              <DeleteIcon/>
-            </IconButton>
-          </ListItem>
-        )}
+        <ListItem>
+          <ListItemButton>
+            <ListItemText>
+              Portfolio 1
+            </ListItemText>
+          </ListItemButton>
+          <IconButton>
+            <DeleteIcon/>
+          </IconButton>
+        </ListItem>
       </List>
     </Box>
   )

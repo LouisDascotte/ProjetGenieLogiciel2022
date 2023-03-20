@@ -28,11 +28,6 @@ public class ClientController {
     @Autowired
     private ClientLoginRepository clientLoginRepository;
 
-    // mapping de test
-    @GetMapping(path="/register")
-    public String getMsg(){
-        return "Test réussi";
-    }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(path = "/register", consumes = "application/json") // changé le consume (était application/x-www-form-urlencoded )

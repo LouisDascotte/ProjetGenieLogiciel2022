@@ -7,6 +7,7 @@ import TopMenu from '../components/TopMenu';
 import ElementsList from '../components/ElementsList';
 import TempList from '../components/TempList';
 import {Link} from 'react-router-dom';
+import PortfoliosList from '../components/PortfoliosList';
 
 const ManagePortfolios = () => {
   const theme = createTheme({
@@ -30,7 +31,7 @@ const ManagePortfolios = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList/>
+            <PortfoliosList/>
 
           </Card>
           <ThemeProvider theme={theme}>

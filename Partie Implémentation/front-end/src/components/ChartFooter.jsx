@@ -2,11 +2,13 @@ import { NaturePeople } from "@mui/icons-material";
 import { FormControlLabel, FormGroup, Grid, Checkbox, Switch, Typography, RadioGroup, FormControl, Radio } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React from "react";
+import { ConsPerWeek as dataWeek, consPerDay as dataDay, ConsPerMonth as dataMonth} from '../resources/demo-data';
 
 
 export default function ChartFooter() {
 
-  const min=132 , max= 564, stdev = 2.4, mean = 230;
+  const stats = GasData(dataWeek);
+  const mean=stats.mean , max= stats.max, stdev = stats.stdev, min = stats.min;
   const theme = createTheme({
     palette: {
       primary: {
@@ -14,6 +16,7 @@ export default function ChartFooter() {
       },
     },
   });
+
 
     return (
       <ThemeProvider theme={theme}>
@@ -31,12 +34,12 @@ export default function ChartFooter() {
             direction='column' 
             alignItems='left'
             >
-              {/* Gas stats */}
+              {/* Energy stats */}
               <Grid item xs={6} >
-                <Typography variant='body2'>Mean: {mean}</Typography>
+                <Typography variant='body2'>Mean: {mean.toFixed(2)}</Typography>
               </Grid>
               <Grid item xs={6} >
-                <Typography variant='body2'>STDEV: {stdev}</Typography>
+                <Typography variant='body2'>STDEV: {stdev.toFixed(2)}</Typography>
               </Grid>
               <Grid item xs={6} >
                 <Typography variant='body2'>Max : {max}</Typography>
@@ -70,4 +73,45 @@ export default function ChartFooter() {
         </Grid>
       </ThemeProvider>
     );
+}
+
+
+
+function GasData(data) {
+  //Only get the gas values
+  const gasValues = data.map((d) => d.gas);
+
+  //Calculate the stats
+  const gasMin = Math.min(...gasValues);
+  const gasMax = Math.max(...gasValues);
+  const gasMean = gasValues.reduce((acc, cur) => acc + cur, 0) / gasValues.length;
+  const gasStdev = Math.sqrt(gasValues.reduce((acc, cur) => acc + (cur - gasMean) ** 2, 0) / gasValues.length);
+
+  return {gasMin, gasMax, gasMean, gasStdev};
+}
+
+function ElecData(data) {
+  //Only get the elec values
+  const elecValues = data.map((d) => d.elec);
+
+  //Calculate the stats
+  const elecMin = Math.min(...elecValues);
+  const elecMax = Math.max(...elecValues);
+  const elecMean = elecValues.reduce((acc, cur) => acc + cur, 0) / elecValues.length;
+  const elecStdev = Math.sqrt(elecValues.reduce((acc, cur) => acc + (cur - elecMean) ** 2, 0) / elecValues.length);
+
+  return {elecMin, elecMax, elecMean, elecStdev};
+}
+
+function WaterData(data) {
+  //Only get the water values
+  const waterValues = data.map((d) => d.water);
+
+  //Calculate the stats
+  const waterMin = Math.min(...waterValues);
+  const waterMax = Math.max(...waterValues);
+  const waterMean = waterValues.reduce((acc, cur) => acc + cur, 0) / waterValues.length;
+  const waterStdev = Math.sqrt(waterValues.reduce((acc, cur) => acc + (cur - waterMean) ** 2, 0) / waterValues.length);
+
+  return {waterMin, waterMax, waterMean, waterStdev};
 }

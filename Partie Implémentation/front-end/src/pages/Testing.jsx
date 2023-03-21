@@ -25,7 +25,6 @@ const Testing = () => {
           </Stack>
         </Stack>
     </Stack>
-   
 
   );
 }

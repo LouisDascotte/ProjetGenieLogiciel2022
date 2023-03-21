@@ -30,13 +30,13 @@ export default class BiAx extends PureComponent {
               <Legend verticalAlign='top' />
 
               {(showElec &&
-                <Line yAxisId="left" dot={false} name="Electicity Cons." type="monotone" dataKey="elec" stroke="#82ca9d" strokeWidth={2} activeDot={{ r: 2 }} />
+                <Line yAxisId="left" isAnimationActive={false} dot={false} name="Electicity Cons." type="monotone" dataKey="elec" stroke="#82ca9d" strokeWidth={2} activeDot={{ r: 2 }} />
               )}
               {(showGas &&
-                <Line yAxisId="left" dot={false} name="Gas Cons." type="monotone" dataKey="gas" stroke="#E29B3F" strokeWidth={2} activeDot={{ r: 2 }} />
+                <Line yAxisId="left" isAnimationActive={false} dot={false} name="Gas Cons." type="monotone" dataKey="gas" stroke="#E29B3F" strokeWidth={2} activeDot={{ r: 2 }} />
               )}
               {(showWater &&
-                <Line yAxisId="right" dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={2} strokeDasharray="16 2" activeDot={{ r: 2 }} />
+                <Line yAxisId="right" isAnimationActive={false} dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={2} strokeDasharray="16 2" activeDot={{ r: 2 }} />
               )}
             </LineChart>
           </ResponsiveContainer>

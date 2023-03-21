@@ -14,6 +14,7 @@ const WeekDatePicker = ({onChange }) => {
   const maxDate = new Date("2022-12-31");
   const minTime = 8;
   const maxTime = 52;
+
   const [startDate, setStartDate] = useState(minDate);
   const [endDate, setEndDate] = useState(new Date(addWeeks(startDate, 8)));
 
@@ -34,7 +35,7 @@ const WeekDatePicker = ({onChange }) => {
         selectsStart
         startDate={startDate}
         minDate={minDate}
-        maxDate={subWeeks(endDate, minTime)}
+        maxDate={subWeeks(maxDate, minTime)}
         locale="fr-FR"
         dateFormat="dd/MM/yyyy"
         showWeekNumbers
@@ -48,7 +49,7 @@ const WeekDatePicker = ({onChange }) => {
         selected={endDate}
         onChange={(date) => setEndDate(date)}
         selectsEnd
-        endDate={endDate}
+        endDate={addWeeks(startDate, minTime)}
         minDate={addWeeks(startDate, minTime)}
         maxDate={new Date(Math.min.apply(null, [maxDate, addWeeks(startDate, maxTime)]))}
         dateFormat="dd/MM/yyyy"

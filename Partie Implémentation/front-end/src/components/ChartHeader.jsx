@@ -109,38 +109,6 @@ const ChartHeader = () => {
         </Grid>
       );
   }   
-
-  /*
-  return (
-    <Grid container
-    direction='row'
-    alignItems='center'
-    justifyContent='end'
-    spacing={1}
-    >
-      <Grid item xs={6} >
-        <Typography variant="h6" component="div" gutterBottom> From: </Typography>
-      </Grid>
-      <Grid item xs={6} > 
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          dateFormat="dd/MM/yyyy"
-        ></DatePicker>
-      </Grid>
-      <Grid item xs={6} >
-        <Typography variant="h6" component="div" gutterBottom> To: </Typography>
-      </Grid>
-      <Grid item xs={6} >
-      <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          dateFormat="dd/MM/yyyy"
-        ></DatePicker>
-      </Grid>
-    </Grid>
-  );
-  */
 }
 
 export default ChartHeader

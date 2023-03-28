@@ -6,10 +6,14 @@ import ChartFooter from '../components/ChartFooter';
 import ChartHeader from '../components/ChartHeader';
 import BiAx from '../components/BiAx';
 
-
 const Testing = () => {
   const pageName = "test";
 	const pageAddress = "/test";
+
+  const [gasVis, setGasVis] = React.useState(true);
+  const [waterVis, setWaterVis] = React.useState(true);
+  const [elecVis, setElecVis] = React.useState(true);
+
   return (
 
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >
@@ -18,9 +22,9 @@ const Testing = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Stack sx={{height:"80%", justifyContent:'start', alignItems:'center'}}>
             <ChartHeader />
-            <BiAx scale={"week"} showGas={true} showWater={true} showElec={true} />
-            <Stack sx={{width:"60%", justifyContent:"center"}} >
-              <ChartFooter />
+            <BiAx scale={"day"} showGas={gasVis} showWater={waterVis} showElec={elecVis} />
+            <Stack sx={{width:"80%", justifyContent:"center"}} >
+              <ChartFooter waterVis={true} elecVis={true} gasVis={true} />
             </Stack>
           </Stack>
         </Stack>

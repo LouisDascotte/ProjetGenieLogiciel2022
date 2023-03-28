@@ -1,117 +1,105 @@
 import { NaturePeople } from "@mui/icons-material";
-import { FormControlLabel, FormGroup, Grid, Checkbox, Switch, Typography, RadioGroup, FormControl, Radio } from "@mui/material";
+import { FormControlLabel, FormGroup, Grid, Checkbox, Switch, Typography, RadioGroup, FormControl, Radio, Select } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React from "react";
-import { ConsPerWeek as dataWeek, consPerDay as dataDay, ConsPerMonth as dataMonth} from '../resources/demo-data';
+import { ConsPerWeek as dataWeek, ConsPerDay as dataDay, ConsPerMonth as dataMonth, ConsPerDay2 as dataD1, ConsPerDay3 as dataD2} from '../resources/demo-data';
+import { useState } from "react";
+import ChartStats from "./ChartStats";
 
 
 export default function ChartFooter() {
 
-  const stats = GasData(dataWeek);
-  const mean=stats.mean , max= stats.max, stdev = stats.stdev, min = stats.min;
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#9bcc6c',
-      },
-    },
-  });
+  const [energyChoice, setEnergyChoice] = useState('elec');
+  const [scaleChoice, setScaleChoice] = useState('day');
+  const [waterVis, setWaterVis] = useState(true);
+  const [elecVis, setElecVis] = useState(true);
+  const [gasVis, setGasVis] = useState(true);
 
+  const handleWaterChange = (event) => {
+    setWaterVis(event.target.checked);
+  };
+  const handleElecChange = (event) => {
+    setElecVis(event.target.checked);
+  };
+  const handleGasChange = (event) => {
+    setGasVis(event.target.checked);
+  };
+
+  const setEnergyChosen = (e) => {
+    const energyChoice = e.target.value;
+    setEnergyChoice(energyChoice);
+  };
+
+  const setScaleChosen = (e) => {
+    const scaleChoice = e.target.value;
+    setScaleChoice(scaleChoice);
+  };
 
     return (
-      <ThemeProvider theme={theme}>
+      
         <Grid container direction='row'
         justifyContent="center"
         alignItems="center" >
-          <Grid item container xs={4} md={4} rowSpacing={2} >
-            <Grid item >
-              {/* Gas convert */}
-              <FormGroup>
-                <FormControlLabel control={<Checkbox defaultChecked={false} color='primary' />} label='Gas in m³' labelPlacement='end' />
-              </FormGroup>
+          <Grid item container xs={2}
+          rowSpacing={1}
+          >
+            <Grid item container
+            direction={'row'}
+            alignItems='center'
+            >
+              <Grid item container
+              direction={'row'}
+              alignItems='center' >
+                <Grid item xs={6}>
+                  <Select
+                  native
+                  labelId="energy-select-label"
+                  id="energy-select"
+                  label="Energy"
+                  value={energyChoice}
+                  onChange={setEnergyChosen}
+                  variant='standard'
+                  >
+                    <option value='elec'>Electricity</option>
+                    <option value='gas'>Gas</option>
+                    <option value='water'>Water</option>
+                  </Select>
+                </Grid>
+                <Grid item xs={6}>
+                  <Select
+                  native
+                  labelId="scale-select-label"
+                  id="scale-select"
+                  label="Scale"
+                  value={scaleChoice}
+                  onChange={setScaleChosen}
+                  variant='standard'
+                  >
+                    <option value='day'>Day</option>
+                    <option value='week'>Week</option>
+                    <option value='month'>Month</option>
+                  </Select>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item container 
             direction='column' 
             alignItems='left'
+            columnSpacing={2}
             >
-              {/* Energy stats */}
-              <Grid item xs={6} >
-                <Typography variant='body2'>Mean: {mean.toFixed(2)}</Typography>
-              </Grid>
-              <Grid item xs={6} >
-                <Typography variant='body2'>STDEV: {stdev.toFixed(2)}</Typography>
-              </Grid>
-              <Grid item xs={6} >
-                <Typography variant='body2'>Max : {max}</Typography>
-              </Grid>
-              <Grid item xs={6} >
-                <Typography variant='body2'>Min : {min}</Typography>
+              <Grid item >
+                <ChartStats nrj={energyChoice} scale={scaleChoice} />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4} md={4} >
+          
+          <Grid item xs={3} >
             <FormControl>
-              <RadioGroup 
-              aria-label='Data Show'
-              name='Data Show'
-              defaultValue='real'
-              >
-                <FormControlLabel value='real' control={<Radio defaultChecked={true} color='primary' />} label='Real Data' labelPlacement='end' />
-                <FormControlLabel value='estidata' control={<Radio defaultChecked={false} color='primary' />} label='Estimated Data' labelPlacement='end' />
-                <FormControlLabel value='recaldata' control={<Radio defaultChecked={false} color='primary' />} label='Recalculated Data' labelPlacement='end' />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={4} md={4} >
-            <FormControl>
-              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Water Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Electricity Consumption' labelPlacement='end' />
-              <FormControlLabel control={<Switch defaultChecked={true} color='primary' size="small" />} label='Gas Consumption' labelPlacement='end' />
+              <FormControlLabel control={<Checkbox defaultChecked={true} checked={waterVis} onChange={handleWaterChange} color='primary' size="small"  />} label='Water Cons' labelPlacement='end' />
+              <FormControlLabel control={<Checkbox defaultChecked={true} checked={elecVis} onChange={handleElecChange} color='primary' size="small" />} label='Electricity Cons' labelPlacement='end' />
+              <FormControlLabel control={<Checkbox defaultChecked={true} checked={gasVis} onChange={handleGasChange} color='primary' size="small" />} label='Gas Cons' labelPlacement='end' />
             </FormControl>
           </Grid>
         </Grid>
-      </ThemeProvider>
     );
-}
-
-
-
-function GasData(data) {
-  //Only get the gas values
-  const gasValues = data.map((d) => d.gas);
-
-  //Calculate the stats
-  const gasMin = Math.min(...gasValues);
-  const gasMax = Math.max(...gasValues);
-  const gasMean = gasValues.reduce((acc, cur) => acc + cur, 0) / gasValues.length;
-  const gasStdev = Math.sqrt(gasValues.reduce((acc, cur) => acc + (cur - gasMean) ** 2, 0) / gasValues.length);
-
-  return {gasMin, gasMax, gasMean, gasStdev};
-}
-
-function ElecData(data) {
-  //Only get the elec values
-  const elecValues = data.map((d) => d.elec);
-
-  //Calculate the stats
-  const elecMin = Math.min(...elecValues);
-  const elecMax = Math.max(...elecValues);
-  const elecMean = elecValues.reduce((acc, cur) => acc + cur, 0) / elecValues.length;
-  const elecStdev = Math.sqrt(elecValues.reduce((acc, cur) => acc + (cur - elecMean) ** 2, 0) / elecValues.length);
-
-  return {elecMin, elecMax, elecMean, elecStdev};
-}
-
-function WaterData(data) {
-  //Only get the water values
-  const waterValues = data.map((d) => d.water);
-
-  //Calculate the stats
-  const waterMin = Math.min(...waterValues);
-  const waterMax = Math.max(...waterValues);
-  const waterMean = waterValues.reduce((acc, cur) => acc + cur, 0) / waterValues.length;
-  const waterStdev = Math.sqrt(waterValues.reduce((acc, cur) => acc + (cur - waterMean) ** 2, 0) / waterValues.length);
-
-  return {waterMin, waterMax, waterMean, waterStdev};
 }

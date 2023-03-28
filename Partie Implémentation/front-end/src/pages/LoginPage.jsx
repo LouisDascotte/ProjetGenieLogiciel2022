@@ -6,17 +6,18 @@ import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidat
 import { theme, CssTextField} from '../utils/style';
 import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
+import { useLocalState } from '../utils/useLocalStorage';
 
 
-const LOGIN_URL = "/api/client/login";
+const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
 
 const LoginPage = () => {
-  
 
-  // LOGIC PART OF THE LOGIN PAGE 
+  const [jwt, setJwt] = useLocalState("", "jwt");
 
-  const navigate = useNavigate();
-  const {setAuth} = useContext(AuthContext);
+
+  /*const navigate = useNavigate();
+  const {setAuth} = useContext(AuthContext);*/
 
 
   const [form, setForm] = useState({
@@ -28,7 +29,63 @@ const LoginPage = () => {
 
   const {errors, validateForm, onBlurField} = useLoginFieldValidator(form);
 
-  const onSubmitForm = async (e) => {
+
+  const onSubmitForm = async(e) => {
+    e.preventDefault();
+    const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
+    console.log(isValid);
+    if (!isValid)
+      return; 
+
+    
+    const body = {
+      email : form.email,
+      password: form.password
+    }
+
+    /*try{
+      const response = await axios.post(LOGIN_URL, JSON.stringify({
+        email : form.email, 
+        password : form.password
+      }), {
+        headers : {"Content-Type":"application/json"}
+      }).then(([body, headers])=>{
+        setJwt(headers.get("authorization"))
+      }); 
+      console.log(JSON.stringify(response?.data));
+      /*const accessToken = response?.data?.accessToken; // TODO
+      const roles = response?.data?.roles; // TODO
+      setAuth({form})
+    } catch(err){
+      if(!err?.response){
+        console.log("No server response.");
+      } else {
+        console.log("Login failed");
+      }
+    }*/
+
+    fetch(LOGIN_URL, {
+    headers: {
+      "Content-Type": "application/json",
+      //"Authorization" : `Bearer ${jwt}`
+      "Access-Control-Allow-Origin":true
+    },
+    method:"post",
+    body: JSON.stringify(body),
+    }).then((response)=> { if (response.status === 200)
+     Promise.all([response.json(), response.headers]);
+     else 
+      return Promise.reject("Invalid login attempt");
+    }) 
+      .then(([body, headers])=>{
+    setJwt(headers.get("authorization"));
+    window.location.href="main-page";
+    }).catch((message)=>{
+      alert(message);
+    });
+    
+  }
+  /*const onSubmitForm = async (e) => {
     e.preventDefault();
     const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
     console.log(isValid);
@@ -45,7 +102,7 @@ const LoginPage = () => {
       }); 
       console.log(JSON.stringify(response?.data));
       /*const accessToken = response?.data?.accessToken; // TODO
-      const roles = response?.data?.roles; // TODO*/
+      const roles = response?.data?.roles; // TODO
       setAuth({form})
     } catch(err){
       if(!err?.response){
@@ -56,7 +113,7 @@ const LoginPage = () => {
     }
     
     navigate("/main-page");
-  };
+  };*/
 
   const onUpdateField = e => {
     const field = e.target.name; 

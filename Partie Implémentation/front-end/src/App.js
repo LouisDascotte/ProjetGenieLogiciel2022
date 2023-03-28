@@ -21,29 +21,44 @@ import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest';
 import {createBrowserHistory} from "history"; 
+import { useLocalState } from './utils/useLocalStorage';
+import PrivateRoute from './utils/private_route';
 
 function App() {
     let history = createBrowserHistory();
-    console.log(history.location);
-  return (
+    /*const [jwt, setJwt] = useLocalState("", "jwt");
+
+    useEffect(() => {
+        const reqBody={
+            username:"random",
+            password:"random"
+        }
+    });
+
+    fetch("http://localhost:8080/api/client/auth/login")*/
+    return (
       <BrowserRouter >
               <Routes>   
-                  <Route path='/' element={<Navigate to="/login"/>}></Route>
-                  <Route path="/coffee" exact element={<CoffeeTest/>}/> 
-                  <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
-                  <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
-                  <Route path='/create-pass-success' exact element={<NewPasswordSuccess/>}/>
-                  <Route path="/main-page" exact element={<MainPage/>}/>
-                  <Route path="/login" exact element={<LoginPage/>}/>
-                  <Route path="/manage-portfolios" exact element={<ManagePortfolios/>}/>
-                  <Route path="/manage-meters" exact element={<ManageMeters/>}/>
-                  <Route path="/manage-invoices" exact element={<ManageInvoices/>}/>
-                  <Route path="/manage-contracts" exact element={<ManageContracts/>}/>
-                  <Route path="/preferences" exact element={<Preferences/>}/>
-                  <Route path="/profile" exact element={<Profile/>}/>
-                  <Route path="/notifications" exact element={<Notifications/>}/>
-                  <Route path="/register-account" exact element={<RegisterPage/>}/>
-                  <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
+                <Route path="/login" exact element={<LoginPage/>}/>
+                <Route path="/register-account" exact element={<RegisterPage/>}/>
+                <Route path='/' element={<Navigate to="/login"/>}></Route>
+
+                <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
+                <Route path='/create-pass' exact element={<PrivateRoute>
+                    <CreateNewPassword/>
+                </PrivateRoute>}/>
+                <Route path='/create-pass-success' exact element={<PrivateRoute><NewPasswordSuccess/></PrivateRoute>}/>
+                <Route path="/main-page" exact element={<PrivateRoute><MainPage/></PrivateRoute>}/>
+                
+                <Route path="/manage-portfolios" exact element={<ManagePortfolios/>}/>
+                <Route path="/manage-meters" exact element={<ManageMeters/>}/>
+                <Route path="/manage-invoices" exact element={<ManageInvoices/>}/>
+                <Route path="/manage-contracts" exact element={<ManageContracts/>}/>
+                <Route path="/preferences" exact element={<Preferences/>}/>
+                <Route path="/profile" exact element={<Profile/>}/>
+                <Route path="/notifications" exact element={<Notifications/>}/>
+                
+                <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
               </Routes>
             
       </BrowserRouter>

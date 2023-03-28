@@ -15,10 +15,10 @@ import java.util.List;
 public interface PortfolioRepository extends MongoRepository<Portfolio, ObjectId> {
 
     /**
-     * Returns a list of portfolios owned by the specified client.
+     * Returns a list of portfolios belonging to the specified client.
      *
-     * @param client The client whose portfolios are being retrieved.
-     * @return A list of portfolios owned by the client.
+     * @param client the client for which to retrieve portfolios
+     * @return a list of Portfolio instances belonging to the specified client
      */
     List<Portfolio> findByClient(Client client);
 }

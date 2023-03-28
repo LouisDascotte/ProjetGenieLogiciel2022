@@ -1,5 +1,6 @@
 package com.pgl.energenius.Controllers;
 
+import com.mongodb.DuplicateKeyException;
 import com.pgl.energenius.Objects.Address;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.config.JwtUtil;
@@ -63,13 +64,16 @@ public class ClientController {
                 clientDto.getPhoneNumber(),
                 address,
                 null);
-        clientRepository.save(client);
 
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
                 WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
 
-        clientLoginRepository.save(clientLogin);
+        if (clientLoginRepository.existsById(clientDto.getEmail())) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
+        clientLoginRepository.insert(clientLogin);
+        clientRepository.insert(client);
         return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
 

@@ -58,7 +58,7 @@ public class PortfolioController {
         // car on s'est que l'utilisateur doit être authentifié pour accéder à ce mapping
         Client client = ((ClientLogin) authentication.getPrincipal()).getClient();
 
-        List<Portfolio> portfolios = portfolioService.clientPortfolios(client);
+        List<Portfolio> portfolios = portfolioRepository.findByClient(client);
         return new ResponseEntity<>(portfolios, HttpStatus.OK);
     }
 
@@ -76,7 +76,7 @@ public class PortfolioController {
 //            portfolioDto.getAddress(), TODO
 //            portfolioDto.getName());
         log.info("Activated");
-        portfolioRepository.save(portfolio);
+        portfolioRepository.insert(portfolio);
         return "Portfolio Added";
     }
 
@@ -89,7 +89,7 @@ public class PortfolioController {
     @GetMapping("/consumption")
     public ResponseEntity<HashMap<EnergyType, List<Reading>>> getConsumption(@RequestBody ObjectId portfolioId) {
 
-        Optional<Portfolio> portfolioOptional = portfolioService.getPortfolio(portfolioId);
+        Optional<Portfolio> portfolioOptional = portfolioRepository.findById(portfolioId);
 
         if (portfolioOptional.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

@@ -1,5 +1,6 @@
 package com.pgl.energenius.Controllers;
 
+import com.pgl.energenius.Objects.Address;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.config.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -48,37 +49,37 @@ public class ClientController {
      */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/auth/register")
-    @ResponseBody
-    public String register(@RequestBody ClientDto clientDto) {
-        Client client = new Client();
-//                clientDto.getFirstName(),
-//                clientDto.getLastName(),
-//                clientDto.getEmail(),
-//                clientDto.getPhoneNumber(), // changé pour les tests
-//                clientDto.getAddress(),
-//                clientDto.getCity(),
-//                clientDto.getCountry(),
-//                clientDto.getPostalCode(),
-//                clientDto.getLanguage());
-                  
-                 // TODO*/
+    public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
 
+        Address address = new Address(clientDto.getCity(),
+                clientDto.getStreet(),
+                clientDto.getHouseNo(),
+                clientDto.getBox(),
+                clientDto.getPostalCode(),
+                clientDto.getCountry());
+
+        Client client = new Client(clientDto.getFirstName(),
+                clientDto.getLastName(),
+                clientDto.getPhoneNumber(),
+                address,
+                null);
         clientRepository.save(client);
+
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
                 WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
 
         clientLoginRepository.save(clientLogin);
 
-        return "Correctly done" ;
+        return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
 
     /**
-     * GET method to log in the client.
+     * POST method to log in the client.
      *
      * @param clientLoginDto The client's login credentials.
      * @return A ResponseEntity containing the client's login information and the authentication token.
      */
-    @GetMapping("/auth/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {

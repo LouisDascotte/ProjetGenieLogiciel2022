@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Get jwt token
         final String token = header.split(" ")[1].trim();
 
-        // Get clientLogin (UserDetails) and set it on the spring security context
+        // Get clientLogin (UserDetails)
         ClientLogin clientLogin = clientLoginRepository.findByEmail(jwtUtil.getEmailFromToken(token)).orElse(null);
 
         // Validate token
@@ -54,6 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Set clientLogin (UserDetails) on the spring security context
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                 clientLogin, null, clientLogin.getAuthorities());
 

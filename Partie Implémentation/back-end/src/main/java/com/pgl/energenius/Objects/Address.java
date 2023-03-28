@@ -2,12 +2,14 @@ package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * The address of a client
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Address {
 
     /**

@@ -7,23 +7,10 @@ import { useState } from "react";
 import ChartStats from "./ChartStats";
 
 
-export default function ChartFooter() {
+export default function ChartFooter({ switchesChecked, onSwitchChange }) {
 
   const [energyChoice, setEnergyChoice] = useState('elec');
   const [scaleChoice, setScaleChoice] = useState('day');
-  const [waterVis, setWaterVis] = useState(true);
-  const [elecVis, setElecVis] = useState(true);
-  const [gasVis, setGasVis] = useState(true);
-
-  const handleWaterChange = (event) => {
-    setWaterVis(event.target.checked);
-  };
-  const handleElecChange = (event) => {
-    setElecVis(event.target.checked);
-  };
-  const handleGasChange = (event) => {
-    setGasVis(event.target.checked);
-  };
 
   const setEnergyChosen = (e) => {
     const energyChoice = e.target.value;
@@ -36,70 +23,102 @@ export default function ChartFooter() {
   };
 
     return (
-      
-        <Grid container direction='row'
+
+      <Grid container
+      direction='row'
+      justifyContent="center"
+      alignItems="center"
+      //blue
+      >
+
+        <Grid item container
+        direction='column'
         justifyContent="center"
-        alignItems="center" >
-          <Grid item container xs={2}
-          rowSpacing={1}
+        alignItems="center"
+        xs={8}
+        //black
+        >
+
+          <Grid item container
+          direction='row'
+          justifyContent="center"
+          alignItems="center"
+          //red
           >
-            <Grid item container
-            direction={'row'}
-            alignItems='center'
+
+            <Grid item
+            xs={6}
+            //Select 1
             >
-              <Grid item container
-              direction={'row'}
-              alignItems='center' >
-                <Grid item xs={6}>
-                  <Select
-                  native
-                  labelId="energy-select-label"
-                  id="energy-select"
-                  label="Energy"
-                  value={energyChoice}
-                  onChange={setEnergyChosen}
-                  variant='standard'
-                  >
-                    <option value='elec'>Electricity</option>
-                    <option value='gas'>Gas</option>
-                    <option value='water'>Water</option>
-                  </Select>
-                </Grid>
-                <Grid item xs={6}>
-                  <Select
-                  native
-                  labelId="scale-select-label"
-                  id="scale-select"
-                  label="Scale"
-                  value={scaleChoice}
-                  onChange={setScaleChosen}
-                  variant='standard'
-                  >
-                    <option value='day'>Day</option>
-                    <option value='week'>Week</option>
-                    <option value='month'>Month</option>
-                  </Select>
-                </Grid>
-              </Grid>
+              <Select
+              native
+              labelId="energy-select-label"
+              id="energy-select"
+              label="Energy"
+              value={energyChoice}
+              onChange={setEnergyChosen}
+              variant='standard'
+              >
+                <option value='elec'>Electricity</option>
+                <option value='gas'>Gas</option>
+                <option value='water'>Water</option>
+              </Select>
             </Grid>
-            <Grid item container 
-            direction='column' 
-            alignItems='left'
-            columnSpacing={2}
+            <Grid item
+            xs={6}
+            //Select 2
             >
-              <Grid item >
-                <ChartStats nrj={energyChoice} scale={scaleChoice} />
-              </Grid>
+              <Select
+              native
+              labelId="scale-select-label"
+              id="scale-select"
+              label="Scale"
+              value={scaleChoice}
+              onChange={setScaleChosen}
+              variant='standard'
+              >
+                <option value='day'>Day</option>
+                <option value='week'>Week</option>
+                <option value='month'>Month</option>
+              </Select>
             </Grid>
           </Grid>
-          
-          <Grid item xs={3} >
+
+          <Grid item container
+          direction='column'
+          justifyContent="center"
+          alignItems="center"
+          //green
+          >
+            <Grid item
+            xs={12}
+            //Stats
+            >
+              <ChartStats nrj={energyChoice} scale={scaleChoice} />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item container
+        direction='column'
+        justifyContent="left"
+        alignItems="center"
+        xs={4}
+        //red
+        >
+          <Grid item
+          xs={12}
+          >
             <FormControl>
-              <FormControlLabel control={<Checkbox defaultChecked={true} checked={waterVis} onChange={handleWaterChange} color='primary' size="small"  />} label='Water Cons' labelPlacement='end' />
-              <FormControlLabel control={<Checkbox defaultChecked={true} checked={elecVis} onChange={handleElecChange} color='primary' size="small" />} label='Electricity Cons' labelPlacement='end' />
-              <FormControlLabel control={<Checkbox defaultChecked={true} checked={gasVis} onChange={handleGasChange} color='primary' size="small" />} label='Gas Cons' labelPlacement='end' />
+              <FormControlLabel control={<Switch defaultChecked={true} checked={switchesChecked.waterSwitch} onChange={(e) => onSwitchChange("waterSwitch", e.target.checked)} color='primary' size="small"  />} label='Water Cons' labelPlacement='end' />
+
+              <FormControlLabel control={<Switch defaultChecked={true} checked={switchesChecked.elecSwitch} onChange={(e) => onSwitchChange("elecSwitch", e.target.checked)} color='primary' size="small" />} label='Electricity Cons' labelPlacement='end' />
+
+              <FormControlLabel control={<Switch defaultChecked={true} checked={switchesChecked.gasSwitch} onChange={(e) => onSwitchChange("gasSwitch", e.target.checked)} color='primary' size="small" />} label='Gas Cons' labelPlacement='end' />
+              
             </FormControl>
           </Grid>
         </Grid>
+      </Grid>
     );
 }

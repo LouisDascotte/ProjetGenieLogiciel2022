@@ -1,5 +1,5 @@
 import { Card, Grid, Stack } from '@mui/material';
-import React from 'react';
+import React, {useState} from 'react';
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import ChartFooter from '../components/ChartFooter';
@@ -10,9 +10,15 @@ const Testing = () => {
   const pageName = "test";
 	const pageAddress = "/test";
 
-  const [gasVis, setGasVis] = React.useState(true);
-  const [waterVis, setWaterVis] = React.useState(true);
-  const [elecVis, setElecVis] = React.useState(true);
+  const [switchesChecked , setSwitchesChecked] = useState({
+    waterSwitch: true,
+    elecSwitch: true,
+    gasSwitch: true,
+  });
+
+  function handleSwitchChange(switchName, checked) {
+    setSwitchesChecked({ ...switchesChecked, [switchName]: checked });
+  }
 
   return (
 
@@ -22,9 +28,9 @@ const Testing = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Stack sx={{height:"80%", justifyContent:'start', alignItems:'center'}}>
             <ChartHeader />
-            <BiAx scale={"day"} showGas={gasVis} showWater={waterVis} showElec={elecVis} />
+            <BiAx scale={"day"} switchesChecked={switchesChecked} />
             <Stack sx={{width:"80%", justifyContent:"center"}} >
-              <ChartFooter waterVis={true} elecVis={true} gasVis={true} />
+              <ChartFooter switchesChecked={switchesChecked} onSwitchChange={handleSwitchChange} />
             </Stack>
           </Stack>
         </Stack>

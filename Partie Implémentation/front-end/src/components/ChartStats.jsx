@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import { ConsPerDay2 as dataD1, ConsPerWeek as dataD2, ConsPerMonth as dataD3 } from "../resources/demo-data";
 
 function GasData(data) {
@@ -98,24 +98,26 @@ const ChartStats = ({nrj, scale}) => {
   }
 
   return (
-    <Grid item container 
-        direction='column' 
-        alignItems='left'
-        columnSpacing={2}
-        >
-          <Grid item xs={6} >
-            <Typography variant='body2'>Mean: {nrjData.Mean} {nrjData.Unit} </Typography>
-          </Grid>
-          <Grid item xs={6} >
-            <Typography variant='body2'>STDEV: {nrjData.Stdev}% </Typography>
-          </Grid>
-          <Grid item xs={6} >
-            <Typography variant='body2'>Max : {nrjData.Max} {nrjData.Unit} </Typography>
-          </Grid>
-          <Grid item xs={6} >
-            <Typography variant='body2'>Min : {nrjData.Min} {nrjData.Unit} </Typography>
-          </Grid>
-        </Grid>
+    <Grid container
+    alignItems='center'
+    justifyContent='center'
+    columnSpacing={2}
+    rowSpacing={2}
+    >
+      <Grid item xs='auto' >
+        <Typography variant='body2'>Mean: {nrjData.Mean} {nrjData.Unit} </Typography>
+      </Grid>
+      <Grid item xs='auto' >
+        <Typography variant='body2'>Max : {nrjData.Max} {nrjData.Unit} </Typography>
+      </Grid>
+      <Box width='100%' />
+      <Grid item xs='auto' >
+        <Typography variant='body2'>STDEV: {nrjData.Stdev}% </Typography>
+      </Grid>         
+      <Grid item xs='auto' >
+        <Typography variant='body2'>Min : {nrjData.Min} {nrjData.Unit} </Typography>
+      </Grid>
+    </Grid>
   );
 }
 

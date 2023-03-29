@@ -35,7 +35,7 @@ public class JwtUtil implements Serializable {
      * @param token the JWT token
      * @return the email address contained in the token
      */
-    public String getEmailFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -129,7 +129,7 @@ public class JwtUtil implements Serializable {
      * @return true if the token is valid for the given user, false otherwise
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final  String email = getEmailFromToken(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final  String username = getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

@@ -3,12 +3,12 @@ package com.pgl.energenius.Controllers;
 import com.mongodb.DuplicateKeyException;
 import com.pgl.energenius.Objects.Address;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
+import com.pgl.energenius.Repositories.UserRepository;
 import com.pgl.energenius.config.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import com.pgl.energenius.Objects.Client;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
-import com.pgl.energenius.Repositories.ClientLoginRepository;
 import com.pgl.energenius.Repositories.ClientRepository;
 import com.pgl.energenius.config.WebSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @Autowired
-    private ClientLoginRepository clientLoginRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -68,11 +68,12 @@ public class ClientController {
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
                 WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
 
-        if (clientLoginRepository.existsById(clientDto.getEmail())) {
+        try {
+            userRepository.insert(clientLogin);
+        } catch (DuplicateKeyException e) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
-        clientLoginRepository.insert(clientLogin);
         clientRepository.insert(client);
         return new ResponseEntity<>(client, HttpStatus.CREATED);
     }

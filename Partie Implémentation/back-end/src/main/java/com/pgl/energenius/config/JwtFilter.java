@@ -1,7 +1,7 @@
 package com.pgl.energenius.config;
 
-import com.pgl.energenius.Objects.ClientLogin;
-import com.pgl.energenius.Repositories.ClientLoginRepository;
+import com.pgl.energenius.Objects.User;
+import com.pgl.energenius.Repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import static org.springframework.util.StringUtils.hasText;
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    private ClientLoginRepository clientLoginRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,18 +45,22 @@ public class JwtFilter extends OncePerRequestFilter {
         // Get jwt token
         final String token = header.split(" ")[1].trim();
 
+        String username = jwtUtil.getUsernameFromToken(token);
         // Get clientLogin (UserDetails)
-        ClientLogin clientLogin = clientLoginRepository.findByEmail(jwtUtil.getEmailFromToken(token)).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
+
+        if (user == null)
+            user = userRepository.findByLoginId(username).orElse(null);
 
         // Validate token
-        if (clientLogin == null || !jwtUtil.validateToken(token, clientLogin)) {
+        if (user == null || !jwtUtil.validateToken(token, user)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // Set clientLogin (UserDetails) on the spring security context
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                clientLogin, null, clientLogin.getAuthorities());
+                user, null, user.getAuthorities());
 
         // Authenticate the user
         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

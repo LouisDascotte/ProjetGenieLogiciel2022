@@ -1,6 +1,6 @@
 package com.pgl.energenius.config;
 
-import com.pgl.energenius.Services.ClientLoginService;
+import com.pgl.energenius.Services.CustomUserDetailsService;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +13,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +31,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig {
 
     @Autowired
-    private ClientLoginService clientLoginService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -59,7 +58,7 @@ public class WebSecurityConfig {
                 .and()
 
                 .authorizeHttpRequests()
-                .requestMatchers("/api/client/auth/**").permitAll()
+                .requestMatchers("/api/client/auth/**", "/api/employee/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
@@ -74,7 +73,7 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(clientLoginService);
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

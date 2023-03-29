@@ -2,32 +2,56 @@ package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * The login informations of an employee
+ * The login information of an employee
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
-@Document(collection = "employee_logins")
-public class EmployeeLogin {
+@NoArgsConstructor
+public class EmployeeLogin extends User {
+
 
     /**
      * The ID of the employee
      */
-    @Id
+    @Indexed(unique = true)
     private String loginId;
-
-    /**
-     * The password of the employee
-     */
-    private String password;
 
     /**
      * The employee that owns those login infos
      */
-    @DBRef(lazy = true)
+    @DBRef
     private Employee employee;
+
+    public EmployeeLogin(String loginId, String password, Employee employee) {
+        super(password);
+        this.loginId = loginId;
+        this.employee = employee;
+    }
+
+    /**
+     * Grant authorities to the employee
+     * @return the roles of the employee
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add((GrantedAuthority) () -> "ROLE_EMPLOYEE");
+        return roles;
+    }
+
+    @Override
+    public String getUsername() {
+        return loginId;
+    }
 }

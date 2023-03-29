@@ -24,7 +24,7 @@ public class EmployeeLogin extends User {
     /**
      * The ID of the employee
      */
-    @Indexed(unique = true)
+    @Indexed(unique = true, sparse = true)
     private String loginId;
 
     /**

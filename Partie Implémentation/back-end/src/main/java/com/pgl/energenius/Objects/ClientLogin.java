@@ -24,7 +24,7 @@ public class ClientLogin extends User {
     /**
      * The email used by the client
      */
-    @Indexed(unique = true)
+    @Indexed(unique = true, sparse = true)
     private String email;
 
     /**

@@ -5,14 +5,6 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 
 const ScaleButtons = ({ scale, setScale }) => {
     const [value, setValue] = React.useState(scale);
-
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: '#9BCC6C',
-        },
-      },
-    });
     
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -20,8 +12,7 @@ const ScaleButtons = ({ scale, setScale }) => {
     };
     
     return (
-      <ThemeProvider theme={theme}>
-        <Stack direction="row"
+      <Stack direction="row"
       spacing={1.5}
       alignItems='baseline'
       >
@@ -37,27 +28,19 @@ const ScaleButtons = ({ scale, setScale }) => {
             size='small'
         >
           <ToggleButton value="day" aria-label="justified">
-          1D
+          Day
           </ToggleButton>
           <ToggleButton value="week" aria-label="justified">
-          1W
+          Week
           </ToggleButton>
           <ToggleButton value="month" aria-label="justified">
-          1M
+          Month
           </ToggleButton>
           <ToggleButton value="trimester" aria-label="justified">
-          3M
-          </ToggleButton>
-          <ToggleButton value="semester" aria-label="justified">
-          6M
-          </ToggleButton>
-          <ToggleButton value="year" aria-label="justified">
-          1Y
+          Trimester
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-      </ThemeProvider>
-      
     );
     }
 

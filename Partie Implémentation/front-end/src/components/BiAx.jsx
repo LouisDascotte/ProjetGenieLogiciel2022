@@ -1,10 +1,11 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-import { ConsPerWeek as dataWeek, ConsPerDay as dataDay, ConsPerMonth as dataMonth, ConsPerDay2 as dataD1, ConsPerDay3 as dataD2} from '../resources/demo-data';
+import { ConsPerWeek as dataWeek, ConsPerMonth as dataMonth, ConsPerDay2 as dataD1 } from '../resources/demo-data';
 
 
-export default function BiAx ({ switchesChecked, scale }) {
+export default function BiAx ({ switchesChecked, scale, dates }) {
   let data;
+  let XAxisVis = true;
 
   switch (scale) {
     case "day":
@@ -16,6 +17,7 @@ export default function BiAx ({ switchesChecked, scale }) {
     case "month":
     default:
       data = dataMonth;
+      XAxisVis = false;
       break;
   }
   
@@ -33,22 +35,24 @@ export default function BiAx ({ switchesChecked, scale }) {
         }}
       >
         <CartesianGrid vertical={false} />
-        <XAxis dataKey={scale} hide={true} />
-        <YAxis yAxisId="left" domain={[dataMin => (dataMin * 0.9), dataMax => (dataMax * 1.1)]} allowDecimals={false} />
-        <YAxis yAxisId="right" orientation="right" domain={[dataMin => (dataMin * 0.9), dataMax => (dataMax * 1.1)]} allowDecimals={false} />
+        <XAxis dataKey={scale} hide={XAxisVis} />
+
+        <YAxis yAxisId="left" domain={[dataMin => (dataMin * 0.9).toFixed(0), dataMax => (dataMax * 1.1).toFixed(0)]} tickCount={6} unit=' kWh' />
+
+        <YAxis yAxisId="right" orientation="right" domain={[dataMin => (dataMin * 0.95).toFixed(0), dataMax => (dataMax * 1.05).toFixed(0)]} tickCount={6} unit=' Ltrs' />
         <Tooltip />
         <Legend verticalAlign='top' />
 
         {(switchesChecked.elecSwitch &&
-          <Line yAxisId="left" isAnimationActive={false} dot={false} name="Electicity Cons." type="monotone" dataKey="elec" stroke="#82ca9d" strokeWidth={2} activeDot={{ r: 2 }} />
+          <Line yAxisId="left" isAnimationActive={false} dot={false} name="Electicity Cons." type="monotone" dataKey="elec" stroke="#82ca9d" strokeWidth={3} activeDot={{ r: 2 }} />
         )}
 
         {(switchesChecked.gasSwitch &&
-          <Line yAxisId="left" isAnimationActive={false} dot={false} name="Gas Cons." type="monotone" dataKey="gas" stroke="#E29B3F" strokeWidth={2} activeDot={{ r: 2 }} />
+          <Line yAxisId="left" isAnimationActive={false} dot={false} name="Gas Cons." type="monotone" dataKey="gas" stroke="#E29B3F" strokeWidth={3} activeDot={{ r: 2 }} />
         )}
 
         {(switchesChecked.waterSwitch &&
-          <Line yAxisId="right" isAnimationActive={false} dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={2} strokeDasharray="16 2" activeDot={{ r: 2 }} />
+          <Line yAxisId="right" isAnimationActive={false} dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={3} strokeDasharray="16 2" activeDot={{ r: 2 }} />
         )}
       </LineChart>
     </ResponsiveContainer>

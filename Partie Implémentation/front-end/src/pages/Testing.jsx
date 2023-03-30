@@ -16,9 +16,17 @@ const Testing = () => {
     gasSwitch: true,
   });
 
+  const [scaleSelected, setScaleSelected] = useState('month');
+
   function handleSwitchChange(switchName, checked) {
     setSwitchesChecked({ ...switchesChecked, [switchName]: checked });
   }
+
+  function handleToggleChange(event) {
+    setScaleSelected(event.target.value);
+  }
+
+
 
   return (
 
@@ -26,11 +34,13 @@ const Testing = () => {
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        <Stack sx={{height:"80%", justifyContent:'start', alignItems:'center'}}>
-            <ChartHeader />
-            <BiAx scale={"day"} switchesChecked={switchesChecked} />
-            <Stack sx={{width:"80%", justifyContent:"center"}} >
-              <ChartFooter switchesChecked={switchesChecked} onSwitchChange={handleSwitchChange} />
+        <Stack sx={{height:"80%", justifyContent:'center', alignItems:'center'}} >
+            <ChartHeader scaleToggled={scaleSelected} onToggleChange={handleToggleChange} />
+
+            <BiAx scale={scaleSelected} switchesChecked={switchesChecked} />
+            
+            <Stack sx={{width:'80%', justifyContent:"center"}} >
+              <ChartFooter switchesChecked={switchesChecked} onSwitchChange={handleSwitchChange} scale={scaleSelected} />
             </Stack>
           </Stack>
         </Stack>

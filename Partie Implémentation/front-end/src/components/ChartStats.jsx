@@ -103,13 +103,14 @@ const ChartStats = ({nrj, scale}) => {
     alignItems='center'
     justifyContent='center'
     direction='row'
-    columnSpacing={4}
+    columnSpacing={2}
     >
       <Grid item container
       xs='auto'
       direction="column"
       justifyContent="center"
       alignItems="flex-start"
+      rowSpacing={1}
       >
         <Grid item container 
         xs='12'
@@ -117,7 +118,7 @@ const ChartStats = ({nrj, scale}) => {
         columnSpacing={1}
         >
           <Grid item xs='auto' >
-            <Tooltip title="The mean represents the typical amount of energy used over a given time period." placement="top"  >
+            <Tooltip title={<h3>The mean represents the typical amount of energy used over a given time period.</h3> } placement="top" enterDelay={200} leaveDelay={200}  >
               <InfoOutlinedIcon fontSize="8" />
             </Tooltip>
           </Grid>
@@ -131,7 +132,7 @@ const ChartStats = ({nrj, scale}) => {
         columnSpacing={1}
         >
           <Grid item xs='auto' >
-            <Tooltip title="Standard deviation" placement="top">
+            <Tooltip title={<h3> The STDEV measures how spread out data is from the mean, it indicates the degree of variability. A high % means high variability and a low % means low variability.</h3> } placement="top" enterDelay={200} leaveDelay={200} >
               <InfoOutlinedIcon fontSize="8" />
             </Tooltip>
           </Grid>
@@ -145,6 +146,7 @@ const ChartStats = ({nrj, scale}) => {
       direction="column"
       justifyContent="center"
       alignItems="flex-start"
+      rowSpacing={1}
       >
         <Grid item xs='auto' >
           <Typography variant='body2'>Max : {nrjData.Max} {nrjData.Unit} </Typography>

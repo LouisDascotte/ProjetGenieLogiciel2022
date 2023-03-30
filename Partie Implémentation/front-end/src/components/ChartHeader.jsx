@@ -1,22 +1,16 @@
 import { Grid, Typography } from '@mui/material';
 import {React, useState} from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import MonthDatePicker from './datepickers/MonthDatePicker.jsx';
-import QuarterDatePicker from './datepickers/QuarterDatePicker.jsx';
-import WeekDatePicker from './datepickers/WeekDatePicker.jsx';
-import DayDatePicker from './datepickers/DayDatePicker.jsx';
 import { Stack } from '@mui/system';
-import ScaleButtons from './ScaleButtons.jsx';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import DatePickers from './DatePickers.jsx';
 
 {/* npm install react-datepicker --save */}
 
 
-const ChartHeader = () => {
+const ChartHeader = ({ scaleToggled, onToggleChange }) => {
   
-  const [scale, setScale] = useState('month');
-  
-  switch (scale) {
-    case "day":
       return (
         <Grid container
         direction='row'
@@ -24,91 +18,38 @@ const ChartHeader = () => {
         justifyContent='end'
         >
           <Grid item xs={9} >
-            <ScaleButtons scale={scale} setScale={setScale} />
+          <Stack direction="row"
+          spacing={1.5}
+          alignItems='baseline'
+          >
+            <Typography variant="h6" component="div" gutterBottom>
+              Scale:
+            </Typography>
+            <ToggleButtonGroup
+                value={scaleToggled}
+                exclusive
+                onChange={onToggleChange}
+                aria-label="text alignment"
+                color='primary'
+                size='small'
+            >
+              <ToggleButton value="day" aria-label="justified">
+              Day
+              </ToggleButton>
+              <ToggleButton value="week" aria-label="justified">
+              Week
+              </ToggleButton>
+              <ToggleButton value="month" aria-label="justified">
+              Month
+              </ToggleButton>
+            </ToggleButtonGroup>
+      </Stack>
           </Grid>
           <Grid item xs={3} >
-            <DayDatePicker />
+            <DatePickers scale={scaleToggled} />
           </Grid>
         </Grid>
       );
-    case "week":
-      return (
-        <Grid container
-        direction='row'
-        alignItems='center'
-        justifyContent='end'
-        >
-          <Grid item xs={9} >
-            <ScaleButtons scale={scale} setScale={setScale} />
-          </Grid>
-          <Grid item xs={3} >
-            <WeekDatePicker />
-          </Grid>
-        </Grid>
-      );
-    case "trimester":
-      return (
-        <Grid container
-        direction='row'
-        alignItems='center'
-        justifyContent='space-between'
-        >
-          <Grid item xs={3} >
-            <ScaleButtons scale={scale} setScale={setScale} />
-          </Grid>
-          <Grid item xs={3} >
-            <QuarterDatePicker />
-          </Grid>
-        </Grid>
-      );
-    case "semester":
-      return (
-        <Grid container
-        direction='row'
-        alignItems='center'
-        justifyContent='end'
-        >
-          <Grid item xs={9} >
-            <ScaleButtons scale={scale} setScale={setScale} />
-          </Grid>
-          <Grid item xs={3} >
-            <MonthDatePicker />
-          </Grid>
-        </Grid>
-      );
-    case "year":
-      return (
-        <Grid container
-        direction='row'
-        alignItems='center'
-        justifyContent='end'
-        >
-          <Grid item xs={9} >
-            <ScaleButtons scale={scale} setScale={setScale} />
-          </Grid>
-          <Grid item xs={3} >
-            <MonthDatePicker />
-          </Grid>
-        </Grid>
-      );
-    case "month":
-    default:
-      // Render the ScaleButtons and MonthDatePicker components if scale is "month"
-      return (
-        <Grid container
-        direction='row'
-        alignItems='center'
-        justifyContent='end'
-        >
-          <Grid item xs={9} >
-            <ScaleButtons scale={scale} setScale={setScale} />
-          </Grid>
-          <Grid item xs={3} >
-            <MonthDatePicker />
-          </Grid>
-        </Grid>
-      );
-  }   
 }
 
 export default ChartHeader

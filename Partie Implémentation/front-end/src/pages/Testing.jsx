@@ -26,8 +26,6 @@ const Testing = () => {
     setScaleSelected(event.target.value);
   }
 
-
-
   return (
 
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >

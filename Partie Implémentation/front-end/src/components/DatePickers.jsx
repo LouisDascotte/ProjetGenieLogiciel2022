@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import "react-datepicker/dist/react-datepicker.css";
 
-const DatePickers = ({onChange }) => {
-
-  const [scale, setScale] = useState("week");
+const DatePickers = ({scale }) => {
 
   const minDate = new Date("2022-01-01");
   const maxDate = new Date("2022-12-31");

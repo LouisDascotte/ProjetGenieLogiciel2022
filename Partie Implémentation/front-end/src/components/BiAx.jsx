@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { ConsPerWeek as dataWeek, ConsPerMonth as dataMonth, ConsPerDay2 as dataD1 } from '../resources/demo-data';
 
 
-export default function BiAx ({ switchesChecked, scale, dates }) {
+export default function BiAx ({ switchesChecked, scale }) {
   let data;
   let XAxisVis = true;
 

@@ -7,7 +7,7 @@ import { useState } from "react";
 import ChartStats from "./ChartStats";
 
 
-export default function ChartFooter({ switchesChecked, onSwitchChange }) {
+export default function ChartFooter({ switchesChecked, onSwitchChange, scale }) {
 
   const [energyChoice, setEnergyChoice] = useState('elec');
   const [scaleChoice, setScaleChoice] = useState('day');
@@ -64,24 +64,6 @@ export default function ChartFooter({ switchesChecked, onSwitchChange }) {
                 <option value='water'>Water</option>
               </Select>
             </Grid>
-            <Grid item
-            xs={6}
-            //Select 2
-            >
-              <Select
-              native
-              labelId="scale-select-label"
-              id="scale-select"
-              label="Scale"
-              value={scaleChoice}
-              onChange={setScaleChosen}
-              variant='standard'
-              >
-                <option value='day'>Day</option>
-                <option value='week'>Week</option>
-                <option value='month'>Month</option>
-              </Select>
-            </Grid>
           </Grid>
 
           <Grid item container
@@ -94,7 +76,7 @@ export default function ChartFooter({ switchesChecked, onSwitchChange }) {
             xs={12}
             //Stats
             >
-              <ChartStats nrj={energyChoice} scale={scaleChoice} />
+              <ChartStats nrj={energyChoice} scale={scale} />
             </Grid>
           </Grid>
         </Grid>

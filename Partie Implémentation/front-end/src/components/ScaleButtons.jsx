@@ -36,9 +36,6 @@ const ScaleButtons = ({ scale, setScale }) => {
           <ToggleButton value="month" aria-label="justified">
           Month
           </ToggleButton>
-          <ToggleButton value="trimester" aria-label="justified">
-          Trimester
-          </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
     );

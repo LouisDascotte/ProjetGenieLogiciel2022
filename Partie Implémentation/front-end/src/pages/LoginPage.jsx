@@ -16,8 +16,8 @@ const LoginPage = () => {
   const [jwt, setJwt] = useLocalState("", "jwt");
 
 
-  /*const navigate = useNavigate();
-  const {setAuth} = useContext(AuthContext);*/
+  const navigate = useNavigate();
+  const {setAuth} = useContext(AuthContext);
 
 
   const [form, setForm] = useState({
@@ -43,8 +43,8 @@ const LoginPage = () => {
       password: form.password
     }
 
-    /*try{
-      const response = await axios.post(LOGIN_URL, JSON.stringify({
+    try{
+      const response = await axios.get(LOGIN_URL, JSON.stringify({
         email : form.email, 
         password : form.password
       }), {
@@ -53,7 +53,7 @@ const LoginPage = () => {
         setJwt(headers.get("authorization"))
       }); 
       console.log(JSON.stringify(response?.data));
-      /*const accessToken = response?.data?.accessToken; // TODO
+      const accessToken = response?.data?.accessToken; // TODO
       const roles = response?.data?.roles; // TODO
       setAuth({form})
     } catch(err){
@@ -62,15 +62,15 @@ const LoginPage = () => {
       } else {
         console.log("Login failed");
       }
-    }*/
+    }
 
-    fetch(LOGIN_URL, {
+    /*fetch(LOGIN_URL, {
     headers: {
       "Content-Type": "application/json",
       //"Authorization" : `Bearer ${jwt}`
       "Access-Control-Allow-Origin":true
     },
-    method:"post",
+    method:"get",
     body: JSON.stringify(body),
     }).then((response)=> { if (response.status === 200)
      Promise.all([response.json(), response.headers]);
@@ -82,7 +82,7 @@ const LoginPage = () => {
     window.location.href="main-page";
     }).catch((message)=>{
       alert(message);
-    });
+    });*/
     
   }
   /*const onSubmitForm = async (e) => {

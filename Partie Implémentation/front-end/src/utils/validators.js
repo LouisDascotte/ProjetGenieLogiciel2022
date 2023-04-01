@@ -1,16 +1,16 @@
 export const emailValidator = email => {
   if (!email){
     return "Email is required"; 
-  } else if (!new RegExp(/\S+@\S+\.\S+/).test(email)){
+  } /*else if (!new RegExp(/\S+@\S+\.\S+/).test(email)){
     return "Incorrect email format";
-  }
+  }*/
   return "";
 };
 
 export const passwordValidator = password => {
   if (!password) {
     return "Password is required";
-  } else if (password.length < 8){
+  } else if (password.length <2){ // TO CHANGE TO 8 CHARS LATER
     return "Password must have a minimum of 8 characters";
   }
   return "";

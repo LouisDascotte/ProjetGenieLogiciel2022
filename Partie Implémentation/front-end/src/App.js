@@ -19,15 +19,15 @@ import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
-import CoffeeTest from './pages/CoffeeTest';
+import CoffeeTest from './pages/CoffeeTest'; 
 import {createBrowserHistory} from "history"; 
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 
 function App() {
     let history = createBrowserHistory();
-    /*const [jwt, setJwt] = useLocalState("", "jwt");
-
+    const [jwt, setJwt] = useLocalState("", "jwt");
+    /*
     useEffect(() => {
         const reqBody={
             username:"random",
@@ -57,7 +57,6 @@ function App() {
                 <Route path="/preferences" exact element={<Preferences/>}/>
                 <Route path="/profile" exact element={<Profile/>}/>
                 <Route path="/notifications" exact element={<Notifications/>}/>
-                
                 <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
               </Routes>
             

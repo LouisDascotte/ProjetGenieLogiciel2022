@@ -32,7 +32,6 @@ const ManagePortfolios = () => {
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
             <PortfoliosList/>
-
           </Card>
           <ThemeProvider theme={theme}>
             <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>

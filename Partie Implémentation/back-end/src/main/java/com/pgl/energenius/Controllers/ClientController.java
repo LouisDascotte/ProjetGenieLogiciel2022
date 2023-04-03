@@ -85,6 +85,7 @@ public class ClientController {
      * @return A ResponseEntity containing the client's login information and the authentication token.
      */
     @PostMapping("/auth/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {

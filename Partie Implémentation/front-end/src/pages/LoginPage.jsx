@@ -17,7 +17,6 @@ const LoginPage = () => {
 
 
   const navigate = useNavigate();
-  const {setAuth} = useContext(AuthContext);
 
 
   const [form, setForm] = useState({
@@ -43,19 +42,17 @@ const LoginPage = () => {
       password: form.password
     }
 
+
     try{
-      const response = await axios.get(LOGIN_URL, JSON.stringify({
-        email : form.email, 
-        password : form.password
-      }), {
-        headers : {"Content-Type":"application/json"}
-      }).then(([body, headers])=>{
-        setJwt(headers.get("authorization"))
-      }); 
-      console.log(JSON.stringify(response?.data));
-      const accessToken = response?.data?.accessToken; // TODO
-      const roles = response?.data?.roles; // TODO
-      setAuth({form})
+      const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
+        headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+      }).then(response => {
+        console.log("auth: " + response.headers["authorization"]);
+        setJwt(response.headers["authorization"], "jwt");
+      });
+      navigate("/main-page");
     } catch(err){
       if(!err?.response){
         console.log("No server response.");
@@ -64,13 +61,15 @@ const LoginPage = () => {
       }
     }
 
+    
+
     /*fetch(LOGIN_URL, {
     headers: {
       "Content-Type": "application/json",
-      //"Authorization" : `Bearer ${jwt}`
+      "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true
     },
-    method:"get",
+    method:"post",
     body: JSON.stringify(body),
     }).then((response)=> { if (response.status === 200)
      Promise.all([response.json(), response.headers]);

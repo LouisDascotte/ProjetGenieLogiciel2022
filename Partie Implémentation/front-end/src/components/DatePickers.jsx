@@ -3,8 +3,13 @@ import {addDays, subDays, addWeeks, subWeeks} from 'date-fns';
 import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import fr from 'date-fns/locale/fr';
+registerLocale('fr', fr)
 
 const DatePickers = ({scale }) => {
+
+  setDefaultLocale('fr');
 
   const minDate = new Date("2022-01-01");
   const maxDate = new Date("2022-12-31");
@@ -78,7 +83,6 @@ const DatePickers = ({scale }) => {
             minDate={minDate}
             maxDate={subWeeks(maxDate, minTime)}
             startDate={startDate}
-            locale="fr-FR"
             dateFormat="dd/MM/yyyy"
             showWeekNumbers
           ></DatePicker>
@@ -95,6 +99,7 @@ const DatePickers = ({scale }) => {
             dateFormat="dd/MM/yyyy"
             minDate={addWeeks(startDate, minTime)}
             maxDate={new Date(Math.min.apply(null, [maxDate, addWeeks(startDate, maxTime)]))}
+            showWeekNumbers
           ></DatePicker>
           </Grid>
         </Grid>

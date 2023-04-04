@@ -10,16 +10,10 @@ import ChartStats from "./ChartStats";
 export default function ChartFooter({ switchesChecked, onSwitchChange, scale }) {
 
   const [energyChoice, setEnergyChoice] = useState('elec');
-  const [scaleChoice, setScaleChoice] = useState('day');
 
   const setEnergyChosen = (e) => {
     const energyChoice = e.target.value;
     setEnergyChoice(energyChoice);
-  };
-
-  const setScaleChosen = (e) => {
-    const scaleChoice = e.target.value;
-    setScaleChoice(scaleChoice);
   };
 
     return (

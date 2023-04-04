@@ -66,9 +66,9 @@ const SideMenu = (mainPage) => {
                         Manage invoices
                     </MenuItem>
                 </Link>
-                <Link to="/stats" className='link'>
+                <Link to="/chart" className='link'>
                     <MenuItem icon={<InsertedChartOutlinedIcon />} >
-                        Statistical analysis
+                        Consumption Chart
                     </MenuItem>
                 </Link>
                 <Link to="/test" className='link'>

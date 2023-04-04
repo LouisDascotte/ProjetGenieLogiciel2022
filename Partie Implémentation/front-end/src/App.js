@@ -18,9 +18,14 @@ import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import CoffeeTest from './pages/CoffeeTest';
-import StatAnalysis from './pages/StatAnalysis';
+import ChartAnalysis from './pages/ChartAnalysis';
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
+
+import StaffManageConsumption from "./pagesStaff/StaffManageConsumption";
+import StaffMainPage from "./pagesStaff/StaffMainPage";
+import StaffManageContracts from "./pagesStaff/StaffManageContracts";
+import StaffManageClients from "./pagesStaff/StaffManageClients";
 
 function App() {
   return (
@@ -42,9 +47,15 @@ function App() {
                   <Route path="/notifications" exact element={<Notifications/>}/>
                   <Route path="/register-account" exact element={<RegisterPage/>}/>
                   <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
-                  <Route path='/stats' exact element={<StatAnalysis/>}/>
+                  <Route path='/chart' exact element={<ChartAnalysis/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
-                  <Route path='/Test' exact element={<Testing/>}/>
+
+                  <Route path='/test' exact element={<Testing/>}/>
+                  <Route path='/staff' exact element={<StaffMainPage/>}/>
+                  <Route path='/staff-contracts' exact element={<StaffManageContracts/>}/>
+                  <Route path='/staff-clients' exact element={<StaffManageClients/>}/>
+                  <Route path='/staff-consumption' exact element={<StaffManageConsumption/>}/>
+                  {/* <Route path='/meter/:id' element={<StaffManageMeter/>}/> */}
               </Routes>
             
       </BrowserRouter>

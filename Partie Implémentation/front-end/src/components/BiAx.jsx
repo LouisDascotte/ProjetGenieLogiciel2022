@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-import { ConsPerWeek as dataWeek, ConsPerMonth as dataMonth, ConsPerDay2 as dataD1 } from '../resources/demo-data';
+import { ConsPerWeek as dataWeek, ConsPerMonth as dataMonth, ConsPerDay as dataDay } from '../resources/demo-data';
 
 
 export default function BiAx ({ switchesChecked, scale }) {
@@ -9,7 +9,7 @@ export default function BiAx ({ switchesChecked, scale }) {
 
   switch (scale) {
     case "day":
-      data = dataD1;
+      data = dataDay;
       break;
     case "week":
       data = dataWeek;
@@ -52,7 +52,7 @@ export default function BiAx ({ switchesChecked, scale }) {
         )}
 
         {(switchesChecked.waterSwitch &&
-          <Line yAxisId="right" isAnimationActive={false} dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={3} strokeDasharray="16 2" activeDot={{ r: 2 }} />
+          <Line yAxisId="right" isAnimationActive={false} dot={false} name="Water Cons." type="monotone" dataKey="water" stroke="#8884d8" strokeWidth={3} activeDot={{ r: 2 }} />
         )}
       </LineChart>
     </ResponsiveContainer>

@@ -1,8 +1,9 @@
 package com.pgl.energenius.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.enums.ClientStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -15,15 +16,16 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Document(collection = "clients")
-
 /**
  * Client
  */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "clients")
 public class Client {
+
     /**
      * The ID of the client
      */
@@ -61,8 +63,7 @@ public class Client {
     /**
      * The language that the client usually uses
      */
-    @DBRef(lazy = true)
-    private Language language;
+    private String language;
 
     /**
      * The favorite portfolio of the client
@@ -82,23 +83,19 @@ public class Client {
 
     /**
      * Create a client
-     * @param firstName
-     * @param lastName
-     * @param phoneNo
-     * @param address
-     * @param language
+     * @param clientDto
      */
-    public Client(String firstName, String lastName, String phoneNo, Address address, Language language) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNo = phoneNo;
-        this.address = address;
-        this.language = language;
+    public Client(ClientDto clientDto) {
+        this.firstName = clientDto.getFirstName();
+        this.lastName = clientDto.getLastName();
+        this.phoneNo = clientDto.getPhoneNumber();
+        this.address = clientDto.getAddress();
+        this.language = clientDto.getLanguage();
         id = new ObjectId();
         creationDate = new Date(System.currentTimeMillis());
         lastAccess = creationDate;
         status = null; // TODO
-        favoritePortfolio = null; // TODO
+        favoritePortfolio = null;
         darkMode = false;
         notifications = new ArrayList<>();
     }

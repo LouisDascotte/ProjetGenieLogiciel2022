@@ -1,24 +1,17 @@
 package com.pgl.energenius.Controllers;
 
-import com.mongodb.DuplicateKeyException;
-import com.pgl.energenius.Objects.Address;
-import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
-import com.pgl.energenius.Repositories.UserRepository;
-import com.pgl.energenius.config.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
-import com.pgl.energenius.Objects.Client;
+import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
-import com.pgl.energenius.Repositories.ClientRepository;
-import com.pgl.energenius.config.WebSecurityConfig;
+import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
+import com.pgl.energenius.Services.ClientService;
+import com.pgl.energenius.config.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -31,13 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private ClientService clientService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -52,30 +39,15 @@ public class ClientController {
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
 
-        Address address = new Address(clientDto.getCity(),
-                clientDto.getStreet(),
-                clientDto.getHouseNo(),
-                clientDto.getBox(),
-                clientDto.getPostalCode(),
-                clientDto.getCountry());
-
-        Client client = new Client(clientDto.getFirstName(),
-                clientDto.getLastName(),
-                clientDto.getPhoneNumber(),
-                address,
-                null);
-
-        ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
-                WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
-
         try {
-            userRepository.insert(clientLogin);
-        } catch (DuplicateKeyException e) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
+            return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
 
-        clientRepository.insert(client);
-        return new ResponseEntity<>(client, HttpStatus.CREATED);
+        } catch (ObjectAlreadyExitsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -89,18 +61,17 @@ public class ClientController {
     public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {
-            Authentication auth = authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(clientLoginDto.getEmail(), clientLoginDto.getPassword()));
-
-            ClientLogin clientLogin = (ClientLogin) auth.getPrincipal();
+            ClientLogin clientLogin = clientService.authenticateClient(clientLoginDto);
 
             return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtUtil.generateToken(clientLogin)
-                    ).body(clientLogin);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(clientLogin))
+                    .body(clientLogin.getClient());
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

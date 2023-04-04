@@ -1,9 +1,11 @@
 package com.pgl.energenius.Controllers;
 
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Objects.DTOs.EmployeeLoginDto;
 import com.pgl.energenius.Objects.EmployeeLogin;
 import com.pgl.energenius.Repositories.UserRepository;
+import com.pgl.energenius.Services.EmployeeService;
 import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.config.WebSecurityConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,9 @@ public class EmployeeController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     /**
      * POST method to log in the employee.
      *
@@ -41,21 +46,19 @@ public class EmployeeController {
      */
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody EmployeeLoginDto employeeLoginDto) {
-        System.out.println("ok");
-        try {
-            Authentication auth = authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(employeeLoginDto.getLoginId(), employeeLoginDto.getPassword()));
 
-            System.out.println("ok");
-            EmployeeLogin employeeLogin = (EmployeeLogin) auth.getPrincipal();
+        try {
+            EmployeeLogin employeeLogin = employeeService.authenticateEmployee(employeeLoginDto);
 
             return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtUtil.generateToken(employeeLogin)
-                    ).body(employeeLogin);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(employeeLogin))
+                    .body(employeeLogin.getEmployee());
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
  }

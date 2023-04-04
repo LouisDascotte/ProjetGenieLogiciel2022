@@ -1,7 +1,9 @@
 package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -14,7 +16,9 @@ import java.util.List;
  * Employee of a supplier
  */
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "employees")
 public class Employee {
 

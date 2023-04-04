@@ -5,6 +5,7 @@ import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.enums.MeterStatus;
 import com.pgl.energenius.enums.MeterType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -17,6 +18,7 @@ import java.util.List;
  * Meter of a client
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "meters")

@@ -1,12 +1,11 @@
 package com.pgl.energenius.Objects;
 
-import lombok.AllArgsConstructor;
+import com.pgl.energenius.Objects.DTOs.ClientDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;

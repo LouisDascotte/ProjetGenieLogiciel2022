@@ -1,5 +1,6 @@
 package com.pgl.energenius.Objects;
 
+import com.pgl.energenius.Objects.DTOs.PortfolioDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,14 +50,13 @@ public class Portfolio {
     /**
      * Create a portfolio
      * @param client
-     * @param address
-     * @param name
+     * @param portfolioDto
      */
-    public Portfolio(Client client, Address address, String name) {
+    public Portfolio(Client client, PortfolioDto portfolioDto) {
         id = new ObjectId();
         this.client = client;
-        this.address = address;
-        this.name = name;
+        this.address = portfolioDto.getAddress();
+        this.name = portfolioDto.getName();
         supplyPoints = new ArrayList<>();
     }
 }

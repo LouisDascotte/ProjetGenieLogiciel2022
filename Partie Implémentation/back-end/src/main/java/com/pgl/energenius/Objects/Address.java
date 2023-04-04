@@ -1,44 +1,46 @@
 package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The address of a client
+ * An address
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
 
     /**
-     * The city of the client
+     * The city
      */
     private String city;
 
     /**
-     * The street of the client
+     * The street
      */
     private String street;
 
     /**
-     * The number of the client's house
+     * The number of house
      */
     private int houseNo;
 
     /**
-     * The postal box of the client
+     * The postal box
      */
     private int box;
 
     /**
-     * The postal code of the client's city
+     * The postal code
      */
     private int postalCode;
 
     /**
-     * The country of the client
+     * The country
      */
     private String country;
 }

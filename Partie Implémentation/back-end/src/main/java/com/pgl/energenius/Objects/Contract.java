@@ -1,7 +1,10 @@
 package com.pgl.energenius.Objects;
 
+import com.pgl.energenius.enums.ContractType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,7 +16,9 @@ import java.util.Date;
  * The contract of a client
  */
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "contracts")
 public class Contract {
 
@@ -48,7 +53,7 @@ public class Contract {
     /**
      * The type of contract
      */
-    private String contractType;
+    private ContractType contractType;
 
     /**
      * The first meter linked to the contract
@@ -81,18 +86,8 @@ public class Contract {
 
     /**
      * Create a contract
-     * @param beginDate
-     * @param endDate
-     * @param client
-     * @param supplier
-     * @param contractType
-     * @param meter1
-     * @param meter2
-     * @param offer
-     * @param status
-     * @param portfolio
      */
-    public Contract(Date beginDate, Date endDate, Client client, Supplier supplier, String contractType, Meter meter1, Meter meter2, Offer offer, String status, Portfolio portfolio) {
+    public Contract(Date beginDate, Date endDate, Client client, Supplier supplier, ContractType contractType, Meter meter1, Meter meter2, Offer offer, String status, Portfolio portfolio) {
         id = new ObjectId();
         this.beginDate = beginDate;
         this.endDate = endDate;

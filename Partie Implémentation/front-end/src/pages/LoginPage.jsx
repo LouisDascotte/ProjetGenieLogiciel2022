@@ -13,8 +13,7 @@ const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
 
 const LoginPage = () => {
 
-  const [jwt, setJwt] = useLocalState("", "jwt");
-
+  const [jwt, setJwt] = useLocalState("", "jwt"); 
 
   const navigate = useNavigate();
 
@@ -50,7 +49,9 @@ const LoginPage = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response => {
         console.log("auth: " + response.headers["authorization"]);
-        setJwt(response.headers["authorization"], "jwt");
+        //setJwt(response.headers["authorization"], "jwt");
+        localStorage.setItem("jwt", JSON.stringify(response.headers["authorization"]));
+        setAuthToken(JSON.stringify(response.headers["authorization"]));
       });
       navigate("/main-page");
     } catch(err){
@@ -60,59 +61,8 @@ const LoginPage = () => {
         console.log("Login failed");
       }
     }
-
-    
-
-    /*fetch(LOGIN_URL, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true
-    },
-    method:"post",
-    body: JSON.stringify(body),
-    }).then((response)=> { if (response.status === 200)
-     Promise.all([response.json(), response.headers]);
-     else 
-      return Promise.reject("Invalid login attempt");
-    }) 
-      .then(([body, headers])=>{
-    setJwt(headers.get("authorization"));
-    window.location.href="main-page";
-    }).catch((message)=>{
-      alert(message);
-    });*/
     
   }
-  /*const onSubmitForm = async (e) => {
-    e.preventDefault();
-    const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
-    console.log(isValid);
-    if (!isValid)
-      return; 
-    alert(JSON.stringify(form, null, 2));
-    try{
-      const response = await axios.post(LOGIN_URL, JSON.stringify({
-        email : form.email, 
-        password : form.password
-      }), {
-        headers : {"Content-Type":"application/json"}, 
-        withCredentials: true
-      }); 
-      console.log(JSON.stringify(response?.data));
-      /*const accessToken = response?.data?.accessToken; // TODO
-      const roles = response?.data?.roles; // TODO
-      setAuth({form})
-    } catch(err){
-      if(!err?.response){
-        console.log("No server response.");
-      } else {
-        console.log("Login failed");
-      }
-    }
-    
-    navigate("/main-page");
-  };*/
 
   const onUpdateField = e => {
     const field = e.target.name; 

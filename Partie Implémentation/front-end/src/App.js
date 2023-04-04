@@ -20,24 +20,14 @@ import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest'; 
-import {createBrowserHistory} from "history"; 
+import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 
 function App() {
-    let history = createBrowserHistory();
-    const [jwt, setJwt] = useLocalState("", "jwt");
-    /*
-    useEffect(() => {
-        const reqBody={
-            username:"random",
-            password:"random"
-        }
-    });
-
-    fetch("http://localhost:8080/api/client/auth/login")*/
+  
     return (
-      <BrowserRouter >
+      <BrowserRouter history={history}>
               <Routes>   
                 <Route path="/login" exact element={<LoginPage/>}/>
                 <Route path="/register-account" exact element={<RegisterPage/>}/>
@@ -47,16 +37,33 @@ function App() {
                 <Route path='/create-pass' exact element={<PrivateRoute>
                     <CreateNewPassword/>
                 </PrivateRoute>}/>
-                <Route path='/create-pass-success' exact element={<PrivateRoute><NewPasswordSuccess/></PrivateRoute>}/>
-                <Route path="/main-page" exact element={<PrivateRoute><MainPage/></PrivateRoute>}/>
-                
-                <Route path="/manage-portfolios" exact element={<ManagePortfolios/>}/>
-                <Route path="/manage-meters" exact element={<ManageMeters/>}/>
-                <Route path="/manage-invoices" exact element={<ManageInvoices/>}/>
-                <Route path="/manage-contracts" exact element={<ManageContracts/>}/>
-                <Route path="/preferences" exact element={<Preferences/>}/>
-                <Route path="/profile" exact element={<Profile/>}/>
-                <Route path="/notifications" exact element={<Notifications/>}/>
+                <Route path='/create-pass-success' exact element={<PrivateRoute>
+                  <NewPasswordSuccess/>
+                  </PrivateRoute>}/>
+                <Route path="/main-page" exact element={<PrivateRoute>
+                  <MainPage/>
+                  </PrivateRoute>}/>
+                <Route path="/manage-portfolios" exact element={<PrivateRoute>
+                  <ManagePortfolios/>
+                </PrivateRoute>}/>
+                <Route path="/manage-meters" exact element={<PrivateRoute>
+                  <ManageMeters/>
+                </PrivateRoute>}/>
+                <Route path="/manage-invoices" exact element={<PrivateRoute>
+                  <ManageInvoices/>
+                  </PrivateRoute>}/>
+                <Route path="/manage-contracts" exact element={<PrivateRoute>
+                  <ManageContracts/>
+                  </PrivateRoute>}/>
+                <Route path="/preferences" exact element={<PrivateRoute>
+                  <Preferences/>
+                  </PrivateRoute>}/>
+                <Route path="/profile" exact element={<PrivateRoute>
+                  <Profile/>
+                  </PrivateRoute>}/>
+                <Route path="/notifications" exact element={<PrivateRoute>
+                  <Notifications/>
+                  </PrivateRoute>}/>
                 <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
               </Routes>
             

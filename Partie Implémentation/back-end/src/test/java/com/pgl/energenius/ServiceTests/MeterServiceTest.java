@@ -2,16 +2,21 @@ package com.pgl.energenius.ServiceTests;
 
 import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.Exception.ObjectNotFoundException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Exception.UnauthorizedAccessException;
 import com.pgl.energenius.Objects.*;
+import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Services.ContractService;
 import com.pgl.energenius.Services.MeterService;
+import com.pgl.energenius.Services.NotificationService;
 import com.pgl.energenius.Utils.SecurityUtils;
+import com.pgl.energenius.Utils.ValidationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -33,54 +38,49 @@ public class MeterServiceTest {
     private SecurityUtils securityUtils;
 
     @Mock
-    private ContractService contractService;
+    private NotificationService notificationService;
+
+    @Mock
+    private ValidationUtils validationUtils;
 
     @InjectMocks
     private MeterService meterService;
 
-    @Test
-    public void test_getMeter_Client() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+    private Meter meter;
 
-        Meter meter = Meter.builder()
-                .EAN("EAN1234")
-                .build();
-
-        when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
+    private void setUp() throws InvalidUserDetailsException {
 
         Client client = new Client();
 
-        Contract contract = Contract.builder()
-                .meter1(meter)
+        meter = Meter.builder()
+                .EAN("EAN1234")
+                .clientId(client.getId())
                 .build();
 
-        List<Contract> contracts = new ArrayList<>();
-        contracts.add(contract);
-
-        when(contractService.getContractsByClient(client)).thenReturn(contracts);
+        when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+    }
 
+    @Test
+    public void test_getMeter_Client() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        setUp();
         assertEquals(meter, meterService.getMeter("EAN1234"));
     }
 
     @Test
     public void test_getMeter_Employee() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
+        Employee employee = Employee.builder()
+                .supplier(new Supplier("", ""))
+                .build();
+
         Meter meter = Meter.builder()
                 .EAN("EAN1234")
+                .SupplierId(employee.getSupplier().getId())
                 .build();
 
         when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
-
-        Employee employee = new Employee();
-
-        Contract contract = Contract.builder()
-                .meter1(meter)
-                .build();
-
-        List<Contract> contracts = new ArrayList<>();
-        contracts.add(contract);
-
-        when(contractService.getContractsByEmployee(employee)).thenReturn(contracts);
         when(securityUtils.getCurrentEmployeeLogin()).thenReturn(new EmployeeLogin("", "", employee));
         when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
 
@@ -88,22 +88,10 @@ public class MeterServiceTest {
     }
 
     @Test
-    public void test_getMeter_UnauthorizedAccess() throws ObjectNotFoundException, InvalidUserDetailsException {
+    public void test_getMeter_UnauthorizedAccess() throws InvalidUserDetailsException {
 
-        Meter meter = Meter.builder()
-                .EAN("EAN1234")
-                .build();
-
-        when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
-
-        Client client = new Client();
-
-        Contract contract = new Contract();
-        List<Contract> contracts = new ArrayList<>();
-        contracts.add(contract);
-
-        when(contractService.getContractsByClient(client)).thenReturn(contracts);
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        setUp();
+        meter.setClientId(null);
 
         assertThrows(UnauthorizedAccessException.class, () -> meterService.getMeter("EAN1234"));
     }
@@ -115,29 +103,13 @@ public class MeterServiceTest {
     }
 
     @Test
-    public void test_createReadingMeter() throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException {
+    public void test_createReadingMeter() throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, ObjectNotValidatedException {
 
-        Meter meter = Meter.builder()
-                .EAN("EAN1234")
-                .readings(new ArrayList<>())
-                .build();
-
-        when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
-
-        Client client = new Client();
-
-        Contract contract = Contract.builder()
-                .meter1(meter)
-                .build();
-
-        List<Contract> contracts = new ArrayList<>();
-        contracts.add(contract);
-
-        when(contractService.getContractsByClient(client)).thenReturn(contracts);
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        setUp();
 
         Reading reading = new Reading(new Date(), 123);
         assertEquals(reading, meterService.createReadingMeter("EAN1234", reading.getDate(), 123));
         verify(meterRepository, times(1)).save(meter);
+        verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
     }
 }

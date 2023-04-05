@@ -1,9 +1,12 @@
 package com.pgl.energenius.Objects;
 
 import com.pgl.energenius.Objects.DTOs.ClientDto;
+import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.enums.ClientStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -30,9 +33,8 @@ public class Client {
      * The ID of the client
      */
     @Id
-    //private ObjectId id;
-    private String id; // Using the toString() from ObjectId
-
+    @Default
+    private ObjectId id = new ObjectId();
 
     /**
      * The first name of the client
@@ -47,11 +49,13 @@ public class Client {
      */
     private String phoneNo;
 
+    @Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date lastAccess;
+    private Date lastAccess = new Date();
 
+    @Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     /**
      * The address of the client
@@ -76,29 +80,20 @@ public class Client {
     /**
      * If the client prefers to use the dark mode of the application or not
      */
-    private Boolean darkMode;
+    @Default
+    private Boolean darkMode = false;
 
-    /**
-     * The list of the notifications of the client
-     */
-    private List<Notification> notifications;
+    public static ClientBuilder builder(ClientDto clientDto) {
 
-    /**
-     * Create a client
-     * @param clientDto
-     */
-    public Client(ClientDto clientDto) {
-        this.firstName = clientDto.getFirstName();
-        this.lastName = clientDto.getLastName();
-        this.phoneNo = clientDto.getPhoneNumber();
-        this.address = clientDto.getAddress();
-        this.language = clientDto.getLanguage();
-        id = new ObjectId().toString();
-        creationDate = new Date(System.currentTimeMillis());
-        lastAccess = creationDate;
-        status = null; // TODO
-        favoritePortfolio = null;
-        darkMode = false;
-        notifications = new ArrayList<>();
+        return builder()
+                .firstName(clientDto.getFirstName())
+                .lastName(clientDto.getLastName())
+                .phoneNo(clientDto.getPhoneNumber())
+                .address(clientDto.getAddress())
+                .language(clientDto.getLanguage());
+    }
+
+    public static ClientBuilder builder() {
+        return new ClientBuilder();
     }
 }

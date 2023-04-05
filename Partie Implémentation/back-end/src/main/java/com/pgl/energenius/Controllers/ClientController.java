@@ -1,11 +1,13 @@
 package com.pgl.energenius.Controllers;
 
 import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Services.ClientService;
 import com.pgl.energenius.config.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -37,13 +39,16 @@ public class ClientController {
      */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody ClientDto clientDto) {
 
         try {
             return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
 
         } catch (ObjectAlreadyExitsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -58,14 +63,14 @@ public class ClientController {
      */
     @PostMapping("/auth/login")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
+    public ResponseEntity<?> login(@Valid @RequestBody ClientLoginDto clientLoginDto) {
 
         try {
             ClientLogin clientLogin = clientService.authenticateClient(clientLoginDto);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(clientLogin))
-                    .body(clientLogin.getClient().getId());
+                    .body(clientLogin.getClient().getId().toString());
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");

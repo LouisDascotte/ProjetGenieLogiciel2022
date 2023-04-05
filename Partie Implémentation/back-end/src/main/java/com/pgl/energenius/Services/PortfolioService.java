@@ -1,14 +1,12 @@
 package com.pgl.energenius.Services;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.Exception.*;
 import com.pgl.energenius.Objects.*;
 import com.pgl.energenius.Objects.DTOs.PortfolioDto;
 import com.pgl.energenius.Objects.DTOs.SupplyPointDto;
 import com.pgl.energenius.Repositories.PortfolioRepository;
 import com.pgl.energenius.Utils.SecurityUtils;
+import com.pgl.energenius.Utils.ValidationUtils;
 import com.pgl.energenius.enums.EnergyType;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,21 @@ public class PortfolioService {
 
     @Autowired
     private SecurityUtils securityUtils;
+
+    @Autowired
+    private ValidationUtils validationUtils;
+
+    public Portfolio insertPortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
+
+        validationUtils.validate(portfolio);
+        return portfolioRepository.insert(portfolio);
+    }
+
+    public void savePortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
+
+        validationUtils.validate(portfolio);
+        portfolioRepository.save(portfolio);
+    }
 
     public Portfolio getPortfolio(ObjectId portfolioId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException {
 
@@ -72,10 +85,10 @@ public class PortfolioService {
         return readings;
     }
 
-    public Portfolio createPortfolio(PortfolioDto portfolioDto) throws InvalidUserDetailsException {
+    public Portfolio createPortfolio(PortfolioDto portfolioDto) throws InvalidUserDetailsException, ObjectNotValidatedException {
 
         Client client = securityUtils.getCurrentClientLogin().getClient();
-        return portfolioRepository.insert(new Portfolio(client, portfolioDto));
+        return insertPortfolio(Portfolio.builder(portfolioDto).client(client).build());
     }
 
     public List<Portfolio> getAllPortfolios() throws InvalidUserDetailsException {
@@ -84,7 +97,7 @@ public class PortfolioService {
         return portfolioRepository.findByClient(client);
     }
 
-    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException {
+    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
         Meter meter = meterService.getMeter(supplyPointDto.getEAN());
@@ -100,11 +113,11 @@ public class PortfolioService {
         SupplyPoint supplyPoint = new SupplyPoint(EAN, supplyPointDto.getSupplyPointType());
         portfolio.getSupplyPoints().add(supplyPoint);
 
-        portfolioRepository.save(portfolio);
+        savePortfolio(portfolio);
         return supplyPoint;
     }
 
-    public void deleteSupplyPoint(ObjectId portfolioId, String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+    public void deleteSupplyPoint(ObjectId portfolioId, String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
 
@@ -113,6 +126,6 @@ public class PortfolioService {
 
         portfolio.getSupplyPoints().remove(supplyPoint);
 
-        portfolioRepository.save(portfolio);
+        savePortfolio(portfolio);
     }
 }

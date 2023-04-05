@@ -1,6 +1,6 @@
 package com.pgl.energenius.Objects;
 
-import com.pgl.energenius.Objects.DTOs.ClientDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ClientLogin extends User {
 
     /**

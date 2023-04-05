@@ -1,6 +1,6 @@
 package com.pgl.energenius.config;
 
-import com.pgl.energenius.Services.CustomUserDetailsService;
+import com.pgl.energenius.Services.UserService;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +32,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig {
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -97,7 +97,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         //configuration.addExposedHeader("Authorization");
         configuration.addExposedHeader(HttpHeaders.AUTHORIZATION);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "OPTIONS", "POST"));
         configuration.setAllowedHeaders(List.of("Content-Type","Authorization", "Access-Control-Allow-Origin"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

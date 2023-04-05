@@ -1,23 +1,17 @@
 package com.pgl.energenius.Controllers;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Objects.DTOs.EmployeeLoginDto;
 import com.pgl.energenius.Objects.EmployeeLogin;
-import com.pgl.energenius.Repositories.UserRepository;
+import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.Services.EmployeeService;
 import com.pgl.energenius.config.JwtUtil;
-import com.pgl.energenius.config.WebSecurityConfig;
 import lombok.extern.slf4j.Slf4j;
-import com.pgl.energenius.Objects.ClientLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**

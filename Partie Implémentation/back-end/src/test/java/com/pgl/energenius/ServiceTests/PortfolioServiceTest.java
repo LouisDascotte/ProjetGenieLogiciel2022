@@ -1,9 +1,6 @@
 package com.pgl.energenius.ServiceTests;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.Exception.*;
 import com.pgl.energenius.Objects.*;
 import com.pgl.energenius.Objects.DTOs.PortfolioDto;
 import com.pgl.energenius.Objects.DTOs.SupplyPointDto;
@@ -11,6 +8,7 @@ import com.pgl.energenius.Repositories.PortfolioRepository;
 import com.pgl.energenius.Services.MeterService;
 import com.pgl.energenius.Services.PortfolioService;
 import com.pgl.energenius.Utils.SecurityUtils;
+import com.pgl.energenius.Utils.ValidationUtils;
 import com.pgl.energenius.enums.EnergyType;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -37,16 +35,29 @@ public class PortfolioServiceTest {
     @Mock
     private MeterService meterService;
 
+    @Mock
+    private ValidationUtils validationUtils;
+
     @InjectMocks
     private PortfolioService portfolioService;
 
-    @Test
-    public void test_getPortfolio() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
+    private Portfolio portfolio;
+
+    private void setUp() throws InvalidUserDetailsException {
+
+        // Mostly used for the getPortfolio() method
         Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
+        PortfolioDto portfolioDto = new PortfolioDto();
+        portfolio = Portfolio.builder(portfolioDto).client(client).build();
+
         when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+    }
 
+    @Test
+    public void test_getPortfolio() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
+
+        setUp();
         assertEquals(portfolio, portfolioService.getPortfolio(portfolio.getId()));
     }
 
@@ -60,50 +71,40 @@ public class PortfolioServiceTest {
 
     @Test
     public void test_getPortfolio_Unauthorized() throws InvalidUserDetailsException {
-        Client client = Client.builder().firstName("test").build();
-        Portfolio portfolio = new Portfolio(new Client(), new PortfolioDto());
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
+        setUp();
+        Client client2 = new Client();
+        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client2));
         assertThrows(UnauthorizedAccessException.class, () -> portfolioService.getPortfolio(portfolio.getId()));
     }
 
     @Test
     public void test_getPortfolio_InvalidUserDetails() throws InvalidUserDetailsException {
-        Portfolio portfolio = new Portfolio(new Client(), new PortfolioDto());
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
 
+        setUp();
+        when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
         assertThrows(InvalidUserDetailsException.class, () -> portfolioService.getPortfolio(portfolio.getId()));
     }
 
     @Test
     public void test_deletePortfolio() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
+        setUp();
         portfolioService.deletePortfolio(portfolio.getId());
-
         verify(portfolioRepository, times(1)).delete(portfolio);
     }
 
     @Test
     public void test_getConsumption() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
 
-        Meter meter = new Meter("EAN1234", EnergyType.ELEC, null, null, null);
+        setUp();
+        Meter meter = Meter.builder().EAN("EAN1234").energyType(EnergyType.ELEC).build();
+
         meter.getReadings().add(new Reading(new Date(), 100));
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
         portfolio.getSupplyPoints().add(supplyPoint);
-
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
         HashMap<EnergyType, List<Reading>> expectedReadings = new HashMap<>();
         expectedReadings.put(EnergyType.ELEC, meter.getReadings());
@@ -115,7 +116,7 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_createPortfolio() throws InvalidUserDetailsException {
+    public void test_createPortfolio() throws InvalidUserDetailsException, ObjectNotValidatedException {
 
         Address address = Address.builder()
                 .city("test")
@@ -126,7 +127,7 @@ public class PortfolioServiceTest {
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
-        Portfolio portfolio = new Portfolio(client, portfolioDto);
+        Portfolio portfolio = Portfolio.builder(portfolioDto).client(client).build();
 
         when(portfolioRepository.insert(any(Portfolio.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -151,14 +152,10 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException {
+    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException {
 
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
-
-        Meter meter = new Meter("EAN1234", null, null, null, null);
+        setUp();
+        Meter meter = Meter.builder().EAN("EAN1234").build();
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
         SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", null);
@@ -172,15 +169,12 @@ public class PortfolioServiceTest {
     @Test
     public void test_createSupplyPoint_ObjectAlreadyExists() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
 
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-        Meter meter = new Meter("EAN1234", null, null, null, null);
+        setUp();
+        Meter meter = Meter.builder().EAN("EAN1234").build();
+
 
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
         portfolio.getSupplyPoints().add(supplyPoint);
-
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
@@ -190,16 +184,11 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_deleteSupplyPoint() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
+    public void test_deleteSupplyPoint() throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException, ObjectNotValidatedException {
 
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-
+        setUp();
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
         portfolio.getSupplyPoints().add(supplyPoint);
-
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
         portfolioService.deleteSupplyPoint(portfolio.getId(), "EAN1234");
 
@@ -209,14 +198,9 @@ public class PortfolioServiceTest {
     @Test
     public void test_deleteSupplyPoint_ObjectNotFound() throws InvalidUserDetailsException {
 
-        Client client = new Client();
-        Portfolio portfolio = new Portfolio(client, new PortfolioDto());
-
+        setUp();
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
         portfolio.getSupplyPoints().add(supplyPoint);
-
-        when(portfolioRepository.findById(portfolio.getId())).thenReturn(Optional.of(portfolio));
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
         assertThrows(ObjectNotFoundException.class, () -> portfolioService.deleteSupplyPoint(portfolio.getId(), "EAN0000"));
     }

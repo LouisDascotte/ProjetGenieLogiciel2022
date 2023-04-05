@@ -1,6 +1,5 @@
 package com.pgl.energenius.Objects.DTOs;
 
-import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.SupplyPointType;
 import lombok.AllArgsConstructor;
 import lombok.Data;

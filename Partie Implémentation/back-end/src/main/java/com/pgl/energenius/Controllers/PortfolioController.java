@@ -1,16 +1,11 @@
 package com.pgl.energenius.Controllers;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.Exception.*;
 import com.pgl.energenius.Objects.*;
 import com.pgl.energenius.Objects.DTOs.PortfolioDto;
 import com.pgl.energenius.Objects.DTOs.SupplyPointDto;
 import com.pgl.energenius.Services.PortfolioService;
 import com.pgl.energenius.enums.EnergyType;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +19,6 @@ import java.util.List;
 /**
  * The PortfolioController class handles all HTTP requests related to Portfolios.
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/client/portfolio")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -68,6 +62,9 @@ public class PortfolioController {
 
         } catch (InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -132,6 +129,9 @@ public class PortfolioController {
         } catch (ObjectAlreadyExitsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -149,6 +149,9 @@ public class PortfolioController {
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -7,6 +7,7 @@ import { theme, CssTextField} from '../utils/style';
 import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
 import { useLocalState } from '../utils/useLocalStorage';
+import {setAuthToken} from "../utils/setAuthToken";
 
 
 const LOGIN_URL = "http://localhost:8080/api/client/auth/login";

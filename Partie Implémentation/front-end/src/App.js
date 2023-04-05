@@ -23,9 +23,13 @@ import CoffeeTest from './pages/CoffeeTest';
 import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
+import {setAuthToken} from "./utils/setAuthToken";
 
 function App() {
-  
+    const token = localStorage.getItem("jwt");
+    if (token){
+      setAuthToken(token);
+    }
     return (
       <BrowserRouter history={history}>
               <Routes>   

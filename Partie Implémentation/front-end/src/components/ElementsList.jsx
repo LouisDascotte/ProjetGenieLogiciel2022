@@ -3,7 +3,7 @@ import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemT
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 
-const ElementsList = () => {
+const ElementsList = ( { type,  } ) => {
   function generate(element) {
     return [0, 1, 2, 3, 4].map((value) =>
       React.cloneElement(element, {

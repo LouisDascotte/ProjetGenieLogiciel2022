@@ -65,7 +65,7 @@ public class ClientController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(clientLogin))
-                    .body(clientLogin.getClient());
+                    .body(clientLogin.getClient().getId());
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");

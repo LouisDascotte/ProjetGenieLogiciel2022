@@ -8,17 +8,21 @@ import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
 import { useLocalState } from '../utils/useLocalStorage';
 import {setAuthToken} from "../utils/setAuthToken";
+import {authServices} from "../utils/services/auth-service";
 
 
 const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
 
 const LoginPage = () => {
 
+  // ToDo : check usefulness of this part
   const [jwt, setJwt] = useLocalState("", "jwt"); 
+  const [user, setUser] = useLocalState("", "user");
 
+  // Used for the redirection
   const navigate = useNavigate();
 
-
+  // Used to set the credentials
   const [form, setForm] = useState({
     email:"",
     password:"",
@@ -26,6 +30,7 @@ const LoginPage = () => {
   });
 
 
+  // Used for the regex
   const {errors, validateForm, onBlurField} = useLoginFieldValidator(form);
 
 
@@ -52,8 +57,10 @@ const LoginPage = () => {
         console.log("auth: " + response.headers["authorization"]);
         //setJwt(response.headers["authorization"], "jwt");
         localStorage.setItem("jwt", JSON.stringify(response.headers["authorization"]));
+        localStorage.setItem("user", JSON.stringify(response.data));
         setAuthToken(JSON.stringify(response.headers["authorization"]));
       });
+      
       navigate("/main-page");
     } catch(err){
       if(!err?.response){

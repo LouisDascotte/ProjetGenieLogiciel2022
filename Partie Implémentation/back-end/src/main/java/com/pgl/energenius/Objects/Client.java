@@ -30,7 +30,9 @@ public class Client {
      * The ID of the client
      */
     @Id
-    private ObjectId id;
+    //private ObjectId id;
+    private String id; // Using the toString() from ObjectId
+
 
     /**
      * The first name of the client
@@ -91,7 +93,7 @@ public class Client {
         this.phoneNo = clientDto.getPhoneNumber();
         this.address = clientDto.getAddress();
         this.language = clientDto.getLanguage();
-        id = new ObjectId();
+        id = new ObjectId().toString();
         creationDate = new Date(System.currentTimeMillis());
         lastAccess = creationDate;
         status = null; // TODO

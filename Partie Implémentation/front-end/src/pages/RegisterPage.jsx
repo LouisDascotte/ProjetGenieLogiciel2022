@@ -142,32 +142,31 @@ const RegisterPage = () => {
     }
     alert(JSON.stringify(form, null, 2));
 
-    body = {
-      firstName : form
-    }
+    
 
     // inspired by Dave Gray 
-
+    //const jwt = localStorage.getItem("jwt");
     try{
-      const response = await axios.post(REGISTER_URL, JSON.stringify({
+      const body = {
         firstName : form.firstName, 
         lastName : form.lastName, 
         email : form.email, 
-        phoneNumber : form.phoneNumber, 
+        phoneNumber : form.phoneNumber,
         language : form.language, 
-        password : form.password,
+        password : form.password, 
         address : {
           city : form.address.city,
           street : form.address.street, 
           houseNo : form.address.houseNo, 
           box : form.address.box, 
           postalCode : form.address.postalCode, 
-          country : form.address.country
-        },
-        
-        
-      }), {
-        headers : {"Content-Type" : "application/json", },
+          country : form.address.country    
+        }
+      };
+      const response = await axios.post(REGISTER_URL, JSON.stringify(body), {
+        headers : {"Content-Type":"application/json",
+        //"Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true},
         //withCredentials: true
       }); 
       console.log(JSON.stringify(response));

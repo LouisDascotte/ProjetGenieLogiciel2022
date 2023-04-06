@@ -34,7 +34,7 @@ export const useRegisterFieldValidator = form => {
       error: false, 
       message: ""
     },
-    address:{
+    /*address:{
       dirty: false, 
       error: false, 
       message: ""
@@ -58,7 +58,7 @@ export const useRegisterFieldValidator = form => {
       dirty: false, 
       error: false, 
       message: ""
-    },
+    },*/
     
     password: {
       dirty: false,
@@ -84,7 +84,7 @@ export const useRegisterFieldValidator = form => {
       nextErrors = touchErrors(errors);
     }
 
-    const {firstName, lastName, email, phoneNumber, address, city, country, postalCode, language, password, confirmPassword } = form;
+    const {firstName, lastName, email, phoneNumber, /*address, city, country, postalCode, language,*/ password, confirmPassword } = form;
  
     if (nextErrors.firstName.dirty && (field ? field === "firstName" : true)) {
       const firstNameMessage = nameValidator(firstName);
@@ -100,12 +100,12 @@ export const useRegisterFieldValidator = form => {
       if (!!lastNameMessage) isValid = false;
     }
 
-    if (nextErrors.language.dirty && (field ? field === "language" : true)) {
+    /*if (nextErrors.language.dirty && (field ? field === "language" : true)) {
       const languageMessage = nameValidator(language);
       nextErrors.language.error = !! languageMessage;
       nextErrors.language.message = languageMessage;
       if (!!languageMessage) isValid = false;
-    }
+    }*/
 
     if (nextErrors.firstName.dirty && (field ? field === "phoneNumber" : true)) {
       const phoneNumberMessage = phoneNumberValidator(phoneNumber);
@@ -114,14 +114,14 @@ export const useRegisterFieldValidator = form => {
       if (!!phoneNumberMessage) isValid = false;
     }
 
-    if (nextErrors.firstName.dirty && (field ? field === "address" : true)) {
+    /*if (nextErrors.firstName.dirty && (field ? field === "address" : true)) {
       const addressMessage = addressValidator(address);
       nextErrors.address.error = !! addressMessage;
       nextErrors.address.message = addressMessage;
       if (!!addressMessage) isValid = false;
-    }
+    }*/
 
-    if (nextErrors.city.dirty && (field ? field === "city" : true)) {
+    /*if (nextErrors.city.dirty && (field ? field === "city" : true)) {
       const cityMessage = cityValidator(city);
       nextErrors.city.error = !! cityMessage;
       nextErrors.city.message = cityMessage;
@@ -140,7 +140,7 @@ export const useRegisterFieldValidator = form => {
       nextErrors.postalCode.error = !! postalCodeMessage;
       nextErrors.postalCode.message = postalCodeMessage;
       if (!!postalCodeMessage) isValid = false;
-    }
+    }*/
 
 
     if (nextErrors.email.dirty && (field ? field === "email" : true)) {

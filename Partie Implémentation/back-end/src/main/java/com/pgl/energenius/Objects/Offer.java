@@ -56,8 +56,7 @@ public class Offer {
     private ContractType contractType;
 
     /**
-     * The supplier in the offer
+     * The id of the supplier
      */
-    @DBRef(lazy = true)
-    private Supplier supplier;
+    private ObjectId supplierId;
 }

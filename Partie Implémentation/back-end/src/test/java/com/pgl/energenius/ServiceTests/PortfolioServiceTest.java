@@ -118,11 +118,7 @@ public class PortfolioServiceTest {
     @Test
     public void test_createPortfolio() throws InvalidUserDetailsException, ObjectNotValidatedException {
 
-        Address address = Address.builder()
-                .city("test")
-                .build();
-
-        PortfolioDto portfolioDto = new PortfolioDto("test", address);
+        PortfolioDto portfolioDto = new PortfolioDto("test", "test");
 
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));

@@ -5,14 +5,14 @@ import com.pgl.energenius.Exception.ObjectNotFoundException;
 import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Exception.UnauthorizedAccessException;
 import com.pgl.energenius.Objects.*;
-import com.pgl.energenius.Objects.notifications.AddReadingNotification;
+import com.pgl.energenius.Objects.notifications.Notification;
+import com.pgl.energenius.Objects.notifications.ReadingNotification;
 import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Utils.SecurityUtils;
 import com.pgl.energenius.Utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,9 +76,9 @@ public class MeterService {
         Reading reading = new Reading(date, value);
         meter.getReadings().add(reading); // TODO verifier la date des autres ?
 
-        AddReadingNotification notification = AddReadingNotification.builder()
+        ReadingNotification notification = ReadingNotification.builder()
                 .senderId(meter.getClientId())
-                .message("") // TODO
+                .type(Notification.Type.READING_NOTIFICATION)
                 .reading(reading)
                 .meter(meter)
                 .build();
@@ -88,30 +88,15 @@ public class MeterService {
         return reading;
     }
 
-    public List<Meter> getAllMeters() throws ObjectNotFoundException, InvalidUserDetailsException { // TODO
+    public List<Meter> getAllMeters() throws ObjectNotFoundException, InvalidUserDetailsException {
 
-        List<Contract> contracts = null;
         try {
             Client client = securityUtils.getCurrentClientLogin().getClient();
-            contracts = contractService.getContractsByClient(client);
+            return meterRepository.findByClientId(client.getId());
 
         } catch (InvalidUserDetailsException ignored) {}
 
-        if (contracts == null) {
-            Employee employee = securityUtils.getCurrentEmployeeLogin().getEmployee();
-            contracts = contractService.getContractsByEmployee(employee);
-        }
-
-        List<Meter> meters = new ArrayList<>();
-
-        for (Contract contract : contracts) {
-
-            if (contract.getMeter1() != null)
-                meters.add(contract.getMeter1());
-
-            if (contract.getMeter2() != null)
-                meters.add(contract.getMeter2());
-        }
-        return meters;
+        Employee employee = securityUtils.getCurrentEmployeeLogin().getEmployee();
+        return meterRepository.findBySupplierId(employee.getSupplier().getId());
     }
 }

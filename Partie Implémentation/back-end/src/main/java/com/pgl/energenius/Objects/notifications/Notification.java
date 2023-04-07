@@ -41,7 +41,8 @@ public class Notification {
     /**
      * The message of the notification
      */
-    private String message;
+    @Default
+    private Type type = Type.NOTIFICATION;
 
     @Default
     private Status status = Status.UNREAD;
@@ -49,5 +50,10 @@ public class Notification {
     public enum Status {
         UNREAD,
         READ
+    }
+
+    public enum Type {
+        READING_NOTIFICATION,
+        NOTIFICATION
     }
 }

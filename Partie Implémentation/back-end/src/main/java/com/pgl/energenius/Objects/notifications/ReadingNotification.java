@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddReadingNotification extends Notification {
+public class ReadingNotification extends Notification {
 
     private Meter meter;
 

@@ -2,7 +2,6 @@ package com.pgl.energenius.Objects.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.pgl.energenius.Objects.Address;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -64,5 +63,5 @@ public class ClientDto {
      * The address of the client.
      */
     @JsonProperty("address")
-    private Address address;
+    private String address;
 }

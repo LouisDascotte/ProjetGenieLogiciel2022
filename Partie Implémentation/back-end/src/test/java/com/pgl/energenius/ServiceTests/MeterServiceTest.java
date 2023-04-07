@@ -7,11 +7,11 @@ import com.pgl.energenius.Exception.UnauthorizedAccessException;
 import com.pgl.energenius.Objects.*;
 import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.Repositories.MeterRepository;
-import com.pgl.energenius.Services.ContractService;
 import com.pgl.energenius.Services.MeterService;
 import com.pgl.energenius.Services.NotificationService;
 import com.pgl.energenius.Utils.SecurityUtils;
 import com.pgl.energenius.Utils.ValidationUtils;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +76,7 @@ public class MeterServiceTest {
 
         Meter meter = Meter.builder()
                 .EAN("EAN1234")
-                .SupplierId(employee.getSupplier().getId())
+                .supplierId(employee.getSupplier().getId())
                 .build();
 
         when(meterRepository.findById("EAN1234")).thenReturn(Optional.of(meter));
@@ -111,5 +110,41 @@ public class MeterServiceTest {
         assertEquals(reading, meterService.createReadingMeter("EAN1234", reading.getDate(), 123));
         verify(meterRepository, times(1)).save(meter);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
+    }
+
+    @Test
+    public  void test_getAllMeters_Client() throws InvalidUserDetailsException, ObjectNotFoundException {
+
+        Client client = new Client();
+
+        meter = Meter.builder()
+                .clientId(client.getId())
+                .build();
+
+        when(meterRepository.findByClientId(client.getId())).thenReturn(List.of(meter));
+        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+
+        assertEquals(meter, meterService.getAllMeters().get(0));
+        verify(securityUtils, times(0)).getCurrentEmployeeLogin();
+    }
+
+    @Test
+    public  void test_getAllMeters_Employee() throws InvalidUserDetailsException, ObjectNotFoundException {
+
+        Employee employee = Employee.builder()
+                .supplier(new Supplier())
+                .build();
+
+        meter = Meter.builder()
+                .supplierId(employee.getSupplier().getId())
+                .build();
+
+        when(meterRepository.findBySupplierId(employee.getSupplier().getId())).thenReturn(List.of(meter));
+        when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
+        when(securityUtils.getCurrentEmployeeLogin()).thenReturn(new EmployeeLogin("", "", employee));
+
+        assertEquals(meter, meterService.getAllMeters().get(0));
+        verify(securityUtils, times(1)).getCurrentClientLogin();
+        verify(meterRepository, times(0)).findByClientId(Mockito.any(ObjectId.class));
     }
 }

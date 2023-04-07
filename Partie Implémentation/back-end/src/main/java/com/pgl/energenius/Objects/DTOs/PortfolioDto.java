@@ -2,7 +2,6 @@ package com.pgl.energenius.Objects.DTOs;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pgl.energenius.Objects.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +24,5 @@ public class PortfolioDto {
    * The address of the portfolio
    */
   @JsonProperty("address")
-  private Address address;
+  private String address;
 }

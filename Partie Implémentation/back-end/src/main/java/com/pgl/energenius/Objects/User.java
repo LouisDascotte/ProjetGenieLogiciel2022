@@ -1,5 +1,6 @@
 package com.pgl.energenius.Objects;
 
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

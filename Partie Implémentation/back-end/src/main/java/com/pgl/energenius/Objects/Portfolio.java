@@ -40,7 +40,7 @@ public class Portfolio {
     /**
      * The address of the client that owns the portfolio
      */
-    private Address address;
+    private String address;
     /**
      * The name of the portfolio
      */

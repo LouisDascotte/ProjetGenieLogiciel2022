@@ -60,7 +60,7 @@ public class Client {
     /**
      * The address of the client
      */
-    private Address address;
+    private String address;
     /**
      * The status of the client
      */

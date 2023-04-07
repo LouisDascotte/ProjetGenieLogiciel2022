@@ -1,5 +1,6 @@
 package com.pgl.energenius.Objects.DTOs;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class EmployeeLoginDto {
     /**
      * The password used by the employee
      */
+    @Size(min = 8)
     private String password;
 }

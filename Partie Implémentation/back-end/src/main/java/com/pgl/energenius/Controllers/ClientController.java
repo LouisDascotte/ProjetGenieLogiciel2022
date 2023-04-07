@@ -5,6 +5,8 @@ import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
+import com.pgl.energenius.Objects.Meter;
+import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Services.ClientService;
 import com.pgl.energenius.config.JwtUtil;
 import jakarta.validation.Valid;
@@ -39,7 +41,7 @@ public class ClientController {
      */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@Valid @RequestBody ClientDto clientDto) {
+    public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
 
         try {
             return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
@@ -63,7 +65,7 @@ public class ClientController {
      */
     @PostMapping("/auth/login")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<?> login(@Valid @RequestBody ClientLoginDto clientLoginDto) {
+    public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {
             ClientLogin clientLogin = clientService.authenticateClient(clientLoginDto);
@@ -78,5 +80,19 @@ public class ClientController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+
+    @Autowired
+    private MeterRepository meterRepository;
+
+    @GetMapping("/auth/test")
+    public void test() {
+
+        Meter meter = Meter.builder()
+                .EAN("EAN1234")
+                .build();
+
+        meterRepository.insert(meter);
     }
 }

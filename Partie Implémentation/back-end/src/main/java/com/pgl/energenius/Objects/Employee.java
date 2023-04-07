@@ -1,6 +1,5 @@
 package com.pgl.energenius.Objects;
 
-import com.pgl.energenius.Objects.notifications.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;

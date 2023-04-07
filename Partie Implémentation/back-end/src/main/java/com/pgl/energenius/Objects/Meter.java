@@ -58,7 +58,7 @@ public class Meter {
     @Default
     private List<Reading> readings = new ArrayList<>();
 
-    private ObjectId SupplierId;
+    private ObjectId supplierId;
 
     private ObjectId clientId;
 }

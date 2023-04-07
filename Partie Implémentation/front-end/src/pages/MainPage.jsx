@@ -27,11 +27,11 @@ const MainPage = () => {
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
     const [page, setPage] = useState("");
 
-    const fetchData = axios.get(API_URL).then(function(response) {
+    /*const fetchData = axios.get(API_URL).then(function(response) {
         console.log(response);
     });
 
-    console.log(fetchData);
+    console.log(fetchData);*/
 
     const pageAddress = "/main-page";
     const pageName = "General overview";

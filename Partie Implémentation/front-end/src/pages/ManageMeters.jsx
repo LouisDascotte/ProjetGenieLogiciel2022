@@ -1,6 +1,6 @@
 import React from 'react'
 import SideMenu from '../components/SideMenu';
-import {Stack,Card, Box, Grid, Button, ThemeProvider, createTheme} from '@mui/material';
+import {Stack,Card, Box, Grid, Button, ThemeProvider, createTheme, IconButton} from '@mui/material';
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
@@ -25,14 +25,28 @@ const theme = createTheme({
 const METER_URL = "http://localhost:8080/api/meter/"
 
 const ManageMeters = () => {
-  const jwt = JSON.parse(localStorage.getItem("jwt"));
-  const response = axios.get(METER_URL + "all", {
-    headers : {"Content-Type":"application/json",
-  "Authorization" : `Bearer ${jwt}`,
-  "Access-Control-Allow-Origin":true}
-  } ).then(response=>{
-    console.log(response.data);
-  });
+  const jwt = localStorage.getItem("jwt");
+
+  const handleClick = () => {
+    const response = axios.get(METER_URL + "auth/test", {
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    } ).then(response=>{
+      console.log(response.data);
+    });
+  }
+
+  const getMeters = () => {
+    const response = axios.get(METER_URL + "all", {
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(response => {
+      console.log(response.data);
+    })
+  }
+  
   const pageAddress = "/manage-meters";
   const pageName = "Manage meters";
   return (
@@ -43,8 +57,11 @@ const ManageMeters = () => {
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
             <ElementsList/>
-
           </Card>
+          <div>
+            <Button variant="contained" onClick={handleClick}>CREATE METER</Button>
+            <Button variant="text" onClick={getMeters}>GET ALL METERS</Button>
+          </div>
           <ThemeProvider theme={theme}>
             <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>

@@ -18,6 +18,7 @@ const LoginPage = () => {
   // ToDo : check usefulness of this part
   const [jwt, setJwt] = useLocalState("", "jwt"); 
   const [user, setUser] = useLocalState("", "user");
+  
 
   // Used for the redirection
   const navigate = useNavigate();
@@ -56,9 +57,9 @@ const LoginPage = () => {
       }).then(response => {
         console.log("auth: " + response.headers["authorization"]);
         //setJwt(response.headers["authorization"], "jwt");
-        localStorage.setItem("jwt", JSON.stringify(response.headers["authorization"]));
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setAuthToken(JSON.stringify(response.headers["authorization"]));
+        localStorage.setItem("jwt", response.headers["authorization"]);
+        localStorage.setItem("user", response.data);
+        setAuthToken(response.headers["authorization"]);
       });
       
       navigate("/main-page");

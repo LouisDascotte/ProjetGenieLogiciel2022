@@ -31,7 +31,7 @@ const ManageMeters = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList/>
+            <ElementsList/> 
 
           </Card>
           <ThemeProvider theme={theme}>

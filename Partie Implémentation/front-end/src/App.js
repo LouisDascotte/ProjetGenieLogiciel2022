@@ -54,8 +54,8 @@ function App() {
                   <Route path='/staff' exact element={<StaffMainPage/>}/>
                   <Route path='/staff-contracts' exact element={<StaffManageContracts/>}/>
                   <Route path='/staff-clients' exact element={<StaffManageClients/>}/>
-                  <Route path='/staff-consumption' exact element={<StaffManageConsumption/>}/>
-                  {/* <Route path='/meter/:id' element={<StaffManageMeter/>}/> */}
+                  <Route path='/staff-cons' exact element={<StaffManageConsumption/>}/>
+                  <Route path='/meter/:id' element={<StaffManageConsumption/>}/>
               </Routes>
             
       </BrowserRouter>

@@ -79,29 +79,19 @@ const MainPage = () => {
             <MenuItem onClick={()=>{}}> 
               <Divider/>
             </MenuItem>
-            <Link to="/main-page" className='link' >
+            <Link to="/staff" className='link' >
               <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
                 General overview
               </MenuItem>
             </Link>
-            <Link to="/manage-portfolios" className='link'>
+            <Link to="/staff-clients" className='link'>
               <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
-                Manage portfolios
+                Manage clients
               </MenuItem>
             </Link>
-            <Link to="/manage-meters" className='link'>
-              <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                Manage meters
-              </MenuItem>
-            </Link>
-            <Link to="/manage-contracts" className='link'>
+            <Link to="/staff-contracts" className='link'>
               <MenuItem icon={<AssignmentIndOutlinedIcon />}>
                 Manage contracts
-              </MenuItem>
-            </Link>
-            <Link to="/manage-invoices" className='link'>
-              <MenuItem icon={<ReceiptOutlinedIcon />} >
-                Manage invoices
               </MenuItem>
             </Link>
           </Menu>
@@ -109,7 +99,7 @@ const MainPage = () => {
       <Stack sx={{display:'flex', width:"100%"}}>  
         <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
         <Stack sx={{height:"80%", justifyContent:'center', alignItems:'center'}} >
-          <DateAndTime locale={"en-US"} />
+          <DateAndTime locale={"fr-FR"} />
         </Stack>
       </Stack>
     </Stack>

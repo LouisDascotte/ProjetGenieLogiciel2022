@@ -5,8 +5,11 @@ import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.enums.MeterStatus;
 import com.pgl.energenius.enums.MeterType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,6 +20,7 @@ import java.util.List;
  * Meter of a client
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "meters")
@@ -51,22 +55,10 @@ public class Meter {
     /**
      * The readings of the meter
      */
-    private List<Reading> readings;
+    @Default
+    private List<Reading> readings = new ArrayList<>();
 
-    /**
-     * Create a meter
-     * @param EAN
-     * @param energyType
-     * @param meterStatus
-     * @param hourType
-     * @param meterType
-     */
-    public Meter(String EAN, EnergyType energyType, MeterStatus meterStatus, HourType hourType, MeterType meterType) {
-        this.EAN = EAN;
-        this.energyType = energyType;
-        this.meterStatus = meterStatus;
-        this.hourType = hourType;
-        this.meterType = meterType;
-        readings = new ArrayList<>();
-    }
+    private ObjectId SupplierId;
+
+    private ObjectId clientId;
 }

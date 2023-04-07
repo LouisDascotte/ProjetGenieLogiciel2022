@@ -17,36 +17,58 @@ import Profile from './pages/Profile';
 import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
-import CoffeeTest from './pages/CoffeeTest';
-import ChartAnalysis from './pages/ChartAnalysis';
-import ErrorPage from './pages/ErrorPage';
-import Testing from './pages/Testing';
-
-import StaffManageConsumption from "./pagesStaff/StaffManageConsumption";
-import StaffMainPage from "./pagesStaff/StaffMainPage";
-import StaffManageContracts from "./pagesStaff/StaffManageContracts";
-import StaffManageClients from "./pagesStaff/StaffManageClients";
+import CreateNewPassword from './pages/CreateNewPassword';
+import NewPasswordSuccess from './pages/NewPasswordSuccess';
+import CoffeeTest from './pages/CoffeeTest'; 
+import history from './utils/history';
+import { useLocalState } from './utils/useLocalStorage';
+import PrivateRoute from './utils/private_route';
+import {setAuthToken} from "./utils/setAuthToken";
 
 function App() {
-  return (
-      <BrowserRouter >
+    const token = localStorage.getItem("jwt");
+    if (token){
+      setAuthToken(token);
+    }
+    return (
+      <BrowserRouter history={history}>
               <Routes>   
-                  <Route path='/' element={<Navigate to="/login"/>}></Route>
-                  <Route path="/coffee" exact element={<CoffeeTest/>}/> 
-                  <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
-                  <Route path='/create-pass' exact element={<CreateNewPassword/>}/>
-                  <Route path='/create-pass-success' exact element={<NewPasswordSuccess/>}/>
-                  <Route path="/main-page" exact element={<MainPage/>}/>
-                  <Route path="/login" exact element={<LoginPage/>}/>
-                  <Route path="/manage-portfolios" exact element={<ManagePortfolios/>}/>
-                  <Route path="/manage-meters" exact element={<ManageMeters/>}/>
-                  <Route path="/manage-invoices" exact element={<ManageInvoices/>}/>
-                  <Route path="/manage-contracts" exact element={<ManageContracts/>}/>
-                  <Route path="/preferences" exact element={<Preferences/>}/>
-                  <Route path="/profile" exact element={<Profile/>}/>
-                  <Route path="/notifications" exact element={<Notifications/>}/>
-                  <Route path="/register-account" exact element={<RegisterPage/>}/>
-                  <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
+                <Route path="/login" exact element={<LoginPage/>}/>
+                <Route path="/register-account" exact element={<RegisterPage/>}/>
+                <Route path='/' element={<Navigate to="/login"/>}></Route>
+
+                <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
+                <Route path='/create-pass' exact element={<PrivateRoute>
+                    <CreateNewPassword/>
+                </PrivateRoute>}/>
+                <Route path='/create-pass-success' exact element={<PrivateRoute>
+                  <NewPasswordSuccess/>
+                  </PrivateRoute>}/>
+                <Route path="/main-page" exact element={<PrivateRoute>
+                  <MainPage/>
+                  </PrivateRoute>}/>
+                <Route path="/manage-portfolios" exact element={<PrivateRoute>
+                  <ManagePortfolios/>
+                </PrivateRoute>}/>
+                <Route path="/manage-meters" exact element={<PrivateRoute>
+                  <ManageMeters/>
+                </PrivateRoute>}/>
+                <Route path="/manage-invoices" exact element={<PrivateRoute>
+                  <ManageInvoices/>
+                  </PrivateRoute>}/>
+                <Route path="/manage-contracts" exact element={<PrivateRoute>
+                  <ManageContracts/>
+                  </PrivateRoute>}/>
+                <Route path="/preferences" exact element={<PrivateRoute>
+                  <Preferences/>
+                  </PrivateRoute>}/>
+                <Route path="/profile" exact element={<PrivateRoute>
+                  <Profile/>
+                  </PrivateRoute>}/>
+                <Route path="/notifications" exact element={<PrivateRoute>
+                  <Notifications/>
+                  </PrivateRoute>}/>
+                <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
                   <Route path='/chart' exact element={<ChartAnalysis/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
 

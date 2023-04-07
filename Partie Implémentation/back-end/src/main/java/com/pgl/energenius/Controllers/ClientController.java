@@ -1,22 +1,19 @@
 package com.pgl.energenius.Controllers;
 
-import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
-import com.pgl.energenius.config.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
-import com.pgl.energenius.Objects.Client;
+import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
-import com.pgl.energenius.Repositories.ClientLoginRepository;
-import com.pgl.energenius.Repositories.ClientRepository;
-import com.pgl.energenius.config.WebSecurityConfig;
+import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
+import com.pgl.energenius.Services.ClientService;
+import com.pgl.energenius.config.JwtUtil;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -29,13 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private ClientLoginRepository clientLoginRepository;
-
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private ClientService clientService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -48,52 +39,44 @@ public class ClientController {
      */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/auth/register")
-    @ResponseBody
-    public String register(@RequestBody ClientDto clientDto) {
-        Client client = new Client();
-//                clientDto.getFirstName(),
-//                clientDto.getLastName(),
-//                clientDto.getEmail(),
-//                clientDto.getPhoneNumber(), // changé pour les tests
-//                clientDto.getAddress(),
-//                clientDto.getCity(),
-//                clientDto.getCountry(),
-//                clientDto.getPostalCode(),
-//                clientDto.getLanguage());
-                  
-                 // TODO*/
+    public ResponseEntity<?> register(@Valid @RequestBody ClientDto clientDto) {
 
-        clientRepository.save(client);
-        ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
-                WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);
+        try {
+            return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
 
-        clientLoginRepository.save(clientLogin);
+        } catch (ObjectAlreadyExitsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 
-        return "Correctly done" ;
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
-     * GET method to log in the client.
+     * POST method to log in the client.
      *
      * @param clientLoginDto The client's login credentials.
      * @return A ResponseEntity containing the client's login information and the authentication token.
      */
-    @GetMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
+    @PostMapping("/auth/login")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> login(@Valid @RequestBody ClientLoginDto clientLoginDto) {
 
         try {
-            Authentication auth = authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(clientLoginDto.getEmail(), clientLoginDto.getPassword()));
-
-            ClientLogin clientLogin = (ClientLogin) auth.getPrincipal();
+            ClientLogin clientLogin = clientService.authenticateClient(clientLoginDto);
 
             return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtUtil.generateToken(clientLogin)
-                    ).body(clientLogin);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(clientLogin))
+                    .body(clientLogin.getClient().getId().toString());
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

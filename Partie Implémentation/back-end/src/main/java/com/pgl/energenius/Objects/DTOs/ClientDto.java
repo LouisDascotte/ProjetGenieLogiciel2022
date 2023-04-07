@@ -2,9 +2,11 @@ package com.pgl.energenius.Objects.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.pgl.energenius.Objects.Address;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
  * Client Data Transfert Object
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDto {
@@ -44,32 +47,7 @@ public class ClientDto {
     private String phoneNumber;
 
     /**
-     * The address of the client
-     */
-    @JsonProperty("address")
-    private String address;
-
-    /**
-     * The city of the client
-     */
-    @JsonProperty("city")
-    private String city;
-
-    /**
-     * The country of the client
-     */
-    @JsonProperty("country")
-    private String country;
-
-
-    /**
-     * The postal code of the client
-     */
-    @JsonProperty("postalCode")
-    private String postalCode;
-
-    /**
-     * The prefered language of the client
+     * The preferred language of the client
      */
     @JsonProperty("language")
     private String language;
@@ -81,4 +59,10 @@ public class ClientDto {
     @Size(min = 8)
     @JsonProperty("password")
     private String password;
+
+    /**
+     * The address of the client.
+     */
+    @JsonProperty("address")
+    private Address address;
 }

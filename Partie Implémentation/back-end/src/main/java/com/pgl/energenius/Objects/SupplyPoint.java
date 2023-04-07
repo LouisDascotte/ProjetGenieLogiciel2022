@@ -1,28 +1,22 @@
 package com.pgl.energenius.Objects;
 
-import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.SupplyPointType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import lombok.NoArgsConstructor;
 
 /**
  * Supply point
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SupplyPoint {
 
     /**
-     * The meter of the supply point
+     * The EAN of the supply point/meter
      */
-    @DBRef(lazy = true)
-    private Meter meter;
-
-    /**
-     * The type of energy of the meter
-     */
-    private EnergyType energyType;
+    private String EAN;
 
     /**
      * The type of supply point

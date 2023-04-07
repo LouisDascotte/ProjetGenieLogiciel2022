@@ -6,19 +6,23 @@ import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidat
 import { theme, CssTextField} from '../utils/style';
 import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
+import { useLocalState } from '../utils/useLocalStorage';
+import {setAuthToken} from "../utils/setAuthToken";
+import {authServices} from "../utils/services/auth-service";
 
 
-const LOGIN_URL = "/api/client/login";
+const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
 
 const LoginPage = () => {
-  
 
-  // LOGIC PART OF THE LOGIN PAGE 
+  // ToDo : check usefulness of this part
+  const [jwt, setJwt] = useLocalState("", "jwt"); 
+  const [user, setUser] = useLocalState("", "user");
 
+  // Used for the redirection
   const navigate = useNavigate();
-  const {setAuth} = useContext(AuthContext);
 
-
+  // Used to set the credentials
   const [form, setForm] = useState({
     email:"",
     password:"",
@@ -26,27 +30,38 @@ const LoginPage = () => {
   });
 
 
+  // Used for the regex
   const {errors, validateForm, onBlurField} = useLoginFieldValidator(form);
 
-  const onSubmitForm = async (e) => {
+
+  const onSubmitForm = async(e) => {
     e.preventDefault();
     const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "login");
     console.log(isValid);
     if (!isValid)
       return; 
-    alert(JSON.stringify(form, null, 2));
+
+    
+    const body = {
+      email : form.email,
+      password: form.password
+    }
+
+
     try{
-      const response = await axios.post(LOGIN_URL, JSON.stringify({
-        email : form.email, 
-        password : form.password
-      }), {
-        headers : {"Content-Type":"application/json"}, 
-        withCredentials: true
-      }); 
-      console.log(JSON.stringify(response?.data));
-      /*const accessToken = response?.data?.accessToken; // TODO
-      const roles = response?.data?.roles; // TODO*/
-      setAuth({form})
+      const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
+        headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+      }).then(response => {
+        console.log("auth: " + response.headers["authorization"]);
+        //setJwt(response.headers["authorization"], "jwt");
+        localStorage.setItem("jwt", JSON.stringify(response.headers["authorization"]));
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setAuthToken(JSON.stringify(response.headers["authorization"]));
+      });
+      
+      navigate("/main-page");
     } catch(err){
       if(!err?.response){
         console.log("No server response.");
@@ -55,8 +70,7 @@ const LoginPage = () => {
       }
     }
     
-    navigate("/main-page");
-  };
+  }
 
   const onUpdateField = e => {
     const field = e.target.name; 

@@ -1,4 +1,4 @@
-import {React, useState} from 'react'
+import {React, useState, useRef, useEffect} from 'react'
 import {Alert, createTheme, Button, styled ,Typography, Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
@@ -36,10 +36,77 @@ const CssTextField = styled(TextField)({
   },
 });
 
-const REGISTER_URL = "/api/client/register"; // endpoint for the registration in the back end part
+const REGISTER_URL = "/api/client/auth/register"; // endpoint for the registration in the back end part
 
 
 const RegisterPage = () => {
+
+  let address = {
+    street_number : "",
+    street_name : "",
+    city : "",
+    province : "",
+    region : "",
+    country : "",
+    postal_code : "",
+  }
+  const autoCompleteRef = useRef(); 
+  const inputRef = useRef();
+  const options = {
+    componentRestrictions: { country: "be" },
+    fields: ["address_components", "geometry", "icon", "name"],
+    types: ["address"]
+  };
+  useEffect(() => {
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+      inputRef.current,
+      options
+    );
+    autoCompleteRef.current.addListener("place_changed", async function () {
+      const place = await autoCompleteRef.current.getPlace();
+      console.log(place);
+      address = { 
+      street_number : "",
+      street_name : "",
+      city : "",
+      province : "",
+      region : "",
+      country : "",
+      postal_code : "",}
+      place.address_components.forEach(function(c){
+        switch(c.types[0]){
+          case 'street_number':
+            address.street_number = c.long_name;
+            form.address.houseNo = c.long_name; 
+            break; 
+          case 'route':
+            address.street_name = c.long_name; 
+            form.address.street = c.long_name; 
+            break; 
+          case 'locality':
+            address.city = c.long_name; 
+            form.address.city = c.long_name; 
+            break;
+          case 'administrative_area_level_2':
+            address.province = c.long_name;
+            break;
+          case 'administrative_area_level_1':
+            address.region  = c.long_name; 
+            form.address.region = c.long_name; 
+            break; 
+          case 'postal_code':
+            address.postal_code = c.long_name; 
+            form.address.postalCode = c.long_name;
+            break;
+          case 'country' :
+            address.country = c.long_name; 
+            form.address.country = c.long_name; 
+            break;
+        }
+      })
+      console.log(address);
+     });
+    }, []);
 
   const [form, setForm]=useState(
     {
@@ -48,10 +115,15 @@ const RegisterPage = () => {
       lastName:"",
       email:"",
       phoneNumber:"",
-      address:"",
-      city:"",
-      country:"",
-      postalCode:"",
+      address : {
+        city : "",
+        street : "", 
+        houseNo : "", 
+        box : "", 
+        postalCode : "", 
+        country : "",
+        region : ""
+      },
       language:"",
       password:"",
       confirmPassword:"",
@@ -70,23 +142,31 @@ const RegisterPage = () => {
     }
     alert(JSON.stringify(form, null, 2));
 
-    // inspired by Dave Gray 
+    
 
+    // inspired by Dave Gray 
+    //const jwt = localStorage.getItem("jwt");
     try{
-      const response = await axios.post(REGISTER_URL, JSON.stringify({
+      const body = {
         firstName : form.firstName, 
         lastName : form.lastName, 
         email : form.email, 
-        phoneNumber : form.phoneNumber, 
-        address : form.address, 
-        city : form.city, 
-        country : form.country,
-        postalCode : form.postalCode, 
+        phoneNumber : form.phoneNumber,
         language : form.language, 
-        password : form.password,
-         //firstName, lastName, email, phoneNumber, address, city, country, postalCode, language, password
-      }), {
-        headers : {"Content-Type" : "application/json", },
+        password : form.password, 
+        address : {
+          city : form.address.city,
+          street : form.address.street, 
+          houseNo : form.address.houseNo, 
+          box : form.address.box, 
+          postalCode : form.address.postalCode, 
+          country : form.address.country    
+        }
+      };
+      const response = await axios.post(REGISTER_URL, JSON.stringify(body), {
+        headers : {"Content-Type":"application/json",
+        //"Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true},
         //withCredentials: true
       }); 
       console.log(JSON.stringify(response));
@@ -260,8 +340,9 @@ const RegisterPage = () => {
               justifyContent='space-evenly' 
               xs={12}>
                 <Grid 
-                item xs={6}
+                item xs={12}
                 align='center'>
+                  
                   <CssTextField 
                   sx={{width:"90%"}} 
                   size='small' 
@@ -269,14 +350,16 @@ const RegisterPage = () => {
                   label='address' 
                   margin='normal'
                   name='address' 
-                  value={form.address} 
-                  onChange={onUpdateField}
-                  onBlur={onBlurField}/>
-                  {errors.address.dirty && errors.address.error ? (
+                  value={address.street} 
+                  inputRef={inputRef}
+                  //onChange={onUpdateField}
+                  //onBlur={onBlurField}
+                  />
+                  {/*errors.address.dirty && errors.address.error ? (
                     <Alert severity='error' sx={{width:"75%"}}>{errors.address.message}</Alert>
-                      ) : null}
+                  ) : null*/}
                 </Grid>
-                <Grid 
+                {/*<Grid 
                 item xs={6} 
                 align='center'>
                   <CssTextField 
@@ -347,7 +430,7 @@ const RegisterPage = () => {
                     <Alert severity='error' sx={{width:"75%"}}>{errors.postalCode.message}</Alert>
                       ) : null}
                   </Grid>
-                </Grid>
+                    </Grid>
                 <Grid 
                 item 
                 xs={6} 
@@ -365,7 +448,7 @@ const RegisterPage = () => {
                   {errors.language.dirty && errors.language.error ? (
                     <Alert severity='error' sx={{width:"75%"}}>{errors.language.message}</Alert>
                       ) : null}
-                </Grid> 
+                </Grid> */}
               </Grid>
             </Box>
             <Box 

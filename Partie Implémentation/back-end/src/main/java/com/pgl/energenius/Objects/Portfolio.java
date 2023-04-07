@@ -1,6 +1,9 @@
 package com.pgl.energenius.Objects;
 
+import com.pgl.energenius.Objects.DTOs.PortfolioDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -15,6 +18,7 @@ import java.util.List;
  * The portfolio of a client
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "portfolios")
@@ -24,7 +28,8 @@ public class Portfolio {
      * The ID of the portfolio
      */
     @Id
-    private ObjectId id;
+    @Default
+    private ObjectId id = new ObjectId();
 
     /**
      * The client that owns the portfolio
@@ -44,19 +49,17 @@ public class Portfolio {
     /**
      * The list of the supply points that are in the portfolio
      */
-    private List<SupplyPoint> supplyPoints;
+    @Default
+    private List<SupplyPoint> supplyPoints = new ArrayList<>();
 
-    /**
-     * Create a portfolio
-     * @param client
-     * @param address
-     * @param name
-     */
-    public Portfolio(Client client, Address address, String name) {
-        id = new ObjectId();
-        this.client = client;
-        this.address = address;
-        this.name = name;
-        supplyPoints = new ArrayList<>();
+    public static PortfolioBuilder builder(PortfolioDto portfolioDto) {
+
+        return builder()
+                .address(portfolioDto.getAddress())
+                .name(portfolioDto.getName());
+    }
+
+    public static PortfolioBuilder builder() {
+        return new PortfolioBuilder();
     }
 }

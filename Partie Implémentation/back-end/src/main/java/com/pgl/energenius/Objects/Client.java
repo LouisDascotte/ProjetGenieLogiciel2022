@@ -1,8 +1,12 @@
 package com.pgl.energenius.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pgl.energenius.Objects.DTOs.ClientDto;
+import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.enums.ClientStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -15,20 +19,22 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Document(collection = "clients")
-
 /**
  * Client
  */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "clients")
 public class Client {
+
     /**
      * The ID of the client
      */
     @Id
-    private ObjectId id;
+    @Default
+    private ObjectId id = new ObjectId();
 
     /**
      * The first name of the client
@@ -43,11 +49,13 @@ public class Client {
      */
     private String phoneNo;
 
+    @Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date lastAccess;
+    private Date lastAccess = new Date();
 
+    @Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     /**
      * The address of the client
@@ -61,8 +69,7 @@ public class Client {
     /**
      * The language that the client usually uses
      */
-    @DBRef(lazy = true)
-    private Language language;
+    private String language;
 
     /**
      * The favorite portfolio of the client
@@ -73,33 +80,20 @@ public class Client {
     /**
      * If the client prefers to use the dark mode of the application or not
      */
-    private Boolean darkMode;
+    @Default
+    private Boolean darkMode = false;
 
-    /**
-     * The list of the notifications of the client
-     */
-    private List<Notification> notifications;
+    public static ClientBuilder builder(ClientDto clientDto) {
 
-    /**
-     * Create a client
-     * @param firstName
-     * @param lastName
-     * @param phoneNo
-     * @param address
-     * @param language
-     */
-    public Client(String firstName, String lastName, String phoneNo, Address address, Language language) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNo = phoneNo;
-        this.address = address;
-        this.language = language;
-        id = new ObjectId();
-        creationDate = new Date(System.currentTimeMillis());
-        lastAccess = creationDate;
-        status = null; // TODO
-        favoritePortfolio = null; // TODO
-        darkMode = false;
-        notifications = new ArrayList<>();
+        return builder()
+                .firstName(clientDto.getFirstName())
+                .lastName(clientDto.getLastName())
+                .phoneNo(clientDto.getPhoneNumber())
+                .address(clientDto.getAddress())
+                .language(clientDto.getLanguage());
+    }
+
+    public static ClientBuilder builder() {
+        return new ClientBuilder();
     }
 }

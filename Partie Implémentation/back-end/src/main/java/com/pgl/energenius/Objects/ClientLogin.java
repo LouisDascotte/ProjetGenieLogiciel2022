@@ -2,11 +2,11 @@ package com.pgl.energenius.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,27 +15,29 @@ import java.util.List;
 /**
  * The login information of a client
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@Document("client_logins")
-public class ClientLogin implements UserDetails {
+public class ClientLogin extends User {
 
     /**
      * The email used by the client
      */
-    @Id
+    @Indexed(unique = true, sparse = true)
     private String email;
-
-    /**
-     * The password used by the client
-     */
-    private String password;
 
     /**
      * The client that uses the information
      */
     @DBRef
     private Client client;
+
+    public ClientLogin(String email, String password, Client client) {
+        super(password);
+        this.email = email;
+        this.client = client;
+    }
 
     /**
      * Grant authorities to the client
@@ -56,41 +58,4 @@ public class ClientLogin implements UserDetails {
     public String getUsername() {
         return email;
     }
-
-    /**
-     * Check if the account isn't expired
-     * @return
-     */
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    /**
-     * Check if the account isn't locked
-     * @return
-     */
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    /**
-     * Check if the credential informations aren't expired
-     * @return
-     */
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    /**
-     * Check if the account is enabled
-     * @return
-     */
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 }

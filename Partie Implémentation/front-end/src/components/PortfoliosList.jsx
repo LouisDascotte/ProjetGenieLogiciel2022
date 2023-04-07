@@ -5,7 +5,7 @@ import { FixedSizeList} from 'react-window';
 
 const PortfoliosList = () => {
   const [portfolios, setPortfolios] = useState({});
-
+  const data = this.props;
   // For now, usage of a hardcoded portfolio. Will later be replaced with an axios GET request to get the details.
   
 

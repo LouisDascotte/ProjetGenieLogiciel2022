@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
-
+import authServices from "../utils/services/auth-service";
 
 // Content from the original MUI React documentation.
 
@@ -26,6 +26,11 @@ const AccountMenu = () => {
     setAnchorEl(null);
   };
   const name = "Dupont";
+
+  const handleLogout = () => {
+    authServices.logout();
+    handleClose();
+  }
 
 
 
@@ -143,7 +148,7 @@ const AccountMenu = () => {
           </ListItemIcon>
           Settings
         </MenuItem></Link>
-        <Link to="/login" className='link'><MenuItem onClick={handleClose}>
+        <Link to="/login" className='link'><MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

@@ -1,49 +1,31 @@
 package com.pgl.energenius.Controllers;
 
+import com.pgl.energenius.Exception.*;
 import com.pgl.energenius.Objects.*;
 import com.pgl.energenius.Objects.DTOs.PortfolioDto;
-import com.pgl.energenius.Repositories.PortfolioRepository;
-import com.pgl.energenius.Services.ClientService;
+import com.pgl.energenius.Objects.DTOs.SupplyPointDto;
 import com.pgl.energenius.Services.PortfolioService;
 import com.pgl.energenius.enums.EnergyType;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.ArrayList;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The PortfolioController class handles all HTTP requests related to Portfolios.
  */
-@Slf4j
 @RestController
-@RequestMapping("/api/client")
+@RequestMapping("/api/client/portfolio")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PortfolioController {
 
     @Autowired
     private PortfolioService portfolioService;
-
-    @Autowired
-    private ClientService clientService;
-
-    @Autowired
-    private PortfolioRepository portfolioRepository;
 
     /**
      * This method returns all portfolios of the connected client.
@@ -51,15 +33,17 @@ public class PortfolioController {
      * @return A list of portfolios owned by the client
      */
     @GetMapping("/all")
-    public ResponseEntity<List<Portfolio>> getPortfolios() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> getPortfolios() {
 
-        // Pas besoin de vérifier, si authentication.getPrincipal() est un ClientLogin,
-        // car on s'est que l'utilisateur doit être authentifié pour accéder à ce mapping
-        Client client = ((ClientLogin) authentication.getPrincipal()).getClient();
+        try {
+            return new ResponseEntity<>(portfolioService.getAllPortfolios(), HttpStatus.OK);
 
-        List<Portfolio> portfolios = portfolioService.clientPortfolios(client);
-        return new ResponseEntity<>(portfolios, HttpStatus.OK);
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -70,14 +54,21 @@ public class PortfolioController {
      */
     @PostMapping("/create")
     @ResponseBody
-    public String createPortfolio(@RequestBody PortfolioDto portfolioDto){
-        Portfolio portfolio = new Portfolio();
-//            portfolioDto.getClient(),
-//            portfolioDto.getAddress(), TODO
-//            portfolioDto.getName());
-        log.info("Activated");
-        portfolioRepository.save(portfolio);
-        return "Portfolio Added";
+    public ResponseEntity<?> create(@RequestBody PortfolioDto portfolioDto){
+
+        try {
+            Portfolio portfolio = portfolioService.createPortfolio(portfolioDto);
+            return new ResponseEntity<>(portfolio, HttpStatus.CREATED);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -87,39 +78,84 @@ public class PortfolioController {
      * @return the consumption readings for the portfolio
      */
     @GetMapping("/consumption")
-    public ResponseEntity<HashMap<EnergyType, List<Reading>>> getConsumption(@RequestBody ObjectId portfolioId) {
+    public ResponseEntity<?> getConsumption(@RequestParam ObjectId portfolioId) {
 
-        Optional<Portfolio> portfolioOptional = portfolioService.getPortfolio(portfolioId);
+        try {
+            HashMap<EnergyType, List<Reading>> readings = portfolioService.getPortfolioConsumption(portfolioId);
+            return new ResponseEntity<>(readings, HttpStatus.OK);
 
-        if (portfolioOptional.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        Portfolio portfolio = portfolioOptional.get();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Pas besoin de vérifier, si authentication.getPrincipal() est un ClientLogin,
-        // car on s'est que l'utilisateur doit être authentifié pour accéder à ce mapping
-        Client client = ((ClientLogin) authentication.getPrincipal()).getClient();
-
-        // Permet de vérifier si le portfolio appartient bien à l'utilisateur connecté.
-        if (!client.equals(portfolio.getClient())) {
-            new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        }
-
-        HashMap<EnergyType, List<Reading>> readings = new HashMap<>();
-
-        readings.put(EnergyType.GAZ, new ArrayList<>());
-        readings.put(EnergyType.ELEC, new ArrayList<>());
-        readings.put(EnergyType.EAU, new ArrayList<>());
-
-        for (SupplyPoint sp: portfolio.getSupplyPoints()) {
-
-            Meter meter = sp.getMeter();
-            List<Reading> readings_of_energy_type = readings.get(meter.getEnergyType());
-            readings_of_energy_type.addAll(meter.getReadings());
-        }
-
-        return new ResponseEntity<>(readings, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam ObjectId portfolioId) {
+
+        try {
+            portfolioService.deletePortfolio(portfolioId);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/supply_point/add")
+    public ResponseEntity<?> createSupplyPoint(@RequestParam ObjectId portfolioId, @RequestBody SupplyPointDto supplyPointDto) {
+
+        try {
+            SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, supplyPointDto);
+            return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (ObjectAlreadyExitsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/supply_point/delete")
+    public ResponseEntity<?> deleteSupplyPoint(@RequestParam ObjectId portfolioId, @RequestParam String EAN) {
+
+        try {
+            portfolioService.deleteSupplyPoint(portfolioId, EAN);
+            return ResponseEntity.ok().build();
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

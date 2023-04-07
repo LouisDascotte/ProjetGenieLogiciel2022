@@ -7,20 +7,31 @@ import TopMenu from '../components/TopMenu';
 import TempList from '../components/TempList';
 import ElementsList from '../components/ElementsList';
 import {Link} from 'react-router-dom';
+import axios from '../api/axios';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#9bcc6c",
+      contrastText: '#fff'
+    }, 
+    secondary: {
+      main: "#000",
+      contrastText: '#000000'
+    }
+  }
+});
+
+const METER_URL = "http://localhost:8080/api/meter/"
 
 const ManageMeters = () => {
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#9bcc6c",
-        contrastText: '#fff'
-      }, 
-      secondary: {
-        main: "#000",
-        contrastText: '#000000'
-      }
-    }
+  const jwt = JSON.parse(localStorage.getItem("jwt"));
+  const response = axios.get(METER_URL + "all", {
+    headers : {"Content-Type":"application/json",
+  "Authorization" : `Bearer ${jwt}`,
+  "Access-Control-Allow-Origin":true}
+  } ).then(response=>{
+    console.log(response.data);
   });
   const pageAddress = "/manage-meters";
   const pageName = "Manage meters";

@@ -24,6 +24,7 @@ import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
+import CreatePortfolio from './pages/CreatePortfolio';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -50,6 +51,8 @@ function App() {
                 <Route path="/manage-portfolios" exact element={<PrivateRoute>
                   <ManagePortfolios/>
                 </PrivateRoute>}/>
+                <Route path="/create-portfolio" exact element={
+                <PrivateRoute><CreatePortfolio/></PrivateRoute>}/>
                 <Route path="/manage-meters" exact element={<PrivateRoute>
                   <ManageMeters/>
                 </PrivateRoute>}/>

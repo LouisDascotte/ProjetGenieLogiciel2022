@@ -184,7 +184,6 @@ const RegisterPage = () => {
   }
 
   const onUpdateField=e=>{
-    console.log(form);
     const field = e.target.name; 
     const nextFormState= {
       ...form, 

@@ -34,7 +34,7 @@ const ManagePortfolios = () => {
             <PortfoliosList/>
           </Card>
           <ThemeProvider theme={theme}>
-            <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+            <Link to='/create-portfolio' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                 Create portfolio
               </Button>

@@ -13,7 +13,7 @@ const PortfoliosList = () => {
   const jwt = localStorage.getItem("jwt");
 
   // creating the list of portfolios
-  let portfolios = [];
+  let portfolios = ["Portfolio 1", "Portfolio 2", "Portfolio 3"];
 
   // the name of the portfolio
 
@@ -31,16 +31,16 @@ const PortfoliosList = () => {
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
       <List style={{maxHeight: '100%', overflow: 'auto'}}>
-        <ListItem>
+        {portfolios.map(portfolio => <ListItem>
           <ListItemButton>
             <ListItemText>
-              Portfolio 1
+              {portfolio}
             </ListItemText>
           </ListItemButton>
           <IconButton>
             <DeleteIcon/>
           </IconButton>
-        </ListItem>
+        </ListItem> )}
       </List>
     </Box>
   )

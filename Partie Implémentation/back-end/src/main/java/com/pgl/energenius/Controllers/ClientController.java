@@ -1,22 +1,36 @@
 package com.pgl.energenius.Controllers;
 
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.Exception.ObjectNotValidatedException;
+import com.pgl.energenius.Objects.Area;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Objects.Meter;
+import com.pgl.energenius.Repositories.AreaRepository;
 import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Services.ClientService;
 import com.pgl.energenius.config.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Polygon;
+import org.springframework.data.mongodb.core.geo.GeoJson;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The ClientController class handles all HTTP requests related to Clients
@@ -82,17 +96,17 @@ public class ClientController {
         }
     }
 
+    @GetMapping("")
+    public ResponseEntity<?> getClient() {
 
-    @Autowired
-    private MeterRepository meterRepository;
+        try {
+            return new ResponseEntity<>(clientService.getAuthClient(), HttpStatus.OK);
 
-    @GetMapping("/auth/test")
-    public void test() {
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
-        Meter meter = Meter.builder()
-                .EAN("EAN1234")
-                .build();
-
-        meterRepository.insert(meter);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

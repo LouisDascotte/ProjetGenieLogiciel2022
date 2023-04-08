@@ -1,6 +1,7 @@
 package com.pgl.energenius.Services;
 
 import com.mongodb.DuplicateKeyException;
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.Objects.Client;
@@ -10,6 +11,7 @@ import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Objects.notifications.Notification;
 import com.pgl.energenius.Repositories.ClientRepository;
 import com.pgl.energenius.Repositories.UserRepository;
+import com.pgl.energenius.Utils.SecurityUtils;
 import com.pgl.energenius.Utils.ValidationUtils;
 import com.pgl.energenius.config.WebSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class ClientService {
     @Autowired
     private ValidationUtils validationUtils;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public Client insertClient(Client client) throws ObjectNotValidatedException {
 
         validationUtils.validate(client);
@@ -47,6 +52,11 @@ public class ClientService {
 
         validationUtils.validate(client);
         clientRepository.save(client);
+    }
+
+    public Client getAuthClient() throws InvalidUserDetailsException {
+
+        return securityUtils.getCurrentClientLogin().getClient();
     }
 
     public Client createClient(ClientDto clientDto) throws ObjectAlreadyExitsException, ObjectNotValidatedException {

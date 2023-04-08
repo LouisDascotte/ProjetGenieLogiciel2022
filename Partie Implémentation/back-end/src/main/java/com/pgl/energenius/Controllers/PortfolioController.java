@@ -54,6 +54,7 @@ public class PortfolioController {
      */
     @PostMapping("/create")
     @ResponseBody
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity<?> create(@RequestBody PortfolioDto portfolioDto){
 
         try {

@@ -45,7 +45,6 @@ const MainPage = () => {
     }
 
     useEffect(()=> {
-        console.log("Value of page :", page);
         if (page !== ""){
             setHasSelectedPortfolio(true);
         }

@@ -20,9 +20,19 @@ public class PortfolioDto {
   @JsonProperty("name")
   private String name;
 
+  @JsonProperty("supply_point")
+  private String ean; 
+
+
+  @JsonProperty("supplier")
+  private String supplier; 
+
   /**
    * The address of the portfolio
    */
   @JsonProperty("address")
   private String address;
+
+  @JsonProperty("energy_type")
+  private String energy_type; 
 }

@@ -52,7 +52,7 @@ const LoginPage = () => {
     try{
       const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
+      //"Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response => {
         console.log("auth: " + response.headers["authorization"]);

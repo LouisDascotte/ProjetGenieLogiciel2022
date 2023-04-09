@@ -3,12 +3,12 @@ package com.pgl.energenius.Controllers;
 import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.Exception.ObjectNotValidatedException;
-import com.pgl.energenius.Objects.Area;
+//import com.pgl.energenius.Objects.Area;
 import com.pgl.energenius.Objects.ClientLogin;
 import com.pgl.energenius.Objects.DTOs.ClientDto;
 import com.pgl.energenius.Objects.DTOs.ClientLoginDto;
 import com.pgl.energenius.Objects.Meter;
-import com.pgl.energenius.Repositories.AreaRepository;
+//import com.pgl.energenius.Repositories.AreaRepository;
 import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Services.ClientService;
 import com.pgl.energenius.config.JwtUtil;
@@ -96,7 +96,8 @@ public class ClientController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/auth/infos")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getClient() {
 
         try {

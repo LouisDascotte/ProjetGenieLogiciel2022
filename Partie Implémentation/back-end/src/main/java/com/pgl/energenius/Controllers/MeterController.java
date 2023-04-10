@@ -57,10 +57,11 @@ public class MeterController {
     }
 
     @PostMapping("/reading/add")
-    public ResponseEntity<?> addReading(@RequestParam String EAN, @RequestParam Date date, @RequestParam int value) {
+    public ResponseEntity<?> addReading(@RequestParam String EAN, @RequestParam String date, @RequestParam int value) {
 
         try {
-            return new ResponseEntity<>(meterService.createReadingMeter(EAN, date, value), HttpStatus.CREATED);
+            // Utilisation du constructeur Date(long) qui utilise des millisecondes pour créer la date.
+            return new ResponseEntity<>(meterService.createReadingMeter(EAN, new Date(Long.parseLong(date)), value), HttpStatus.CREATED);
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

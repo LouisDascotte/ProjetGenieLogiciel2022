@@ -25,6 +25,7 @@ import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
 import CreatePortfolio from './pages/CreatePortfolio';
+import MeterConsumption from './pages/MeterConsumption';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -72,6 +73,9 @@ function App() {
                   <Notifications/>
                   </PrivateRoute>}/>
                 <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
+                <Route path="/enter-consumption" exact element={<PrivateRoute>
+                  <MeterConsumption/>
+                </PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

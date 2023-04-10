@@ -1,7 +1,7 @@
 package com.pgl.energenius.config;
 
-import com.pgl.energenius.Objects.User;
-import com.pgl.energenius.Repositories.UserRepository;
+import com.pgl.energenius.model.User;
+import com.pgl.energenius.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package com.pgl.energenius.config;
 
-import com.pgl.energenius.Services.UserService;
+import com.pgl.energenius.service.UserService;
 import java.util.Arrays;
 import java.util.List;
 

@@ -8,6 +8,8 @@ import com.pgl.energenius.Exception.UnauthorizedAccessException;
 import com.pgl.energenius.Objects.Meter;
 import com.pgl.energenius.Repositories.MeterRepository;
 import com.pgl.energenius.Services.MeterService;
+import com.pgl.energenius.Utils.SecurityUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +28,20 @@ public class MeterController {
     @Autowired
     private MeterRepository meterRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @CrossOrigin("http://localhost:3000")
     @GetMapping("/auth/test")
-    public void test() {
-
+    public void test() throws InvalidUserDetailsException {
+        
         Meter meter = Meter.builder()
-                .EAN("EAN1234")
-                .build();
+        .EAN("EAN1234").clientId(securityUtils.getCurrentClientLogin().getClient().getId())
+        .build();
 
         meterRepository.insert(meter);
+        
+        
     }
     
     @CrossOrigin("http://localhost:3000")

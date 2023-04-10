@@ -24,7 +24,7 @@ const MeterConsumption = (ean) => {
   const [selectedDate, setSelectedDate] = useState(dayjs(`${year}-${month}-${day}`));
   const [value, setValue] = useState("");
 
-  const meter_ean = "EAN1234"; 
+  const meter_ean = ean; 
   
   const navigate = useNavigate();
 

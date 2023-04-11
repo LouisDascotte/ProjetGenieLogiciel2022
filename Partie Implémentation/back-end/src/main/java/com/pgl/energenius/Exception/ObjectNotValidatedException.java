@@ -1,4 +1,4 @@
-package com.pgl.energenius.exception;
+package com.pgl.energenius.Exception;
 
 public class ObjectNotValidatedException extends Exception {
 

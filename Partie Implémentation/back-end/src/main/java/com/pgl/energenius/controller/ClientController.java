@@ -1,7 +1,7 @@
 package com.pgl.energenius.controller;
 
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
 import com.pgl.energenius.config.JwtUtil;
-import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.service.ClientService;
 import com.pgl.energenius.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

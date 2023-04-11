@@ -163,6 +163,7 @@ const RegisterPage = () => {
           country : form.address.country    
         }
       };
+      console.log(body);
       const response = await axios.post(REGISTER_URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
         //"Authorization" : `Bearer ${jwt}`,

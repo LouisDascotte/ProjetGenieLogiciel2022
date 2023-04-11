@@ -1,10 +1,11 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.exception.ObjectNotValidatedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 
 import java.util.Set;
 

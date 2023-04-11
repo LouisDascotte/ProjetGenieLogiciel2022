@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.Exception.ObjectNotFoundException;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.Contract;
 import com.pgl.energenius.model.Employee;

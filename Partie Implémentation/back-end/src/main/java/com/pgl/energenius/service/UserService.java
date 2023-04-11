@@ -1,10 +1,10 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.exception.ObjectNotFoundException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.User;
 import com.pgl.energenius.repository.UserRepository;
+import com.pgl.energenius.Exception.ObjectNotFoundException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.WebSecurityConfig;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;

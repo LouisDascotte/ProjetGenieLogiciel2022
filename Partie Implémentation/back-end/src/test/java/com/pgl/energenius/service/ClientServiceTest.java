@@ -1,8 +1,8 @@
 package com.pgl.energenius.service;
 
 import com.mongodb.DuplicateKeyException;
-import com.pgl.energenius.exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.dto.ClientDto;

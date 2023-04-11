@@ -1,9 +1,9 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.exception.InvalidUserDetailsException;
-import com.pgl.energenius.exception.ObjectNotFoundException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
-import com.pgl.energenius.exception.UnauthorizedAccessException;
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
+import com.pgl.energenius.Exception.ObjectNotFoundException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
+import com.pgl.energenius.Exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.repository.MeterRepository;

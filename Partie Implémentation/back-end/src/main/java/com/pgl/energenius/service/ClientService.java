@@ -1,14 +1,14 @@
 package com.pgl.energenius.service;
 
 import com.mongodb.DuplicateKeyException;
-import com.pgl.energenius.exception.InvalidUserDetailsException;
-import com.pgl.energenius.exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.repository.ClientRepository;
+import com.pgl.energenius.Exception.InvalidUserDetailsException;
+import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
+import com.pgl.energenius.Exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.WebSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;

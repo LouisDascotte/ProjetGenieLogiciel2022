@@ -5,11 +5,7 @@ import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.exception.UnauthorizedAccessException;
-import com.pgl.energenius.model.Meter;
-import com.pgl.energenius.repository.MeterRepository;
 import com.pgl.energenius.service.MeterService;
-import com.pgl.energenius.service.SecurityService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +40,11 @@ public class MeterController {
         }
     }
 
-    @PostMapping("/reading")
-    public ResponseEntity<?> createReading(@RequestParam String EAN, @RequestParam String date, @RequestParam int value) {
+    @PostMapping("/{EAN}/reading")
+    public ResponseEntity<?> createReading(@PathVariable String EAN, @RequestParam String date, @RequestParam int value) {
 
         try {
-            // Utilisation du constructeur Date(long) qui utilise des millisecondes pour créer la date.
+            // Utilisation du constructeur Date (long) qui utilise des millisecondes pour créer la date.
             return new ResponseEntity<>(meterService.createReadingMeter(EAN, new Date(Long.parseLong(date)), value), HttpStatus.CREATED);
 
         } catch (ObjectNotFoundException e) {

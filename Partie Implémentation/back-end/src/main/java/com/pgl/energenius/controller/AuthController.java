@@ -1,9 +1,9 @@
 package com.pgl.energenius.controller;
 
 
-import com.pgl.energenius.Exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.ObjectAlreadyExitsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.EmployeeLogin;

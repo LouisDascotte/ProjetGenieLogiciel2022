@@ -1,4 +1,4 @@
-package com.pgl.energenius.Exception;
+package com.pgl.energenius.exception;
 
 public class InvalidUserDetailsException extends Exception {
 

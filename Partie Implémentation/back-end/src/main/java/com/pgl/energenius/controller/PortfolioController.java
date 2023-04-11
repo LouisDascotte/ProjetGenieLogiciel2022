@@ -1,20 +1,16 @@
 package com.pgl.energenius.controller;
 
-import com.pgl.energenius.model.*;
+import com.pgl.energenius.exception.*;
+import com.pgl.energenius.model.Portfolio;
+import com.pgl.energenius.model.SupplyPoint;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
 import com.pgl.energenius.service.PortfolioService;
-import com.pgl.energenius.Exception.*;
-import com.pgl.energenius.enums.EnergyType;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * The PortfolioController class handles all HTTP requests related to Portfolios.
@@ -81,8 +77,7 @@ public class PortfolioController {
     public ResponseEntity<?> getAllConsumption(@PathVariable("id") ObjectId portfolioId) {
 
         try {
-            HashMap<EnergyType, List<Reading>> readings = portfolioService.getPortfolioConsumption(portfolioId);
-            return new ResponseEntity<>(readings, HttpStatus.OK);
+            return new ResponseEntity<>(portfolioService.getPortfolioConsumption(portfolioId), HttpStatus.OK);
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -158,6 +153,20 @@ public class PortfolioController {
         }
     }
 
-//    @GetMapping("/{id}/supply_point/{EAN}/consumption")
-//    public ResponseEntity<?> getSupplyPointConsumption
+    @GetMapping("/{id}/supply_point/{EAN}/consumption")
+    public ResponseEntity<?> getSupplyPointConsumption(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) {
+
+        try {
+            return new ResponseEntity<>(portfolioService.getSupplyPointConsumption(portfolioId, EAN), HttpStatus.OK);
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.pgl.energenius.model.Meter;
 import com.pgl.energenius.model.Reading;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.bson.types.ObjectId;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ReadingNotification extends Notification {
 
-    private Meter meter;
+    private String EAN;
 
     private Reading reading;
 }

@@ -4,7 +4,7 @@ import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
 import com.pgl.energenius.repository.PortfolioRepository;
-import com.pgl.energenius.Exception.*;
+import com.pgl.energenius.exception.*;
 import com.pgl.energenius.enums.EnergyType;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ public class PortfolioServiceTest {
         setUp();
         Meter meter = Meter.builder().EAN("EAN1234").energyType(EnergyType.ELEC).build();
 
-        meter.getReadings().add(new Reading(new Date(), 100));
+        meter.getReadings().add(new Reading(new Date(), 100, Reading.Status.PENDING));
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
@@ -114,7 +114,7 @@ public class PortfolioServiceTest {
     @Test
     public void test_createPortfolio() throws InvalidUserDetailsException, ObjectNotValidatedException {
 
-        PortfolioDto portfolioDto = new PortfolioDto("test", "test");
+        PortfolioDto portfolioDto = new PortfolioDto("test", null);
 
         Client client = new Client();
         when(securityService.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));

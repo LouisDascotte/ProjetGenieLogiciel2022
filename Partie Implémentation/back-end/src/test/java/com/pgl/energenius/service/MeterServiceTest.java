@@ -1,9 +1,9 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.repository.MeterRepository;
@@ -102,7 +102,7 @@ public class MeterServiceTest {
 
         setUp();
 
-        Reading reading = new Reading(new Date(), 123);
+        Reading reading = new Reading(new Date(), 123, Reading.Status.PENDING);
         assertEquals(reading, meterService.createReadingMeter("EAN1234", reading.getDate(), 123));
         verify(meterRepository, times(1)).save(meter);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
@@ -120,7 +120,7 @@ public class MeterServiceTest {
         when(meterRepository.findByClientId(client.getId())).thenReturn(List.of(meter));
         when(securityService.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
-        assertEquals(meter, meterService.getAllMeters().get(0));
+        assertEquals(meter, meterService.getMeters().get(0));
         verify(securityService, times(0)).getCurrentEmployeeLogin();
     }
 
@@ -139,7 +139,7 @@ public class MeterServiceTest {
         when(securityService.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
         when(securityService.getCurrentEmployeeLogin()).thenReturn(new EmployeeLogin("", "", employee));
 
-        assertEquals(meter, meterService.getAllMeters().get(0));
+        assertEquals(meter, meterService.getMeters().get(0));
         verify(securityService, times(1)).getCurrentClientLogin();
         verify(meterRepository, times(0)).findByClientId(Mockito.any(ObjectId.class));
     }

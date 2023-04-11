@@ -1,10 +1,10 @@
 package com.pgl.energenius.controller;
 
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.service.MeterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,7 @@ public class MeterController {
     public ResponseEntity<?> getMeters() {
 
         try {
-            return new ResponseEntity<>(meterService.getAllMeters(), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return new ResponseEntity<>(meterService.getMeters(), HttpStatus.OK);
 
         } catch (InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -55,6 +52,20 @@ public class MeterController {
 
         } catch (ObjectNotValidatedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/allocations")
+    public ResponseEntity<?> getAllocations() {
+
+        try {
+            return new ResponseEntity<>(meterService.getMeterAllocations(), HttpStatus.OK);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

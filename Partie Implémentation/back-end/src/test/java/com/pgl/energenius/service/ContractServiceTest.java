@@ -1,10 +1,8 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.model.Client;
-import com.pgl.energenius.model.Contract;
-import com.pgl.energenius.model.Employee;
-import com.pgl.energenius.model.Supplier;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.model.*;
 import com.pgl.energenius.repository.ContractRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,34 +24,28 @@ public class ContractServiceTest {
     @Mock
     private ContractRepository contractRepository;
 
+    @Mock
+    private SecurityService securityService;
+
     @InjectMocks
     private ContractService contractService;
 
     @Test
-    public void test_getContractsByClient() throws ObjectNotFoundException {
+    public void test_getContracts_Client() throws InvalidUserDetailsException {
 
         Contract contract = new Contract();
         List<Contract> contracts = new ArrayList<>();
         contracts.add(contract);
 
         Client client = new Client();
-        when(contractRepository.findByClient(client)).thenReturn(contracts);
+        when(securityService.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        when(contractRepository.findByClientId(client.getId())).thenReturn(contracts);
 
-        assertEquals(contracts, contractService.getContractsByClient(client));
+        assertEquals(contracts, contractService.getContracts());
     }
 
     @Test
-    public void test_getContractsByClient_ObjectNotFound() {
-
-        List<Contract> contracts = new ArrayList<>();
-        Client client = new Client();
-        when(contractRepository.findByClient(client)).thenReturn(contracts);
-
-        assertThrows(ObjectNotFoundException.class, () -> contractService.getContractsByClient(client));
-    }
-
-    @Test
-    public void test_getContractsByEmployee() throws ObjectNotFoundException {
+    public void test_getContractsByEmployee() throws InvalidUserDetailsException {
 
         Contract contract = new Contract();
         List<Contract> contracts = new ArrayList<>();
@@ -62,22 +55,10 @@ public class ContractServiceTest {
                 .supplier(new Supplier())
                 .build();
 
-        when(contractRepository.findBySupplier(employee.getSupplier())).thenReturn(contracts);
+        when(securityService.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
+        when(securityService.getCurrentEmployeeLogin()).thenReturn(new EmployeeLogin("", "", employee));
+        when(contractRepository.findBySupplierId(employee.getSupplier().getId())).thenReturn(contracts);
 
-        assertEquals(contracts, contractService.getContractsByEmployee(employee));
-    }
-
-    @Test
-    public void test_getContractsByEmployee_ObjectNotFound() {
-
-        List<Contract> contracts = new ArrayList<>();
-
-        Employee employee = Employee.builder()
-                .supplier(new Supplier())
-                .build();
-
-        when(contractRepository.findBySupplier(employee.getSupplier())).thenReturn(contracts);
-
-        assertThrows(ObjectNotFoundException.class, () -> contractService.getContractsByEmployee(employee));
+        assertEquals(contracts, contractService.getContracts());
     }
 }

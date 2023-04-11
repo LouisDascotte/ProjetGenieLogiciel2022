@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.EmployeeLogin;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -4,7 +4,7 @@ import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
 import com.pgl.energenius.repository.PortfolioRepository;
-import com.pgl.energenius.Exception.*;
+import com.pgl.energenius.exception.*;
 import com.pgl.energenius.enums.EnergyType;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,5 +125,18 @@ public class PortfolioService {
         portfolio.getSupplyPoints().remove(supplyPoint);
 
         savePortfolio(portfolio);
+    }
+
+    public List<Reading> getSupplyPointConsumption(ObjectId portfolioId, String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        Portfolio portfolio = getPortfolio(portfolioId);
+
+        for (SupplyPoint sp : portfolio.getSupplyPoints()) {
+
+            if (EAN.equals(sp.getEAN())) {
+                return meterService.getMeter(EAN).getReadings();
+            }
+        }
+        return new ArrayList<>();
     }
 }

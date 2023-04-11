@@ -25,4 +25,11 @@ public class Reading {
      * The value of the reading
      */
     private int value;
+
+    private Status status;
+
+    public enum Status {
+        PENDING,
+        ACCEPTED
+    }
 }

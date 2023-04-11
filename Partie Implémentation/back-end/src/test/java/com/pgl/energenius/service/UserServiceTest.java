@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.Exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.EmployeeLogin;
 import com.pgl.energenius.repository.UserRepository;

@@ -1,12 +1,13 @@
 package com.pgl.energenius.service;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
-import com.pgl.energenius.Exception.UnauthorizedAccessException;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.notification.ReadingNotification;
+import com.pgl.energenius.repository.MeterAllocationRepository;
 import com.pgl.energenius.repository.MeterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class MeterService {
     private MeterRepository meterRepository;
 
     @Autowired
-    private ContractService contractService;
+    private MeterAllocationRepository meterAllocationRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -71,14 +72,14 @@ public class MeterService {
 
         Meter meter = getMeter(EAN);
 
-        Reading reading = new Reading(date, value);
+        Reading reading = new Reading(date, value, Reading.Status.PENDING);
         meter.getReadings().add(reading); // TODO verifier la date des autres ?
 
         ReadingNotification notification = ReadingNotification.builder()
                 .senderId(meter.getClientId())
                 .type(Notification.Type.READING_NOTIFICATION)
                 .reading(reading)
-                .meter(meter)
+                .EAN(meter.getEAN())
                 .build();
 
         saveMeter(meter);
@@ -86,7 +87,7 @@ public class MeterService {
         return reading;
     }
 
-    public List<Meter> getAllMeters() throws ObjectNotFoundException, InvalidUserDetailsException {
+    public List<Meter> getMeters() throws InvalidUserDetailsException {
 
         try {
             Client client = securityService.getCurrentClientLogin().getClient();
@@ -96,5 +97,11 @@ public class MeterService {
 
         Employee employee = securityService.getCurrentEmployeeLogin().getEmployee();
         return meterRepository.findBySupplierId(employee.getSupplier().getId());
+    }
+
+    public List<MeterAllocation> getMeterAllocations() throws InvalidUserDetailsException {
+
+        Client client = securityService.getCurrentClientLogin().getClient();
+        return meterAllocationRepository.findByClientId(client.getId());
     }
 }

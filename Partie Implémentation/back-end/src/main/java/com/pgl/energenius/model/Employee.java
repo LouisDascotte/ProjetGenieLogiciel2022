@@ -32,7 +32,7 @@ public class Employee {
     private ObjectId id = new ObjectId();
 
     /**
-     * The prefered language of the employee
+     * The preferred language of the employee
      */
     private String language;
 
@@ -42,10 +42,4 @@ public class Employee {
     @Indexed(unique = true)
     @DBRef(lazy = true)
     private Supplier supplier;
-
-    /**
-     * The history of the meters allocated by the employee
-     */
-    @Default
-    private List<MeterAllocation> meterAllocationHistory = new ArrayList<>();
 }

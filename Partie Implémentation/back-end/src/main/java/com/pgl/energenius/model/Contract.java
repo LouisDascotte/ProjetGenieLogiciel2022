@@ -41,16 +41,14 @@ public class Contract {
     private Date endDate;
 
     /**
-     * The client that the contract is linked to
+     * The id of client that the contract is linked to
      */
-    @DBRef(lazy = true)
-    private Client client;
+    private ObjectId clientId;
 
     /**
-     * The supplier of the contract
+     * The id of supplier of the contract
      */
-    @DBRef(lazy = true)
-    private Supplier supplier;
+    private ObjectId supplierId;
 
     /**
      * The type of contract
@@ -58,16 +56,14 @@ public class Contract {
     private ContractType contractType;
 
     /**
-     * The first meter linked to the contract
+     * The id of the first meter linked to the contract
      */
-    @DBRef(lazy = true)
-    private Meter meter1;
+    private ObjectId meterId_1;
 
     /**
-     * The second meter linked to the contract, if there is any
+     * The id of the second meter linked to the contract, if there is any
      */
-    @DBRef(lazy = true)
-    private Meter meter2;
+    private ObjectId meterId_2;
 
     /**
      * The offer of the contract
@@ -81,8 +77,7 @@ public class Contract {
     private String status; // TODO enum ?
 
     /**
-     * The portfolio containing the contract
+     * The id of the portfolio containing the contract
      */
-    @DBRef(lazy = true)
-    private Portfolio portfolio;
+    private ObjectId portfolioId;
 }

@@ -38,27 +38,21 @@ public class Client {
      * The first name of the client
      */
     private String firstName;
+
     /**
      * The last name of the client
      */
     private String lastName;
+
     /**
      * The phone number of the client
      */
     private String phoneNo;
 
-    @Default
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date lastAccess = new Date();
-
-    @Default
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date creationDate = new Date();
-
     /**
      * The address of the client
      */
-    private String address;
+    private Address address;
     /**
      * The status of the client
      */
@@ -70,10 +64,9 @@ public class Client {
     private String language;
 
     /**
-     * The favorite portfolio of the client
+     * The id of the favorite portfolio of the client
      */
-    @DBRef(lazy = true)
-    private Portfolio favoritePortfolio;
+    private ObjectId favoritePortfolioId;
 
     /**
      * If the client prefers to use the dark mode of the application or not

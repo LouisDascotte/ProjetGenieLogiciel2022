@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ContractRepository extends MongoRepository<Contract, ObjectId> {
 
-    List<Contract> findByClient(Client client);
+    List<Contract> findByClientId(ObjectId clientId);
 
-    List<Contract> findBySupplier(Supplier supplier);
+    List<Contract> findBySupplierId(ObjectId supplierId);
 }

@@ -1,7 +1,7 @@
 package com.pgl.energenius.service;
 
 import com.pgl.energenius.model.dto.EmployeeLoginDto;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.Employee;
 import com.pgl.energenius.model.EmployeeLogin;
 import com.pgl.energenius.repository.EmployeeRepository;

@@ -1,9 +1,7 @@
 package com.pgl.energenius.controller;
 
-import com.pgl.energenius.Exception.InvalidUserDetailsException;
-import com.pgl.energenius.config.JwtUtil;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.service.ClientService;
-import com.pgl.energenius.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,6 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping("/me")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getClient() {
 
         try {

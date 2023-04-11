@@ -3,6 +3,8 @@ package com.pgl.energenius.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "meter_allocations")
 public class MeterAllocation {
 
     /**
@@ -28,4 +31,15 @@ public class MeterAllocation {
      * The date of expiration of the meter's allocation
      */
     private Date expirationDate;
+
+    private ObjectId clientId;
+
+    private String SupplierName;
+
+    private Status status;
+
+    public enum Status {
+        ACTIVE,
+        ENDED
+    }
 }

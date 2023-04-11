@@ -1,8 +1,8 @@
 package com.pgl.energenius.service;
 
 
-import com.pgl.energenius.Exception.ObjectNotFoundException;
-import com.pgl.energenius.Exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.Contract;
 import com.pgl.energenius.model.Employee;
@@ -21,6 +21,9 @@ public class ContractService {
     @Autowired
     private ValidationService validationService;
 
+    @Autowired
+    private SecurityService securityService;
+
     public Contract insertContract(Contract contract) throws ObjectNotValidatedException {
 
         validationService.validate(contract);
@@ -33,23 +36,17 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
-    public List<Contract> getContractsByClient(Client client) throws ObjectNotFoundException {
+    public List<Contract> getContracts() throws InvalidUserDetailsException {
 
-        List<Contract> contracts = contractRepository.findByClient(client);
+        try {
+            Client client = securityService.getCurrentClientLogin().getClient();
+            return contractRepository.findByClientId(client.getId());
 
-        if (contracts.isEmpty()) {
-            throw new ObjectNotFoundException("Contract not found with client: " + client.getFirstName() + " " + client.getLastName());
-        }
-        return contracts;
+        } catch (InvalidUserDetailsException ignored) {}
+
+        Employee employee = securityService.getCurrentEmployeeLogin().getEmployee();
+        return contractRepository.findBySupplierId(employee.getSupplier().getId());
     }
 
-    public List<Contract> getContractsByEmployee(Employee employee) throws ObjectNotFoundException {
 
-        List<Contract> contracts = contractRepository.findBySupplier(employee.getSupplier());
-
-        if (contracts.isEmpty()) {
-            throw new ObjectNotFoundException("Contract not found with supplier: " + employee.getSupplier().getName());
-        }
-        return contracts;
-    }
 }

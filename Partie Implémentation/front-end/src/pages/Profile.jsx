@@ -25,7 +25,7 @@ const Profile = () => {
   });
 
 
-  const response = axios.get(URL + "auth/infos",{
+  const response = axios.get(URL + "me",{
     headers : {"Content-Type":"application/json",
   "Authorization" : `Bearer ${jwt}`,
   "Access-Control-Allow-Origin":true}

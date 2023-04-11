@@ -37,7 +37,7 @@ const CssTextField = styled(TextField)({
   },
 });
 
-const URL = "http://localhost:8080/api/client/portfolio";
+const URL = "http://localhost:8080/portfolio";
 
 
 const CreatePortfolio = () => {

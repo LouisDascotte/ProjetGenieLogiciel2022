@@ -5,7 +5,7 @@ import { FixedSizeList} from 'react-window';
 import axios from "../api/axios";
 
 
-const PORTFOLIO_URL = "http://localhost:8080/api/client/portfolio";
+const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
 
 const PortfoliosList = () => {
   
@@ -18,7 +18,7 @@ const PortfoliosList = () => {
   // the name of the portfolio
 
   const getPortfolios = async () => {
-    const response = axios.get(PORTFOLIO_URL + "/all", {
+    const response = axios.get(PORTFOLIO_URL, {
       headers : {"Content-Type":"application/json",
     "Authorization" : `Bearer ${jwt}`,
     "Access-Control-Allow-Origin":true}
@@ -27,6 +27,8 @@ const PortfoliosList = () => {
       //portfolios = response.data; 
     })
   }
+
+  getPortfolios();
 
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>

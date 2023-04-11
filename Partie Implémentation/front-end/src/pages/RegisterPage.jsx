@@ -36,7 +36,7 @@ const CssTextField = styled(TextField)({
   },
 });
 
-const REGISTER_URL = "/api/client/auth/register"; // endpoint for the registration in the back end part
+const REGISTER_URL = "/api/auth/client/register"; // endpoint for the registration in the back end part
 
 
 const RegisterPage = () => {

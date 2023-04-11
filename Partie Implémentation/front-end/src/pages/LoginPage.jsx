@@ -11,7 +11,7 @@ import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
 
 
-const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
+const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 
 const LoginPage = () => {
 

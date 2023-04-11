@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import TopMenu from '../components/TopMenu';
 import SideMenu from '../components/SideMenu';
  
-const URL = "http://localhost:8080/api/meter/reading/add";
+const URL = "http://localhost:8080/api/meter/reading";
 
 const MeterConsumption = (ean) => {
   

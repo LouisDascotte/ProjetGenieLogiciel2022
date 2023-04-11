@@ -1,9 +1,9 @@
 import React from 'react'
 import StaffSideMenu from '../pagesStaff/StaffSideMenu';
-import {Stack,Card, Grid, Button, ThemeProvider, createTheme} from '@mui/material';
+import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden} from '@mui/material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import ElementsList from '../components/ElementsList';
+import ElementsList2 from '../components/ElementsList2';
 
 
 
@@ -17,6 +17,10 @@ const ManageCons = () => {
       secondary: {
         main: "#000",
         contrastText: '#000000'
+      },
+      deletion : {
+        main: "#ff0000",
+        contrastText: '#000000'
       }
     }
   });
@@ -29,14 +33,23 @@ const ManageCons = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList/>
+            <ElementsList2/>
           </Card>
           <ThemeProvider theme={theme}>
-            <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-              <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                Import Data
-              </Button>
-            </Link>
+          <Grid item xs={12} align='center'>
+              <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
+                  Import Data
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item xs={12} align='center'>
+              <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                <Button  variant='outlined' color='deletion' disabled={false} sx={{mt:2, width:'100%', mb:5} }>
+                  Delete
+                </Button>
+              </Link>
+            </Grid>
           </ThemeProvider>
         </Grid>
       </Stack>

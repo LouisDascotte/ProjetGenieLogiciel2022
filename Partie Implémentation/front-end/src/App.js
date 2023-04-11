@@ -17,13 +17,19 @@ import Profile from './pages/Profile';
 import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
-import CreateNewPassword from './pages/CreateNewPassword';
-import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import CoffeeTest from './pages/CoffeeTest'; 
-import history from './utils/history';
+//import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
+import ErrorPage from './pages/ErrorPage';
+import Testing from './pages/Testing';
+import StaffMainPage from './pagesStaff/StaffMainPage';
+import StaffManageClients from './pagesStaff/StaffManageClients';
+import StaffManageContracts from './pagesStaff/StaffManageContracts';
+import StaffManageConsumption from './pagesStaff/StaffManageConsumption';
+import ChartAnalysis from './pages/ChartAnalysis';
+
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -31,7 +37,7 @@ function App() {
       setAuthToken(token);
     }
     return (
-      <BrowserRouter history={history}>
+      <BrowserRouter history={null}>
               <Routes>   
                 <Route path="/login" exact element={<LoginPage/>}/>
                 <Route path="/register-account" exact element={<RegisterPage/>}/>

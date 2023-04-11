@@ -2,30 +2,37 @@ export const ClientList = [
   {
     clientID: 1817,
     name: "John Doe",
+    address: "123 Main Street, New York, NY 10001",
   },
   {
     clientID: 837,
     name: "Jane Doe",
+    address: "456 Main Street, New York, NY 10001",
   },
   {
     clientID: 9287,
     name: "John Smith",
+    address: "789 Main Street, New York, NY 10001",
   },
   {
     clientID: 62,
     name: "Jane Smith",
+    address: "101 Main Street, New York, NY 10001",
   },
   {
     clientID: 823,
     name: "Mason Doe",
+    address: "102 Main Street, New York, NY 10001",
   },
   {
     clientID: 632,
     name: "Aleksandr Kuznetsov",
+    address: "103 Main Street, New York, NY 10001",
   },
   {
     clientID: 782,
     name: "William Shakespeare",
+    address: "104 Main Street, New York, NY 10001",
   }
 ]
 
@@ -338,5 +345,80 @@ export const ContractList = [
     meter: {
       meterID: 935171
     }
+  }
+]
+
+export const MeterReadingList = [
+  {
+    meterReadingID: 9172,
+    meter: {
+      meterID: 918373
+    },
+    readingDateTime: "2019-01-01",
+    reading: 1000
+  },
+  {
+    meterReadingID: 9272,
+    meter: {
+      meterID: 989324,
+    },
+    readingDateTime: "2019-01-01",
+    reading: 1000
+  },
+  {
+    meterReadingID: 9372,
+    meter: {
+      meterID: 918273
+    },
+    readingDateTime: "2019-01-01",
+    reading: 1000
+  },
+  {
+    meterReadingID: 9472,
+    meter: {
+      meterID: 918373,
+    },
+    readingDateTime: "2019-02-01",
+    reading: 2000
+  },
+  {
+    meterReadingID: 9572,
+    meter: {
+      meterID: 989324
+    },
+    readingDateTime: "2019-02-01",
+    reading: 2000
+  },
+  {
+    meterReadingID: 9672,
+    meter: {
+      meterID: 918273
+    },
+    readingDateTime: "2019-02-01",
+    reading: 2000
+  },
+  {
+    meterReadingID: 9772,
+    meter: {
+      meterID: 918373
+    },
+    readingDateTime: "2019-03-01",
+    reading: 3000
+  },
+  {
+    meterReadingID: 9872,
+    meter: {
+      meterID: 989324
+    },
+    readingDateTime: "2019-03-01",
+    reading: 3000
+  },
+  {
+    meterReadingID: 9972,
+    meter: {
+      meterID: 918373
+    },
+    readingDateTime: "2019-04-01",
+    reading: 4000
   }
 ]

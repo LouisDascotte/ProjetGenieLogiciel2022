@@ -43,7 +43,17 @@ const ManageClients = () => {
 
   const getClientNameById = (clientID) => {
     return Clients.find((client) => client.clientID === clientID).name;
-  };  
+  };
+
+  const renderMeterLink = (meterID) => {
+    return (
+      <Link to={`/meter/${meterID}`}>
+        <Button variant="contained" color="primary">
+          See Details
+        </Button>
+      </Link>
+    );
+  };
 
   return (
 
@@ -65,10 +75,8 @@ const ManageClients = () => {
                   <List style={{maxHeight: '100%', overflow: 'auto'}} >
                   {getMetersByClientId(selectedClient).map((meter) => (
                       <ListItem key={meter.meterID} >
-                        <ListItemText primary={meter.meterID}  />
-                        <Button variant="contained" onClick={() => handleClientClick(meter.meterID)} >
-                          See Details
-                        </Button>
+                        <ListItemText primary={meter.meterID} />
+                        {renderMeterLink(meter.meterID)}
                       </ListItem>
                     ))}
                   </List>
@@ -83,7 +91,7 @@ const ManageClients = () => {
                       <ListItem key={client.clientID}>
                         <ListItemText primary={`${client.name}`} />
                         <Button variant="contained" onClick={() => handleClientClick(client.clientID)} >
-                          See Meters
+                          See Details
                         </Button>
                       </ListItem>
                     ))}

@@ -37,7 +37,7 @@ const CssTextField = styled(TextField)({
   },
 });
 
-const URL = "http://localhost:8080/portfolio";
+const URL = "http://localhost:8080/api/portfolio";
 
 
 const CreatePortfolio = () => {
@@ -61,7 +61,7 @@ const CreatePortfolio = () => {
   const [energyType, setEnergyType] = useState("");
 
   let [data, setData] = useState({
-    portfolio_name : "",
+    name : "",
     supply_point : "", 
     supplier : "", 
     address : "", 
@@ -109,10 +109,9 @@ const CreatePortfolio = () => {
   const onSubmitForm = e => {
     e.preventDefault();
     console.log(data);
-    console.log("working");
     const jwt = localStorage.getItem("jwt");
     try {
-      const response = axios.post(URL + "/create", JSON.stringify(data), {
+      const response = axios.post(URL, JSON.stringify(data), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
@@ -139,7 +138,7 @@ const CreatePortfolio = () => {
           <Card sx={{width:'100%', m:2, mt:5}}>
             <Stack sx={{width:'95%'}}>
               
-              <CssTextField name="portfolio_name" label="Enter a name for your portfolio" sx={{m:2, mt:5}} onChange={onUpdateField}/>
+              <CssTextField name="name" label="Enter a name for your portfolio" sx={{m:2, mt:5}} onChange={onUpdateField}/>
               <Button variant="outlined" size="large" sx={{m:2, color:"#9acd6c", borderBlockColor:'#9acd6c'}} onClick={()=>setOpenSupply(true)}>{ (data.supply_point === "") ? "Add a supply point" : data.supply_point}</Button>
               <Dialog open={openSupply} onClose={()=>setOpenSupply(false)}>
                 <DialogTitle>Add a supply point</DialogTitle>

@@ -25,25 +25,6 @@ public class MeterController {
     @Autowired
     private MeterService meterService;
 
-    @Autowired
-    private MeterRepository meterRepository;
-
-    @Autowired
-    private SecurityService securityService;
-
-    @CrossOrigin("http://localhost:3000")
-    @GetMapping("/auth/test")
-    public void test() throws InvalidUserDetailsException {
-        
-        Meter meter = Meter.builder()
-        .EAN("EAN1234").clientId(securityService.getCurrentClientLogin().getClient().getId())
-        .build();
-
-        meterRepository.insert(meter);
-        
-        
-    }
-    
     @CrossOrigin("http://localhost:3000")
     @GetMapping("/all")
     public ResponseEntity<?> getMeters() {
@@ -63,8 +44,8 @@ public class MeterController {
         }
     }
 
-    @PostMapping("/reading/add")
-    public ResponseEntity<?> addReading(@RequestParam String EAN, @RequestParam String date, @RequestParam int value) {
+    @PostMapping("/reading")
+    public ResponseEntity<?> createReading(@RequestParam String EAN, @RequestParam String date, @RequestParam int value) {
 
         try {
             // Utilisation du constructeur Date(long) qui utilise des millisecondes pour créer la date.

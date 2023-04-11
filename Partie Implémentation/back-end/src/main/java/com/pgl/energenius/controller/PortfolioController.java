@@ -20,7 +20,7 @@ import java.util.List;
  * The PortfolioController class handles all HTTP requests related to Portfolios.
  */
 @RestController
-@RequestMapping("/api/client/portfolio")
+@RequestMapping("/api/portfolio")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PortfolioController {
 
@@ -52,9 +52,8 @@ public class PortfolioController {
      * @param portfolioDto The portfolio to add
      * @return A message confirming that the portfolio was added
      */
-    @PostMapping("/create")
+    @PostMapping
     @ResponseBody
-    @CrossOrigin("http://localhost:3000")
     public ResponseEntity<?> create(@RequestBody PortfolioDto portfolioDto){
 
         try {
@@ -78,8 +77,8 @@ public class PortfolioController {
      * @param portfolioId the ID of the portfolio to retrieve the consumption readings for
      * @return the consumption readings for the portfolio
      */
-    @GetMapping("/consumption")
-    public ResponseEntity<?> getConsumption(@RequestParam ObjectId portfolioId) {
+    @GetMapping("{id}/consumption")
+    public ResponseEntity<?> getAllConsumption(@PathVariable("id") ObjectId portfolioId) {
 
         try {
             HashMap<EnergyType, List<Reading>> readings = portfolioService.getPortfolioConsumption(portfolioId);
@@ -96,8 +95,8 @@ public class PortfolioController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam ObjectId portfolioId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") ObjectId portfolioId) {
 
         try {
             portfolioService.deletePortfolio(portfolioId);
@@ -114,8 +113,8 @@ public class PortfolioController {
         }
     }
 
-    @PostMapping("/supply_point/add")
-    public ResponseEntity<?> createSupplyPoint(@RequestParam ObjectId portfolioId, @RequestBody SupplyPointDto supplyPointDto) {
+    @PostMapping("/{id}/supply_point")
+    public ResponseEntity<?> createSupplyPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody SupplyPointDto supplyPointDto) {
 
         try {
             SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, supplyPointDto);
@@ -138,8 +137,8 @@ public class PortfolioController {
         }
     }
 
-    @DeleteMapping("/supply_point/delete")
-    public ResponseEntity<?> deleteSupplyPoint(@RequestParam ObjectId portfolioId, @RequestParam String EAN) {
+    @DeleteMapping("/{id}/supply_point/{EAN}")
+    public ResponseEntity<?> deleteSupplyPoint(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) {
 
         try {
             portfolioService.deleteSupplyPoint(portfolioId, EAN);
@@ -159,4 +158,6 @@ public class PortfolioController {
         }
     }
 
+//    @GetMapping("/{id}/supply_point/{EAN}/consumption")
+//    public ResponseEntity<?> getSupplyPointConsumption
 }

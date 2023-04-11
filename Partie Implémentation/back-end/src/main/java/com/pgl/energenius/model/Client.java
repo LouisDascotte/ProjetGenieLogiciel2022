@@ -1,5 +1,7 @@
 package com.pgl.energenius.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pgl.energenius.config.ObjectIdSerializer;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.enums.ClientStatus;
 import lombok.AllArgsConstructor;

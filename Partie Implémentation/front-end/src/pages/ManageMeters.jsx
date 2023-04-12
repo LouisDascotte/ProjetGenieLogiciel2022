@@ -8,6 +8,7 @@ import TempList from '../components/TempList';
 import ElementsList from '../components/ElementsList';
 import {Link} from 'react-router-dom';
 import axios from '../api/axios';
+import MetersList from '../components/MetersList';
 
 const theme = createTheme({
   palette: {
@@ -27,25 +28,7 @@ const METER_URL = "http://localhost:8080/api/meter/"
 const ManageMeters = () => {
   const jwt = localStorage.getItem("jwt");
 
-  const handleClick = () => {
-    const response = axios.get(METER_URL + "auth/test", {
-      headers : {"Content-Type":"application/json",
-    "Authorization" : `Bearer ${jwt}`,
-    "Access-Control-Allow-Origin":true}
-    } ).then(response=>{
-      console.log(response.data);
-    });
-  }
-
-  const getMeters = () => {
-    const response = axios.get(METER_URL + "all", {
-      headers : {"Content-Type":"application/json",
-    "Authorization" : `Bearer ${jwt}`,
-    "Access-Control-Allow-Origin":true}
-    }).then(response => {
-      console.log(response.data);
-    })
-  }
+  
   
   const pageAddress = "/manage-meters";
   const pageName = "Manage meters";
@@ -56,12 +39,8 @@ const ManageMeters = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList/>
+            <MetersList/>
           </Card>
-          <div>
-            <Button variant="contained" onClick={handleClick}>CREATE METER</Button>
-            <Button variant="text" onClick={getMeters}>GET ALL METERS</Button>
-          </div>
           <ThemeProvider theme={theme}>
             <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>

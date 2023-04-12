@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react'
 import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
-import axios from "../api/axios";
+import axios from "../../api/axios";
 
 
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";

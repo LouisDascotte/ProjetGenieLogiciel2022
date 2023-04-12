@@ -1,14 +1,17 @@
-import {React, useState} from 'react'
+import {React, useState, useEffect, useRef} from 'react'
 import SideMenu from '../components/SideMenu';
-import {Stack,Card, Dialog, DialogContent, DialogTitle, DialogContentText, InputLabel, Select,MenuItem,  DialogActions, Box, Grid, Button, TextField, ThemeProvider, createTheme, styled, IconButton, FormControl} from '@mui/material';
+import {Stack,Card, Dialog, DialogContent, DialogTitle, DialogContentText, InputLabel, Select,MenuItem,  DialogActions, Box, Grid, Button, TextField, ThemeProvider, createTheme, styled, IconButton, FormControl, Snackbar, Alert} from '@mui/material';
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
 import TempList from '../components/TempList';
 import ElementsList from '../components/ElementsList';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from '../api/axios';
 
+const delay = ms => new Promise(
+  resolve => setTimeout(resolve, ms)
+);
 
 const theme = createTheme({
   palette: {
@@ -51,22 +54,99 @@ const CreatePortfolio = () => {
   const [address, setAddress] = useState("");
   const [contractType, setContractType] = useState("");*/
 
+  const [energyType, setEnergyType] = useState("");
+
+  const [data, setData] = useState({
+    name : "",
+    supply_point : "", 
+    supplier : "", 
+    address : {
+      city : "",
+      street : "", 
+      houseNo : "", 
+      box : "", 
+      postalCode : "", 
+      country : "",
+      region : ""
+    }, 
+    contract_type : ""
+  });
+
   // The state of the dialog popup
   const [openSupply, setOpenSupply] = useState(false);
   const [openSupplier, setOpenSupplier] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
   const [openContract, setOpenContract] = useState(false);
 
+  let address = {
+    street_number : "",
+    street_name : "",
+    city : "",
+    province : "",
+    region : "",
+    country : "",
+    postal_code : "",
+  }
+  const autoCompleteRef = useRef(); 
+  const inputRef = useRef();
+  const options = {
+    componentRestrictions: { country: "be" },
+    fields: ["address_components", "geometry", "icon", "name"],
+    types: ["address"]
+  };
+  useEffect(() => {
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+      inputRef.current,
+      options
+    );
+    autoCompleteRef.current.addListener("place_changed", async function () {
+      const place = await autoCompleteRef.current.getPlace();
+      console.log(place);
+      address = { 
+      street_number : "",
+      street_name : "",
+      city : "",
+      province : "",
+      region : "",
+      country : "",
+      postal_code : "",}
+      place.address_components.forEach(function(c){
+        switch(c.types[0]){
+          case 'street_number':
+            address.street_number = c.long_name;
+            data.address.houseNo = c.long_name; 
+            break; 
+          case 'route':
+            address.street_name = c.long_name; 
+            data.address.street = c.long_name; 
+            break; 
+          case 'locality':
+            address.city = c.long_name; 
+            data.address.city = c.long_name; 
+            break;
+          case 'administrative_area_level_2':
+            address.province = c.long_name;
+            break;
+          case 'administrative_area_level_1':
+            address.region  = c.long_name; 
+            data.address.region = c.long_name; 
+            break; 
+          case 'postal_code':
+            address.postal_code = c.long_name; 
+            data.address.postalCode = c.long_name;
+            break;
+          case 'country' :
+            address.country = c.long_name; 
+            data.address.country = c.long_name; 
+            break;
+        }
+      })
+      console.log(address);
+     });
+    }, []);
 
-  const [energyType, setEnergyType] = useState("");
 
-  let [data, setData] = useState({
-    name : "",
-    supply_point : "", 
-    supplier : "", 
-    address : "", 
-    contract_type : ""
-  });
+  
 
   const onUpdateField=e=>{
     e.preventDefault();
@@ -106,7 +186,11 @@ const CreatePortfolio = () => {
     setEnergyType(value);
   }
 
-  const onSubmitForm = e => {
+  const navigate = useNavigate();
+
+ 
+
+  const onSubmitForm = async e => {
     e.preventDefault();
     console.log(data);
     const jwt = localStorage.getItem("jwt");
@@ -116,13 +200,33 @@ const CreatePortfolio = () => {
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        console.log("Portfolio Created"); 
-        console.log(response.data);
+        creationSuccess();
+        delay(3000).then(()=>{
+          console.log("Portfolio Created"); 
+          console.log(response.data);
+          creationSuccess();
+          setSuccess(false);
+          navigate("/manage-portfolios");
+        })
       }) 
     } catch(err){
       console.log("Unexpected error occured.");
     }
     
+  }
+
+  const [success, setSuccess] = useState(false);
+
+  function creationSuccess() {
+    setSuccess(true);
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway'){
+      return; 
+    }
+
+    setSuccess(false);
   }
 
   return (
@@ -153,64 +257,16 @@ const CreatePortfolio = () => {
                   </Stack>
                 </DialogContent>
               </Dialog>
-              <Button onClick={()=>setOpenSupplier(true)} variant="outlined" size="large" sx={{m:2, color:"#9acd6c", borderBlockColor:'#9acd6c'}}>{ (data.supplier === "") ? "Add a supplier" : data.supplier}</Button>
-              <Dialog open={openSupplier} onClose={()=>setOpenSupplier(false)}>
-                <DialogTitle>Add a supplier</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Add the supplier. 
-                  </DialogContentText>
-                  <CssTextField name="supplier" value={data.supplier} label="Enter the supplier's name" sx={{width:'100%', mt:1}} onChange={onUpdateField}/>
-                  <Stack direction='row' justifyContent={"center"} alignContent={"space-evenly"} sx={{mt:1}}>
-                    <Button sx={{color:"#000", mr:5}} onClick={handleSupplierCancel}>Cancel</Button>
-                    <Button sx={{color:"#9acd6c"}} onClick={() => setOpenSupplier(false)}>Confirm</Button>   
-                  </Stack>
-                </DialogContent>
-              </Dialog>
-              <Button variant="outlined" size="large" sx={{m:2, color:"#9acd6c", borderBlockColor:'#9acd6c'}} onClick={()=>setOpenAddress(true)}>{ (data.address === "") ? "Add an address" : data.address}</Button>
-              <Dialog open={openAddress} onClose={()=>setOpenAddress(false)}>
-                <DialogTitle>Add an address</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Add the address. 
-                  </DialogContentText>
-                  <CssTextField name="address" value={data.address} label="Enter the address" sx={{width:'100%', mt:1}} onChange={onUpdateField}/>
-                  <Stack direction='row' justifyContent={"center"} alignContent={"space-evenly"} sx={{mt:1}}>
-                    <Button sx={{color:"#000", mr:5}} onClick={handleAddressCancel}>Cancel</Button>
-                    <Button sx={{color:"#9acd6c"}} onClick={() => setOpenAddress(false)}>Confirm</Button>   
-                  </Stack>
-                </DialogContent>
-              </Dialog>
-              <Button variant="outlined" size="large" sx={{m:2, mb:5, color:"#9acd6c", borderBlockColor:'#9acd6c'}} onClick={()=>setOpenContract(true)}>{ (data.contract_type === "") ? "Add a contract type" : data.contract_type}</Button>
-              <Dialog open={openContract} onClose={()=>setOpenContract(false)}>
-                <DialogTitle>Add a contract type.</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Add the contract type. 
-                  </DialogContentText>
-
-                  <FormControl fullWidth size="small" margin="normal">
-                    <InputLabel margin="normal" id="select-energy-label">Energy type :</InputLabel>
-                    <Select
-                      labelId="portfolio-select-label"
-                      id="portfolio-select"
-                      value={data.contract_type}
-                      label="Energy :"
-                      onChange={handleSelect}
-                      >
-                        <MenuItem value={"gas"}>Gas</MenuItem>
-                        <MenuItem value={"elec"}>Electricity</MenuItem>
-                        <MenuItem value={"gaselec"}>Gas + Electricity</MenuItem>                    
-                    </Select>
-                  </FormControl>   
-
-
-                  <Stack direction='row' justifyContent={"center"} alignContent={"space-evenly"} sx={{mt:1}}>
-                    <Button sx={{color:"#000", mr:5}} onClick={handleContractCancel}>Cancel</Button>
-                    <Button sx={{color:"#9acd6c"}} onClick={() => setOpenContract(false)}>Confirm</Button>   
-                  </Stack>
-                </DialogContent>
-              </Dialog>
+              
+              <CssTextField variant='outlined' 
+                  label='address' 
+                  margin='normal'
+                  name='address' 
+                  value={address.street} 
+                  inputRef={inputRef}
+                  sx={{m:2}}/>
+              
+              
             </Stack>
           </Card>
           <ThemeProvider theme={theme}>    
@@ -218,11 +274,15 @@ const CreatePortfolio = () => {
                 Create portfolio
               </Button>
           </ThemeProvider>
+          <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity='success'>Portfolio successfully created !</Alert>
+          </Snackbar>
           </Stack>
           </Box>
           </form>
         </Grid>
       </Stack>
+      
     </Stack>
   )
 }

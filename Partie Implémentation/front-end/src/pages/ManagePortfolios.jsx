@@ -7,7 +7,7 @@ import TopMenu from '../components/TopMenu';
 import ElementsList from '../components/ElementsList';
 import TempList from '../components/TempList';
 import {Link} from 'react-router-dom';
-import PortfoliosList from '../components/PortfoliosList';
+import PortfoliosList from '../components/portfolio/PortfoliosList';
 
 const ManagePortfolios = () => {
   const theme = createTheme({

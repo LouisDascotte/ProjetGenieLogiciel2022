@@ -24,7 +24,7 @@ const SideMenu = (mainPage) => {
     return (
     
     
-       <Sidebar style={{ height:"100vh"}}>
+       <Sidebar style={{ height:"100vh"}} defaultCollapsed >
             <Menu>
                 <MenuItem
                     icon= {<MenuOutlinedIcon/>}

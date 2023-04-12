@@ -26,34 +26,10 @@ const ManageClients = () => {
   const pageAddress = "/staff-clients";
   const pageName = "Manage clients";
 
-  const [selectedClient, setSelectedClient] = React.useState(null); 
-
   const handleClientClick = (clientID) => {
-    setSelectedClient(clientID);
     console.log(clientID);
   };
-  const handleResetClick = () => {
-    setSelectedClient(null);
-  };
 
-  const getMetersByClientId = (clientID) => {
-    const meters = MeterList.filter((meter) => meter.owner === clientID);
-    return meters
-  };
-
-  const getClientNameById = (clientID) => {
-    return Clients.find((client) => client.clientID === clientID).name;
-  };
-
-  const renderMeterLink = (meterID) => {
-    return (
-      <Link to={`/meter/${meterID}`}>
-        <Button variant="contained" color="primary">
-          See Details
-        </Button>
-      </Link>
-    );
-  };
 
   return (
 
@@ -64,42 +40,25 @@ const ManageClients = () => {
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
             <Card sx={{width:'50%', m:2, height:'60%' }} >
-              {selectedClient ? (
-                <Box sx={{height:'100%', width:'100%'}} alignment='center'>
-                  <Button variant="contained" color="primary" startIcon={<ArrowBack />} onClick={handleResetClick} fullWidth='true' >
-                    Retour
-                  </Button>
-                  <Typography variant="h4" component="h2" align="center" fontWeight={400} >
-                    Meters of {getClientNameById(selectedClient)}
-                  </Typography>
-                  <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {getMetersByClientId(selectedClient).map((meter) => (
-                      <ListItem key={meter.meterID} >
-                        <ListItemText primary={meter.meterID} />
-                        {renderMeterLink(meter.meterID)}
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              ) : (
-                <Box sx={{height:'100%', width:'100%'}} alignment='center' >
-                  <Typography variant="h4" component="h2" align="center" fontWeight={800} >
-                    Client List
-                  </Typography>
-                  <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                    {Clients.map((client) => (
-                      <ListItem key={client.clientID}>
-                        <ListItemText primary={`${client.name}`} />
+               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+                <Typography variant="h4" component="h2" align="center" fontWeight={800} >
+                  Client List
+                </Typography>
+                <List style={{maxHeight: '100%', overflow: 'auto'}} >
+                  {Clients.map((client) => (
+                    <ListItem key={client.clientID}>
+                      <ListItemText primary={`${client.name}`} />
+                      <Link to={`/staff-clients/${client.clientID}`}>
                         <Button variant="contained" onClick={() => handleClientClick(client.clientID)} >
                           See Details
                         </Button>
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              )}
+                      </Link>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
             </Card>
-              <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
+              <Link to='/staff-clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
                 <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                   Add New Client
                 </Button>

@@ -3,36 +3,50 @@ export const ClientList = [
     clientID: 1817,
     name: "John Doe",
     address: "123 Main Street, New York, NY 10001",
+    email: "john.doe@gmail.com",
+    phone: "123-456-7890",
   },
   {
     clientID: 837,
     name: "Jane Doe",
     address: "456 Main Street, New York, NY 10001",
+    email: "jane.doe@gmail.com",
+    phone: "143-456-7890",
   },
   {
     clientID: 9287,
     name: "John Smith",
     address: "789 Main Street, New York, NY 10001",
+    email: "john.smith@gmail.com",
+    phone: "163-456-7890",
   },
   {
     clientID: 62,
     name: "Jane Smith",
     address: "101 Main Street, New York, NY 10001",
+    email: "jane.smith@gmail.com",
+    phone: "183-456-7890",
   },
   {
     clientID: 823,
     name: "Mason Doe",
     address: "102 Main Street, New York, NY 10001",
+    email: "mason.doe@gmail.com",
+    phone: "193-456-7890",
   },
   {
     clientID: 632,
     name: "Aleksandr Kuznetsov",
     address: "103 Main Street, New York, NY 10001",
+    email: "aleks.kuznet@gmail.com",
+    phone: "123-466-7890",
   },
   {
     clientID: 782,
     name: "William Shakespeare",
     address: "104 Main Street, New York, NY 10001",
+    email: "will.shake@gmail.com",
+    phone: "123-436-7890",
   }
 ]
 

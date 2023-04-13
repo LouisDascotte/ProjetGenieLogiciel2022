@@ -73,10 +73,10 @@ const CreatePortfolio = () => {
   });
 
   // The state of the dialog popup
-  const [openSupply, setOpenSupply] = useState(false);
+  /*const [openSupply, setOpenSupply] = useState(false);
   const [openSupplier, setOpenSupplier] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
-  const [openContract, setOpenContract] = useState(false);
+  const [openContract, setOpenContract] = useState(false);*/
 
   let address = {
     street_number : "",
@@ -158,7 +158,7 @@ const CreatePortfolio = () => {
     setData(nextDataState);
   };
 
-  const handleSupplyCancel = () => {
+  /*const handleSupplyCancel = () => {
     data.supply_point = "";
     setOpenSupply(false)
   }
@@ -176,15 +176,15 @@ const CreatePortfolio = () => {
   const handleContractCancel = () => {
     data.contract_type = "";
     setOpenContract(false);
-  }
+  }*/
 
   
 
-  const handleSelect = (e) => {
+  /*const handleSelect = (e) => {
     const{value} = e.target; 
     data.contract_type=value; 
     setEnergyType(value);
-  }
+  }*/
 
   const navigate = useNavigate();
 
@@ -201,7 +201,7 @@ const CreatePortfolio = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
         creationSuccess();
-        delay(3000).then(()=>{
+        delay(1000).then(()=>{
           console.log("Portfolio Created"); 
           console.log(response.data);
           creationSuccess();
@@ -243,20 +243,7 @@ const CreatePortfolio = () => {
             <Stack sx={{width:'95%'}}>
               
               <CssTextField name="name" label="Enter a name for your portfolio" sx={{m:2, mt:5}} onChange={onUpdateField}/>
-              <Button variant="outlined" size="large" sx={{m:2, color:"#9acd6c", borderBlockColor:'#9acd6c'}} onClick={()=>setOpenSupply(true)}>{ (data.supply_point === "") ? "Add a supply point" : data.supply_point}</Button>
-              <Dialog open={openSupply} onClose={()=>setOpenSupply(false)}>
-                <DialogTitle>Add a supply point</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Add the supply point of your portfolio. 
-                  </DialogContentText>
-                  <CssTextField name="supply_point" value={data.supply_point} label="Enter the supply point EAN" sx={{width:'100%', mt:1}} onChange={onUpdateField}/>
-                  <Stack direction='row' justifyContent={"center"} alignContent={"space-evenly"} sx={{mt:1}}>
-                    <Button sx={{color:"#000", mr:5}} onClick={handleSupplyCancel}>Cancel</Button>
-                    <Button sx={{color:"#9acd6c"}} onClick={() => setOpenSupply(false)}>Confirm</Button>   
-                  </Stack>
-                </DialogContent>
-              </Dialog>
+              
               
               <CssTextField variant='outlined' 
                   label='address' 

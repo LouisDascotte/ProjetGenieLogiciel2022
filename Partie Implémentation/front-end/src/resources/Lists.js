@@ -239,21 +239,29 @@ export const ContractList = [
     contractID: 9172,
     name: "Contract 1",
     owner: 1817,
+    consumptionAddress: "123 Main Street, New York, NY 10001",
     contractType: "Electricity",
     supplier: "EleCable",
     meter: {
       meterID: 918373
-    }
+    },
+    beginDate: "2019-01-01",
+    endDate: "2020-02-01",
+    subPrice: 28,
   },
   {
     contractID: 9272,
     name: "Contract 2",
     owner: 1817,
+    consumptionAddress: "123 Main Street, New York, NY 10001",
     contractType: "Gas",
     supplier: "GasCool",
     meter: {
       meterID: 989324
-    }
+    },
+    beginDate: "2019-01-01",
+    endDate: "2020-01-01",
+    subPrice: 12,
   },
   {
     contractID: 9372,

@@ -4,8 +4,8 @@ import {ArrowBack} from '@mui/icons-material'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import TopMenu from '../components/TopMenu';
-import { ClientList as Clients, MeterList } from '../resources/Lists';
+import StaffTopMenu from '../pagesStaff/StaffTopMenu';
+import { ClientList as Clients } from '../resources/Lists';
 
 
 
@@ -37,10 +37,10 @@ const ManageClients = () => {
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
         <StaffSideMenu mainPage={'false'} />
         <Stack sx={{display:'flex', width:"100%"}}>
-          <TopMenu pageAddress={pageAddress} pageName={pageName}/>
+          <StaffTopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
             <Card sx={{width:'50%', m:2, height:'60%' }} >
-               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+              <Box sx={{height:'100%', width:'100%'}} alignment='center' >
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
                   Client List
                 </Typography>

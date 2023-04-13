@@ -46,12 +46,12 @@ const SideMenu = (mainPage) => {
                     </MenuItem>
                 </Link>
                 <Link to="/staff-clients" className='link'>
-                    <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
+                    <MenuItem icon={<AssignmentIndOutlinedIcon />} onClick={()=>{}}>
                         Manage clients
                     </MenuItem>
                 </Link>
                 <Link to="/staff-contracts" className='link'>
-                    <MenuItem icon={<AssignmentIndOutlinedIcon />}>
+                    <MenuItem icon={<ReceiptOutlinedIcon />}>
                         Manage contracts
                     </MenuItem>
                 </Link>

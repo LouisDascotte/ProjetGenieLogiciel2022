@@ -4,7 +4,7 @@ import {ArrowBack} from '@mui/icons-material'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField, FormControl, OutlinedInput, InputLabel, Input} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import TopMenu from '../components/TopMenu';
+import StaffTopMenu from '../pagesStaff/StaffTopMenu';
 import { ClientList as Clients, MeterList } from '../resources/Lists';
 
 
@@ -30,11 +30,12 @@ const StaffAddClient = () => {
   const pageAddress = "/staff-clients";
   const pageName = "New Client";
 
-  const [newClientID, setClientID] = React.useState(null);
+  const [newClientID, setClientID] = React.useState('');
 
   const handleNewClient = () => {
     alert(`New client ${newClientID} added`);
   };
+  const isButtonDisabled = newClientID.trim() === '';
 
   return (
 
@@ -42,7 +43,7 @@ const StaffAddClient = () => {
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
         <StaffSideMenu mainPage={'false'} />
         <Stack sx={{display:'flex', width:"100%"}}>
-          <TopMenu pageAddress={pageAddress} pageName={pageName}/>
+          <StaffTopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid container
           align='center'
           justifyContent='center'
@@ -85,7 +86,7 @@ const StaffAddClient = () => {
                 </Link>
               </Grid>
               <Grid item xs={6}>
-                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'50%', mb:5}} onClick={handleNewClient} >
+                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'50%', mb:5}} disabled={isButtonDisabled} onClick={handleNewClient} >
                   Add Client
                 </Button>
               </Grid>

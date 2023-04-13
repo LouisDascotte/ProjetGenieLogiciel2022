@@ -31,6 +31,8 @@ import StaffManageConsumption from './pagesStaff/StaffManageConsumption';
 import StaffViewClient from './pagesStaff/StaffViewClient';
 import StaffAddClient from './pagesStaff/StaffAddClient';
 import StaffLinkMeter from './pagesStaff/StaffLinkMeter';
+import StaffViewContract from './pagesStaff/StaffViewContract';
+import StaffNewContract from './pagesStaff/StaffNewContract';
 import ChartAnalysis from './pages/ChartAnalysis';
 
 
@@ -90,6 +92,8 @@ function App() {
                   <Route path='/staff-clients/:id' element={<StaffViewClient/>}/>
                   <Route path='/staff-clients/new' element={<StaffAddClient/>}/>
                   <Route path='/staff-clients/:id/link-meter' element={<StaffLinkMeter/>}/>
+                  <Route path='/staff-contracts/:id' element={<StaffViewContract/>}/>
+                  <Route path='/staff-contracts/new' element={<StaffNewContract/>}/>
               </Routes>
             
       </BrowserRouter>

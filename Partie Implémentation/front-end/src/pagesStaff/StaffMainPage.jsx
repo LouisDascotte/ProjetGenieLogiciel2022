@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import {Stack, Box, Divider, Grid} from '@mui/material';
 import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
-import TopMenu from '../components/TopMenu';
+import StaffTopMenu from '../pagesStaff/StaffTopMenu';
 import PortfolioMainGraph from '../components/PortfolioMainGraph';
 import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
@@ -13,8 +13,9 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import {Select, FormControl, InputLabel } from '@mui/material';
-import {  Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import axios from "../api/axios";
+
 import DateAndTime from '../components/DateAndTime';
 
 
@@ -43,7 +44,7 @@ const MainPage = () => {
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-      <Sidebar style={{ height:"100%"}}>
+      <Sidebar style={{ height:"100%"}} defaultCollapsed >
         <Stack>
           <Menu>
             <MenuItem
@@ -97,7 +98,7 @@ const MainPage = () => {
           </Menu>
         </Sidebar>
       <Stack sx={{display:'flex', width:"100%"}}>  
-        <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
+        <StaffTopMenu pageAddress={pageAddress} pageName = {pageName}/>
         <Stack sx={{height:"80%", justifyContent:'center', alignItems:'center'}} >
           <DateAndTime locale={"fr-FR"} />
         </Stack>

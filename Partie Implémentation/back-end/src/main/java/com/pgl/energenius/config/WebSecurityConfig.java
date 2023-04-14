@@ -98,7 +98,7 @@ public class WebSecurityConfig {
         //configuration.addExposedHeader("Authorization");
         configuration.addExposedHeader(HttpHeaders.AUTHORIZATION);
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "OPTIONS", "POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "OPTIONS", "POST", "DELETE"));
         configuration.setAllowedHeaders(List.of("Content-Type","Authorization", "Access-Control-Allow-Origin"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

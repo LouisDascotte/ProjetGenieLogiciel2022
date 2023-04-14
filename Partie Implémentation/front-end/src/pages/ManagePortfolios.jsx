@@ -63,6 +63,8 @@ const ManagePortfolios = () => {
     })
     setSelectedId(id);
   }
+
+  const [state, setState] = useState(1);
   
   const pageAddress = "/manage-portfolios";
   const pageName = "Manage portfolios";
@@ -102,7 +104,7 @@ const ManagePortfolios = () => {
         </ThemeProvider> </Grid>: 
         <Grid>
           <IconButton onClick={handleArrowButton}><ArrowBackIcon/></IconButton>
-          <Portfolio data={{childPortfolio}}/>
+          <Portfolio data={{childPortfolio}} key={childPortfolio.id}/>
         </Grid>
          }
       </Stack>

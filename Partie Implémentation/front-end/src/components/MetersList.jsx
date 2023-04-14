@@ -1,15 +1,20 @@
 import React, { useState, useEffect} from 'react'
-import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemText } from '@mui/material';
+import { Box,IconButton,  Stack, Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 import axios from "../api/axios";
-
+import { useNavigate } from 'react-router-dom';
+import MeterConsumption from "../pages/MeterConsumption";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const URL = "http://localhost:8080/api/meter/all";
 
 
 const MetersList = () => {
   const [meters, setMeters] =  useState([]);
+  const [consumption, setConsumption] = useState(false);
+  const [currentEan, setCurrentEan] = useState("");
+
   useEffect(()=> {
     // getting the jwt
     const jwt = localStorage.getItem("jwt");
@@ -23,22 +28,46 @@ const MetersList = () => {
     });
   }, [])
   
+  /*meters.map(meter => {
+    console.log(meter)
+  })*/
+
+  const navigate = useNavigate();
+
+  const handleClick = (ean) => {
+    setCurrentEan(ean);
+    setConsumption(true);
+  }
+
+  function handleArrowButton(){
+    setConsumption(false);
+  }
+
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
+      {consumption ? 
+      <Stack>
+        <IconButton onClick={handleArrowButton}><ArrowBackIcon/></IconButton>
+        <MeterConsumption ean={currentEan} update={setConsumption}/>
+      </Stack>
+       : 
+      
       <List style={{maxHeight: '100%', overflow: 'auto'}}>
-        {meters.map(meter =>  
-        <ListItem>
-          <ListItemButton>
-            <ListItemText>
-              {meter.name}
-            </ListItemText>
-          </ListItemButton>
-          <IconButton>
-            <DeleteIcon/>
-          </IconButton>
-        </ListItem>
-)}
-      </List>
+      {meters.map(meter =>  
+      <ListItem>
+        <ListItemButton onClick={()=>handleClick(meter.ean)}>
+          <ListItemText>
+            {meter.ean}
+          </ListItemText>
+        </ListItemButton>
+        <IconButton>
+          <DeleteIcon/>
+        </IconButton>
+      </ListItem>
+      )}
+    </List>
+      }
+      
     </Box>
   )
 }

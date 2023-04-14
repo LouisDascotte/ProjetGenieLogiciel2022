@@ -53,8 +53,18 @@ const Portfolio = ({data}) => {
   }
 
   const handleDelete = (ean) => {
+
     console.log("Deleting : "+ ean);
+    const response = axios.delete(PORTFOLIO_URL + `/${data.childPortfolio.id}` + "/supply_point/" + `${ean}`,{
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(response=>{
+      console.log(data.childPortfolio);
+      console.log(response.data);
+    })
   }
+
 
   const meters = [
     {

@@ -1,15 +1,8 @@
 import { Stack } from "@mui/material";
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import NavigationBar from './components/NavigationBar';
-import SideMenu from './components/SideMenu';
-import MainPage from './pages/MainPage';
 import CreateNewPassword from './pages/CreateNewPassword';
 import LoginPage from './pages/LoginPage';
-import ManageContracts from './pages/ManageContracts';
-import ManageInvoices from './pages/ManageInvoices';
-import ManageMeters from './pages/ManageMeters';
-import ManagePortfolios from './pages/ManagePortfolios';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import Notifications from './pages/Notifications';
 import Preferences from './pages/Preferences';
@@ -17,23 +10,21 @@ import Profile from './pages/Profile';
 import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
-import CoffeeTest from './pages/CoffeeTest'; 
 //import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
-import StaffMainPage from './pagesStaff/StaffMainPage';
-import StaffManageClients from './pagesStaff/StaffManageClients';
-import StaffManageContracts from './pagesStaff/StaffManageContracts';
-import StaffManageConsumption from './pagesStaff/StaffManageConsumption';
-import StaffViewClient from './pagesStaff/StaffViewClient';
-import StaffAddClient from './pagesStaff/StaffAddClient';
-import StaffLinkMeter from './pagesStaff/StaffLinkMeter';
-import StaffViewContract from './pagesStaff/StaffViewContract';
-import StaffNewContract from './pagesStaff/StaffNewContract';
-import ChartAnalysis from './pages/ChartAnalysis';
+import MainPage from './pages/MainPage';
+import ManageClients from './pages/ManageClients';
+import ManageContracts from './pages/ManageContracts';
+import ManageConsumption from './pages/ManageConsumption';
+import ViewClient from './pages/ViewClient';
+import AddClient from './pages/NewClient';
+import LinkMeter from './pages/LinkMeter';
+import ViewContract from './pages/ViewContract';
+import NewContract from './pages/StaffNewContract';
 
 
 function App() {
@@ -55,21 +46,6 @@ function App() {
                 <Route path='/create-pass-success' exact element={<PrivateRoute>
                   <NewPasswordSuccess/>
                   </PrivateRoute>}/>
-                <Route path="/main-page" exact element={<PrivateRoute>
-                  <MainPage/>
-                  </PrivateRoute>}/>
-                <Route path="/manage-portfolios" exact element={<PrivateRoute>
-                  <ManagePortfolios/>
-                </PrivateRoute>}/>
-                <Route path="/manage-meters" exact element={<PrivateRoute>
-                  <ManageMeters/>
-                </PrivateRoute>}/>
-                <Route path="/manage-invoices" exact element={<PrivateRoute>
-                  <ManageInvoices/>
-                  </PrivateRoute>}/>
-                <Route path="/manage-contracts" exact element={<PrivateRoute>
-                  <ManageContracts/>
-                  </PrivateRoute>}/>
                 <Route path="/preferences" exact element={<PrivateRoute>
                   <Preferences/>
                   </PrivateRoute>}/>
@@ -80,20 +56,19 @@ function App() {
                   <Notifications/>
                   </PrivateRoute>}/>
                 <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
-                  <Route path='/chart' exact element={<ChartAnalysis/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
 
                   <Route path='/test' exact element={<Testing/>}/>
-                  <Route path='/staff' exact element={<StaffMainPage/>}/>
-                  <Route path='/staff-contracts' exact element={<StaffManageContracts/>}/>
-                  <Route path='/staff-clients' exact element={<StaffManageClients/>}/>
-                  <Route path='/staff-cons' exact element={<StaffManageConsumption/>}/>
-                  <Route path='/meter/:id' element={<StaffManageConsumption/>}/>
-                  <Route path='/staff-clients/:id' element={<StaffViewClient/>}/>
-                  <Route path='/staff-clients/new' element={<StaffAddClient/>}/>
-                  <Route path='/staff-clients/:id/link-meter' element={<StaffLinkMeter/>}/>
-                  <Route path='/staff-contracts/:id' element={<StaffViewContract/>}/>
-                  <Route path='/staff-contracts/new' element={<StaffNewContract/>}/>
+                  <Route path='/staff' exact element={<MainPage/>}/>
+                  <Route path='/staff-contracts' exact element={<ManageContracts/>}/>
+                  <Route path='/staff-clients' exact element={<ManageClients/>}/>
+                  <Route path='/staff-cons' exact element={<ManageConsumption/>}/>
+                  <Route path='/meter/:id' element={<ManageConsumption/>}/>
+                  <Route path='/staff-clients/:id' element={<ViewClient/>}/>
+                  <Route path='/staff-clients/new' element={<AddClient/>}/>
+                  <Route path='/staff-clients/:id/link-meter' element={<LinkMeter/>}/>
+                  <Route path='/staff-contracts/:id' element={<ViewContract/>}/>
+                  <Route path='/staff-contracts/new' element={<NewContract/>}/>
               </Routes>
             
       </BrowserRouter>

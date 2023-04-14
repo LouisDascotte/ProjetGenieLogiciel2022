@@ -1,10 +1,10 @@
 import React from 'react'
-import StaffSideMenu from '../pagesStaff/StaffSideMenu'
+import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Select} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import { ClientList as Clients} from '../resources/Lists';
-import StaffTopMenu from '../pagesStaff/StaffTopMenu';
+import TopMenu from '../components/TopMenu';
 import TextField from '@mui/material/TextField';
 
 function NewContract() {
@@ -68,9 +68,9 @@ function NewContract() {
 
     <ThemeProvider theme={theme}>
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-        <StaffSideMenu mainPage={'false'} />
+        <SideMenu mainPage={'false'} />
         <Stack sx={{display:'flex', width:"100%"}}>
-          <StaffTopMenu pageAddress={pageAddress} pageName={pageName}/>
+          <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
             <Card sx={{width:'80%', m:2, height:'auto'}}>
               <Box sx={{height:'100%', width:'100%'}} alignment='center' >

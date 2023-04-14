@@ -1,9 +1,8 @@
 import React from 'react'
-import StaffSideMenu from '../pagesStaff/StaffSideMenu';
+import SideMenu from '../components/SideMenu';
 import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden} from '@mui/material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import ElementsList2 from '../components/ElementsList2';
 
 
 
@@ -28,12 +27,11 @@ const ManageCons = () => {
   const pageName = "Manage consumption";
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-      <StaffSideMenu mainPage={"false"} />
+      <SideMenu mainPage={"false"} />
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList2/>
           </Card>
           <ThemeProvider theme={theme}>
           <Grid item xs={12} align='center'>

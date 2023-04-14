@@ -1,10 +1,10 @@
 import React from 'react'
-import StaffSideMenu from '../pagesStaff/StaffSideMenu'
+import SideMenu from '../components/SideMenu'
 import {ArrowBack} from '@mui/icons-material'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField, FormControl, OutlinedInput, InputLabel, Input} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import StaffTopMenu from '../pagesStaff/StaffTopMenu';
+import TopMenu from '../components/TopMenu';
 import { ClientList as Clients, MeterList } from '../resources/Lists';
 
 
@@ -41,9 +41,9 @@ const StaffAddClient = () => {
 
     <ThemeProvider theme={theme}>
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-        <StaffSideMenu mainPage={'false'} />
+        <SideMenu mainPage={'false'} />
         <Stack sx={{display:'flex', width:"100%"}}>
-          <StaffTopMenu pageAddress={pageAddress} pageName={pageName}/>
+          <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid container
           align='center'
           justifyContent='center'

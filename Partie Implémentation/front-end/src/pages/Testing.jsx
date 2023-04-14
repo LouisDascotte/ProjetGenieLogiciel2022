@@ -1,9 +1,9 @@
 import React from 'react'
-import StaffSideMenu from '../pagesStaff/StaffSideMenu'
+import SideMenu from '../pagesStaff/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import StaffTopMenu from '../pagesStaff/StaffTopMenu';
+import TopMenu from '../components/TopMenu';
 import { ClientList as Clients, ContractList as Contracts} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';

@@ -2,10 +2,7 @@ import React from 'react'
 import SideMenu from '../components/SideMenu';
 import {createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
-import AccountMenu from '../components/AccountMenu';
-import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
 import { Link, NavLink } from "react-router-dom";
-import TopMenu from '../components/TopMenu';
 
 const RegistrationSuccess = () => {
   // Styling part

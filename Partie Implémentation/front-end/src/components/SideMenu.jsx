@@ -1,12 +1,8 @@
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
-import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
-import InsertedChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import WalletOutlinedIcon from '@mui/icons-material/WalletOutlined';
-import { Box, Divider, FormControl, InputLabel, Select } from '@mui/material';
+import { Divider} from '@mui/material';
 import React, { useState } from 'react';
 import { Menu, MenuItem, Sidebar, useProSidebar } from 'react-pro-sidebar';
 import { Link } from 'react-router-dom';
@@ -25,7 +21,7 @@ const SideMenu = (mainPage) => {
     return (
     
     
-       <Sidebar style={{ height:"100vh"}}>
+       <Sidebar style={{ height:"100vh"}} defaultCollapsed >
             <Menu>
                 <MenuItem
                     icon= {<MenuOutlinedIcon/>}
@@ -41,39 +37,19 @@ const SideMenu = (mainPage) => {
                 <MenuItem onClick={()=>{}}> 
                     <Divider/>
                 </MenuItem>
-                <Link to="/main-page" className='link' >
+                <Link to="/staff" className='link' >
                     <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
                         General overview
                     </MenuItem>
                 </Link>
-                <Link to="/manage-portfolios" className='link'>
-                    <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
-                        Manage portfolios
+                <Link to="/staff-clients" className='link'>
+                    <MenuItem icon={<AssignmentIndOutlinedIcon />} onClick={()=>{}}>
+                        Manage clients
                     </MenuItem>
                 </Link>
-                <Link to="/manage-meters" className='link'>
-                    <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                        Manage meters
-                    </MenuItem>
-                </Link>
-                <Link to="/manage-contracts" className='link'>
-                    <MenuItem icon={<AssignmentIndOutlinedIcon />}>
+                <Link to="/staff-contracts" className='link'>
+                    <MenuItem icon={<ReceiptOutlinedIcon />}>
                         Manage contracts
-                    </MenuItem>
-                </Link>
-                <Link to="/manage-invoices" className='link'>
-                    <MenuItem icon={<ReceiptOutlinedIcon />} >
-                        Manage invoices
-                    </MenuItem>
-                </Link>
-                <Link to="/chart" className='link'>
-                    <MenuItem icon={<InsertedChartOutlinedIcon />} >
-                        Consumption Chart
-                    </MenuItem>
-                </Link>
-                <Link to="/test" className='link'>
-                    <MenuItem icon={<InsertedChartOutlinedIcon />} >
-                        Test
                     </MenuItem>
                 </Link>
             </Menu>

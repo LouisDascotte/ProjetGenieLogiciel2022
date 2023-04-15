@@ -4,13 +4,10 @@ import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.reading.DoubleReading;
 import com.pgl.energenius.model.reading.SimpleReading;
 import com.pgl.energenius.service.ReadingService;
-import com.pgl.energenius.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/meter")
@@ -41,7 +38,7 @@ public class ReadingController {
         }
     }
 
-    @PostMapping("/{EAN}/double-reading")
+    @PostMapping("/{EAN}/reading/double")
     public ResponseEntity<?> createDoubleReading(@PathVariable String EAN, @RequestParam String date, @RequestParam int dayValue, @RequestParam int nightValue, @RequestParam boolean overwrite) {
 
         try {

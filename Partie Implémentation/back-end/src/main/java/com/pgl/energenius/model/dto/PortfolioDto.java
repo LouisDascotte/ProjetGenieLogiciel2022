@@ -25,5 +25,5 @@ public class PortfolioDto {
    * The address of the portfolio
    */
   @JsonProperty("address")
-  private Address address;
+  private String address;
 }

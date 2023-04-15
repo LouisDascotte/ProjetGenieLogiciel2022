@@ -9,4 +9,6 @@ import java.util.List;
 public interface MeterAllocationRepository extends MongoRepository<MeterAllocation, ObjectId> {
 
     List<MeterAllocation> findByClientId(ObjectId clientId);
+
+    List<MeterAllocation> findByClientIdAndEAN(ObjectId clientId, String EAN);
 }

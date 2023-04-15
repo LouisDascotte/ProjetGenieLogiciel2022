@@ -1,6 +1,5 @@
 package com.pgl.energenius.model;
 
-import com.pgl.energenius.enums.SupplyPointType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +20,10 @@ public class SupplyPoint {
     /**
      * The type of supply point
      */
-    private SupplyPointType supplyPointType;
+    private Type type;
+
+    public enum Type {
+        SUPPLY_POINT,
+        PRODUCTION_SUPPLY_POINT // Extension 5
+    }
 }

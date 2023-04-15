@@ -1,16 +1,17 @@
-package com.pgl.energenius.service;
+package com.pgl.energenius.utils;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.pgl.energenius.exception.ObjectNotValidatedException;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
-public class ValidationService {
+public class ValidationUtils {
 
     @Autowired
     private Validator validator;

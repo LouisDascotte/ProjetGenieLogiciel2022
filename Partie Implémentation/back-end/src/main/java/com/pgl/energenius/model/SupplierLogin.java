@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class EmployeeLogin extends User {
+public class SupplierLogin extends User {
 
 
     /**
@@ -30,12 +30,12 @@ public class EmployeeLogin extends User {
      * The employee that owns those login infos
      */
     @DBRef
-    private Employee employee;
+    private Supplier supplier;
 
-    public EmployeeLogin(String loginId, String password, Employee employee) {
+    public SupplierLogin(String loginId, String password, Supplier supplier) {
         super(password);
         this.loginId = loginId;
-        this.employee = employee;
+        this.supplier = supplier;
     }
 
     /**

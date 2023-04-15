@@ -4,43 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * An address
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "addresses")
 public class Address {
 
-    /**
-     * The city
-     */
-    private String city;
+    @Id
+    private String address;
 
-    /**
-     * The street
-     */
-    private String street;
+    private double lat;
 
-    /**
-     * The number of house
-     */
-    private int houseNo;
-
-    /**
-     * The postal box
-     */
-    private int box;
-
-    /**
-     * The postal code
-     */
-    private int postalCode;
-
-    /**
-     * The country
-     */
-    private String country;
+    private double lng;
 }

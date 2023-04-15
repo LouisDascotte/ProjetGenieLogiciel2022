@@ -13,4 +13,8 @@ public interface MeterRepository extends MongoRepository<Meter, String> {
     List<Meter> findByClientId(ObjectId clientId);
 
     List<Meter> findBySupplierId(ObjectId supplierId);
+
+    List<String> findIdsByClientId(ObjectId clientId);
+
+    List<String> findIdsByClientIdAndSupplierId(ObjectId clientId, ObjectId supplierId);
 }

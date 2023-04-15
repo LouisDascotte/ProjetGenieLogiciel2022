@@ -54,6 +54,7 @@ public class Notification {
 
     public enum Type {
         READING_NOTIFICATION,
+        CONTRACT_REQUEST_NOTIFICATION,
         NOTIFICATION
     }
 }

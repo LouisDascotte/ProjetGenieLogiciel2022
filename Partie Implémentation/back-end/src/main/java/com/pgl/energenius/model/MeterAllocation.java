@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 /**
  * The allocation of a meter
  */
@@ -25,16 +23,16 @@ public class MeterAllocation {
     /**
      * The date of the start of the allocation of the meter
      */
-    private Date assignmentDate;
+    private String beginDate;
 
     /**
      * The date of expiration of the meter's allocation
      */
-    private Date expirationDate;
+    private String endDate;
 
     private ObjectId clientId;
 
-    private String SupplierName;
+    private String supplierName;
 
     private Status status;
 

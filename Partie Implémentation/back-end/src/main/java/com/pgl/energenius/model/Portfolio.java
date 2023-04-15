@@ -38,7 +38,7 @@ public class Portfolio {
     /**
      * The address of the client that owns the portfolio
      */
-    private Address address;
+    private String address;
     /**
      * The name of the portfolio
      */
@@ -49,15 +49,4 @@ public class Portfolio {
      */
     @Default
     private List<SupplyPoint> supplyPoints = new ArrayList<>();
-
-    public static PortfolioBuilder builder(PortfolioDto portfolioDto) {
-
-        return builder()
-                .address(portfolioDto.getAddress())
-                .name(portfolioDto.getName());
-    }
-
-    public static PortfolioBuilder builder() {
-        return new PortfolioBuilder();
-    }
 }

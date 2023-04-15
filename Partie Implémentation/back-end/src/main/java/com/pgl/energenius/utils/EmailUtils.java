@@ -1,4 +1,4 @@
-package com.pgl.energenius.service;
+package com.pgl.energenius.utils;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService {
+public class EmailUtils {
 
     @Autowired
     private JavaMailSender javaMailSender;

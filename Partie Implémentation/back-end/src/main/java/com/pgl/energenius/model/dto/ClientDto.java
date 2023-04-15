@@ -64,5 +64,5 @@ public class ClientDto {
      * The address of the client.
      */
     @JsonProperty("address")
-    private Address address;
+    private String address;
 }

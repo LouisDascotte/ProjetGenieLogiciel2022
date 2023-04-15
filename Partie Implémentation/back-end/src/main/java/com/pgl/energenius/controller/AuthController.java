@@ -1,26 +1,29 @@
 package com.pgl.energenius.controller;
 
 
+import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
-import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.model.ClientLogin;
-import com.pgl.energenius.model.EmployeeLogin;
+import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
-import com.pgl.energenius.model.dto.EmployeeLoginDto;
+import com.pgl.energenius.model.dto.SupplierLoginDto;
+import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.repository.ReadingRepository;
 import com.pgl.energenius.service.ClientService;
-import com.pgl.energenius.service.EmployeeService;
+import com.pgl.energenius.service.SupplierService;
 import com.pgl.energenius.service.UserService;
 import jakarta.mail.MessagingException;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,7 +40,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private EmployeeService employeeService;
+    private SupplierService supplierService;
 
     /**
      * POST method to register a new client.
@@ -127,18 +130,18 @@ public class AuthController {
     /**
      * POST method to log in the employee.
      *
-     * @param employeeLoginDto The employee's login credentials.
+     * @param supplierLoginDto The employee's login credentials.
      * @return A ResponseEntity containing the employee's login information and the authentication token.
      */
     @PostMapping("/employee/login")
-    public ResponseEntity<?> login(@RequestBody EmployeeLoginDto employeeLoginDto) {
+    public ResponseEntity<?> login(@RequestBody SupplierLoginDto supplierLoginDto) {
 
         try {
-            EmployeeLogin employeeLogin = employeeService.authenticateEmployee(employeeLoginDto);
+            SupplierLogin supplierLogin = supplierService.authenticateSupplier(supplierLoginDto);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(employeeLogin))
-                    .body(employeeLogin.getEmployee());
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(supplierLogin))
+                    .body(supplierLogin.getSupplier());
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");

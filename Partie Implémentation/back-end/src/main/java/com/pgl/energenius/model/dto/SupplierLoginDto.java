@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeLoginDto {
+public class SupplierLoginDto {
 
     /**
      * The id used by the employee

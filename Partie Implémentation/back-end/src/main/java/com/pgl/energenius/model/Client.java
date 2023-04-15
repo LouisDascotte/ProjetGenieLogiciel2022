@@ -1,9 +1,6 @@
 package com.pgl.energenius.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pgl.energenius.config.ObjectIdSerializer;
 import com.pgl.energenius.model.dto.ClientDto;
-import com.pgl.energenius.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -11,11 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * Client
@@ -52,11 +45,11 @@ public class Client {
     /**
      * The address of the client
      */
-    private Address address;
+    private String address;
     /**
      * The status of the client
      */
-    private ClientStatus status;
+    private Status status;
 
     /**
      * The language that the client usually uses
@@ -74,17 +67,7 @@ public class Client {
     @Default
     private Boolean darkMode = false;
 
-    public static ClientBuilder builder(ClientDto clientDto) {
-
-        return builder()
-                .firstName(clientDto.getFirstName())
-                .lastName(clientDto.getLastName())
-                .phoneNo(clientDto.getPhoneNumber())
-                .address(clientDto.getAddress())
-                .language(clientDto.getLanguage());
-    }
-
-    public static ClientBuilder builder() {
-        return new ClientBuilder();
+    public enum Status {
+        // TODO
     }
 }

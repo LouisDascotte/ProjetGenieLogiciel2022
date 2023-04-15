@@ -32,13 +32,13 @@ public class PortfolioController {
     public ResponseEntity<?> getPortfolios() {
 
         try {
-            return new ResponseEntity<>(portfolioService.getAllPortfolios(), HttpStatus.OK);
+            return new ResponseEntity<>(portfolioService.getPortfolios(), HttpStatus.OK);
 
         } catch (InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -115,7 +115,7 @@ public class PortfolioController {
             SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, supplyPointDto);
             return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
 
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException | AddressesNotEqualsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (ObjectNotFoundException e) {

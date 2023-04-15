@@ -1,6 +1,6 @@
 package com.pgl.energenius.model.dto;
 
-import com.pgl.energenius.enums.SupplyPointType;
+import com.pgl.energenius.model.SupplyPoint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,5 +12,5 @@ public class SupplyPointDto {
 
     private String EAN;
 
-    private SupplyPointType supplyPointType;
+    private SupplyPoint.Type type;
 }

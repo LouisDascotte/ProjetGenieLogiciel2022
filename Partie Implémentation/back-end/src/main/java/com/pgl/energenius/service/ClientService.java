@@ -10,6 +10,8 @@ import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.WebSecurityConfig;
+import com.pgl.energenius.utils.SecurityUtils;
+import com.pgl.energenius.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,32 +35,41 @@ public class ClientService {
     private AuthenticationProvider authenticationProvider;
 
     @Autowired
-    private ValidationService validationService;
+    private ValidationUtils validationUtils;
 
     @Autowired
-    private SecurityService securityService;
+    private SecurityUtils securityUtils;
+
+    @Autowired
+    private AddressService addressService;
 
 
     public Client insertClient(Client client) throws ObjectNotValidatedException {
 
-        validationService.validate(client);
+        validationUtils.validate(client);
         return clientRepository.insert(client);
     }
 
     public void saveClient(Client client) throws ObjectNotValidatedException {
 
-        validationService.validate(client);
+        validationUtils.validate(client);
         clientRepository.save(client);
     }
 
     public Client getAuthClient() throws InvalidUserDetailsException {
 
-        return securityService.getCurrentClientLogin().getClient();
+        return securityUtils.getCurrentClientLogin().getClient();
     }
 
-    public Client createClient(ClientDto clientDto) throws ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public Client createClient(ClientDto clientDto) throws Exception {
 
-        Client client = Client.builder(clientDto).build();
+        Client client = Client.builder()
+                .firstName(clientDto.getFirstName())
+                .lastName(clientDto.getLastName())
+                .phoneNo(clientDto.getPhoneNumber())
+                .address(addressService.createAddress(clientDto.getAddress()).getAddress())
+                .language(clientDto.getLanguage())
+                .build();
 
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
                 WebSecurityConfig.passwordEncoder().encode(clientDto.getPassword()), client);

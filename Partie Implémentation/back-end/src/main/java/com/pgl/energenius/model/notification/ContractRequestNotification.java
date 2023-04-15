@@ -1,7 +1,10 @@
 package com.pgl.energenius.model.notification;
 
-import com.pgl.energenius.model.reading.Reading;
-import lombok.*;
+import com.pgl.energenius.model.contract.Contract;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
@@ -10,10 +13,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReadingNotification extends Notification {
-
-    private String EAN;
+public class ContractRequestNotification extends Notification {
 
     @DBRef(lazy = true)
-    private Reading reading;
+    public Contract contract;
 }

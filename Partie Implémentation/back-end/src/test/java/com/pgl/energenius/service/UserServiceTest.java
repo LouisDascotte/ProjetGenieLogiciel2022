@@ -2,8 +2,9 @@ package com.pgl.energenius.service;
 
 import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.model.ClientLogin;
-import com.pgl.energenius.model.EmployeeLogin;
+import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.repository.UserRepository;
+import com.pgl.energenius.utils.EmailUtils;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private EmailService emailService;
+    private EmailUtils emailUtils;
 
     @InjectMocks
     private UserService userService;
@@ -40,13 +41,13 @@ public class UserServiceTest {
     }
 
     @Test
-    public void test_loadUserByUsername_EmployeeLogin() {
+    public void test_loadUserByUsername_SupplierLogin() {
 
-        EmployeeLogin employeeLogin = new EmployeeLogin();
-        when(userRepository.findByLoginId("test")).thenReturn(Optional.of(employeeLogin));
+        SupplierLogin supplierLogin = new SupplierLogin();
+        when(userRepository.findByLoginId("test")).thenReturn(Optional.of(supplierLogin));
         when(userRepository.findByEmail("test")).thenReturn(Optional.empty());
 
-        assertEquals(employeeLogin, userService.loadUserByUsername("test"));
+        assertEquals(supplierLogin, userService.loadUserByUsername("test"));
         verify(userRepository, times(1)).findByEmail("test");
     }
 
@@ -82,7 +83,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail("test")).thenReturn(Optional.of(new ClientLogin()));
 
         userService.resetPasswordClient("test", "123");
-        verify(emailService, times(1)).sendPasswordResetMail("test", "123");
+        verify(emailUtils, times(1)).sendPasswordResetMail("test", "123");
     }
 
     @Test

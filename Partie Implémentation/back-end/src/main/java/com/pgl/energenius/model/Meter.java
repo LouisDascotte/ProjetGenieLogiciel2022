@@ -1,20 +1,14 @@
 package com.pgl.energenius.model;
 
 import com.pgl.energenius.enums.EnergyType;
-import com.pgl.energenius.enums.HourType;
-import com.pgl.energenius.enums.MeterStatus;
 import com.pgl.energenius.enums.MeterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Meter of a client
@@ -40,7 +34,7 @@ public class Meter {
     /**
      * The status of the meter
      */
-    private MeterStatus meterStatus;
+    private Status status;
 
     /**
      * The type of time setting that the meter uses (ex : bi-monthly)
@@ -52,13 +46,19 @@ public class Meter {
      */
     private MeterType meterType;
 
-    /**
-     * The readings of the meter
-     */
-    @Default
-    private List<Reading> readings = new ArrayList<>();
-
     private ObjectId supplierId;
 
     private ObjectId clientId;
+
+    private String address;
+
+    public enum Status {
+        AFFECTED,
+        DISAFFECTED
+    }
+
+    public enum HourType {
+        SIMPLE,
+        DOUBLE
+    }
 }

@@ -1,11 +1,14 @@
 package com.pgl.energenius.service;
 
+import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
+import com.pgl.energenius.model.reading.Reading;
 import com.pgl.energenius.repository.PortfolioRepository;
 import com.pgl.energenius.exception.*;
-import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.utils.SecurityUtils;
+import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class provides services related to PortfolioRepository.
@@ -27,20 +31,26 @@ public class PortfolioService {
     private MeterService meterService;
 
     @Autowired
-    private SecurityService securityService;
+    private SecurityUtils securityUtils;
 
     @Autowired
-    private ValidationService validationService;
+    private ValidationUtils validationUtils;
+
+    @Autowired
+    private AddressService addressService;
+
+    @Autowired
+    private ReadingService readingService;
 
     public Portfolio insertPortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
 
-        validationService.validate(portfolio);
+        validationUtils.validate(portfolio);
         return portfolioRepository.insert(portfolio);
     }
 
     public void savePortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
 
-        validationService.validate(portfolio);
+        validationUtils.validate(portfolio);
         portfolioRepository.save(portfolio);
     }
 
@@ -49,7 +59,7 @@ public class PortfolioService {
         Portfolio portfolio = portfolioRepository.findById(portfolioId)
                 .orElseThrow(() -> new ObjectNotFoundException("Portfolio not found with id: " + portfolioId));
 
-        ObjectId clientId = securityService.getCurrentClientLogin().getClient().getId();
+        ObjectId clientId = securityUtils.getCurrentClientLogin().getClient().getId();
 
         // Permet de vérifier si le portfolio appartient bien à l'utilisateur connecté.
         if (!clientId.equals(portfolio.getClientId())) {
@@ -66,39 +76,55 @@ public class PortfolioService {
     public HashMap<EnergyType, List<Reading>> getPortfolioConsumption(ObjectId portfolioId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException{
 
         Portfolio portfolio = getPortfolio(portfolioId);
-
         HashMap<EnergyType, List<Reading>> readings = new HashMap<>();
-
-        readings.put(EnergyType.GAZ, new ArrayList<>());
-        readings.put(EnergyType.ELEC, new ArrayList<>());
-        readings.put(EnergyType.EAU, new ArrayList<>());
 
         for (SupplyPoint sp: portfolio.getSupplyPoints()) {
 
             Meter meter = meterService.getMeter(sp.getEAN());
-            List<Reading> readings_of_energy_type = readings.get(meter.getEnergyType());
-            readings_of_energy_type.addAll(meter.getReadings());
+            List<MeterAllocation> meterAllocations = meterService.getMeterAllocations(sp.getEAN());
+
+            if (!readings.containsKey(meter.getEnergyType())) {
+                readings.put(meter.getEnergyType(), new ArrayList<>());
+            }
+
+            List<Reading> meterEnergyReadings = readings.get(meter.getEnergyType());
+
+            for (MeterAllocation ma : meterAllocations) {
+                meterEnergyReadings.addAll(readingService.getReadingsByDateBetween(ma.getBeginDate(), ma.getEndDate(), sp.getEAN()));
+            }
         }
 
         return readings;
     }
 
-    public Portfolio createPortfolio(PortfolioDto portfolioDto) throws InvalidUserDetailsException, ObjectNotValidatedException {
+    public Portfolio createPortfolio(PortfolioDto portfolioDto) throws Exception {
 
-        Client client = securityService.getCurrentClientLogin().getClient();
-        return insertPortfolio(Portfolio.builder(portfolioDto).clientId(client.getId()).build());
+        Client client = securityUtils.getCurrentClientLogin().getClient();
+
+        Portfolio portfolio = Portfolio.builder()
+                .address(addressService.createAddress(portfolioDto.getAddress()).getAddress())
+                .name(portfolioDto.getName())
+                .clientId(client.getId())
+                .build();
+
+        return insertPortfolio(portfolio);
     }
 
-    public List<Portfolio> getAllPortfolios() throws InvalidUserDetailsException {
+    public List<Portfolio> getPortfolios() throws InvalidUserDetailsException {
 
-        Client client = securityService.getCurrentClientLogin().getClient();
+        Client client = securityUtils.getCurrentClientLogin().getClient();
         return portfolioRepository.findByClientId(client.getId());
     }
 
-    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
         Meter meter = meterService.getMeter(supplyPointDto.getEAN());
+
+        if (!Objects.equals(meter.getAddress(), portfolio.getAddress())) {
+            throw new AddressesNotEqualsException("The meter's address is not equal to the portfolio's address");
+        }
+
         String EAN = meter.getEAN();
 
         for (SupplyPoint sp : portfolio.getSupplyPoints()) {
@@ -108,7 +134,7 @@ public class PortfolioService {
             }
         }
 
-        SupplyPoint supplyPoint = new SupplyPoint(EAN, supplyPointDto.getSupplyPointType());
+        SupplyPoint supplyPoint = new SupplyPoint(EAN, supplyPointDto.getType());
         portfolio.getSupplyPoints().add(supplyPoint);
 
         savePortfolio(portfolio);
@@ -130,13 +156,19 @@ public class PortfolioService {
     public List<Reading> getSupplyPointConsumption(ObjectId portfolioId, String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
+        boolean isSupplyPointInPortfolio = portfolio.getSupplyPoints().stream().anyMatch(sp -> Objects.equals(EAN, sp.getEAN()));
 
-        for (SupplyPoint sp : portfolio.getSupplyPoints()) {
-
-            if (EAN.equals(sp.getEAN())) {
-                return meterService.getMeter(EAN).getReadings();
-            }
+        if (!isSupplyPointInPortfolio) {
+            throw new ObjectNotFoundException("No supply point found in portfolio of Id: " + portfolioId);
         }
-        return new ArrayList<>();
+
+        List<MeterAllocation> meterAllocations = meterService.getMeterAllocations(EAN);
+        List<Reading> readings = new ArrayList<>();
+
+        for (MeterAllocation ma : meterAllocations) {
+            readings.addAll(readingService.getReadingsByDateBetween(ma.getBeginDate(), ma.getEndDate(), EAN));
+        }
+
+        return readings;
     }
 }

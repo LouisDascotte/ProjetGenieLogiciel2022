@@ -6,6 +6,8 @@ import com.pgl.energenius.repository.UserRepository;
 import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.WebSecurityConfig;
+import com.pgl.energenius.utils.EmailUtils;
+import com.pgl.energenius.utils.ValidationUtils;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,20 +27,20 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private ValidationService validationService;
+    private ValidationUtils validationUtils;
 
     @Autowired
-    private EmailService emailService;
+    private EmailUtils emailUtils;
 
     public User insertUser(User user) throws ObjectNotValidatedException {
 
-        validationService.validate(user);
+        validationUtils.validate(user);
         return userRepository.insert(user);
     }
 
     public void saveUser(User user) throws ObjectNotValidatedException {
 
-        validationService.validate(user);
+        validationUtils.validate(user);
         userRepository.save(user);
     }
 
@@ -64,7 +66,7 @@ public class UserService implements UserDetailsService {
         if (!existsByEmail(email))
             throw new ObjectNotFoundException("No client exists with email: " + email);
 
-        emailService.sendPasswordResetMail(email, token);
+        emailUtils.sendPasswordResetMail(email, token);
     }
 
     public void changePasswordClient(String email, String newPassword) throws ObjectNotFoundException {

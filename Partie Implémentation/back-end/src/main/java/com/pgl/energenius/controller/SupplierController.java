@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/employee")
 @CrossOrigin(origins = "http://localhost:3000")
-public class EmployeeController {
+public class SupplierController {
 
  }

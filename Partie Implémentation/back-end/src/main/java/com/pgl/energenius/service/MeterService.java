@@ -5,15 +5,16 @@ import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.*;
-import com.pgl.energenius.model.notification.Notification;
-import com.pgl.energenius.model.notification.ReadingNotification;
 import com.pgl.energenius.repository.MeterAllocationRepository;
 import com.pgl.energenius.repository.MeterRepository;
+import com.pgl.energenius.utils.SecurityUtils;
+import com.pgl.energenius.utils.ValidationUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MeterService {
@@ -25,23 +26,20 @@ public class MeterService {
     private MeterAllocationRepository meterAllocationRepository;
 
     @Autowired
-    private NotificationService notificationService;
+    private SecurityUtils securityUtils;
 
     @Autowired
-    private SecurityService securityService;
-
-    @Autowired
-    private ValidationService validationService;
+    private ValidationUtils validationUtils;
 
     public Meter insertMeter(Meter meter) throws ObjectNotValidatedException {
 
-        validationService.validate(meter);
+        validationUtils.validate(meter);
         return meterRepository.insert(meter);
     }
 
     public void saveMeter(Meter meter) throws ObjectNotValidatedException {
 
-        validationService.validate(meter);
+        validationUtils.validate(meter);
         meterRepository.save(meter);
     }
 
@@ -51,7 +49,7 @@ public class MeterService {
                 .orElseThrow(() -> new ObjectNotFoundException("Meter not found with EAN: " + EAN));
 
         try {
-            Client client = securityService.getCurrentClientLogin().getClient();
+            Client client = securityUtils.getCurrentClientLogin().getClient();
 
             if (client.getId().equals(meter.getClientId()))
                 return meter;
@@ -60,48 +58,51 @@ public class MeterService {
 
         } catch (InvalidUserDetailsException ignored) {}
 
-        Employee employee = securityService.getCurrentEmployeeLogin().getEmployee();
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
 
-        if (employee.getSupplier().getId().equals(meter.getSupplierId()))
+        if (supplier.getId().equals(meter.getSupplierId()))
             return meter;
 
         throw new UnauthorizedAccessException("Authenticated employee does not own the requested meter");
     }
 
-    public Reading createReadingMeter(String EAN, Date date, int value) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
-
-        Meter meter = getMeter(EAN);
-
-        Reading reading = new Reading(date, value, Reading.Status.PENDING);
-        meter.getReadings().add(reading); // TODO verifier la date des autres ?
-
-        ReadingNotification notification = ReadingNotification.builder()
-                .senderId(meter.getClientId())
-                .type(Notification.Type.READING_NOTIFICATION)
-                .reading(reading)
-                .EAN(meter.getEAN())
-                .build();
-
-        saveMeter(meter);
-        notificationService.insertNotification(notification);
-        return reading;
-    }
-
     public List<Meter> getMeters() throws InvalidUserDetailsException {
 
         try {
-            Client client = securityService.getCurrentClientLogin().getClient();
+            Client client = securityUtils.getCurrentClientLogin().getClient();
             return meterRepository.findByClientId(client.getId());
 
         } catch (InvalidUserDetailsException ignored) {}
 
-        Employee employee = securityService.getCurrentEmployeeLogin().getEmployee();
-        return meterRepository.findBySupplierId(employee.getSupplier().getId());
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+        return meterRepository.findBySupplierId(supplier.getId());
     }
 
-    public List<MeterAllocation> getMeterAllocations() throws InvalidUserDetailsException {
+    public List<String> getLinkedMetersEAN(ObjectId clientId) throws UnauthorizedAccessException, InvalidUserDetailsException {
 
-        Client client = securityService.getCurrentClientLogin().getClient();
+        try {
+            Client client = securityUtils.getCurrentClientLogin().getClient();
+
+            if (!Objects.equals(client.getId(), clientId)) {
+                throw new UnauthorizedAccessException("Authenticated client id is not equal to clientId.");
+            }
+            return meterRepository.findIdsByClientId(clientId);
+
+        } catch (InvalidUserDetailsException ignored) {}
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+        return meterRepository.findIdsByClientIdAndSupplierId(clientId, supplier.getId());
+    }
+
+    public List<MeterAllocation> getMetersAllocations() throws InvalidUserDetailsException {
+
+        Client client = securityUtils.getCurrentClientLogin().getClient();
         return meterAllocationRepository.findByClientId(client.getId());
+    }
+
+    public List<MeterAllocation> getMeterAllocations(String EAN) throws InvalidUserDetailsException {
+
+        Client client = securityUtils.getCurrentClientLogin().getClient();
+        return meterAllocationRepository.findByClientIdAndEAN(client.getId(), EAN);
     }
 }

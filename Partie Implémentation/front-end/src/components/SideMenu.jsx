@@ -1,6 +1,7 @@
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { Divider} from '@mui/material';
 import React, { useState } from 'react';
@@ -37,19 +38,24 @@ const SideMenu = (mainPage) => {
                 <MenuItem onClick={()=>{}}> 
                     <Divider/>
                 </MenuItem>
-                <Link to="/staff" className='link' >
+                <Link to="/main-page" className='link' >
                     <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
                         General overview
                     </MenuItem>
                 </Link>
-                <Link to="/staff-clients" className='link'>
+                <Link to="/clients" className='link'>
                     <MenuItem icon={<AssignmentIndOutlinedIcon />} onClick={()=>{}}>
                         Manage clients
                     </MenuItem>
                 </Link>
-                <Link to="/staff-contracts" className='link'>
+                <Link to="/contracts" className='link'>
                     <MenuItem icon={<ReceiptOutlinedIcon />}>
                         Manage contracts
+                    </MenuItem>
+                </Link>
+                <Link to="/consumption" className='link'>
+                    <MenuItem icon={<ElectricMeterOutlinedIcon />}>
+                        Manage consumption
                     </MenuItem>
                 </Link>
             </Menu>

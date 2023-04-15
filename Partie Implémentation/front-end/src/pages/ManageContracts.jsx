@@ -23,7 +23,7 @@ const ManageContracts = () => {
     }
   });
 
-  const pageAddress = "/staff-contracts";
+  const pageAddress = "/contracts";
   const pageName = "Manage contracts";
 
   const [selectedContract, setSelectedContract] = React.useState(null);
@@ -54,10 +54,10 @@ const ManageContracts = () => {
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
                   {ContractList.map((contract) => (
-                    <ListItem key={contract.contractID}>
-                      <ListItemText primary={`${contract.contractID}`} />
-                      <Link to={`/staff-contracts/${contract.contractID}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                        <Button variant="contained" onClick={() => handleContractClick(contract.contractID)}>
+                    <ListItem key={contract.contractId}>
+                      <ListItemText primary={`${contract.contractId}`} />
+                      <Link to={`/contracts/${contract.contractId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                        <Button variant="contained" onClick={() => handleContractClick(contract.contractId)}>
                           See Details
                         </Button>
                       </Link>
@@ -67,14 +67,14 @@ const ManageContracts = () => {
               </Box>
             </Card> 
             <Grid item xs={12} align='center'>
-              <Link to='/staff-contracts/new' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+              <Link to='/contracts/new' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
                 <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                   New contract
                 </Button>
               </Link>
             </Grid>
             <Grid item xs={12} align='center'>
-              <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+              <Link to='/contracts/requests' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
                 <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                   Contract Requests
                 </Button>

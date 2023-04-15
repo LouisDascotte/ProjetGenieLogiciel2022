@@ -28,12 +28,12 @@ function ViewClient() {
     }
   });
 
-  const pageAddress = "/staff-client/:id";
+  const pageAddress = "/client/:id";
   const pageName = "View Client";
 
   const getClientById = (id) => {
     const idInt = parseInt(id,10);
-    return Clients.find((client) => client.clientID === idInt);
+    return Clients.find((client) => client.clientId === idInt);
   };
   const client = getClientById(id);
 
@@ -51,7 +51,7 @@ function ViewClient() {
   }
 
   const handleRemoveClient = () => {
-    alert("Client removed");
+    alert("DELETE request sent to server ");
   }
 
   return (
@@ -64,7 +64,7 @@ function ViewClient() {
           <Grid align='center'>
             <Card sx={{width:'80%', m:2, height:'70%' }} >
               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
-                <Link to={'/staff-clients'} >
+                <Link to={'/clients'} >
                   <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
                     Retour
                   </Button>
@@ -121,7 +121,7 @@ function ViewClient() {
             alignItems='center'
             >
               <Grid item xs={6} >
-                <Link to={`/staff-clients/${client.clientID}/link-meter`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>
+                <Link to={`/clients/${client.clientId}/link-meter`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>
                   <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                     Link Meter
                   </Button>

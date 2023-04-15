@@ -28,19 +28,19 @@ function ViewContract() {
     }
   });
 
-  const pageAddress = "/staff-contracts/:id";
+  const pageAddress = "/contracts/:id";
   const pageName = "View Contract";
 
   const getContractById = (id) => {
     const idInt = parseInt(id,10);
-    return Contracts.find((contract) => contract.contractID === idInt);
+    return Contracts.find((contract) => contract.contractId === idInt);
   };
   
   function getClientByContractId(id) {
     const idInt = parseInt(id,10);
-    const owner = Contracts.find((contract) => contract.contractID === idInt).owner;
-    const ownerID = parseInt(owner,10);
-    return Clients.find((client) => client.clientID === ownerID);
+    const owner = Contracts.find((contract) => contract.contractId === idInt).clientId;
+    const ownerId = parseInt(owner,10);
+    return Clients.find((client) => client.clientId === ownerId);
   }
 
   const contract = getContractById(id);
@@ -53,7 +53,7 @@ function ViewContract() {
     return client.email;
   }
   const getClientId = () => {
-    return client.clientID;
+    return client.clientId;
   }
   const getClientPhone = () => {
     return client.phone;
@@ -76,11 +76,11 @@ function ViewContract() {
         return meters = {meter1: contract.meter[0], meter2: contract.meter[1]};
     }
   }
-  const getSubPrice = () => {
-    return contract.subPrice;
+  const getOffer = () => {
+    return contract.offer;
   }
   const getSupplier = () => {
-    return contract.supplier;
+    return contract.supplierId;
   }
   const getContractBeginDate = () => {
     return contract.beginDate;
@@ -90,14 +90,14 @@ function ViewContract() {
   }
 
   const contractData = {
-    clientID: getClientId(),
+    clientId: getClientId(),
     clientName: getClientName(),
     clientEmail: getClientEmail(),
     clientPhone: getClientPhone(),
     consumptionAddress: getConsAddress(),
     contractType: getConsType(),
     meter: getMeters(),
-    subPrice: getSubPrice(),
+    offer: getOffer(),
     supplier: getSupplier(),
     beginDate: getContractBeginDate(),
     endDate: getContractEndDate(),
@@ -121,10 +121,11 @@ function ViewContract() {
   const handleSaveClick = () => {
     setEditableData(editableData);
     setEditMode(false);
+    alert('PUT request sent to server ');
   }
 
   const handleCancelContract = () => {
-    alert("Contract cancelled");
+    alert('DELETE request sent to server ');
   }
 
   return (
@@ -137,13 +138,13 @@ function ViewContract() {
           <Grid align='center'>
             <Card sx={{width:'80%', m:2, height:'auto' }} >
               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
-                <Link to={'/staff-contracts'} >
+                <Link to={'/contracts'} >
                   <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
                     Retour
                   </Button>
                 </Link>
                 <Typography variant="h5" component="h2" align="center" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                  Contract n° {contract.contractID}
+                  Contract n° {contract.contractId}
                 </Typography>
                 <Typography variant="h6" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
                   Client's Details
@@ -168,9 +169,9 @@ function ViewContract() {
                     </Grid>
                     <Grid item xs='auto' >
                       <TextField
-                      name="clientID"
+                      name="clientId"
                       label="Client id"
-                      value={editableData.clientID}
+                      value={editableData.clientId}
                       size='small'
                       onChange={handleEditableDataChange}
                       disabled={!editMode}
@@ -324,7 +325,7 @@ function ViewContract() {
                 </Typography>
                 <Grid >
                   <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                    Subscribed to the base offer of {getSubPrice()}€/month for {getConsType().toLocaleLowerCase()} to {getSupplier()}.
+                    Subscribed to the base offer of {getOffer()}€/month for {getConsType().toLocaleLowerCase()} to {getSupplier()}.
                   </Typography>
                 </Grid>
               </Box>

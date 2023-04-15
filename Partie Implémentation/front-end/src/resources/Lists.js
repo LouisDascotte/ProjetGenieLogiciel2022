@@ -1,48 +1,48 @@
 export const ClientList = [
   {
-    clientID: 1817,
+    clientId: 1817,
     name: "John Doe",
     address: "123 Main Street, New York, NY 10001",
     email: "john.doe@gmail.com",
     phone: "123-456-7890",
   },
   {
-    clientID: 837,
+    clientId: 837,
     name: "Jane Doe",
     address: "456 Main Street, New York, NY 10001",
     email: "jane.doe@gmail.com",
     phone: "143-456-7890",
   },
   {
-    clientID: 9287,
+    clientId: 9287,
     name: "John Smith",
     address: "789 Main Street, New York, NY 10001",
     email: "john.smith@gmail.com",
     phone: "163-456-7890",
   },
   {
-    clientID: 62,
+    clientId: 62,
     name: "Jane Smith",
     address: "101 Main Street, New York, NY 10001",
     email: "jane.smith@gmail.com",
     phone: "183-456-7890",
   },
   {
-    clientID: 823,
+    clientId: 823,
     name: "Mason Doe",
     address: "102 Main Street, New York, NY 10001",
     email: "mason.doe@gmail.com",
     phone: "193-456-7890",
   },
   {
-    clientID: 632,
+    clientId: 632,
     name: "Aleksandr Kuznetsov",
     address: "103 Main Street, New York, NY 10001",
     email: "aleks.kuznet@gmail.com",
     phone: "123-466-7890",
   },
   {
-    clientID: 782,
+    clientId: 782,
     name: "William Shakespeare",
     address: "104 Main Street, New York, NY 10001",
     email: "will.shake@gmail.com",
@@ -53,181 +53,184 @@ export const ClientList = [
 export const MeterList = [
   // Gas suppliers : "AmbiNRG", "GasCool" or "GasHot", Electricity suppliers : "AmbiNRG" "EleCable" or "SpeedElec", Water suppliers : "WaterFlow"
   {
-    meterID: 918373,
-    owner : 1817,
+    meterId: 918373,
+    clientId : 1817,
     energyType: "Electricity",
-    supplier: "EleCable"
+    supplierId: "EleCable",
+    meterStatus: "Active",
+    hourType: "Peak",
+    meterType: "manual"
   },
   {
-    meterID: 989324,
-    owner : 1817,
+    meterId: 989324,
+    clientId : 1817,
     energyType: "Gas",
-    supplier: "GasCool"
+    supplierId: "GasCool"
   },
   {
-    meterID: 918273,
-    owner : 837,
+    meterId: 918273,
+    clientId : 837,
     energyType: "Water",
-    supplier: "WaterFlow"
+    supplierId: "WaterFlow"
   },
   {
-    meterID: 981724,
-    owner : 837,
+    meterId: 981724,
+    clientId : 837,
     energyType: "Electricity",
-    supplier: "SpeedElec"
+    supplierId: "SpeedElec"
   },
   {
-    meterID: 927212,
-    owner : 9287,
+    meterId: 927212,
+    clientId : 9287,
     energyType: "Electricity",
-    supplier: "AmbiNRG"
+    supplierId: "AmbiNRG"
   },
   {
-    meterID: 913621,
-    owner : 9287,
+    meterId: 913621,
+    clientId : 9287,
     energyType: "Gas",
-    supplier: "AmbiNRG"
+    supplierId: "AmbiNRG"
   },
   {
-    meterID: 916728,
-    owner : 62,
+    meterId: 916728,
+    clientId : 62,
     energyType: "Electricity",
-    supplier: "EleCable"
+    supplierId: "EleCable"
   },
   {
-    meterID: 916282,
-    owner : 62,
+    meterId: 916282,
+    clientId : 62,
     energyType: "Gas",
-    supplier: "GasCool"
+    supplierId: "GasCool"
   },
   {
-    meterID: 962511,
-    owner : 823,
+    meterId: 962511,
+    clientId : 823,
     energyType: "Electricity",
-    supplier: "SpeedElec"
+    supplierId: "SpeedElec"
   },
   {
-    meterID: 912727,
-    owner : 632,
+    meterId: 912727,
+    clientId : 632,
     energyType: "Electricity",
-    supplier: "EleCable"
+    supplierId: "EleCable"
   },
   {
-    meterID: 912918,
-    owner : 632,
+    meterId: 912918,
+    clientId : 632,
     energyType: "Gas",
-    supplier: "GasHot"
+    supplierId: "GasHot"
   },
   {
-    meterID: 946372,
-    owner : 782,
+    meterId: 946372,
+    clientId : 782,
     energyType: "Electricity",
-    supplier: "SpeedElec"
+    supplierId: "SpeedElec"
   },
   {
-    meterID: 935171,
-    owner : 782,
+    meterId: 935171,
+    clientId : 782,
     energyType: "Gas",
-    supplier: "GasCool"
+    supplierId: "GasCool"
   }
 ]
 
 export const PortfolioList = [
   {
-    portfolioID: 64,
+    portfolioId: 64,
     name: "Portfolio 1",
     owner: 1817,
     meters: [
       {
-        meterID: 918373
+        meterId: 918373
       },
       {
-        meterID: 989324
+        meterId: 989324
       }
     ]
   },
   {
-    portfolioID: 927,
-    name: "Portfolio {portfolioID}",
+    portfolioId: 927,
+    name: "Portfolio {portfolioId}",
     owner: 1817,
     meters: [
       {
-          meterID: 918273
+          meterId: 918273
       },
       {
-          meterID: 981724
+          meterId: 981724
       }
     ]
   },
   {
-    portfolioID: 624,
+    portfolioId: 624,
     name: "Portfolio 2",
     owner: 837,
     meters: [
       {
-          meterID: 927212
+          meterId: 927212
       },
       {
-          meterID: 913621
+          meterId: 913621
       }
     ]
   },
   {
-    portfolioID: 921,
+    portfolioId: 921,
     name: "Portfolio 3",
     owner: 9287,
     meters: [
       {
-          meterID: 917626
+          meterId: 917626
       }
     ]
   },
   {
-    portfolioID: 671,
+    portfolioId: 671,
     name: "Portfolio 4",
     owner: 62,
     meters: [
       {
-          meterID: 916728
+          meterId: 916728
       },
       {
-          meterID: 916282
+          meterId: 916282
       }
     ]
   },
   {
-    portfolioID: 542,
+    portfolioId: 542,
     name: "Portfolio 5",
     owner: 823,
     meters: [
       {
-          meterID: 962511
+          meterId: 962511
       }
     ]
   },
   {
-    portfolioID: 6632,
+    portfolioId: 6632,
     name: "Portfolio 6",
     owner: 632,
     meters: [
       {
-          meterID: 912727
+          meterId: 912727
       },
       {
-          meterID: 912918
+          meterId: 912918
       }
     ]
   },
   {
-    portfolioID: 763,
+    portfolioId: 763,
     name: "Portfolio 7",
     owner: 782,
     meters: [
       {
-          meterID: 946372
+          meterId: 946372
       },
       {
-          meterID: 935171
+          meterId: 935171
       }
     ]
   }
@@ -236,211 +239,255 @@ export const PortfolioList = [
 export const ContractList = [
   // contractType : "Electricity", "Gas", "GasElec" (both electricity and gas) or "Water"
   {
-    contractID: 9172,
+    contractId: 9172,
     name: "Contract 1",
-    owner: 1817,
+    clientId: 1817,
     consumptionAddress: "123 Main Street, New York, NY 10001",
     contractType: "Electricity",
-    supplier: "EleCable",
+    supplierId: "EleCable",
     meter: {
-      meterID: 918373
+      meterId: 918373
     },
     beginDate: "2019-01-01",
     endDate: "2020-02-01",
-    subPrice: 28,
+    offer: 28,
   },
   {
-    contractID: 9272,
+    contractId: 9272,
     name: "Contract 2",
-    owner: 1817,
+    clientId: 1817,
     consumptionAddress: "123 Main Street, New York, NY 10001",
     contractType: "Gas",
-    supplier: "GasCool",
+    supplierId: "GasCool",
     meter: {
-      meterID: 989324
+      meterId: 989324
     },
     beginDate: "2019-01-01",
     endDate: "2020-01-01",
-    subPrice: 12,
+    offer: 12,
   },
   {
-    contractID: 9372,
+    contractId: 9372,
     name: "Contract 3",
-    owner: 837,
+    clientId: 837,
     contractType: "Water",
-    supplier: "WaterFlow",
+    supplierId: "WaterFlow",
     meter: {
-      meterID: 918273
+      meterId: 918273
     }
   },
   {
-    contractID: 9472,
+    contractId: 9472,
     name: "Contract 4",
-    owner: 837,
+    clientId: 837,
     contractType: "Electricity",
-    supplier: "SpeedElec",
+    supplierId: "SpeedElec",
     meter: {
-      meterID: 981724
+      meterId: 981724
     }
   },
   {
-    contractID: 9572,
+    contractId: 9572,
     name: "Contract 5",
-    owner: 9287,
+    clientId: 9287,
     contractType: "GasElec",
-    supplier: "AmbiNRG",
+    supplierId: "AmbiNRG",
     meter: [
       {
-        meterID: 927212
+        meterId: 927212
       },
       {
-        meterID: 913621
+        meterId: 913621
       }
     ]
   },
   {
-    contractID: 9672,
+    contractId: 9672,
     name: "Contract 6",
-    owner: 62,
+    clientId: 62,
     contractType: "Electricity",
-    supplier: "EleCable",
+    supplierId: "EleCable",
     meter: {
-      meterID: 916728
+      meterId: 916728
     }
   },
   {
-    contractID: 9772,
+    contractId: 9772,
     name: "Contract 7",
-    owner: 62,
+    clientId: 62,
     contractType: "Gas",
-    supplier: "GasCool",
+    supplierId: "GasCool",
     meter: {
-      meterID: 916282
+      meterId: 916282
     }
   },
   {
-    contractID: 9872,
+    contractId: 9872,
     name: "Contract 8",
-    owner: 823,
+    clientId: 823,
     contractType: "Electricity",
-    supplier: "SpeedElec",
+    supplierId: "SpeedElec",
     meter: {
-      meterID: 962511
+      meterId: 962511
     }
   },
   {
-    contractID: 9972,
+    contractId: 9972,
     name: "Contract 9",
-    owner: 632,
+    clientId: 632,
     contractType: "Electricity",
-    supplier: "EleCable",
+    supplierId: "EleCable",
     meter: {
-      meterID: 912727
+      meterId: 912727
     }
   },
   {
-    contractID: 10072,
+    contractId: 10072,
     name: "Contract 10",
-    owner: 632,
+    clientId: 632,
     contractType: "Gas",
-    supplier: "GasHot",
+    supplierId: "GasHot",
     meter: {
-      meterID: 912918
+      meterId: 912918
     }
   },
   {
-    contractID: 10172,
+    contractId: 10172,
     name: "Contract 11",
-    owner: 782,
+    clientId: 782,
     contractType: "Electricity",
-    supplier: "SpeedElec",
+    supplierId: "SpeedElec",
     meter: {
-      meterID: 946372
+      meterId: 946372
     }
   },
   {
-    contractID: 10272,
+    contractId: 10272,
     name: "Contract 12",
-    owner: 782,
+    clientId: 782,
     contractType: "Gas",
-    supplier: "GasCool",
+    supplierId: "GasCool",
     meter: {
-      meterID: 935171
+      meterId: 935171
     }
   }
 ]
 
 export const MeterReadingList = [
   {
-    meterReadingID: 9172,
-    meter: {
-      meterID: 918373
-    },
-    readingDateTime: "2019-01-01",
-    reading: 1000
+    meterId: 918373,
+    date: "2019-01-01",
+    value: 1000
   },
   {
-    meterReadingID: 9272,
-    meter: {
-      meterID: 989324,
-    },
-    readingDateTime: "2019-01-01",
-    reading: 1000
+    meterId: 989324,
+    date: "2019-01-01",
+    value: 1000
   },
   {
-    meterReadingID: 9372,
-    meter: {
-      meterID: 918273
-    },
-    readingDateTime: "2019-01-01",
-    reading: 1000
+    meterId: 918273,
+    date: "2019-01-01",
+    value: 1000
   },
   {
-    meterReadingID: 9472,
-    meter: {
-      meterID: 918373,
-    },
-    readingDateTime: "2019-02-01",
-    reading: 2000
+    meterId: 918373,
+    date: "2019-02-01",
+    value: 2000
   },
   {
-    meterReadingID: 9572,
-    meter: {
-      meterID: 989324
-    },
-    readingDateTime: "2019-02-01",
-    reading: 2000
+    meterId: 989324,
+    date: "2019-02-01",
+    value: 2000
   },
   {
-    meterReadingID: 9672,
-    meter: {
-      meterID: 918273
-    },
-    readingDateTime: "2019-02-01",
-    reading: 2000
+    meterId: 918273,
+    date: "2019-02-01",
+    value: 2000
   },
   {
-    meterReadingID: 9772,
-    meter: {
-      meterID: 918373
-    },
-    readingDateTime: "2019-03-01",
-    reading: 3000
+    meterId: 918373,
+    date: "2019-03-01",
+    value: 3000
   },
   {
-    meterReadingID: 9872,
-    meter: {
-      meterID: 989324
-    },
-    readingDateTime: "2019-03-01",
-    reading: 3000
+    meterId: 989324,
+    date: "2019-03-01",
+    value: 3000
   },
   {
-    meterReadingID: 9972,
-    meter: {
-      meterID: 918373
-    },
-    readingDateTime: "2019-04-01",
-    reading: 4000
+    meterId: 918373,
+    date: "2019-04-01",
+    value: 4000
+  },
+  {
+    meterId: 989324,
+    date: "2019-01-02",
+    value: 1000
+  },
+]
+
+export const ContractRequestList = [
+  {
+    contractRequestId: 6172,
+    data : {
+      clientId: 1817,
+      address: "123 Main Street",
+      city: "New York",
+      zipCode: "10001",
+      country: "USA",
+      contractType: "Electricity",
+      meterIdGas: null,
+      meterIdElec: "123456789",
+      meterType: "manual",
+      offer: "Offer Y"
+    }
+  },
+  {
+    contractRequestId: 6272,
+    data : {
+      clientId: 1817,
+      address: "123 Main Street",
+      city: "New York",
+      zipCode: "10001",
+      country: "USA",
+      contractType: "Gas",
+      meterIdGas: "987654321",
+      meterIdElec: null,
+      meterType: "manual",
+      offer: "Offer Y",
+    }
+  }
+]
+
+export const SupplierList = [
+  {
+    supplierId: 1,
+    name: "EleCable",
+    operatingRegion: "Walloonia"
+  },
+  {
+    supplierId: 2,
+    name: "GasCool",
+    operatingRegion: "Walloonia"
+  },
+  {
+    supplierId: 3,
+    name: "GasHot",
+    operatingRegion: "Walloonia"
+  },
+  {
+    supplierId: 4,
+    name: "SpeedElec",
+    operatingRegion: "Walloonia"
+  },
+  {
+    supplierId: 5,
+    name: "WaterFlow",
+    operatingRegion: "Walloonia"
+  },
+  {
+    supplierId: 6,
+    name: "AmbiNRG",
+    operatingRegion: "Walloonia"
   }
 ]

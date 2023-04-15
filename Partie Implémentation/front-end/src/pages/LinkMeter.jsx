@@ -8,10 +8,22 @@ import { ClientList as Clients} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import DatePicker from 'react-datepicker';
+import { useEffect } from 'react';
 
 function LinkMeter() {
   const id = useParams().id;
   const [newMeterID, setNewMeterID] = React.useState(null);
+  const [beginDate, setBeginDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
+  const [disabled, setDisabled] = React.useState(true);
+
+  useEffect(() => {
+    if (newMeterID && beginDate && endDate) {
+      setDisabled(false);
+      } else {
+        setDisabled(true);
+        }
+        }, [newMeterID, beginDate, endDate]);
 
   const theme = createTheme({
     palette: {
@@ -30,12 +42,12 @@ function LinkMeter() {
     }
   });
 
-  const pageAddress = "/staff-clients/:id/link-meter";
+  const pageAddress = "/clients/:id/link-meter";
   const pageName = "Link meter to client";
 
   const getClientById = (id) => {
     const idInt = parseInt(id,10);
-    return Clients.find((client) => client.clientID === idInt);
+    return Clients.find((client) => client.clientId === idInt);
   };
   const client = getClientById(id);
 
@@ -43,7 +55,7 @@ function LinkMeter() {
     return client.name;
   }
   const handleConfirmLink = () => {
-    alert(`Meter (${newMeterID}) linked to client ${getClientName()}, ${id}`);
+    alert(`POST Meter (${newMeterID}) linked to client ${getClientName()}, ${id}`);
   };
 
   return (
@@ -60,7 +72,7 @@ function LinkMeter() {
             >
               <Grid item xs={12} >
                 <Typography variant='h5' sx={{mt:2, mb:2}}>
-                  {getClientName()}
+                  Client: {getClientName()} #{id}
                 </Typography>
               </Grid>
               <Grid item xs={3} >
@@ -69,7 +81,14 @@ function LinkMeter() {
                 </Typography>
               </Grid>
               <Grid item xs={6} >
-                <DatePicker/>
+                <TextField
+                  id="beginDate"
+                  value={beginDate}
+                  onChange={(e) => setBeginDate(e.target.value)}
+                  variant="outlined"
+                  sx={{mt:2, mb:2, width:'40%'}}
+                  type='date'
+                />
               </Grid>
               <Grid item xs={3} >
               </Grid>
@@ -79,7 +98,14 @@ function LinkMeter() {
                 </Typography>
               </Grid>
               <Grid item xs={6} >
-                <DatePicker/>
+                <TextField
+                  id="endDate"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  variant="outlined"
+                  sx={{mt:2, mb:2, width:'40%'}}
+                  type='date'
+                />
               </Grid>
               <Grid item xs={3} >
               </Grid>
@@ -90,7 +116,7 @@ function LinkMeter() {
               </Grid>
               <Grid item xs={6} >
                 <TextField
-                  id="meterID"
+                  id="meterId"
                   label="Meter ID"
                   variant="outlined"
                   sx={{mt:2, mb:2, width:'40%'}}
@@ -101,13 +127,15 @@ function LinkMeter() {
               <Grid item xs={3} >
               </Grid>
               <Grid item xs={12} >
-                <Button  variant='outlined' color='secondary' onClick={handleConfirmLink} sx={{mt:2, width:'30%', mb:5}}>
-                  Confirm Link
-                </Button>
+                <Link to={`/clients/${id}`} style={{ textDecoration: 'none' }}>
+                  <Button variant='outlined' disabled={disabled}  color='secondary' onClick={handleConfirmLink} sx={{mt:2, width:'30%', mb:5}}>
+                    Confirm Link
+                  </Button>
+                </Link>
               </Grid>
               <Grid item xs={12} >
-                <Link to={`/staff-clients/${id}`} style={{ textDecoration: 'none' }}>
-                  <Button  variant='outlined' color='error' sx={{mt:2, width:'auto', mb:5}}>
+                <Link to={`/clients/${id}`} style={{ textDecoration: 'none' }}>
+                  <Button variant='outlined' color='error' sx={{mt:2, width:'auto', mb:5}}>
                       Cancel
                   </Button>
                 </Link>          

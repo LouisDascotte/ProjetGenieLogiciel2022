@@ -1,15 +1,15 @@
 import React from 'react'
-import SideMenu from '../components/SideMenu'
-import {ArrowBack} from '@mui/icons-material'
+import SideMenu from '../components/SideMenu';
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {ArrowBack} from '@mui/icons-material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ClientList as Clients } from '../resources/Lists';
+import { ContractList, ContractRequestList } from '../resources/Lists';
 
 
 
-const ManageClients = () => {
+const ContractsRequests = () => {
   const theme = createTheme({
     palette: {
       primary: {
@@ -23,33 +23,27 @@ const ManageClients = () => {
     }
   });
 
-  const pageAddress = "/clients";
-  const pageName = "Manage clients";
-
-  const handleClientClick = (clientID) => {
-    console.log(clientID);
-  };
-
+  const pageAddress = "/contracts/requests";
+  const pageName = "Manage Contract Requests";
 
   return (
-
     <ThemeProvider theme={theme}>
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-        <SideMenu mainPage={'false'} />
+        <SideMenu mainPage={"false"} />
         <Stack sx={{display:'flex', width:"100%"}}>
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
-            <Card sx={{width:'50%', m:2, height:'60%' }} >
-              <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+            <Card sx={{width:'50%', m:2, height:'auto'}}>
+              <Box sx={{height:'100%', width:'100%'}} alignment='center' > 
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
-                  Client List
+                  Contract Requests
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {Clients.map((client) => (
-                    <ListItem key={client.clientId}>
-                      <ListItemText primary={`${client.name}`} />
-                      <Link to={`/clients/${client.clientId}`}>
-                        <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
+                  {ContractRequestList.map((contractRequest) => (
+                    <ListItem key={contractRequest.contractRequestId}>
+                      <ListItemText primary={`${contractRequest.contractRequestId}`} />
+                      <Link to={`/contracts/requests/${contractRequest.contractRequestId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                        <Button variant="contained" >
                           See Details
                         </Button>
                       </Link>
@@ -57,18 +51,12 @@ const ManageClients = () => {
                   ))}
                 </List>
               </Box>
-            </Card>
-              <Link to='/clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
-                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                  Add New Client
-                </Button>
-              </Link>
+            </Card> 
           </Grid>
         </Stack>
       </Stack>
     </ThemeProvider>
   );
-
 }
 
-export default ManageClients
+export default ContractsRequests

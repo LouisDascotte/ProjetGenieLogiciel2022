@@ -29,7 +29,7 @@ function NewContract() {
   const [energyChosen, setEnergyChosen] = React.useState('elec');
 
   const handleContractCreation = () => {
-    alert('contract created');
+    alert('PUT request to create a new contract');
   };
 
   let gasVisible;
@@ -54,6 +54,9 @@ function NewContract() {
   const newContractData = {
     clientID: '',
     address: '',
+    city: '',
+    zipCode: '',
+    country: '',
     contractType: '',
     meterIdGas: '',
     meterIdElec: '',
@@ -61,7 +64,7 @@ function NewContract() {
     offer: '',
   };
 
-  const pageAddress = "/staff-contracts/new";
+  const pageAddress = "/contracts/new";
   const pageName = "New contract";
 
   return (
@@ -92,6 +95,7 @@ function NewContract() {
                     >
                       <TextField
                       id="clientID"
+                      required
                       label="enter the client's ID"
                       variant="outlined"
                       size='small'
@@ -110,6 +114,7 @@ function NewContract() {
                     xs={9}
                     >
                       <TextField
+                      required
                       id="address"
                       label="enter the client's address"
                       variant="outlined"
@@ -129,6 +134,7 @@ function NewContract() {
                     >
                       <TextField
                       id="city"
+                      required
                       label="city :"
                       variant="outlined"  
                       size='small'
@@ -146,6 +152,7 @@ function NewContract() {
                         <Select
                         native
                         id="country"
+                        required
                         label=""
                         defaultValue={'BE'}
                         variant="outlined"
@@ -163,6 +170,7 @@ function NewContract() {
                       >
                         <TextField
                         id="zipCode"
+                        required
                         label="postal code :"
                         variant="outlined"
                         size='small'
@@ -185,6 +193,7 @@ function NewContract() {
                       <Select
                       native
                       id="contractType"
+                      required
                       label=""
                       defaultValue={'electricity'}
                       value={energyChosen}
@@ -210,6 +219,7 @@ function NewContract() {
                     >
                       <TextField
                       id="meterIdGas"
+                      required
                       label="enter EAN (gas) :"
                       variant="outlined"
                       size='small'
@@ -230,6 +240,7 @@ function NewContract() {
                     >
                       <TextField
                       id="meterIdElec"
+                      required
                       label="enter EAN (elec) :"
                       variant="outlined"
                       size='small'
@@ -251,6 +262,7 @@ function NewContract() {
                       <Select
                       native
                       id="meterType"
+                      required
                       label=""
                       defaultValue={'manual'}
                       variant="outlined"
@@ -274,6 +286,7 @@ function NewContract() {
                       <Select
                       native
                       id="offer"
+                      required
                       label=""
                       defaultValue={'basic'}
                       variant="outlined"
@@ -301,7 +314,7 @@ function NewContract() {
                 >
                   <Grid item
                   >
-                    <Link to='/staff-contracts'>
+                    <Link to='/contracts'>
                       <Button variant="outlined" color="error" >
                         Cancel
                       </Button>

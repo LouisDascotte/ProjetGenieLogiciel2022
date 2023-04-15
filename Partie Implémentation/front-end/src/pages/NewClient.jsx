@@ -27,13 +27,13 @@ const StaffAddClient = () => {
     }
   });
 
-  const pageAddress = "/staff-clients";
+  const pageAddress = "/clients";
   const pageName = "New Client";
 
   const [newClientID, setClientID] = React.useState('');
 
   const handleNewClient = () => {
-    alert(`New client ${newClientID} added`);
+    alert(`POST request to add new client ${newClientID}`);
   };
   const isButtonDisabled = newClientID.trim() === '';
 
@@ -79,7 +79,7 @@ const StaffAddClient = () => {
             alignItems='center'
             >
               <Grid item xs={6}>
-                <Link to='/staff-clients' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
+                <Link to='/clients' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
                   <Button  variant='outlined' color='error' sx={{mt:2, width:'100%', mb:5}}>
                     Cancel
                   </Button>

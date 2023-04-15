@@ -1,15 +1,15 @@
 import React from 'react'
-import SideMenu from '../pagesStaff/SideMenu'
-import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField} from '@mui/material';
+import SideMenu from '../components/SideMenu'
+import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ClientList as Clients, ContractList as Contracts} from '../resources/Lists';
+import { ClientList as Clients} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 
-function ViewContract() {
-  const id = 9172;
+function ViewClient() {
+  const id = useParams().id;
 
   const theme = createTheme({
     palette: {
@@ -28,146 +28,91 @@ function ViewContract() {
     }
   });
 
-  const pageAddress = "/test";
-  const pageName = "View Contract";
+  const pageAddress = "/client/:id";
+  const pageName = "View Client";
 
-  const getContractById = (id) => {
+  const getClientById = (id) => {
     const idInt = parseInt(id,10);
-    return Contracts.find((contract) => contract.contractID === idInt);
+    return Clients.find((client) => client.clientId === idInt);
   };
-  
-  function getClientByContractId(id) {
-    const idInt = parseInt(id,10);
-    const owner = Contracts.find((contract) => contract.contractID === idInt).owner;
-    const ownerID = parseInt(owner,10);
-    return Clients.find((client) => client.clientID === ownerID);
-  }
+  const client = getClientById(id);
 
-  const contract = getContractById(id);
-  const client = getClientByContractId(id);
-
-  const getClientName = () => {
+  function getClientName() {
     return client.name;
   }
-  const getClientEmail = () => {
-    return client.email;
+  function getClientAddress() {
+    return client.address;
   }
-  const getClientId = () => {
-    return client.clientID;
-  }
-  const getClientPhone = () => {
+  function getClientPhone() {
     return client.phone;
   }
-
-  const getConsAddress = () => {
-    return contract.consumptionAddress;
-  }
-  const getConsType = () => {
-    return contract.contractType;
-  }
-  const getMeters = () => { 
-    const meterNbr = contract.meter.length;
-    let meters;
-    switch (meterNbr) {
-      default:
-      case 1:
-        return contract.meter[0];
-      case 2:
-        return meters = {meter1: contract.meter[0], meter2: contract.meter[1]};
-    }
-  }
-  const getSubPrice = () => {
-    return contract.subPrice;
-  }
-  const getSupplier = () => {
-    return contract.supplier;
-  }
-  const getContractBeginDate = () => {
-    return contract.beginDate;
-  }
-  const getContractEndDate = () => {
-    return contract.endDate;
+  function getClientEmail() {
+    return client.email;
   }
 
-  const contractData = {
-    clientID: getClientId(),
-    clientName: getClientName(),
-    clientEmail: getClientEmail(),
-    clientPhone: getClientPhone(),
-    consumptionAddress: getConsAddress(),
-    contractType: getConsType(),
-    meter: getMeters(),
-    subPrice: getSubPrice(),
-    supplier: getSupplier(),
-    beginDate: getContractBeginDate(),
-    endDate: getContractEndDate(),
-  }
-  const [editMode, setEditMode] = React.useState(false);
-  const [editableData, setEditableData] = React.useState(contractData);
-
-  const handleEditClick = () => {
-    setEditMode(true);
-    setEditableData(contractData);
-  }
-
-  const handleEditableDataChange = (event) => {
-    const {name, value} = event.target;
-    setEditableData((prevData) => ({
-      ...prevData,
-      [name]: value,
-      }));
-  }
-
-  const handleSaveClick = () => {
-    setEditableData(editableData);
-    setEditMode(false);
-  }
-
-  const handleCancelContract = () => {
-    alert("Contract cancelled");
+  const handleRemoveClient = () => {
+    alert("Client removed");
   }
 
   return (
 
     <ThemeProvider theme={theme}>
-    <Card sx={{display: 'flex', height: 'auto'}}>
-      <Stack>
-      <Card sx={{display: 'flex', height: 'auto'}}>
-        
-        <Grid container
-        >
-          <Grid item container xs='auto' direction="row" alignItems="center" justifyContent="center" 
-          >
-            <Grid item xs='auto' >
-              <Typography variant="h6" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                Client id :
-              </Typography>
-            </Grid>
-            <Grid item xs='auto' >
-              <TextField
-              name="clientid"
-              label="Client id"
-              value={editableData.clientID}
-              size='small'
-              onChange={handleEditableDataChange}
-              disabled={!editMode}
-              />
-            </Grid>
+      <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
+        <SideMenu mainPage={'false'} />
+        <Stack sx={{display:'flex', width:"100%"}}>
+          <TopMenu pageAddress={pageAddress} pageName={pageName}/>
+          <Grid align='center'>
+            <Card sx={{width:'80%', m:2, height:'70%' }} >
+              <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+                <Link to={'/clients'} >
+                  <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
+                    Retour
+                  </Button>
+                </Link>
+                <Typography variant="h4" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                  Client's Details
+                </Typography>
+                <Grid container 
+                spacing={2}
+                columnSpacing={2}
+                alignItems="baseline"
+                justifyContent="center"
+                paddingLeft={4}
+                paddingBottom={2}
+                >
+                  
+                </Grid>
+              </Box>
+            </Card>
 
+            <Grid container
+            direction='row'
+            justifyContent='center'
+            alignItems='center'
+            >
+              <Grid item xs={6} >
+                <Link to={`/clients/${client.clientId}/link-meter`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>
+                  <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
+                    Link Meter
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item xs={6} >
+                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'60%', mb:5}}>
+                    View Linked Meters
+                </Button>             
+              </Grid>
+              <Grid item xs={12} >
+                  <Button  variant='outlined' color='error' onClick={handleRemoveClient} sx={{mt:2, width:'80%', mb:5}}>
+                    Remove Client
+                  </Button>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-
-      </Card>
-      <Card sx={{display: 'flex', height: '100vh'}}>
-
-      </Card>
-      <Card sx={{display: 'flex', height: 'auto'}}>
-
-      </Card>
+        </Stack>
       </Stack>
-    </Card>
     </ThemeProvider>
   );
 }
 
-export default ViewContract;
+export default ViewClient;

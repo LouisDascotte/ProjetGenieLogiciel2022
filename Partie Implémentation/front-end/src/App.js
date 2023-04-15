@@ -7,9 +7,7 @@ import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import Notifications from './pages/Notifications';
 import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
-import RegisterPage from "./pages/RegisterPage";
 import ResetPassword from './pages/ResetPassword';
-import RegistrationSuccess from './pages/RegistrationSuccess';
 //import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
@@ -24,7 +22,12 @@ import ViewClient from './pages/ViewClient';
 import AddClient from './pages/NewClient';
 import LinkMeter from './pages/LinkMeter';
 import ViewContract from './pages/ViewContract';
-import NewContract from './pages/StaffNewContract';
+import NewContract from './pages/NewContract';
+import ContractsRequests from "./pages/ContractsRequests";
+import ViewContractRequest from "./pages/ViewContractRequest";
+import ViewConsumption from "./pages/ViewConsumption";
+import ImportConsumption from "./pages/ImportConsumption";
+import ViewMeter from "./pages/ViewMeter";
 
 
 function App() {
@@ -36,10 +39,7 @@ function App() {
       <BrowserRouter history={null}>
               <Routes>   
                 <Route path="/login" exact element={<LoginPage/>}/>
-                <Route path="/register-account" exact element={<RegisterPage/>}/>
-                <Route path='/' element={<Navigate to="/login"/>}></Route>
-
-                <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
+                <Route path='/' element={<Navigate to="/login"/>}/>
                 <Route path='/create-pass' exact element={<PrivateRoute>
                     <CreateNewPassword/>
                 </PrivateRoute>}/>
@@ -59,16 +59,21 @@ function App() {
                   <Route path="*" element={<ErrorPage/>}/>
 
                   <Route path='/test' exact element={<Testing/>}/>
-                  <Route path='/staff' exact element={<MainPage/>}/>
-                  <Route path='/staff-contracts' exact element={<ManageContracts/>}/>
-                  <Route path='/staff-clients' exact element={<ManageClients/>}/>
-                  <Route path='/staff-cons' exact element={<ManageConsumption/>}/>
-                  <Route path='/meter/:id' element={<ManageConsumption/>}/>
-                  <Route path='/staff-clients/:id' element={<ViewClient/>}/>
-                  <Route path='/staff-clients/new' element={<AddClient/>}/>
-                  <Route path='/staff-clients/:id/link-meter' element={<LinkMeter/>}/>
-                  <Route path='/staff-contracts/:id' element={<ViewContract/>}/>
-                  <Route path='/staff-contracts/new' element={<NewContract/>}/>
+                  <Route path='/main-page' exact element={<MainPage/>}/>
+                  <Route path='/contracts' exact element={<ManageContracts/>}/>
+                  <Route path='/clients' exact element={<ManageClients/>}/>
+                  <Route path='/consumption' exact element={<ManageConsumption/>}/>
+                  <Route path='/meters/:id' element={<ManageConsumption/>}/>
+                  <Route path='/clients/:id' element={<ViewClient/>}/>
+                  <Route path='/clients/new' element={<AddClient/>}/>
+                  <Route path='/clients/:id/link-meter' element={<LinkMeter/>}/>
+                  <Route path='/contracts/:id' element={<ViewContract/>}/>
+                  <Route path='/contracts/new' element={<NewContract/>}/>
+                  <Route path='/contracts/requests' element={<ContractsRequests/>}/>
+                  <Route path='/contracts/requests/:id' element={<ViewContractRequest/>}/>
+                  <Route path='/consumption/meter/:id' element={<ViewMeter/>}/>
+                  <Route path='/consumption/meter/:meterId/:date' element={<ViewConsumption/>}/>
+                  <Route path='/consumption/meter/:meterId/import' element={<ImportConsumption/>}/>
               </Routes>
             
       </BrowserRouter>

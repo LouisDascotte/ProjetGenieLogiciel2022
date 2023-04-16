@@ -11,7 +11,7 @@ import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
 
 
-const LOGIN_URL = "http://localhost:8080/api/client/auth/login";
+const LOGIN_URL = "http://localhost:8080/api/auth/employee/login";
 
 const LoginPage = () => {
 
@@ -19,6 +19,7 @@ const LoginPage = () => {
   const [jwt, setJwt] = useLocalState("", "jwt"); 
   const [user, setUser] = useLocalState("", "user");
 
+  
   // Used for the redirection
   const navigate = useNavigate();
 

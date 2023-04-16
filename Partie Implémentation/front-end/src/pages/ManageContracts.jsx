@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu';
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -6,6 +6,9 @@ import {ArrowBack} from '@mui/icons-material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { ContractList } from '../resources/Lists';
+import { getContracts } from '../api/contractApi';
+import axios from 'axios';
+
 
 
 
@@ -25,6 +28,19 @@ const ManageContracts = () => {
 
   const pageAddress = "/contracts";
   const pageName = "Manage contracts";
+
+  const [contracts, setContracts] = React.useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/contract/all")
+      .then((response) => {
+        setContracts(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const [selectedContract, setSelectedContract] = React.useState(null);
 

@@ -15,17 +15,10 @@ import axios from "../api/axios";
 import SideMenu from '../components/SideMenu';
 
 
-const API_URL = "/api/client/all";
 
 
 const MainPage = () => {
     const [page, setPage] = useState("");
-
-    const fetchData = axios.get(API_URL).then(function(response) {
-        console.log(response);
-    });
-
-    console.log(fetchData);
 
     const pageAddress = "/main-page";
     const pageName = "General overview";

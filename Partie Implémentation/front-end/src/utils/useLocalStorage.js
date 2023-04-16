@@ -5,7 +5,7 @@ function useLocalState(defaultValue, key) {
     const localStorageValue = localStorage.getItem(key);
 
     return localStorageValue !== null
-      ? JSON.parse(localStorageValue)
+      ? localStorageValue
       : defaultValue;
   });
 
@@ -18,4 +18,3 @@ function useLocalState(defaultValue, key) {
 }
 
 export { useLocalState };
-

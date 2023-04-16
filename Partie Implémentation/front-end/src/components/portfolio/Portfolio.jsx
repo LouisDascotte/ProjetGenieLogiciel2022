@@ -103,10 +103,10 @@ const Portfolio = ({data}) => {
 
   return (
     <Card sx={{m:5}}>
-      <Stack sx={{display:'flex', width:"100%"}} alignement='center'>
-        <Box sx={{m:1, width:'100%'}}>
+      <Stack sx={{display:'flex', width:"100%"}}>
+        <Typography variant="h5" sx={{m:1, width:'100%'}}>
           {data.childPortfolio.name}
-        </Box>
+        </Typography>
         <Card sx={{m:1}}>
           <Grid container spacing={12} direction="row">
             <Grid item xs={6}>

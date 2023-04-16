@@ -5,35 +5,28 @@ import{Card, Stack} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 
-const URL = "http://localhost:8080/api/meter/allocations";
-const jwt = localStorage.getItem("jwt");
 
+const ConsumptionHistoryPage = (ean) => {
 
-const AssignmentHistoryPage = () => {
+  const URL = `http://localhost:8080/api/meter/${ean}/reading`;
 
-  const meters_allocs = [
+  const readings = [
     {
     ean : "EAN1234",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123134598653",
-    supplier : "Belfius",
+    date : "12/04/23",
+    value: "123",
     status :"active"
     },
     {
-    ean : "EAN1334",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123138598653",
-    supplier : "Belfius",
-    status :"active"
+      ean : "EAN1234",
+      date : "12/05/23",
+      value: "563",
+      status :"active"
   },
   {
-    ean : "EAN1834",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123134598623",
-    supplier : "Belfius",
+    ean : "EAN1234",
+    date : "12/06/23",
+    value: "125",
     status :"active"
   }
 ]
@@ -106,4 +99,4 @@ const AssignmentHistoryPage = () => {
   )
 }
 
-export default AssignmentHistoryPage
+export default ConsumptionHistoryPage

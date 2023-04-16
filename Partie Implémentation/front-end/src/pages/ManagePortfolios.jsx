@@ -12,6 +12,7 @@ import axios from "../api/axios";
 import Portfolio from '../components/portfolio/Portfolio';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PortfoliosList2 from '../components/portfolio/PortfoliosList2';
 
 const theme = createTheme({
   palette: {
@@ -72,28 +73,10 @@ const ManagePortfolios = () => {
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
-        <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        
-          {selectedId === "" ? 
+        <TopMenu pageAddress={pageAddress} pageName={pageName}/>   
           <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-          <Box sx={{height:'100%', width:'100%'}} alignment='center'>
-            
-            <List style={{maxHeight: '100%', overflow: 'auto'}}>
-              {portfolios.map(portfolio =>  
-                <ListItem>
-                  <ListItemButton onClick={()=>handleClick(portfolio.id)}>
-                    <ListItemText>
-                      {portfolio.name}
-                    </ListItemText>
-                  </ListItemButton>
-                  <IconButton>
-                    <DeleteIcon/>
-                  </IconButton>
-                </ListItem>
-              )}
-            </List> 
-          </Box>
+          <PortfoliosList2/>
         </Card>
         <ThemeProvider theme={theme}>
           <Link to='/create-portfolio' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
@@ -101,12 +84,7 @@ const ManagePortfolios = () => {
               Create portfolio
             </Button>
           </Link>
-        </ThemeProvider> </Grid>: 
-        <Grid>
-          <IconButton onClick={handleArrowButton}><ArrowBackIcon/></IconButton>
-          <Portfolio data={{childPortfolio}} key={childPortfolio.id}/>
-        </Grid>
-         }
+        </ThemeProvider> </Grid>
       </Stack>
       
     </Stack>

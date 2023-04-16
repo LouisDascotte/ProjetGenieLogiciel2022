@@ -26,6 +26,7 @@ import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
 import CreatePortfolio from './pages/CreatePortfolio';
 import MeterConsumption from './pages/MeterConsumption';
+import AssignmentHistoryPage from './pages/AssignmentHistoryPage';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -75,6 +76,9 @@ function App() {
                 <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
                 <Route path="/enter-consumption" exact element={<PrivateRoute>
                   <MeterConsumption/>
+                </PrivateRoute>}/>
+                <Route path="/assignment-history" exact element={<PrivateRoute>
+                  <AssignmentHistoryPage/>
                 </PrivateRoute>}/>
               </Routes>
             

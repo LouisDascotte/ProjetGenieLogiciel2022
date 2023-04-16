@@ -1,8 +1,6 @@
 package com.pgl.energenius.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +22,8 @@ public class JwtUtil implements Serializable {
     @Serial
     private static final long serialVersionUID = -2428942894298L;
 
-    public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // Ex: On reste connecté pendant 24h.
+    private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24h
+    private static final long PASSWORD_RESET_TOKEN_VALIDITY = 60 * 60 * 1000; // 1h
 
     @Value("${jwt.secret}")
     private String secret;
@@ -117,7 +116,7 @@ public class JwtUtil implements Serializable {
      */
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS512).compact();
     }
 
@@ -131,5 +130,28 @@ public class JwtUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final  String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String generatePasswordResetToken(String email) {
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + PASSWORD_RESET_TOKEN_VALIDITY))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public Boolean validatePasswordResetToken(String token) {
+
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .build().parseClaimsJws(token);
+
+            return true;
+
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }

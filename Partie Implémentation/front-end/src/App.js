@@ -55,7 +55,6 @@ function App() {
                 <Route path="/notifications" exact element={<PrivateRoute>
                   <Notifications/>
                   </PrivateRoute>}/>
-                <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
                   <Route path="*" element={<ErrorPage/>}/>
 
                   <Route path='/test' exact element={<Testing/>}/>

@@ -52,14 +52,14 @@ const LoginPage = () => {
     try{
       const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
+      //"Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response => {
         console.log("auth: " + response.headers["authorization"]);
         //setJwt(response.headers["authorization"], "jwt");
-        localStorage.setItem("jwt", JSON.stringify(response.headers["authorization"]));
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setAuthToken(JSON.stringify(response.headers["authorization"]));
+        localStorage.setItem("jwt", response.headers["authorization"]);
+        localStorage.setItem("user", response.data);
+        setAuthToken(response.headers["authorization"]);
       });
       
       navigate("/main-page");

@@ -179,26 +179,13 @@ const LoginPage = () => {
             </form>
             <Link 
               className='link-2' 
-              to='/reset-passwd'>
+              to='/reset-passwd'
+              >
               <Typography 
                 variant="h7" >
                 Forgot your password ? Click here to reset.
               </Typography>
             </Link>
-            <ThemeProvider 
-              theme={theme}>
-              <Link 
-                to='/register-account' 
-                className='link-3' 
-                style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
-                <Button  
-                  variant='outlined' 
-                  color='secondary' 
-                  sx={{mt:2, width:'100%', mb:5}}>
-                  Register New Account
-                </Button>
-              </Link>
-            </ThemeProvider>
           </Stack>
         </Card>
       </Grid>

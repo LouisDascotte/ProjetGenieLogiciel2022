@@ -136,12 +136,6 @@ const AccountMenu = () => {
           Notifications
         </MenuItem></Link>
         <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
         <Link to="/preferences" className='link'><MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />

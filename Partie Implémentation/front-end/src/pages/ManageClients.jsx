@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {ArrowBack} from '@mui/icons-material'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
@@ -7,9 +7,8 @@ import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { ClientList as Clients } from '../resources/Lists';
 
-
-
 const ManageClients = () => {
+
   const theme = createTheme({
     palette: {
       primary: {
@@ -30,6 +29,7 @@ const ManageClients = () => {
     console.log(clientID);
   };
 
+  const [clients, setClients] = React.useState([]);
 
   return (
 
@@ -58,11 +58,14 @@ const ManageClients = () => {
                 </List>
               </Box>
             </Card>
-              <Link to='/clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
-                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                  Add New Client
-                </Button>
-              </Link>
+            <Link to='/clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
+              <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
+                Add New Client
+              </Button>
+            </Link>
+            <Button  >
+              Create Client
+            </Button>
           </Grid>
         </Stack>
       </Stack>

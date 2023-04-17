@@ -19,20 +19,17 @@ import {createBrowserHistory} from "history";
 import axios from "../api/axios";
 
 
-const API_URL = "/api/client/all";
+const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
+
 
 
 const MainPage = () => {
     // hardcoded const in order to test the "create portfolio message"
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
     const [page, setPage] = useState("");
+    const [portfolios, setPortfolios] = useState([]);
 
-    /*const fetchData = axios.get(API_URL).then(function(response) {
-        console.log(response);
-    });
-
-    console.log(fetchData);*/
-
+    
     const pageAddress = "/main-page";
     const pageName = "General overview";
 
@@ -45,6 +42,17 @@ const MainPage = () => {
     }
 
     useEffect(()=> {
+        const jwt = localStorage.getItem("jwt");
+        const response = axios.get(PORTFOLIO_URL, {
+            headers : {"Content-Type":"application/json",
+            "Authorization" : `Bearer ${jwt}`,
+            "Access-Control-Allow-Origin":true}
+            }).then(response => {
+                setPortfolios(response.data);
+            })
+
+
+
         if (page !== ""){
             setHasSelectedPortfolio(true);
         }
@@ -77,8 +85,10 @@ const MainPage = () => {
                                     label="Portfolio :"
                                     onChange={handleChange}
                                     >
-                                    <MenuItem value={"data1"}>Portfolio 1</MenuItem>
-                                    <MenuItem value={"data2"}>Portfolio 2</MenuItem>                    
+                                        {portfolios.map(portfolio => 
+                                             <MenuItem value={portfolio.id}>{portfolio.name}</MenuItem>
+                                        )}
+                                                    
                                     </Select>
                                 </FormControl>   
                                 </Box>

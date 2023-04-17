@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect , useState} from 'react';
+import {useParams} from 'react-router-dom';
 import axios from "../api/axios";
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import{Card, Stack} from "@mui/material";
@@ -6,9 +7,14 @@ import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 
 
-const ConsumptionHistoryPage = (ean) => {
+const ConsumptionHistoryPage = () => {
+  
+  const {id} = useParams();
 
-  const URL = `http://localhost:8080/api/meter/${ean}/reading`;
+  const jwt = localStorage.getItem("jwt");
+
+
+  const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
 
   const readings = [
     {
@@ -36,12 +42,13 @@ const ConsumptionHistoryPage = (ean) => {
   
   
   useEffect(()=>{
-    const response = axios.get(URL, {
+    const response = axios.get(URL2, {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
         data = response.data;
+        console.log(data);
       })
   })
 

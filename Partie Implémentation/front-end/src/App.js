@@ -27,6 +27,7 @@ import {setAuthToken} from "./utils/setAuthToken";
 import CreatePortfolio from './pages/CreatePortfolio';
 import MeterConsumption from './pages/MeterConsumption';
 import AssignmentHistoryPage from './pages/AssignmentHistoryPage';
+import ConsumptionHistoryPage from './pages/ConsumptionHistoryPage';
 import { Portfolio2 } from './components/portfolio/Portfolio2';
 
 function App() {
@@ -83,7 +84,10 @@ function App() {
                 </PrivateRoute>}/>
                 <Route path="/portfolio/:id" exact element={<PrivateRoute>
                   <Portfolio2/>
-                  </PrivateRoute>}/>
+                </PrivateRoute>}/>
+                <Route path="/consumption/:id" exact element={<PrivateRoute>
+                  <ConsumptionHistoryPage/>
+                </PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

@@ -193,9 +193,15 @@ const CreatePortfolio = () => {
   const onSubmitForm = async e => {
     e.preventDefault();
     console.log(data);
+    const body =  {
+      name : data.name,
+      supply_point : data.supply_point,
+      supplier : data.supplier,
+      address : data.address.street + " " + data.address.houseNo + " " +data.address.box + " " +data.address.postalCode + " " +data.address.city + " " +data.address.region + " " +data.address.country,
+    }
     const jwt = localStorage.getItem("jwt");
     try {
-      const response = axios.post(URL, JSON.stringify(data), {
+      const response = axios.post(URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}

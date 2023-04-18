@@ -28,6 +28,7 @@ const ManageCons = () => {
   });
   const pageAddress = "/consumption";
   const pageName = "Manage consumption";
+  
   return (
     <ThemeProvider theme={theme}>
       <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>

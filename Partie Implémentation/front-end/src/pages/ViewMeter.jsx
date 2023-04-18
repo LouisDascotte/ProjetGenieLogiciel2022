@@ -9,7 +9,7 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 
 
 const ViewMeter = () => {
-  const id = useParams().id;
+  const id = useParams().meterId;
 
   const theme = createTheme({
     palette: {

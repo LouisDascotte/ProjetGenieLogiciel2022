@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 
 function ViewContract() {
-  const id = useParams().id;
+  const id = useParams().contractId;
 
   const theme = createTheme({
     palette: {

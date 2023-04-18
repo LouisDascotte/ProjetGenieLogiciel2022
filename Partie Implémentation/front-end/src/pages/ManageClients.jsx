@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { ClientList as Clients } from '../resources/Lists';
+import axios from '../api/axios';
 
 const ManageClients = () => {
 
@@ -22,14 +23,34 @@ const ManageClients = () => {
     }
   });
 
-  const pageAddress = "/clients";
+  const API_URL = "http://localhost:8080/api/client";
+  const jwt = localStorage.getItem("jwt");
+
+  const pageAddress = "/client";
   const pageName = "Manage clients";
+
+  const [clients, setClients] = React.useState([]);
+
+  useEffect(() => {
+    const getClients = async () => {
+      const response = await axios.get(API_URL+"/me", {
+        headers : {"Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true}
+        }).then(response => {
+          const clientsFromServer = response.data;
+          setClients(clientsFromServer);
+        });
+    }
+    getClients();
+  }, []);
+
 
   const handleClientClick = (clientID) => {
     console.log(clientID);
   };
 
-  const [clients, setClients] = React.useState([]);
+  
 
   return (
 
@@ -63,9 +84,6 @@ const ManageClients = () => {
                 Add New Client
               </Button>
             </Link>
-            <Button  >
-              Create Client
-            </Button>
           </Grid>
         </Stack>
       </Stack>

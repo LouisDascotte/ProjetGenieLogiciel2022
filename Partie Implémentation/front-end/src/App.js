@@ -1,13 +1,10 @@
 import { Stack } from "@mui/material";
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import CreateNewPassword from './pages/CreateNewPassword';
 import LoginPage from './pages/LoginPage';
-import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import Notifications from './pages/Notifications';
 import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
-import ResetPassword from './pages/ResetPassword';
 //import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
@@ -40,12 +37,6 @@ function App() {
               <Routes>   
                 <Route path="/login" exact element={<LoginPage/>}/>
                 <Route path='/' element={<Navigate to="/login"/>}/>
-                <Route path='/create-pass' exact element={<PrivateRoute>
-                    <CreateNewPassword/>
-                </PrivateRoute>}/>
-                <Route path='/create-pass-success' exact element={<PrivateRoute>
-                  <NewPasswordSuccess/>
-                  </PrivateRoute>}/>
                 <Route path="/preferences" exact element={<PrivateRoute>
                   <Preferences/>
                   </PrivateRoute>}/>
@@ -62,15 +53,14 @@ function App() {
                   <Route path='/contracts' exact element={<ManageContracts/>}/>
                   <Route path='/clients' exact element={<ManageClients/>}/>
                   <Route path='/consumption' exact element={<ManageConsumption/>}/>
-                  <Route path='/meters/:id' element={<ManageConsumption/>}/>
-                  <Route path='/clients/:id' element={<ViewClient/>}/>
+                  <Route path='/clients/:clientId' element={<ViewClient/>}/>
                   <Route path='/clients/new' element={<AddClient/>}/>
-                  <Route path='/clients/:id/link-meter' element={<LinkMeter/>}/>
-                  <Route path='/contracts/:id' element={<ViewContract/>}/>
+                  <Route path='/clients/:clientId/link-meter' element={<LinkMeter/>}/>
+                  <Route path='/contracts/:contractId' element={<ViewContract/>}/>
                   <Route path='/contracts/new' element={<NewContract/>}/>
                   <Route path='/contracts/requests' element={<ContractsRequests/>}/>
-                  <Route path='/contracts/requests/:id' element={<ViewContractRequest/>}/>
-                  <Route path='/consumption/meter/:id' element={<ViewMeter/>}/>
+                  <Route path='/contracts/requests/:requestId' element={<ViewContractRequest/>}/>
+                  <Route path='/consumption/meter/:meterId' element={<ViewMeter/>}/>
                   <Route path='/consumption/meter/:meterId/:date' element={<ViewConsumption/>}/>
                   <Route path='/consumption/meter/:meterId/import' element={<ImportConsumption/>}/>
               </Routes>

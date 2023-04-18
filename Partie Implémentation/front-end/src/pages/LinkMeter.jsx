@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import { useEffect } from 'react';
 
 function LinkMeter() {
-  const id = useParams().id;
+  const id = useParams().clientId;
   const [newMeterID, setNewMeterID] = React.useState(null);
   const [beginDate, setBeginDate] = React.useState(null);
   const [endDate, setEndDate] = React.useState(null);

@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 
 function ViewClient() {
-  const id = useParams().id;
+  const id = useParams().clientId;
 
   const theme = createTheme({
     palette: {

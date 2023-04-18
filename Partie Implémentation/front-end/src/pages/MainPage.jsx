@@ -38,7 +38,7 @@ const MainPage = () => {
       <Stack sx={{display:'flex', width:"100%"}}>  
         <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
         <Stack sx={{height:"80%", justifyContent:'center', alignItems:'center'}} >
-          <DateAndTime locale={'en-US'} />
+          <DateAndTime locale={'fr-FR'} />
         </Stack>
       </Stack>
     </Stack>

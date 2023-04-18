@@ -14,7 +14,7 @@ function LinkMeter() {
   const date = useParams().date;
   const meterId = useParams().meterId;
 
-  const pageAddress = "/consumption/meter/:meterId/:readindId";
+  const pageAddress = "/consumption/meter/:meterId/:date";
   const pageName = "View consumption";
 
   const handleEditClick = () => {

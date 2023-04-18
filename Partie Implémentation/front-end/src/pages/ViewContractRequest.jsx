@@ -9,7 +9,7 @@ import TopMenu from '../components/TopMenu';
 import TextField from '@mui/material/TextField';
 
 function ContractRequest() {
-  const id = useParams().id;
+  const id = useParams().requestId;
 
   const theme = createTheme({
     palette: {

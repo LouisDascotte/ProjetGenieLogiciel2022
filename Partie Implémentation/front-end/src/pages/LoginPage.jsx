@@ -11,7 +11,7 @@ import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
 
 
-const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
+const LOGIN_URL = "http://localhost:8080/api/auth/employee/login";
 
 const LoginPage = () => {
 
@@ -25,7 +25,7 @@ const LoginPage = () => {
 
   // Used to set the credentials
   const [form, setForm] = useState({
-    email:"",
+    loginId:"",
     password:"",
     
   });
@@ -44,7 +44,7 @@ const LoginPage = () => {
 
     
     const body = {
-      email : form.email,
+      loginId : form.loginId,
       password: form.password
     }
 
@@ -133,21 +133,21 @@ const LoginPage = () => {
                 className='login-textfield'
                 size='small' 
                 variant='outlined' 
-                label='id/email' 
+                label='id' 
                 margin='normal' 
                 sx={{width:'80%'}} 
-                name='email' 
-                value={form.email} 
+                name='loginId' 
+                value={form.loginId} 
                 onChange={onUpdateField}
                 onBlur={onBlurField}/>
-                {errors.email.dirty && errors.email.error ? (
+                {errors.loginId.dirty && errors.loginId.error ? (
                     <Alert 
                     severity='error' 
                     margin='normal' 
                     textAlign='center'
                     sx={{width:"75%", textAlign:"center"}} 
                     align="center">
-                      {errors.email.message}
+                      {errors.loginId.message}
                       </Alert>
                       ) : null}
               <CssTextField 

@@ -47,8 +47,8 @@ const ResetPassword = () => {
           <Stack alignItems='center'>
             <img className='login-logo' src={logo} alt='logo' width={70} height={70}/>
             <Typography className='typo' variant="h4">Reset your password</Typography>
-            <Typography variant="h7" sx={{mt:1, color:'#262626'}}>Enter the email you registered with.</Typography>
-            <CssTextField className='login-textfield'size='small' variant='outlined' label='email' margin='normal' sx={{width:'80%'}}/>
+            <Typography variant="h7" sx={{mt:1, color:'#262626'}}>Enter the id that was given to you.</Typography>
+            <CssTextField className='login-textfield'size='small' variant='outlined' label='id' margin='normal' sx={{width:'80%'}}/>
             <ThemeProvider theme={theme}>
               <Link to='/main-page' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
                 <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>Reset</Button>

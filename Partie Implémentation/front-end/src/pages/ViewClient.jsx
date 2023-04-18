@@ -1,12 +1,13 @@
 import React from 'react'
 import SideMenu from '../components/SideMenu'
-import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
+import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ClientList as Clients} from '../resources/Lists';
+import { ClientList as Clients, MeterList as Meters} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+
 
 function ViewClient() {
   const id = useParams().clientId;
@@ -31,6 +32,9 @@ function ViewClient() {
   const pageAddress = "/client/:id";
   const pageName = "View Client";
 
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+
   const getClientById = (id) => {
     const idInt = parseInt(id,10);
     return Clients.find((client) => client.clientId === idInt);
@@ -53,6 +57,29 @@ function ViewClient() {
   const handleRemoveClient = () => {
     alert("DELETE request sent to server ");
   }
+  
+  const handleClickOpen = () => {
+    console.log("open dialog");
+    setOpenDialog(true);
+  };
+  const handleClose = () => {
+    console.log("close dialog");
+    setOpenDialog(false);
+  };
+
+  const getMetersByClientId = (id) => {
+    const idInt = parseInt(id,10);
+    return Meters.filter((meter) => meter.clientId === idInt);
+  };
+
+  const title = "Linked Meters of Client n°"+id+" :";
+  const description = getMetersByClientId(id).map((meter) => (
+    <List>
+      <ListItem>
+        <ListItemText primary={`meter n°${meter.meterId}`} />
+      </ListItem>
+    </List>
+  ));
 
   return (
 
@@ -128,9 +155,34 @@ function ViewClient() {
                 </Link>
               </Grid>
               <Grid item xs={6} >
-                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'60%', mb:5}}>
+                <Button  variant='outlined' color='secondary' onClick={handleClickOpen} sx={{mt:2, width:'60%', mb:5}}>
                     View Linked Meters
-                </Button>             
+                </Button>
+                {
+                  openDialog ?
+                  <Dialog open={openDialog} onClose={handleClose}>
+                    <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                      {title}
+                    </DialogTitle>
+                    <DialogContent dividers>
+                      {getMetersByClientId(id).map((meter) => (
+                        <List>
+                          <ListItem>
+                            <Link to={`/consumption/meter/${meter.meterId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>
+                              <ListItemText primary={`meter n°${meter.meterId}`} />
+                            </Link>
+                          </ListItem>
+                        </List>
+                      ))}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button autoFocus onClick={handleClose} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  : null
+                }         
               </Grid>
               <Grid item xs={12} >
                   <Button  variant='outlined' color='error' onClick={handleRemoveClient} sx={{mt:2, width:'80%', mb:5}}>

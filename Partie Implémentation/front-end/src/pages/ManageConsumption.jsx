@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu';
-import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden, List, ListItem,ListItemText} from '@mui/material';
+import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden, List, ListItem,ListItemText, Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { MeterList as Meters} from '../resources/Lists';
+import axios from 'axios';
 
 const handleMeterClick = (meterID) => {
   console.log(meterID);
@@ -28,6 +29,31 @@ const ManageCons = () => {
   });
   const pageAddress = "/consumption";
   const pageName = "Manage consumption";
+
+  const API_URL = "http://localhost:8080/api/meter/";
+
+  const [meters, setMeters] = React.useState([]);
+
+  useEffect(() => {
+    async function getMeters() {
+      try {        
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: { 
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get(API_URL+"all", config);
+        console.log(response.data);
+        setMeters(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMeters();
+  }, []);
   
   return (
     <ThemeProvider theme={theme}>
@@ -47,6 +73,19 @@ const ManageCons = () => {
                     </Link>
                   </ListItem>
                 ))}
+              </List>
+            </Card>
+            <Card sx={{width:'40%', m:2, height:'60%'}}>
+              <List style={{maxHeight: '100%', overflow: 'auto'}} >
+                <Typography variant="h4" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                  Linked Meters
+                </Typography>
+                <Typography variant="h6" component="h4" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                  {meters[0]?.meterId}
+                </Typography>
+                <Typography variant="h6" component="h4" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                  {meters[1]?.meterId}
+                </Typography>
               </List>
             </Card>
             

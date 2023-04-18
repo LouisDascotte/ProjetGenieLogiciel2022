@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
+import ResetPassword from "./pages/ResetPassword";
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
 import MainPage from './pages/MainPage';
@@ -47,6 +48,7 @@ function App() {
                   <Notifications/>
                   </PrivateRoute>}/>
                   <Route path="*" element={<ErrorPage/>}/>
+                  <Route path="/reset-passwd" element={<ResetPassword/>}/>
 
                   <Route path='/test' exact element={<Testing/>}/>
                   <Route path='/main-page' exact element={<MainPage/>}/>

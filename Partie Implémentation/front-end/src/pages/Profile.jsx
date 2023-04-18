@@ -6,7 +6,7 @@ import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
 import axios from '../api/axios';
 
-const URL = "http://localhost:8080/api/client/"
+const URL = "http://localhost:8080/api/supplier/"
 
 
 const Profile = () => {
@@ -17,11 +17,8 @@ const Profile = () => {
   const jwt = localStorage.getItem("jwt");
 
   const [infos, setInfos] = useState({
-    last_name : "", 
-    first_name : "", 
-    phone_number : "", 
-    email : "", 
-    address : ""
+    supplierName: "",
+    operatingArea: ""
   });
 
 
@@ -32,10 +29,8 @@ const Profile = () => {
   }).then(response=>{
     console.log(response.data);
     console.log(response.data.firstName);
-    infos.last_name = response.data.lastName; 
-    infos.first_name = response.data.firstName;
-    infos.phone_number = response.data.phoneNo; 
-    infos.email = response.data.email;
+    infos.supplierName = response.data.lastName;
+    infos.operatingArea = response.data.operatingArea;
   })
 
 
@@ -50,11 +45,11 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  First Name
+                  Supplier Name
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='first name'sx={{mr:4}}/>
+                <TextField label='Supplier Name'sx={{mr:4}}/>
               </Grid>
             </Grid>
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>

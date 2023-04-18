@@ -24,7 +24,6 @@ const ManageClients = () => {
   });
 
   const API_URL = "http://localhost:8080/api/client";
-  const jwt = localStorage.getItem("jwt");
 
   const pageAddress = "/client";
   const pageName = "Manage clients";
@@ -32,15 +31,22 @@ const ManageClients = () => {
   const [clients, setClients] = React.useState([]);
 
   useEffect(() => {
-    const getClients = async () => {
-      const response = await axios.get(API_URL+"/me", {
-        headers : {"Content-Type":"application/json",
-        "Authorization" : `Bearer ${jwt}`,
-        "Access-Control-Allow-Origin":true}
-        }).then(response => {
-          const clientsFromServer = response.data;
-          setClients(clientsFromServer);
-        });
+    async function getClients() {
+      try {        
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: { Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get(API_URL, config);
+        console.log("Hello");
+        console.log(response.data);
+        setClients(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
     getClients();
   }, []);
@@ -66,17 +72,17 @@ const ManageClients = () => {
                   Client List
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {Clients.map((client) => (
-                    <ListItem key={client.clientId}>
-                      <ListItemText primary={`${client.name}`} />
-                      <Link to={`/clients/${client.clientId}`}>
-                        <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
-                          See Details
-                        </Button>
-                      </Link>
-                    </ListItem>
-                  ))}
-                </List>
+              {Clients.map((client) => (
+                <ListItem key={client.clientId}>
+                  <ListItemText primary={`${client.name}`} />
+                  <Link to={`/clients/${client.clientId}`}>
+                    <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
+                      See Details
+                    </Button>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
               </Box>
             </Card>
             <Link to='/clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>

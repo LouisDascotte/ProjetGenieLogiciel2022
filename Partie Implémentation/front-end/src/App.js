@@ -29,6 +29,7 @@ import MeterConsumption from './pages/MeterConsumption';
 import AssignmentHistoryPage from './pages/AssignmentHistoryPage';
 import ConsumptionHistoryPage from './pages/ConsumptionHistoryPage';
 import { Portfolio2 } from './components/portfolio/Portfolio2';
+import ContractRequest from './pages/ContractRequest';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -88,6 +89,9 @@ function App() {
                 <Route path="/consumption/:id" exact element={<PrivateRoute>
                   <ConsumptionHistoryPage/>
                 </PrivateRoute>}/>
+                <Route path="/contract-request" exact element={<PrivateRoute>
+                  <ContractRequest/>
+                  </PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

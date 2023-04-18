@@ -165,7 +165,7 @@ export const Portfolio2 = () => {
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
-      <Stack sx={{display:'flex', width:"100%"}}>
+      <Stack sx={{display:'flex', width:"100%"}} alignItems={"center"}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/> 
         <Stack alignItems='center' justifyContent={"center"}>
           <IconButton>
@@ -251,8 +251,8 @@ export const Portfolio2 = () => {
             </Dialog>
           </Card>
         </Stack>
-        <Button onClick={update}>
-          Update
+        <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
+          Apply changes
         </Button>
       </Stack>
     </Stack>

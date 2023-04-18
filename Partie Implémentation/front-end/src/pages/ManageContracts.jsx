@@ -36,7 +36,7 @@ const ManageContracts = () => {
             <ContractsList/>
           </Card>
           <ThemeProvider theme={theme}>
-            <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+            <Link to='/contract-request' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                 New contract request
               </Button>

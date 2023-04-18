@@ -140,12 +140,8 @@ const RegisterPage = () => {
     if (!isValid){
       return;
     }
-    alert(JSON.stringify(form, null, 2));
-
-    
 
     // inspired by Dave Gray 
-    //const jwt = localStorage.getItem("jwt");
     try{
       const body = {
         firstName : form.firstName, 
@@ -154,23 +150,16 @@ const RegisterPage = () => {
         phoneNumber : form.phoneNumber,
         language : form.language, 
         password : form.password, 
-        address : {
-          city : form.address.city,
-          street : form.address.street, 
-          houseNo : form.address.houseNo, 
-          box : form.address.box, 
-          postalCode : form.address.postalCode, 
-          country : form.address.country    
-        }
+        address : form.address.street + " " + form.address.houseNo + " " +form.address.box +" " + form.address.postalCode +" " + form.address.city +" " + form.address.country,
       };
-      console.log(body);
+      
       const response = await axios.post(REGISTER_URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
         //"Authorization" : `Bearer ${jwt}`,
         "Access-Control-Allow-Origin":true},
         //withCredentials: true
       }); 
-      console.log(JSON.stringify(response));
+      
       navigate("/registration-success"); 
       // TODO : Clean input fields 
     } catch (err) {
@@ -359,96 +348,6 @@ const RegisterPage = () => {
                     <Alert severity='error' sx={{width:"75%"}}>{errors.address.message}</Alert>
                   ) : null*/}
                 </Grid>
-                {/*<Grid 
-                item xs={6} 
-                align='center'>
-                  <CssTextField 
-                  sx={{width:"90%"}} 
-                  size='small' 
-                  variant='outlined' 
-                  label='city' 
-                  margin='normal' 
-                  name='city' 
-                  value={form.city} 
-                  onChange={onUpdateField}
-                  onBlur={onBlurField}/>
-                  {errors.city.dirty && errors.city.error ? (
-                    <Alert severity='error' sx={{width:"75%"}}>{errors.city.message}</Alert>
-                      ) : null}
-                </Grid> 
-              </Grid>
-            </Box>
-            <Box 
-            width='100%'>
-              <Grid 
-              container 
-              spacing={0} 
-              direction='row' 
-              justifyContent='space-evenly' 
-              xs={12}>
-                <Grid 
-                container 
-                spacing={0} 
-                direction='row' 
-                justifyContent='space-around' 
-                item 
-                xs={6} 
-                align='center'>
-                  <Grid 
-                  item 
-                  xs={5} 
-                  align='center'>
-                    <CssTextField 
-                    sx={{width:"95%"}} 
-                    size='small' 
-                    variant='outlined' 
-                    label='country' 
-                    margin='normal' 
-                    name='country' 
-                    value={form.country} 
-                    onChange={onUpdateField}
-                    onBlur={onBlurField}/>
-                    {errors.country.dirty && errors.country.error ? (
-                    <Alert severity='error' sx={{width:"75%"}}>{errors.country.message}</Alert>
-                      ) : null}
-                  </Grid>
-                  <Grid 
-                  item 
-                  xs={5} 
-                  align='center'>
-                    <CssTextField 
-                    sx={{width:"95%"}}  
-                    size='small' 
-                    variant='outlined' 
-                    label='postal code' 
-                    margin='normal' 
-                    name='postalCode' 
-                    value={form.postalCode} 
-                    onChange={onUpdateField}
-                    onBlur={onBlurField}/>
-                    {errors.postalCode.dirty && errors.postalCode.error ? (
-                    <Alert severity='error' sx={{width:"75%"}}>{errors.postalCode.message}</Alert>
-                      ) : null}
-                  </Grid>
-                    </Grid>
-                <Grid 
-                item 
-                xs={6} 
-                align='center'>
-                  <CssTextField 
-                  sx={{width:"90%"}} 
-                  size='small' 
-                  variant='outlined' 
-                  label='language' 
-                  margin='normal' 
-                  name="language"
-                  value={form.language}
-                  onChange={onUpdateField}
-                  onBlur={onBlurField}/>
-                  {errors.language.dirty && errors.language.error ? (
-                    <Alert severity='error' sx={{width:"75%"}}>{errors.language.message}</Alert>
-                      ) : null}
-                </Grid> */}
               </Grid>
             </Box>
             <Box 

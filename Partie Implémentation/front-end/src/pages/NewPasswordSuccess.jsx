@@ -7,22 +7,24 @@ import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
 import { Link, NavLink } from "react-router-dom";
 import TopMenu from '../components/TopMenu';
 
-const NewPasswordSuccess = () => {
-  // Styling part
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#9bcc6c",
-        contrastText: '#fff'
-      }, 
-      secondary: {
-        main: "#000",
-        contrastText: '#000000'
-      }
+ // Styling part
+
+ const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#9bcc6c",
+      contrastText: '#fff'
+    }, 
+    secondary: {
+      main: "#000",
+      contrastText: '#000000'
     }
-  });
+  }
+});
 
+
+const NewPasswordSuccess = () => {
 
   // code part
   return (

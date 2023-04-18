@@ -130,11 +130,11 @@ const CreateNewPassword = () => {
                 onBlur={onBlurField}
                 sx={{width:'80%'}}/>
 
-              {errors.password.dirty && errors.password.error ? (
+              {/*errors.password.dirty && errors.password.error ? (
                         <p className='regex-validator'>
                           {errors.password.message}
                         </p>
-                      ) : null}
+              ) : null*/}
 
               <CssTextField 
                 type='password' 
@@ -149,11 +149,11 @@ const CreateNewPassword = () => {
                 onBlur={onBlurField}
                 sx={{width:'80%'}}/>
 
-              {errors.confirmPassword.dirty && errors.confirmPassword.error ? (
+              {/*errors.confirmPassword.dirty && errors.confirmPassword.error ? (
                         <p className="regex-validator">
                           {errors.confirmPassword.message}
                         </p>
-                      ) : null}
+              ) : null*/}
 
               <ThemeProvider theme={theme}>
                   <Button 

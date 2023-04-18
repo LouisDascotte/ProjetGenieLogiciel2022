@@ -14,7 +14,7 @@ const ConsumptionHistoryPage = () => {
   const jwt = localStorage.getItem("jwt");
 
 
-  const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
+  const URL2 = `http://localhost:8080/api/portfoliof/${id}/consumption`
 
   const readings = [
     {

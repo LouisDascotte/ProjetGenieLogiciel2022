@@ -3,36 +3,34 @@ import {createTheme, Button, styled, Typography, Stack, Card,Grid, TextField, Th
 import logo from '../resources/logo.png';
 import { Link } from "react-router-dom";
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#9bcc6c",
+      contrastText: '#fff'
+    }, 
+    secondary: {
+      main: "#000",
+      contrastText: '#000000'
+    }
+  }
+});
+
+const CssTextField = styled(TextField)({
+  '& label.Mui-focused': {
+    color: '#9acd6c',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#9acd6c',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: '#9acd6c',
+    },
+  },
+});
 
 const ResetPassword = () => {
-  // Styling part
-
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#9bcc6c",
-        contrastText: '#fff'
-      }, 
-      secondary: {
-        main: "#000",
-        contrastText: '#000000'
-      }
-    }
-  });
-
-  const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-      color: '#9acd6c',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#9acd6c',
-    },
-    '& .MuiOutlinedInput-root': {
-      '&.Mui-focused fieldset': {
-        borderColor: '#9acd6c',
-      },
-    },
-  });
 
   // code part
   return (

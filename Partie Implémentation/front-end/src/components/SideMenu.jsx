@@ -21,7 +21,6 @@ const SideMenu = (mainPage) => {
     
     return (
     
-    
        <Sidebar style={{ height:"100vh"}} defaultCollapsed >
             <Menu>
                 <MenuItem
@@ -30,9 +29,7 @@ const SideMenu = (mainPage) => {
                         collapseSidebar();
                     }}
                     style={{ textAlign: 'center'}}>
-                        
-                        
-                        
+                              
                 </MenuItem>
                 
                 <MenuItem onClick={()=>{}}> 
@@ -61,6 +58,5 @@ const SideMenu = (mainPage) => {
             </Menu>
         </Sidebar>
   );
-
 };
 export default SideMenu

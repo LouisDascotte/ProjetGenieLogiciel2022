@@ -1,4 +1,4 @@
-import {React, useState} from 'react';
+import {React, useEffect, useState} from 'react';
 import axios from "../api/axios";
 import {Card, Stack, Button, TextField, InputAdornment} from "@mui/material";
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,12 +8,31 @@ import dayjs from 'dayjs';
 import TopMenu from '../components/TopMenu';
 import SideMenu from '../components/SideMenu';
  
-const URL = "http://localhost:8080/api/meter/";
+const API_URL = "http://localhost:8080/api/meter/";
+
 
 const MeterConsumption = ({ean, update}) => {
   
   const pageAddress = "/enter-consumption";
   const pageName = "Enter meter consumption";
+
+  const [meters, setMeters] = useState([]);
+  const jwt = localStorage.getItem("jwt");
+
+  useEffect(() => {
+    axios.get(API_URL + "all", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+      })
+    .then(response => {
+      setMeters(response.data);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, []);
+
 
   const current_date = new Date();
   let day = current_date.getDate();

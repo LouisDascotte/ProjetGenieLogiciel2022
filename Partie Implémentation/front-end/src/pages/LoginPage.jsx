@@ -11,7 +11,7 @@ import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
 
 
-const LOGIN_URL = "http://localhost:8080/api/auth/employee/login";
+const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 
 const LoginPage = () => {
 
@@ -56,7 +56,7 @@ const LoginPage = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response => {
         console.log("auth: " + response.headers["authorization"]);
-        //setJwt(response.headers["authorization"], "jwt");
+        setJwt(response.headers["authorization"], "jwt");
         localStorage.setItem("jwt", response.headers["authorization"]);
         localStorage.setItem("user", response.data);
         setAuthToken(response.headers["authorization"]);

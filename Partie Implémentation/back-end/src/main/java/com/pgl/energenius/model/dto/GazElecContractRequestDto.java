@@ -1,5 +1,6 @@
 package com.pgl.energenius.model.dto;
 
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.enums.MeterType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +18,6 @@ public class GazElecContractRequestDto {
     private MeterType meterType;
 
     private String address;
+
+    private HourType hourType;
 }

@@ -1,6 +1,7 @@
 package com.pgl.energenius.service;
 
 import com.mongodb.DuplicateKeyException;
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
 import com.pgl.energenius.model.notification.Notification;
@@ -47,7 +48,7 @@ public class ReadingServiceTest {
         int value = 123;
 
         Meter meter = Meter.builder()
-                .hourType(Meter.HourType.SIMPLE)
+                .hourType(HourType.SIMPLE)
                 .EAN(EAN)
                 .clientId(new ObjectId())
                 .supplierId(new ObjectId())
@@ -73,7 +74,7 @@ public class ReadingServiceTest {
         int value = 123;
 
         Meter meter = Meter.builder()
-                .hourType(Meter.HourType.SIMPLE)
+                .hourType(HourType.SIMPLE)
                 .EAN(EAN)
                 .clientId(new ObjectId())
                 .supplierId(new ObjectId())
@@ -113,7 +114,7 @@ public class ReadingServiceTest {
         int nightValue = 456;
 
         Meter meter = Meter.builder()
-                .hourType(Meter.HourType.DOUBLE)
+                .hourType(HourType.DOUBLE)
                 .EAN(EAN)
                 .clientId(new ObjectId())
                 .supplierId(new ObjectId())
@@ -141,7 +142,7 @@ public class ReadingServiceTest {
         int nightValue = 456;
 
         Meter meter = Meter.builder()
-                .hourType(Meter.HourType.DOUBLE)
+                .hourType(HourType.DOUBLE)
                 .EAN(EAN)
                 .clientId(new ObjectId())
                 .supplierId(new ObjectId())

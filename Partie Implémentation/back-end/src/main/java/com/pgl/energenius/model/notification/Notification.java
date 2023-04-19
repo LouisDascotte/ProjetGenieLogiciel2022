@@ -1,5 +1,6 @@
 package com.pgl.energenius.model.notification;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder.Default;
 import lombok.Data;
@@ -35,7 +36,7 @@ public class Notification {
      * The date at which the notification was sent
      */
     @Default
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date = new Date();
 
     /**
@@ -55,6 +56,8 @@ public class Notification {
     public enum Type {
         READING_NOTIFICATION,
         CONTRACT_REQUEST_NOTIFICATION,
+        CANCEL_CONTRACT_REQUEST_NOTIFICATION,
+        CANCEL_CONTRACT_NOTIFICATION,
         NOTIFICATION
     }
 }

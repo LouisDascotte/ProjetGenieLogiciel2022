@@ -1,23 +1,31 @@
 package com.pgl.energenius.service;
 
 import com.mongodb.DuplicateKeyException;
+import com.pgl.energenius.enums.Lang;
+import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
+import com.pgl.energenius.model.Supplier;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
+import com.pgl.energenius.model.dto.ClientPreferencesDto;
+import com.pgl.energenius.model.projection.ClientProjection;
 import com.pgl.energenius.repository.ClientRepository;
-import com.pgl.energenius.exception.InvalidUserDetailsException;
-import com.pgl.energenius.exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.config.WebSecurityConfig;
+import com.pgl.energenius.repository.ContractRepository;
+import com.pgl.energenius.repository.PortfolioRepository;
 import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This class provides services related to ClientRepository.
@@ -43,6 +51,11 @@ public class ClientService {
     @Autowired
     private AddressService addressService;
 
+    @Autowired
+    private PortfolioRepository portfolioRepository;
+
+    @Autowired
+    private ContractRepository contractRepository;
 
     public Client insertClient(Client client) throws ObjectNotValidatedException {
 
@@ -68,7 +81,7 @@ public class ClientService {
                 .lastName(clientDto.getLastName())
                 .phoneNo(clientDto.getPhoneNumber())
                 .address(addressService.createAddress(clientDto.getAddress()).getAddress())
-                .language(clientDto.getLanguage())
+                .lang(clientDto.getLang())
                 .build();
 
         ClientLogin clientLogin = new ClientLogin(clientDto.getEmail(),
@@ -90,5 +103,46 @@ public class ClientService {
                 new UsernamePasswordAuthenticationToken(clientLoginDto.getEmail(), clientLoginDto.getPassword()));
 
         return (ClientLogin) auth.getPrincipal();
+    }
+
+    public Client editPreferences(ClientPreferencesDto clientPreferencesDto) throws InvalidUserDetailsException, ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException {
+
+        ClientLogin clientLogin = securityUtils.getCurrentClientLogin();
+        Client client = clientLogin.getClient();
+        boolean modified = false;
+
+        if (clientPreferencesDto.getLang() != client.getLang()) {
+            client.setLang(clientPreferencesDto.getLang());
+            modified = true;
+        }
+
+        if (clientPreferencesDto.getNew_password() != null && Objects.equals(clientLogin.getPassword(), WebSecurityConfig.passwordEncoder().encode(clientPreferencesDto.getOld_password()))) {
+            clientLogin.setPassword(WebSecurityConfig.passwordEncoder().encode(clientPreferencesDto.getNew_password()));
+            userService.saveUser(clientLogin);
+        }
+
+        if (!Objects.equals(client.getFavoritePortfolioId(), clientPreferencesDto.getFavoritePortfolioId())
+                && portfolioRepository.existsByIdAndClientId(clientPreferencesDto.getFavoritePortfolioId(), client.getId())) {
+
+            client.setFavoritePortfolioId(clientPreferencesDto.getFavoritePortfolioId());
+            modified = true;
+        }
+
+        if (modified) {
+            saveClient(client);
+        }
+        return client;
+    }
+
+    public Client getClient(ObjectId clientId) throws InvalidUserDetailsException, UnauthorizedAccessException, ObjectNotFoundException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+        if (contractRepository.existsByClientIdAndSupplierId(clientId, supplier.getId())) {
+            throw new UnauthorizedAccessException("Authenticated supplier cannot access the client of id: " + clientId);
+        }
+
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new ObjectNotFoundException("No client found with id: " + clientId));
     }
 }

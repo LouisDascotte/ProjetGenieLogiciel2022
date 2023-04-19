@@ -11,4 +11,6 @@ public interface MeterAllocationRepository extends MongoRepository<MeterAllocati
     List<MeterAllocation> findByClientId(ObjectId clientId);
 
     List<MeterAllocation> findByClientIdAndEAN(ObjectId clientId, String EAN);
+
+    List<MeterAllocation> findBySupplierNameAndEAN(String supplierName, String EAN);
 }

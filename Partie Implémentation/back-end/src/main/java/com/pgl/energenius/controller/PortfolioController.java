@@ -169,4 +169,18 @@ public class PortfolioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/names")
+    public ResponseEntity<?> getPortfolioIdsAndNames() {
+
+        try {
+            return new ResponseEntity<>(portfolioService.getPortfolioIdsAndNames(), HttpStatus.OK);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

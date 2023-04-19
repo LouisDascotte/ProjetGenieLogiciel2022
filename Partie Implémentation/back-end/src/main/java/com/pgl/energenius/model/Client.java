@@ -1,5 +1,6 @@
 package com.pgl.energenius.model;
 
+import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.model.dto.ClientDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +55,7 @@ public class Client {
     /**
      * The language that the client usually uses
      */
-    private String language;
+    private Lang lang;
 
     /**
      * The id of the favorite portfolio of the client

@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContractRequestNotification extends Notification {
+public class ContractNotification extends Notification {
 
-    @DBRef(lazy = true)
+    @DBRef
     public Contract contract;
 }

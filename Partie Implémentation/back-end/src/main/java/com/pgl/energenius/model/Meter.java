@@ -1,9 +1,11 @@
 package com.pgl.energenius.model;
 
 import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.enums.MeterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -34,7 +36,8 @@ public class Meter {
     /**
      * The status of the meter
      */
-    private Status status;
+    @Default
+    private Status status = Status.AWAITING_APPROVAL;
 
     /**
      * The type of time setting that the meter uses (ex : bi-monthly)
@@ -54,11 +57,8 @@ public class Meter {
 
     public enum Status {
         AFFECTED,
-        DISAFFECTED
+        DISAFFECTED,
+        AWAITING_APPROVAL
     }
 
-    public enum HourType {
-        SIMPLE,
-        DOUBLE
-    }
 }

@@ -1,6 +1,6 @@
 package com.pgl.energenius.model.offer;
 
-import com.pgl.energenius.enums.MeterType;
+import com.pgl.energenius.enums.HourType;
 import lombok.AllArgsConstructor;
 import lombok.Builder.Default;
 import lombok.Data;
@@ -30,7 +30,7 @@ public abstract class Offer {
     /**
      * The type of the meter used in the offer
      */
-    private MeterType meterType;
+    private HourType hourType;
 
     /**
      * The length of the contract

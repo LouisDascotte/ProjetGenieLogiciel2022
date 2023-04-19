@@ -9,7 +9,6 @@ import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.model.Address;
 import com.pgl.energenius.model.Area;
 import com.pgl.energenius.repository.AddressRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AddressService {
@@ -72,12 +70,12 @@ public class AddressService {
         return results[0].formattedAddress;
     }
 
-    public Boolean isAddressInArea(ObjectId areaId, Address address) {
+    public Boolean isAddressInOneOfAreas(List<String> areaNames, Address address) {
 
         GeoJsonPoint point = new GeoJsonPoint(new Point(address.getLng(), address.getLat()));
-        Query query = new Query().addCriteria(Criteria.where("_id").is(areaId));
+        Query query = new Query().addCriteria(Criteria.where("name").in(areaNames));
         query.addCriteria(Criteria.where("polygons").intersects(point));
-        query.fields().include("_id");
+        query.fields().include("name");
         List<Area> areas = mongoTemplate.find(query, Area.class);
 
         return !areas.isEmpty();

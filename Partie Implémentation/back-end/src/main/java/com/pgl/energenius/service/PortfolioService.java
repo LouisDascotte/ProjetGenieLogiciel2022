@@ -4,6 +4,7 @@ import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
+import com.pgl.energenius.model.projection.PortfolioProjection;
 import com.pgl.energenius.model.reading.Reading;
 import com.pgl.energenius.repository.PortfolioRepository;
 import com.pgl.energenius.exception.*;
@@ -41,6 +42,9 @@ public class PortfolioService {
 
     @Autowired
     private ReadingService readingService;
+
+    @Autowired
+    private ClientService clientService;
 
     public Portfolio insertPortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
 
@@ -81,17 +85,11 @@ public class PortfolioService {
         for (SupplyPoint sp: portfolio.getSupplyPoints()) {
 
             Meter meter = meterService.getMeter(sp.getEAN());
-            List<MeterAllocation> meterAllocations = meterService.getMeterAllocations(sp.getEAN());
 
             if (!readings.containsKey(meter.getEnergyType())) {
                 readings.put(meter.getEnergyType(), new ArrayList<>());
             }
-
-            List<Reading> meterEnergyReadings = readings.get(meter.getEnergyType());
-
-            for (MeterAllocation ma : meterAllocations) {
-                meterEnergyReadings.addAll(readingService.getReadingsByDateBetween(ma.getBeginDate(), ma.getEndDate(), sp.getEAN()));
-            }
+            readings.get(meter.getEnergyType()).addAll(readingService.getReadings(sp.getEAN()));
         }
 
         return readings;
@@ -106,14 +104,26 @@ public class PortfolioService {
                 .name(portfolioDto.getName())
                 .clientId(client.getId())
                 .build();
+        insertPortfolio(portfolio);
 
-        return insertPortfolio(portfolio);
+        if (client.getFavoritePortfolioId() == null) {
+            client.setFavoritePortfolioId(portfolio.getId());
+            clientService.saveClient(client);
+        }
+
+        return portfolio;
     }
 
     public List<Portfolio> getPortfolios() throws InvalidUserDetailsException {
 
         Client client = securityUtils.getCurrentClientLogin().getClient();
         return portfolioRepository.findByClientId(client.getId());
+    }
+
+    public List<PortfolioProjection> getPortfolioIdsAndNames() throws InvalidUserDetailsException {
+
+        Client client = securityUtils.getCurrentClientLogin().getClient();
+        return portfolioRepository.findByClientId(client.getId(), PortfolioProjection.class);
     }
 
     public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException {
@@ -162,13 +172,6 @@ public class PortfolioService {
             throw new ObjectNotFoundException("No supply point found in portfolio of Id: " + portfolioId);
         }
 
-        List<MeterAllocation> meterAllocations = meterService.getMeterAllocations(EAN);
-        List<Reading> readings = new ArrayList<>();
-
-        for (MeterAllocation ma : meterAllocations) {
-            readings.addAll(readingService.getReadingsByDateBetween(ma.getBeginDate(), ma.getEndDate(), EAN));
-        }
-
-        return readings;
+        return readingService.getReadings(EAN);
     }
 }

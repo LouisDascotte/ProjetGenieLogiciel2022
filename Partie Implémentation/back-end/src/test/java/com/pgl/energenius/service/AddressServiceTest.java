@@ -4,7 +4,6 @@ import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.model.Address;
 import com.pgl.energenius.model.Area;
 import com.pgl.energenius.repository.AddressRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -53,32 +52,32 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void test_isAddressInArea_True() {
+    public void test_isAddressInOneOfAreas_True() {
 
         Address address = new Address("Test", 0d, 0d);
-        ObjectId areaId = new ObjectId();
+        String areaName = "Test";
 
         GeoJsonPoint point = new GeoJsonPoint(new Point(address.getLng(), address.getLat()));
-        Query query = new Query().addCriteria(Criteria.where("_id").is(areaId));
+        Query query = new Query().addCriteria(Criteria.where("name").in(List.of(areaName)));
         query.addCriteria(Criteria.where("polygons").intersects(point));
-        query.fields().include("_id");
+        query.fields().include("name");
 
         when(mongoTemplate.find(query, Area.class)).thenReturn(List.of(new Area()));
-        assertTrue(addressService.isAddressInArea(areaId, address));
+        assertTrue(addressService.isAddressInOneOfAreas(List.of(areaName), address));
     }
 
     @Test
-    public void test_isAddressInArea_False() {
+    public void test_isAddressInOneOfAreas_False() {
 
         Address address = new Address("Test", 0d, 0d);
-        ObjectId areaId = new ObjectId();
+        String areaName = "Test";
 
         GeoJsonPoint point = new GeoJsonPoint(new Point(address.getLng(), address.getLat()));
-        Query query = new Query().addCriteria(Criteria.where("_id").is(areaId));
+        Query query = new Query().addCriteria(Criteria.where("name").in(List.of(areaName)));
         query.addCriteria(Criteria.where("polygons").intersects(point));
-        query.fields().include("_id");
+        query.fields().include("name");
 
         when(mongoTemplate.find(query, Area.class)).thenReturn(new ArrayList<>());
-        assertFalse(addressService.isAddressInArea(areaId, address));
+        assertFalse(addressService.isAddressInOneOfAreas(List.of(areaName), address));
     }
 }

@@ -10,12 +10,13 @@ import com.pgl.energenius.model.contract.GazElecContract;
 import com.pgl.energenius.model.contract.SimpleContract;
 import com.pgl.energenius.model.dto.GazElecContractRequestDto;
 import com.pgl.energenius.model.dto.SimpleContractRequestDto;
-import com.pgl.energenius.model.notification.ContractRequestNotification;
+import com.pgl.energenius.model.notification.ContractNotification;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.offer.GazElecOffer;
 import com.pgl.energenius.model.offer.Offer;
 import com.pgl.energenius.model.offer.SimpleOffer;
 import com.pgl.energenius.repository.ContractRepository;
+import com.pgl.energenius.repository.MeterRepository;
 import com.pgl.energenius.repository.OfferRepository;
 import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
@@ -44,6 +45,9 @@ public class ContractService {
 
     @Autowired
     private MeterService meterService;
+
+    @Autowired
+    private MeterRepository meterRepository;
 
     @Autowired
     private AddressService addressService;
@@ -98,6 +102,29 @@ public class ContractService {
         return contractRepository.findBySupplierId(supplier.getId());
     }
 
+    public Contract getContract(ObjectId contractId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new ObjectNotFoundException("No contract found with id: " + contractId));
+
+        try {
+            Client client = securityUtils.getCurrentClientLogin().getClient();
+
+            if (Objects.equals(client.getId(), contract.getClientId()))
+                return contract;
+
+            throw new UnauthorizedAccessException("Authenticated client does not own the requested contract");
+
+        } catch (InvalidUserDetailsException ignored) {}
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+        if (Objects.equals(supplier.getId(), contract.getSupplierId()))
+            return contract;
+
+        throw new UnauthorizedAccessException("Authenticated employee does not own the requested contract");
+    }
+
     public Offer getOffer(ObjectId offerId) throws ObjectNotFoundException {
 
         return offerRepository.findById(offerId)
@@ -106,37 +133,28 @@ public class ContractService {
 
     public void createSimpleContractRequest(SimpleContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException {
 
-        Meter meter = meterService.getMeter(contractRequest.getEAN());
-        String addressStr = addressService.getFormattedAddress(contractRequest.getAddress());
-
-        if (meter.getStatus() == Meter.Status.AFFECTED) {
-            throw new UnauthorizedAccessException("Cannot create the contract request with a meter that is already affected to another contract");
-
-        } else if (!Objects.equals(meter.getAddress(), addressStr)) {
-            throw new BadRequestException("Cannot create the contract request because the address of the request is not the same as the meter's address");
-        }
-
-        SimpleOffer offer;
-        try {
-            offer = (SimpleOffer) getOffer(offerId);
-
-        } catch (ClassCastException e) {
+        if (!(getOffer(offerId) instanceof SimpleOffer offer)) {
             throw new BadRequestException("Cannot create the contract request with the offer of id: " + offerId);
+
+        } else if (offer.getHourType() != contractRequest.getHourType()
+                || offer.getEnergyType() != contractRequest.getEnergyType()) {
+
+            throw new BadRequestException("Cannot create the contract request because the offer is not compatible with the contract request");
         }
 
-        if (meter.getEnergyType() != offer.getEnergyType()) {
-            throw new BadRequestException("Cannot create the contract request because the energy of the meter and the offer are not the same");
+        Meter meter = meterService.createMeterIfNotExistsAndCheck(contractRequest.getEAN(),
+                contractRequest.getAddress(),
+                contractRequest.getMeterType(),
+                contractRequest.getEnergyType(),
+                contractRequest.getHourType());
 
-        } else if (meter.getMeterType() != offer.getMeterType()) {
-            throw new BadRequestException("Cannot create the contract request because the meter type of the meter and the offer are not the same");
-        }
-
-        Client client = securityUtils.getCurrentClientLogin().getClient();
         Supplier supplier = supplierService.getSupplierByName(offer.getSupplierName());
+        Address address = addressService.getAddress(meter.getAddress());
 
-        if (!addressService.isAddressInArea(supplier.getAreaId(), addressService.getAddress(addressStr))) {
+        if (!addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)) {
             throw new BadRequestException("Cannot create the contract request because the address is outside the operating region of the supplier");
         }
+        Client client = securityUtils.getCurrentClientLogin().getClient();
 
         SimpleContract contract = SimpleContract.builder()
                 .clientId(client.getId())
@@ -148,7 +166,7 @@ public class ContractService {
 
         insertContract(contract);
 
-        ContractRequestNotification notification = ContractRequestNotification.builder()
+        ContractNotification notification = ContractNotification.builder()
                 .senderId(client.getId())
                 .receiverId(supplier.getId())
                 .type(Notification.Type.CONTRACT_REQUEST_NOTIFICATION)
@@ -160,38 +178,32 @@ public class ContractService {
 
     public void createGazElecContractRequest(GazElecContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException {
 
-        Meter meter_ELEC = meterService.getMeter(contractRequest.getEAN_ELEC());
-        Meter meter_GAZ = meterService.getMeter(contractRequest.getEAN_GAZ());
-        String addressStr = addressService.getFormattedAddress(contractRequest.getAddress());
-
-        if (meter_ELEC.getStatus() == Meter.Status.AFFECTED || meter_GAZ.getStatus() == Meter.Status.AFFECTED) {
-            throw new UnauthorizedAccessException("Cannot create the contract request with a meter that is already affected to another contract");
-
-        } else if (!Objects.equals(meter_ELEC.getAddress(), addressStr) || !Objects.equals(meter_GAZ.getAddress(), addressStr)) {
-            throw new BadRequestException("Cannot create the contract request because the address of the request is not the same as one of the meters address");
-        }
-
-        GazElecOffer offer;
-        try {
-            offer = (GazElecOffer) getOffer(offerId);
-
-        } catch (ClassCastException e) {
+        if (!(getOffer(offerId) instanceof GazElecOffer offer)) {
             throw new BadRequestException("Cannot create the contract request with the offer of id: " + offerId);
+
+        } else if (offer.getHourType() != contractRequest.getHourType()) {
+            throw new BadRequestException("Cannot create the contract request because the offer is not compatible with the contract request");
         }
 
-        if (meter_ELEC.getEnergyType() != EnergyType.ELEC || meter_GAZ.getEnergyType() != EnergyType.GAZ) {
-            throw new BadRequestException("Cannot create the contract request because the energy type of one of the meters is not correct");
+        Meter meter_ELEC = meterService.createMeterIfNotExistsAndCheck(contractRequest.getEAN_ELEC(),
+                contractRequest.getAddress(),
+                contractRequest.getMeterType(),
+                EnergyType.ELEC,
+                contractRequest.getHourType());
 
-        } else if (meter_ELEC.getMeterType() != offer.getMeterType() || meter_GAZ.getMeterType() != offer.getMeterType()) {
-            throw new BadRequestException("Cannot create the contract request because the meter type of one of the meters is not the same as the offer's meter type");
-        }
+        Meter meter_GAZ = meterService.createMeterIfNotExistsAndCheck(contractRequest.getEAN_GAZ(),
+                contractRequest.getAddress(),
+                contractRequest.getMeterType(),
+                EnergyType.GAZ,
+                contractRequest.getHourType());
 
-        Client client = securityUtils.getCurrentClientLogin().getClient();
         Supplier supplier = supplierService.getSupplierByName(offer.getSupplierName());
+        Address address = addressService.getAddress(meter_ELEC.getAddress());
 
-        if (!addressService.isAddressInArea(supplier.getAreaId(), addressService.getAddress(addressStr))) {
+        if (!addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)) {
             throw new BadRequestException("Cannot create the contract request because the address is outside the operating region of the supplier");
         }
+        Client client = securityUtils.getCurrentClientLogin().getClient();
 
         GazElecContract contract = GazElecContract.builder()
                 .clientId(client.getId())
@@ -204,7 +216,7 @@ public class ContractService {
 
         insertContract(contract);
 
-        ContractRequestNotification notification = ContractRequestNotification.builder()
+        ContractNotification notification = ContractNotification.builder()
                 .senderId(client.getId())
                 .receiverId(supplier.getId())
                 .type(Notification.Type.CONTRACT_REQUEST_NOTIFICATION)
@@ -216,14 +228,14 @@ public class ContractService {
 
     public List<Offer> getOffers(GazElecContractRequestDto contractRequest) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        List<GazElecOffer> gazElecOffers = offerRepository.findByMeterType(contractRequest.getMeterType());
+        List<GazElecOffer> gazElecOffers = offerRepository.findByHourType(contractRequest.getHourType());
         List<Offer> offers = gazElecOffers.stream().map(o -> (Offer) o).collect(Collectors.toList());
         return getValidOffers(offers, contractRequest.getAddress());
     }
 
     public List<Offer> getOffers(SimpleContractRequestDto contractRequest) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        List<SimpleOffer> simpleOffers = offerRepository.findByMeterTypeAndEnergyType(contractRequest.getMeterType(), contractRequest.getEnergy());
+        List<SimpleOffer> simpleOffers = offerRepository.findByHourTypeAndEnergyType(contractRequest.getHourType(), contractRequest.getEnergyType());
         List<Offer> offers = simpleOffers.stream().map(o -> (Offer) o).collect(Collectors.toList());
         return getValidOffers(offers, contractRequest.getAddress());
     }
@@ -252,7 +264,7 @@ public class ContractService {
             try {
                 Supplier supplier = supplierService.getSupplierByName(name);
 
-                if (addressService.isAddressInArea(supplier.getAreaId(), address)) {
+                if (addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)) {
                     validOffers.addAll(supplierOffers.get(name));
                 }
 
@@ -260,5 +272,50 @@ public class ContractService {
         }
 
         return validOffers;
+    }
+
+    public void cancelContract(ObjectId contractId) throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException, ObjectNotValidatedException {
+
+        Contract contract = getContract(contractId);
+
+        try {
+            Client client = securityUtils.getCurrentClientLogin().getClient();
+
+            if (contract.getStatus() == Contract.Status.PENDING) {
+                notificationService.deleteByContract(contract);
+
+            } else {
+
+                ContractNotification notification = ContractNotification.builder()
+                        .senderId(client.getId())
+                        .receiverId(contract.getSupplierId())
+                        .type(Notification.Type.CANCEL_CONTRACT_REQUEST_NOTIFICATION)
+                        .contract(contract)
+                        .build();
+                notificationService.insertNotification(notification);
+            }
+
+        } catch (InvalidUserDetailsException e) {
+
+            Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+            Notification notification = Notification.builder()
+                    .senderId(supplier.getId())
+                    .receiverId(contract.getSupplierId())
+                    .type(Notification.Type.CANCEL_CONTRACT_NOTIFICATION)
+                    .build();
+            notificationService.insertNotification(notification);
+        }
+        contractRepository.delete(contract);
+
+        if (contract instanceof SimpleContract simpleContract) {
+
+            meterService.deleteMeterIf_AWAITING_APPROVAL(simpleContract.getEAN());
+
+        } else if (contract instanceof GazElecContract gazElecContract) {
+
+            meterService.deleteMeterIf_AWAITING_APPROVAL(gazElecContract.getEAN_ELEC());
+            meterService.deleteMeterIf_AWAITING_APPROVAL(gazElecContract.getEAN_GAZ());
+        }
     }
 }

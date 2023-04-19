@@ -2,6 +2,7 @@ package com.pgl.energenius.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.model.Address;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -50,7 +51,7 @@ public class ClientDto {
      * The preferred language of the client
      */
     @JsonProperty("language")
-    private String language;
+    private Lang lang;
 
     /**
      * The password of the client. Minimum size of 8 characters

@@ -1,8 +1,10 @@
 package com.pgl.energenius.service;
 
 import com.mongodb.DuplicateKeyException;
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
+import com.pgl.energenius.model.MeterAllocation;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.notification.ReadingNotification;
 import com.pgl.energenius.model.reading.DoubleReading;
@@ -14,6 +16,7 @@ import com.pgl.energenius.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,7 +51,7 @@ public class ReadingService {
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
 
-        if (meter.getHourType() != Meter.HourType.SIMPLE) {
+        if (meter.getHourType() != HourType.SIMPLE) {
             throw new UnauthorizedAccessException("Cannot add a SimpleReading for a meter that is double");
         }
 
@@ -92,7 +95,7 @@ public class ReadingService {
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
 
-        if (meter.getHourType() != Meter.HourType.DOUBLE) {
+        if (meter.getHourType() != HourType.DOUBLE) {
             throw new UnauthorizedAccessException("Cannot add a DoubleReading for a meter that is simple");
         }
 
@@ -135,5 +138,16 @@ public class ReadingService {
 
     public List<Reading> getReadingsByDateBetween(String beginDate, String endDate, String EAN) {
         return readingRepository.findByDateBetweenAndEAN(beginDate, endDate, EAN);
+    }
+
+    public List<Reading> getReadings(String EAN) throws InvalidUserDetailsException {
+
+        List<MeterAllocation> meterAllocations = meterService.getMeterAllocations(EAN);
+        List<Reading> readings = new ArrayList<>();
+
+        for (MeterAllocation ma : meterAllocations) {
+            readings.addAll(getReadingsByDateBetween(ma.getBeginDate(), ma.getEndDate(), EAN));
+        }
+        return readings;
     }
 }

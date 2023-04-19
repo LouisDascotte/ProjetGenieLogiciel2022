@@ -14,6 +14,6 @@ public class ReadingNotification extends Notification {
 
     private String EAN;
 
-    @DBRef(lazy = true)
+    @DBRef
     private Reading reading;
 }

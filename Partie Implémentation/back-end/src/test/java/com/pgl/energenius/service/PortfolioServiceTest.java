@@ -4,6 +4,7 @@ import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
+import com.pgl.energenius.model.projection.PortfolioProjection;
 import com.pgl.energenius.model.reading.Reading;
 import com.pgl.energenius.model.reading.SimpleReading;
 import com.pgl.energenius.repository.PortfolioRepository;
@@ -43,6 +44,9 @@ public class PortfolioServiceTest {
 
     @Mock
     private ReadingService readingService;
+
+    @Mock
+    private ClientService clientService;
 
     @InjectMocks
     private PortfolioService portfolioService;
@@ -152,6 +156,7 @@ public class PortfolioServiceTest {
 
         assertEquals(portfolio, result);
         verify(portfolioRepository, times(1)).insert(Mockito.any(Portfolio.class));
+        verify(clientService, times(1)).saveClient(any(Client.class));
     }
 
     @Test

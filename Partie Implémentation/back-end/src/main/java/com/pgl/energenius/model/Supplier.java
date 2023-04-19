@@ -1,5 +1,6 @@
 package com.pgl.energenius.model;
 
+import com.pgl.energenius.enums.Lang;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -9,6 +10,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 /**
  * Employee of a supplier
@@ -30,7 +33,7 @@ public class Supplier {
     /**
      * The preferred language of the supplier
      */
-    private String language;
+    private Lang lang;
 
     /**
      * The name of the supplier
@@ -41,5 +44,5 @@ public class Supplier {
     /**
      * The region in which the supplier operates
      */
-    private ObjectId areaId;
+    private List<String> operatingAreas;
 }

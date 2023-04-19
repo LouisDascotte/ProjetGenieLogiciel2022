@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonMultiPolygon;
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -18,8 +19,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("areas")
 public class Area {
 
-    @Id
-    private ObjectId id;
+    @Indexed(unique = true)
+    private String name;
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonMultiPolygon polygons;

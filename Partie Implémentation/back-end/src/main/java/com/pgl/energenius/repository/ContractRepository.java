@@ -17,4 +17,8 @@ public interface ContractRepository extends MongoRepository<Contract, ObjectId> 
 
     @Query("{$or:[{'EAN': ?0}, {'EAN_ELEC': ?0}, {'EAN_GAZ': ?0}]}")
     boolean existsByEAN(String EAN);
+
+    List<ObjectId> findClientIdsBySupplierId(ObjectId supplierId);
+
+    boolean existsByClientIdAndSupplierId(ObjectId clientId, ObjectId supplierId);
 }

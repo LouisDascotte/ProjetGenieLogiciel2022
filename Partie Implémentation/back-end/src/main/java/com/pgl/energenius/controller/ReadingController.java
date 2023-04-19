@@ -58,4 +58,18 @@ public class ReadingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/{EAN}/readings")
+    public ResponseEntity<?> getReadings(@PathVariable String EAN) {
+
+        try {
+          return new ResponseEntity<>(readingService.getReadings(EAN), HttpStatus.OK);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import SideMenu from '../components/SideMenu';
+import SideMenu from './SideMenu';
 import {Stack, Box, Grid, Avatar, Menu, MenuItem, ListItemIcon, Divider, IconButton, Tooltip, Icon, ListItem, Badge} from '@mui/material';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';

@@ -40,4 +40,17 @@ public class SupplierController {
         }
     }
 
+    @GetMapping("/clients")
+    public ResponseEntity<?> getClients() {
+
+        try {
+            return new ResponseEntity<>(supplierService.getClientsNameAndId(), HttpStatus.OK);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

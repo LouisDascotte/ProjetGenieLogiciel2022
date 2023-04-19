@@ -39,6 +39,8 @@ const MeterConsumption = ({ean, update}) => {
       value : value,
     }
 
+    console.log(data)
+
     try {
       const jwt = localStorage.getItem("jwt");
       const response = axios.post(URL + `${meter_ean}` + "/reading", null, {
@@ -46,9 +48,10 @@ const MeterConsumption = ({ean, update}) => {
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       , params:{
-        EAN : meter_ean, 
-        date : selectedDate.valueOf(), 
-        value : value,
+        EAN : data.meter_ean, 
+        date : data.date, 
+        value : data.value,
+        overwrite : true
       }}).then(response=>{
         console.log(response.data);
         update(false);
@@ -68,7 +71,7 @@ const MeterConsumption = ({ean, update}) => {
           </LocalizationProvider>
         </Stack>
         <Stack>
-          <TextField sx={{m:1}} label='Enter consumption' onChange={(event)=> {
+          <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label='Enter consumption' onChange={(event)=> {
             setValue(event.target.value);
           }} InputProps={{
             endAdornment: <InputAdornment position="end">kWh</InputAdornment>

@@ -14,7 +14,7 @@ const ConsumptionHistoryPage = () => {
   const jwt = localStorage.getItem("jwt");
 
 
-  const URL2 = `http://localhost:8080/api/portfoliof/${id}/consumption`
+  const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
 
   const readings = [
     {
@@ -89,7 +89,7 @@ const ConsumptionHistoryPage = () => {
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
-        <TopMenu pageAddress={"/assignment-history"} pageName={"Assignment History"}/>
+        <TopMenu pageAddress={"/consumption-history"} pageName={"Consumption History"}/>
         <Card sx={{m:5, height:'100%', width:"90%"}}>
           <DataGrid 
           rows={rows} 

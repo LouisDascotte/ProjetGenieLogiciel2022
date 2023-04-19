@@ -70,7 +70,6 @@ export const Portfolio2 = () => {
 
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
-    
   }
 
   function checkMeter(ean){

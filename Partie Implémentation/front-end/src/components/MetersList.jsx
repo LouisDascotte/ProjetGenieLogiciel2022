@@ -60,9 +60,7 @@ const MetersList = () => {
             {meter.ean}
           </ListItemText>
         </ListItemButton>
-        <IconButton>
-          <DeleteIcon/>
-        </IconButton>
+        
       </ListItem>
       )}
     </List>

@@ -9,7 +9,6 @@ import Profile from './pages/Profile';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
-<<<<<<< HEAD
 import ResetPassword from "./pages/ResetPassword";
 import ErrorPage from './pages/ErrorPage';
 import Testing from './pages/Testing';
@@ -28,14 +27,6 @@ import ViewConsumption from "./pages/ViewConsumption";
 import ImportConsumption from "./pages/ImportConsumption";
 import ViewMeter from "./pages/ViewMeter";
 
-=======
-import CreatePortfolio from './pages/CreatePortfolio';
-import MeterConsumption from './pages/MeterConsumption';
-import AssignmentHistoryPage from './pages/AssignmentHistoryPage';
-import ConsumptionHistoryPage from './pages/ConsumptionHistoryPage';
-import { Portfolio2 } from './components/portfolio/Portfolio2';
-import ContractRequest from './pages/ContractRequest';
->>>>>>> e4eea14916440ba0aecde5621da279bf37dcb0ff
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -56,7 +47,6 @@ function App() {
                 <Route path="/notifications" exact element={<PrivateRoute>
                   <Notifications/>
                   </PrivateRoute>}/>
-<<<<<<< HEAD
                   <Route path="*" element={<ErrorPage/>}/>
                   <Route path="/reset-passwd" element={<ResetPassword/>}/>
 
@@ -75,24 +65,6 @@ function App() {
                   <Route path='/consumption/meter/:meterId' element={<ViewMeter/>}/>
                   <Route path='/consumption/meter/:meterId/:date' element={<ViewConsumption/>}/>
                   <Route path='/consumption/meter/:meterId/import' element={<ImportConsumption/>}/>
-=======
-                <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
-                <Route path="/enter-consumption" exact element={<PrivateRoute>
-                  <MeterConsumption/>
-                </PrivateRoute>}/>
-                <Route path="/assignment-history" exact element={<PrivateRoute>
-                  <AssignmentHistoryPage/>
-                </PrivateRoute>}/>
-                <Route path="/portfolio/:id" exact element={<PrivateRoute>
-                  <Portfolio2/>
-                </PrivateRoute>}/>
-                <Route path="/consumption/:id" exact element={<PrivateRoute>
-                  <ConsumptionHistoryPage/>
-                </PrivateRoute>}/>
-                <Route path="/contract-request" exact element={<PrivateRoute>
-                  <ContractRequest/>
-                  </PrivateRoute>}/>
->>>>>>> e4eea14916440ba0aecde5621da279bf37dcb0ff
               </Routes>
             
       </BrowserRouter>

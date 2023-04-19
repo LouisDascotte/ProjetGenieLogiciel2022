@@ -4,11 +4,11 @@ import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { MeterReadingList as Readings, MeterList as Meters} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import DatePicker from 'react-datepicker';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 function LinkMeter() {
   const date = useParams().date;
@@ -17,6 +17,9 @@ function LinkMeter() {
   const pageAddress = "/consumption/meter/:meterId/:date";
   const pageName = "View consumption";
 
+  const API_URL = "http://localhost:8080/api/meter/";
+
+  
   const handleEditClick = () => {
     setEditMode(!editMode);
     setEditableData(readingData);
@@ -51,31 +54,11 @@ function LinkMeter() {
     }
   });
 
-  const isDoubleHour = (meterId) => {
-    const idInt = parseInt(meterId,10);
-    const meter = Meters.find((meter) => meter.meterId === idInt);
-    if (meter.hourType === "double") {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const getEnergyType = (meterId) => {
-    const idInt = parseInt(meterId,10);
-    const meter = Meters.find((meter) => meter.meterId === idInt);
-    return meter.energyType.toLowerCase();
-  };
-
-  const getReadingByMeterId = (meterID, date) => {
-    const idInt = parseInt(meterID,10);
-    const reading = Readings.find((reading) => reading.meterId === idInt && reading.date === date);
-    return reading;
-  };
 
 
   const readingData = {
     date: date,
-    value: getReadingByMeterId(meterId, date).value,
+    value: (meterId, date).value,
     meterId: meterId
   };
 
@@ -95,6 +78,7 @@ function LinkMeter() {
             justifyContent='center'
             alignItems='center'
             rowSpacing={2}
+            padding={2}
             >
               <Grid item xs={4} >
               </Grid>
@@ -157,7 +141,7 @@ function LinkMeter() {
                   id="unit"
                   label=""
                   variant="outlined"
-                  value={getEnergyType(meterId) === 'electricity' ? "kWh" : "m3"}
+                  value={true === 'electricity' ? "kWh" : "m3"}
                   InputProps={
                     {readOnly: true}
                   }

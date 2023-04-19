@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden, List, ListItem,ListItemText} from '@mui/material';
 import {Link, useParams} from 'react-router-dom';
@@ -6,6 +6,8 @@ import TopMenu from '../components/TopMenu';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { MeterList as Meters, MeterReadingList as Readings } from '../resources/Lists';
 import ArrowBack from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
+
 
 
 const ViewMeter = () => {
@@ -30,6 +32,33 @@ const ViewMeter = () => {
 
   const pageAddress = "/consumption/meter/:id";
   const pageName = "Manage consumption";
+
+  const meterId = useParams().meterId;
+
+  const API_URL = "http://localhost:8080/api/meter/";
+
+  const [readings, setReadings] = React.useState([]);
+
+  useEffect(() => {
+    async function getReadings() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get(API_URL+`${meterId}/readings`, config);
+        console.log(response.data);
+        setReadings(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getReadings();
+  }, []);
 
   const handleMeterClick = (meterID) => {
     console.log(meterID);
@@ -65,6 +94,23 @@ const ViewMeter = () => {
                     <ListItemText primary={`${reading.date}`} />
                     <Link to={`/consumption/meter/${id}/${reading.date}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
                       <Button variant="contained" color='primary' onClick={() => handleMeterClick(reading.meterId)}>
+                      See more
+                      </Button>
+                    </Link>
+                    <Button variant="contained" color='primary' onClick={handleReadingDeletion} >
+                      <DeleteIcon />
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            </Card>
+            <Card sx={{width:'40%', m:2, height:'60%'}}>
+              <List style={{maxHeight: '100%', overflow: 'auto'}} >
+                {readings.map((reading) => (
+                  <ListItem key={reading.date}>
+                    <ListItemText primary={`${reading.date}`} />
+                    <Link to={`/consumption/meter/${id}/${reading.date}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                      <Button variant="contained" color='primary' onClick={() => handleMeterClick(reading.ean)}>
                       See more
                       </Button>
                     </Link>

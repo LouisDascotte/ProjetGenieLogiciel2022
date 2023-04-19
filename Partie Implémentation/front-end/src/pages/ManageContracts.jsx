@@ -32,15 +32,26 @@ const ManageContracts = () => {
   const [contracts, setContracts] = React.useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/contract/all")
-      .then((response) => {
+    async function getContracts() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get("http://localhost:8080/api/contract/all", config);
+        console.log(response.data);
         setContracts(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
+      }
+    }
+    getContracts();
   }, []);
+  
 
   const [selectedContract, setSelectedContract] = React.useState(null);
 

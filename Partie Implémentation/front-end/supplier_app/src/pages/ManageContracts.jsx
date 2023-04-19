@@ -28,7 +28,6 @@ const ManageContracts = () => {
 
   const pageAddress = "/contracts";
   const pageName = "Manage contracts";
-<<<<<<< HEAD
 
   const [contracts, setContracts] = React.useState([]);
 
@@ -52,31 +51,6 @@ const ManageContracts = () => {
     }
     getContracts();
   }, []);
-=======
-  return (
-    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
-      <SideMenu mainPage={"false"} />
-      <Stack sx={{display:'flex', width:"100%"}}>
-        <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        <Grid align='center'>
-          <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ContractsList/>
-          </Card>
-          <ThemeProvider theme={theme}>
-            <Link to='/contract-request' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-              <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                New contract request
-              </Button>
-            </Link>
-          </ThemeProvider>
-          
-        </Grid>
-          
-      </Stack>
-    </Stack>
-  );
-}
->>>>>>> e4eea14916440ba0aecde5621da279bf37dcb0ff
   
 
   const [selectedContract, setSelectedContract] = React.useState(null);

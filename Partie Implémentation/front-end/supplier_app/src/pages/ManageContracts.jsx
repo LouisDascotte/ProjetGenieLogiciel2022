@@ -9,9 +9,6 @@ import { ContractList } from '../resources/Lists';
 import { getContracts } from '../api/contractApi';
 import axios from 'axios';
 
-
-
-
 const ManageContracts = () => {
   const theme = createTheme({
     palette: {

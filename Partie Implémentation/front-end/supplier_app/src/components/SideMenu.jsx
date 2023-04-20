@@ -3,6 +3,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import DescriptionIconOutlined from '@mui/icons-material/DescriptionOutlined';
 import { Divider} from '@mui/material';
 import React, { useState } from 'react';
 import { Menu, MenuItem, Sidebar, useProSidebar } from 'react-pro-sidebar';
@@ -37,23 +38,28 @@ const SideMenu = (mainPage) => {
                 </MenuItem>
                 <Link to="/main-page" className='link' >
                     <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
-                        General overview
+                      General overview
                     </MenuItem>
                 </Link>
                 <Link to="/clients" className='link'>
-                    <MenuItem icon={<AssignmentIndOutlinedIcon />} onClick={()=>{}}>
-                        Manage clients
-                    </MenuItem>
+                  <MenuItem icon={<AssignmentIndOutlinedIcon />} onClick={()=>{}}>
+                    Manage clients
+                  </MenuItem>
                 </Link>
                 <Link to="/contracts" className='link'>
-                    <MenuItem icon={<ReceiptOutlinedIcon />}>
-                        Manage contracts
-                    </MenuItem>
+                  <MenuItem icon={<ReceiptOutlinedIcon />}>
+                    Manage contracts
+                  </MenuItem>
                 </Link>
                 <Link to="/consumption" className='link'>
-                    <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                        Manage consumption
-                    </MenuItem>
+                  <MenuItem icon={<ElectricMeterOutlinedIcon />}>
+                    Manage consumption
+                  </MenuItem>
+                </Link>
+                <Link to="/offers" className='link'>
+                  <MenuItem icon={<DescriptionIconOutlined />}>
+                    Manage offers
+                  </MenuItem>
                 </Link>
             </Menu>
         </Sidebar>

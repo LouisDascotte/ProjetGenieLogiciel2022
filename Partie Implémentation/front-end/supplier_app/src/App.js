@@ -26,6 +26,7 @@ import ViewContractRequest from "./pages/ViewContractRequest";
 import ViewConsumption from "./pages/ViewConsumption";
 import ImportConsumption from "./pages/ImportConsumption";
 import ViewMeter from "./pages/ViewMeter";
+import ManageOffer from "./pages/ManageOffer";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
                   <Route path='/consumption/meter/:meterId' element={<ViewMeter/>}/>
                   <Route path='/consumption/meter/:meterId/:date' element={<ViewConsumption/>}/>
                   <Route path='/consumption/meter/:meterId/import' element={<ImportConsumption/>}/>
+                  <Route path='/offers' element={<ManageOffer/>}/>
               </Routes>
             
       </BrowserRouter>

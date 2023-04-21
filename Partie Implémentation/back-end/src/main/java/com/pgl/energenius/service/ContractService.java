@@ -3,6 +3,7 @@ package com.pgl.energenius.service;
 
 import com.google.maps.errors.ApiException;
 import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.contract.Contract;
@@ -79,7 +80,6 @@ public class ContractService {
         } else if (contractRepository.existsByEAN(contract.getEAN_GAZ())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_GAZ());
         }
-
 
         return contractRepository.insert(contract);
     }
@@ -226,18 +226,18 @@ public class ContractService {
         notificationService.insertNotification(notification);
     }
 
-    public List<Offer> getOffers(GazElecContractRequestDto contractRequest) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
+    public List<Offer> getGazElecOffers(HourType hourType, String addressStr) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        List<GazElecOffer> gazElecOffers = offerRepository.findByHourType(contractRequest.getHourType());
+        List<GazElecOffer> gazElecOffers = offerRepository.findByHourType(hourType);
         List<Offer> offers = gazElecOffers.stream().map(o -> (Offer) o).collect(Collectors.toList());
-        return getValidOffers(offers, contractRequest.getAddress());
+        return getValidOffers(offers, addressStr);
     }
 
-    public List<Offer> getOffers(SimpleContractRequestDto contractRequest) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
+    public List<Offer> getSimpleOffers(HourType hourType, EnergyType energyType, String addressStr) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        List<SimpleOffer> simpleOffers = offerRepository.findByHourTypeAndEnergyType(contractRequest.getHourType(), contractRequest.getEnergyType());
+        List<SimpleOffer> simpleOffers = offerRepository.findByHourTypeAndEnergyType(hourType, energyType);
         List<Offer> offers = simpleOffers.stream().map(o -> (Offer) o).collect(Collectors.toList());
-        return getValidOffers(offers, contractRequest.getAddress());
+        return getValidOffers(offers, addressStr);
     }
 
     public List<Offer> getValidOffers(List<Offer> offers, String addressStr) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
@@ -293,6 +293,7 @@ public class ContractService {
                         .contract(contract)
                         .build();
                 notificationService.insertNotification(notification);
+                return;
             }
 
         } catch (InvalidUserDetailsException e) {
@@ -318,4 +319,14 @@ public class ContractService {
             meterService.deleteMeterIf_AWAITING_APPROVAL(gazElecContract.getEAN_GAZ());
         }
     }
+
+    public List<Offer> getSupplierOffers() throws InvalidUserDetailsException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+        return offerRepository.findBySupplierName(supplier.getName());
+    }
+
+//    public SimpleOffer createOffer() {
+//
+//    }
 }

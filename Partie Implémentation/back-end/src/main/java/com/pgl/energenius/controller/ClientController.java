@@ -6,6 +6,7 @@ import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.dto.ClientPreferencesDto;
 import com.pgl.energenius.service.ClientService;
+import com.pgl.energenius.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,14 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @GetMapping("/me")
     public ResponseEntity<?> getClient() {
 
         try {
-            return new ResponseEntity<>(clientService.getAuthClient(), HttpStatus.OK);
+            return new ResponseEntity<>(securityUtils.getCurrentClientLogin(), HttpStatus.OK);
 
         } catch (InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

@@ -1,5 +1,6 @@
 package com.pgl.energenius.service;
 
+import com.pgl.energenius.config.WebSecurityConfig;
 import com.pgl.energenius.exception.ObjectNotFoundException;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.SupplierLogin;
@@ -99,7 +100,8 @@ public class UserServiceTest {
         ClientLogin clientLogin = new ClientLogin();
         when(userRepository.findByEmail("test")).thenReturn(Optional.of(clientLogin));
 
-        userService.changePasswordClient("test", "test");
+        userService.changePasswordClient("test", "newPassword");
+        assertTrue(WebSecurityConfig.passwordEncoder().matches("newPassword", clientLogin.getPassword()));
         verify(userRepository, times(1)).save(clientLogin);
     }
 }

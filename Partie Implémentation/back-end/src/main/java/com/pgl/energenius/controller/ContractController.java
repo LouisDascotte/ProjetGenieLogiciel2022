@@ -1,13 +1,17 @@
 package com.pgl.energenius.controller;
 
+import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.dto.GazElecContractRequestDto;
+import com.pgl.energenius.model.dto.SimpleOfferDto;
 import com.pgl.energenius.model.dto.SimpleContractRequestDto;
 import com.pgl.energenius.service.ContractService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,11 +36,12 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers")
-    public ResponseEntity<?> getSimpleOffers(@RequestBody SimpleContractRequestDto contractRequest) {
+    public ResponseEntity<?> getSimpleOffers(@RequestParam HourType hourType, @RequestParam EnergyType energyType, @RequestParam String address) {
 
         try {
-            return new ResponseEntity<>(contractService.getOffers(contractRequest), HttpStatus.OK);
+            return new ResponseEntity<>(contractService.getSimpleOffers(hourType, energyType, address), HttpStatus.OK);
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -46,11 +51,12 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers/gaz_elec")
-    public ResponseEntity<?> getGazElecOffers(@RequestBody GazElecContractRequestDto contractRequest) {
+    public ResponseEntity<?> getGazElecOffers(@RequestParam HourType hourType, @RequestParam String address) {
 
         try {
-            return new ResponseEntity<>(contractService.getOffers(contractRequest), HttpStatus.OK);
+            return new ResponseEntity<>(contractService.getGazElecOffers(hourType, address), HttpStatus.OK);
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -60,6 +66,7 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
     public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
 
@@ -84,6 +91,7 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/gaz_elec")
     public ResponseEntity<?> createGazElecContractRequest(@RequestBody GazElecContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
 
@@ -128,4 +136,47 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    @GetMapping("/supplier_offers")
+    public ResponseEntity<?> getOffers() {
+
+        try {
+            return new ResponseEntity<>(contractService.getSupplierOffers(), HttpStatus.OK);
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+//    @PostMapping("/offer")
+//    public ResponseEntity<?> createOffer(@RequestBody SimpleOfferDto simpleOfferDto) {
+//
+//
+//    }
+//
+//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+//    @PostMapping("/offer")
+//    public ResponseEntity<?> createOffer(@RequestBody SimpleOfferDto simpleOfferDto) {
+//
+//
+//    }
+//
+//    @GetMapping("/offer/{id}")
+//    public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {
+//
+//
+//
+//    }
+//
+//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+//    @DeleteMapping("/offer/{id}")
+//    public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) {
+//
+//
+//    }
 }

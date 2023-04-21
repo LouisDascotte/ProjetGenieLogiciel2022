@@ -45,7 +45,7 @@ public class SupplierLogin extends User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add((GrantedAuthority) () -> "ROLE_EMPLOYEE");
+        roles.add((GrantedAuthority) () -> "ROLE_SUPPLIER");
         return roles;
     }
 

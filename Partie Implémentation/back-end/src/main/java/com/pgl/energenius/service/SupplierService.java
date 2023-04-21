@@ -88,7 +88,7 @@ public class SupplierService {
             saveSupplier(supplier);
         }
 
-        if (supplierPreferenceDto.getNew_password() != null && Objects.equals(supplierLogin.getPassword(), WebSecurityConfig.passwordEncoder().encode(supplierPreferenceDto.getOld_password()))) {
+        if (supplierPreferenceDto.getNew_password() != null && WebSecurityConfig.passwordEncoder().matches(supplierPreferenceDto.getOld_password(), supplierLogin.getPassword())) {
             supplierLogin.setPassword(WebSecurityConfig.passwordEncoder().encode(supplierPreferenceDto.getNew_password()));
             userService.saveUser(supplierLogin);
         }

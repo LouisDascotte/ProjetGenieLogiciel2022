@@ -17,4 +17,6 @@ public interface OfferRepository extends MongoRepository<Offer, ObjectId> {
     List<SimpleOffer> findByHourTypeAndEnergyType(HourType hourType, EnergyType energyType);
 
     List<GazElecOffer> findByHourType(HourType hourType);
+
+    List<Offer> findBySupplierName(String supplierName);
 }

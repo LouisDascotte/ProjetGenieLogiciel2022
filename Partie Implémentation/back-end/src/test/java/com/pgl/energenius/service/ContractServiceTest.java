@@ -141,8 +141,6 @@ public class ContractServiceTest {
     @Test
     public void test_getOffers_Simple() throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.GAZ, "", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
         List<SimpleOffer> offers = new ArrayList<>();
 
         offers.add(SimpleOffer.builder()
@@ -165,7 +163,7 @@ public class ContractServiceTest {
         when(supplierService.getSupplierByName("supplier")).thenReturn(supplier1);
         when(addressService.isAddressInOneOfAreas(supplier1.getOperatingAreas(), address)).thenReturn(true);
 
-        List<Offer> result = contractService.getOffers(contractRequest);
+        List<Offer> result = contractService.getSimpleOffers(HourType.SIMPLE, EnergyType.GAZ, "123 Rue de Test, Test");
 
         assertEquals(offers.get(0), result.get(0));
         assertEquals(1, result.size());
@@ -173,8 +171,6 @@ public class ContractServiceTest {
 
     @Test
     public void test_getOffers_GazElec() throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
-
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("", "", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         List<GazElecOffer> offers = new ArrayList<>();
 
@@ -197,7 +193,7 @@ public class ContractServiceTest {
         when(supplierService.getSupplierByName("supplier")).thenReturn(supplier1);
         when(addressService.isAddressInOneOfAreas(supplier1.getOperatingAreas(), address)).thenReturn(true);
 
-        List<Offer> result = contractService.getOffers(contractRequest);
+        List<Offer> result = contractService.getGazElecOffers(HourType.SIMPLE, "123 Rue de Test, Test");
 
         assertEquals(offers.get(0), result.get(0));
         assertEquals(1, result.size());
@@ -206,28 +202,25 @@ public class ContractServiceTest {
     @Test
     public void test_createSimpleContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
 
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         SimpleOffer offer = SimpleOffer.builder()
-                .energyType(contractRequest.getEnergyType())
+                .energyType(cr.getEnergyType())
                 .type(Offer.Type.SIMPLE_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        Client client = new Client();
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        Meter meter = Meter.builder()
+                .EAN(cr.getEAN())
+                .energyType(cr.getEnergyType())
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
+                .build();
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN(), cr.getAddress(),
+                cr.getMeterType(), cr.getEnergyType(), cr.getHourType())).thenReturn(meter);
 
         Supplier supplier = Supplier.builder()
                 .name(offer.getSupplierName())
@@ -235,153 +228,90 @@ public class ContractServiceTest {
                 .build();
         when(supplierService.getSupplierByName(supplier.getName())).thenReturn(supplier);
 
-        Address address = new Address(contractRequest.getAddress(), 0d, 0d);
+        Address address = new Address(cr.getAddress(), 0d, 0d);
         when(addressService.getAddress(address.getAddress())).thenReturn(address);
         when(addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)).thenReturn(true);
 
+        Client client = new Client();
+        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+
         when(contractRepository.existsByEAN(meter.getEAN())).thenReturn(false);
 
-        contractService.createSimpleContractRequest(contractRequest, offer.getId());
+        contractService.createSimpleContractRequest(cr, offer.getId());
 
         verify(notificationService, times(1)).insertNotification(any(Notification.class));
         verify(contractRepository, times(1)).insert(any(SimpleContract.class));
     }
 
     @Test
-    public void test_createSimpleContractRequest_meter_AFFECTED() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createSimpleContractRequest_GazElecOffer() {
 
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.AFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        assertThrows(UnauthorizedAccessException.class, () -> contractService.createSimpleContractRequest(contractRequest, new ObjectId()));
-    }
-
-    @Test
-    public void test_createSimpleContractRequest_different_addresses() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address("Rue de Test2, Test2")
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(contractRequest, new ObjectId()));
-    }
-
-    @Test
-    public void test_createSimpleContractRequest_GazElecOffer() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         GazElecOffer offer = GazElecOffer.builder()
                 .type(Offer.Type.GAZ_ELEC_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
-        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(contractRequest, offer.getId()));
+
+        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(cr, offer.getId()));
     }
 
     @Test
-    public void test_createSimpleContractRequest_incorrect_EnergyType() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createSimpleContractRequest_incorrect_HourType() {
 
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         SimpleOffer offer = SimpleOffer.builder()
-                .energyType(EnergyType.WATER)
-                .type(Offer.Type.SIMPLE_OFFER)
-                .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
-        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(contractRequest, offer.getId()));
-    }
-
-    @Test
-    public void test_createSimpleContractRequest_incorrect_HourType() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        SimpleOffer offer = SimpleOffer.builder()
-                .energyType(EnergyType.ELEC)
+                .energyType(cr.getEnergyType())
                 .type(Offer.Type.SIMPLE_OFFER)
                 .supplierName("supplier")
                 .hourType(HourType.DOUBLE)
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
-        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(contractRequest, offer.getId()));
+
+        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(cr, offer.getId()));
     }
 
     @Test
-    public void test_createSimpleContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createSimpleContractRequest_incorrect_EnergyType() {
 
-        SimpleContractRequestDto contractRequest = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter = Meter.builder()
-                .EAN(contractRequest.getEAN())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(contractRequest.getEnergyType())
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(contractRequest.getEAN())).thenReturn(meter);
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         SimpleOffer offer = SimpleOffer.builder()
-                .energyType(contractRequest.getEnergyType())
+                .energyType(EnergyType.GAZ)
                 .type(Offer.Type.SIMPLE_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        Client client = new Client();
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(cr, offer.getId()));
+    }
+
+    @Test
+    public void test_createSimpleContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
+
+        SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
+
+        SimpleOffer offer = SimpleOffer.builder()
+                .energyType(cr.getEnergyType())
+                .type(Offer.Type.SIMPLE_OFFER)
+                .supplierName("supplier")
+                .hourType(cr.getHourType())
+                .build();
+        when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+
+        Meter meter = Meter.builder()
+                .EAN(cr.getEAN())
+                .energyType(cr.getEnergyType())
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
+                .build();
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN(), cr.getAddress(),
+                cr.getMeterType(), cr.getEnergyType(), cr.getHourType())).thenReturn(meter);
 
         Supplier supplier = Supplier.builder()
                 .name(offer.getSupplierName())
@@ -389,47 +319,44 @@ public class ContractServiceTest {
                 .build();
         when(supplierService.getSupplierByName(supplier.getName())).thenReturn(supplier);
 
-        Address address = new Address(contractRequest.getAddress(), 0d, 0d);
+        Address address = new Address(cr.getAddress(), 0d, 0d);
         when(addressService.getAddress(address.getAddress())).thenReturn(address);
         when(addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)).thenReturn(false);
 
-        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(contractRequest, offer.getId()));
+        assertThrows(BadRequestException.class, () -> contractService.createSimpleContractRequest(cr, offer.getId()));
     }
 
     @Test
     public void test_createGazElecContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
 
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.ELEC)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        GazElecContractRequestDto cr = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         GazElecOffer offer = GazElecOffer.builder()
                 .type(Offer.Type.GAZ_ELEC_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        Client client = new Client();
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        Meter meter_ELEC = Meter.builder()
+                .EAN(cr.getEAN_ELEC())
+                .energyType(EnergyType.ELEC)
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
+                .build();
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN_ELEC(), cr.getAddress(),
+                cr.getMeterType(), EnergyType.ELEC, cr.getHourType())).thenReturn(meter_ELEC);
+
+        Meter meter_GAZ = Meter.builder()
+                .EAN(cr.getEAN_GAZ())
+                .energyType(EnergyType.GAZ)
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
+                .build();
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN_GAZ(), cr.getAddress(),
+                cr.getMeterType(), EnergyType.GAZ, cr.getHourType())).thenReturn(meter_GAZ);
 
         Supplier supplier = Supplier.builder()
                 .name(offer.getSupplierName())
@@ -437,214 +364,83 @@ public class ContractServiceTest {
                 .build();
         when(supplierService.getSupplierByName(supplier.getName())).thenReturn(supplier);
 
-        Address address = new Address(contractRequest.getAddress(), 0d, 0d);
+        Address address = new Address(cr.getAddress(), 0d, 0d);
         when(addressService.getAddress(address.getAddress())).thenReturn(address);
         when(addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)).thenReturn(true);
+
+        Client client = new Client();
+        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
         when(contractRepository.existsByEAN(meter_ELEC.getEAN())).thenReturn(false);
         when(contractRepository.existsByEAN(meter_GAZ.getEAN())).thenReturn(false);
 
-        contractService.createGazElecContractRequest(contractRequest, offer.getId());
+        contractService.createGazElecContractRequest(cr, offer.getId());
 
         verify(notificationService, times(1)).insertNotification(any(Notification.class));
         verify(contractRepository, times(1)).insert(any(GazElecContract.class));
     }
 
     @Test
-    public void test_createGazElecContractRequest_meter_AFFECTED() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createGazElecContractRequest_SimpleOffer()  {
 
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.AFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.ELEC)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        assertThrows(UnauthorizedAccessException.class, () -> contractService.createGazElecContractRequest(contractRequest, new ObjectId()));
-    }
-
-    @Test
-    public void test_createGazElecContractRequest_different_addresses() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address("Rue de Test2, Test2")
-                .energyType(EnergyType.ELEC)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(contractRequest, new ObjectId()));
-    }
-
-    @Test
-    public void test_createGazElecContractRequest_SimpleOffer() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.ELEC)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        GazElecContractRequestDto cr = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         SimpleOffer offer = SimpleOffer.builder()
                 .type(Offer.Type.SIMPLE_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(contractRequest, offer.getId()));
+        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(cr, offer.getId()));
     }
 
     @Test
-    public void test_createGazElecContractRequest_incorrect_EnergyType() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createGazElecContractRequest_incorrect_HourType() {
 
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.WATER)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
+        GazElecContractRequestDto cr = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
         GazElecOffer offer = GazElecOffer.builder()
                 .type(Offer.Type.GAZ_ELEC_OFFER)
                 .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
+                .hourType(HourType.DOUBLE)
                 .build();
         when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(contractRequest, offer.getId()));
+        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(cr, offer.getId()));
     }
 
     @Test
-    public void test_createGazElecContractRequest_incorrect_MeterType() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
+    public void test_createGazElecContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, IOException, InterruptedException, ApiException, ObjectNotValidatedException, BadRequestException {
 
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
+        GazElecContractRequestDto cr = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
+
+        GazElecOffer offer = GazElecOffer.builder()
+                .type(Offer.Type.GAZ_ELEC_OFFER)
+                .supplierName("supplier")
+                .hourType(cr.getHourType())
+                .build();
+        when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
         Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
+                .EAN(cr.getEAN_ELEC())
                 .energyType(EnergyType.ELEC)
-                .meterType(MeterType.NUMERIC)
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
                 .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN_ELEC(), cr.getAddress(),
+                cr.getMeterType(), EnergyType.ELEC, cr.getHourType())).thenReturn(meter_ELEC);
 
         Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
+                .EAN(cr.getEAN_GAZ())
                 .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
+                .hourType(cr.getHourType())
+                .meterType(cr.getMeterType())
+                .address(cr.getAddress())
                 .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        GazElecOffer offer = GazElecOffer.builder()
-                .type(Offer.Type.GAZ_ELEC_OFFER)
-                .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
-
-        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(contractRequest, offer.getId()));
-    }
-
-    @Test
-    public void test_createGazElecContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException {
-
-        GazElecContractRequestDto contractRequest = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
-
-        Meter meter_ELEC = Meter.builder()
-                .EAN(contractRequest.getEAN_ELEC())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.ELEC)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_ELEC.getEAN())).thenReturn(meter_ELEC);
-
-        Meter meter_GAZ = Meter.builder()
-                .EAN(contractRequest.getEAN_GAZ())
-                .status(Meter.Status.DISAFFECTED)
-                .address(contractRequest.getAddress())
-                .energyType(EnergyType.GAZ)
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(meterService.getMeter(meter_GAZ.getEAN())).thenReturn(meter_GAZ);
-
-        when(addressService.getFormattedAddress(contractRequest.getAddress())).thenReturn(contractRequest.getAddress());
-
-        GazElecOffer offer = GazElecOffer.builder()
-                .type(Offer.Type.GAZ_ELEC_OFFER)
-                .supplierName("supplier")
-                .hourType(HourType.SIMPLE)
-                .build();
-        when(offerRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
-
-        Client client = new Client();
-        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+        when(meterService.createMeterIfNotExistsAndCheck(cr.getEAN_GAZ(), cr.getAddress(),
+                cr.getMeterType(), EnergyType.GAZ, cr.getHourType())).thenReturn(meter_GAZ);
 
         Supplier supplier = Supplier.builder()
                 .name(offer.getSupplierName())
@@ -652,12 +448,13 @@ public class ContractServiceTest {
                 .build();
         when(supplierService.getSupplierByName(supplier.getName())).thenReturn(supplier);
 
-        Address address = new Address(contractRequest.getAddress(), 0d, 0d);
+        Address address = new Address(cr.getAddress(), 0d, 0d);
         when(addressService.getAddress(address.getAddress())).thenReturn(address);
         when(addressService.isAddressInOneOfAreas(supplier.getOperatingAreas(), address)).thenReturn(false);
 
-        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(contractRequest, offer.getId()));
+        assertThrows(BadRequestException.class, () -> contractService.createGazElecContractRequest(cr, offer.getId()));
     }
+
 
     @Test
     public void test_insertContract_SimpleContract() throws ObjectAlreadyExitsException, ObjectNotValidatedException {
@@ -715,12 +512,14 @@ public class ContractServiceTest {
                 .status(Contract.Status.PENDING)
                 .clientId(client.getId())
                 .supplierId(new ObjectId())
+                .EAN("EAN123")
                 .build();
         when(contractRepository.findById(contract.getId())).thenReturn(Optional.of(contract));
 
         contractService.cancelContract(contract.getId());
         verify(notificationService, times(1)).deleteByContract(contract);
         verify(contractRepository, times(1)).delete(contract);
+        verify(meterService, times(1)).deleteMeterIf_AWAITING_APPROVAL(contract.getEAN());
     }
 
     @Test
@@ -733,11 +532,13 @@ public class ContractServiceTest {
                 .status(Contract.Status.ACCEPTED)
                 .clientId(client.getId())
                 .supplierId(new ObjectId())
+                .EAN("EAN123")
                 .build();
         when(contractRepository.findById(contract.getId())).thenReturn(Optional.of(contract));
 
         contractService.cancelContract(contract.getId());
         verify(notificationService, times(1)).insertNotification(any(ContractNotification.class));
+        verify(contractRepository, times(0)).delete(any(Contract.class));
     }
 
     @Test
@@ -757,10 +558,33 @@ public class ContractServiceTest {
         contractService.cancelContract(contract.getId());
         verify(notificationService, times(1)).insertNotification(any(Notification.class));
         verify(contractRepository, times(1)).delete(contract);
+        verify(meterService, times(1)).deleteMeterIf_AWAITING_APPROVAL(contract.getEAN());
     }
 
     @Test
-    public void test_getMeter_Client() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+    public void test_cancelContract_GazElecContract() throws InvalidUserDetailsException, ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException {
+
+        Client client = new Client();
+        when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
+
+        GazElecContract contract = GazElecContract.builder()
+                .status(Contract.Status.PENDING)
+                .clientId(client.getId())
+                .supplierId(new ObjectId())
+                .EAN_ELEC("EAN123")
+                .EAN_GAZ("EAN456")
+                .build();
+        when(contractRepository.findById(contract.getId())).thenReturn(Optional.of(contract));
+
+        contractService.cancelContract(contract.getId());
+        verify(notificationService, times(1)).deleteByContract(contract);
+        verify(contractRepository, times(1)).delete(contract);
+        verify(meterService, times(1)).deleteMeterIf_AWAITING_APPROVAL(contract.getEAN_GAZ());
+        verify(meterService, times(1)).deleteMeterIf_AWAITING_APPROVAL(contract.getEAN_ELEC());
+    }
+
+    @Test
+    public void test_getContract_Client() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
@@ -776,7 +600,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_getMeter_Supplier() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+    public void test_getContract_Supplier() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
         Supplier supplier = new Supplier();
         when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
@@ -793,7 +617,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_getMeter_UnauthorizedAccess() throws InvalidUserDetailsException {
+    public void test_getContract_UnauthorizedAccess() throws InvalidUserDetailsException {
 
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
@@ -809,7 +633,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_getMeter_ObjectNotFound() {
+    public void test_getContract_ObjectNotFound() {
 
         assertThrows(ObjectNotFoundException.class, () -> contractService.getContract(new ObjectId()));
     }

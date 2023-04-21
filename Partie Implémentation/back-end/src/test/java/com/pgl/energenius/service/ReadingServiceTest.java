@@ -4,6 +4,7 @@ import com.mongodb.DuplicateKeyException;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
+import com.pgl.energenius.model.MeterAllocation;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.reading.DoubleReading;
 import com.pgl.energenius.model.reading.Reading;
@@ -17,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -173,5 +176,23 @@ public class ReadingServiceTest {
 
         assertEquals(reading, readingService.createDoubleReading(EAN, date, dayValue, nightValue, true));
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
+    }
+
+    @Test
+    public void test_getReadings() throws InvalidUserDetailsException {
+
+        MeterAllocation ma = new MeterAllocation("EAN1234", "2022-12-31", "2023-12-31", null, "", MeterAllocation.Status.ACTIVE);
+        when(meterService.getMeterAllocations("EAN1234")).thenReturn(List.of(ma));
+
+        SimpleReading simpleReading = SimpleReading.builder()
+                .value(123)
+                .EAN("EAN1234")
+                .build();
+        when(readingRepository.findByDateBetweenAndEAN(ma.getBeginDate(), ma.getEndDate(), "EAN1234")).thenReturn(List.of(simpleReading));
+
+        List<Reading> result = readingService.getReadings("EAN1234");
+
+        assertEquals(simpleReading, result.get(0));
+        assertEquals(1, result.size());
     }
 }

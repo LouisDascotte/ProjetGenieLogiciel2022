@@ -149,6 +149,9 @@ public class MeterService {
 
             } else if (meter.getEnergyType() != energyType) {
                 throw new BadRequestException("The meter's energy type is not equal to the energy type");
+
+            } else if (meter.getHourType() != hourType) {
+                throw new BadRequestException("The meter's hour type is not equal to the hour type");
             }
 
         } else {

@@ -69,11 +69,6 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public Client getAuthClient() throws InvalidUserDetailsException {
-
-        return securityUtils.getCurrentClientLogin().getClient();
-    }
-
     public Client createClient(ClientDto clientDto) throws Exception {
 
         Client client = Client.builder()
@@ -116,7 +111,7 @@ public class ClientService {
             modified = true;
         }
 
-        if (clientPreferencesDto.getNew_password() != null && Objects.equals(clientLogin.getPassword(), WebSecurityConfig.passwordEncoder().encode(clientPreferencesDto.getOld_password()))) {
+        if (clientPreferencesDto.getNew_password() != null && WebSecurityConfig.passwordEncoder().matches(clientPreferencesDto.getOld_password(), clientLogin.getPassword())) {
             clientLogin.setPassword(WebSecurityConfig.passwordEncoder().encode(clientPreferencesDto.getNew_password()));
             userService.saveUser(clientLogin);
         }
@@ -138,7 +133,7 @@ public class ClientService {
 
         Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
 
-        if (contractRepository.existsByClientIdAndSupplierId(clientId, supplier.getId())) {
+        if (!contractRepository.existsByClientIdAndSupplierId(clientId, supplier.getId())) {
             throw new UnauthorizedAccessException("Authenticated supplier cannot access the client of id: " + clientId);
         }
 

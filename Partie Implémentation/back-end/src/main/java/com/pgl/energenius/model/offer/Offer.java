@@ -42,6 +42,8 @@ public abstract class Offer {
      */
     private int cost;
 
+    private int nightCost;
+
     /**
      * The type of the contract
      */

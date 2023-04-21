@@ -117,14 +117,11 @@ public class PortfolioServiceTest {
         Meter meter = Meter.builder().EAN("EAN1234").energyType(EnergyType.ELEC).build();
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
-        MeterAllocation meterAllocation = new MeterAllocation("EAN1234", "2022-12-31", "2023-12-31", null, "", MeterAllocation.Status.ACTIVE);
-        when(meterService.getMeterAllocations("EAN1234")).thenReturn(List.of(meterAllocation));
-
         SimpleReading simpleReading = SimpleReading.builder()
                 .value(123)
                 .EAN("EAN1234")
                 .build();
-        when(readingService.getReadingsByDateBetween("2022-12-31", "2023-12-31", "EAN1234")).thenReturn(List.of(simpleReading));
+        when(readingService.getReadings("EAN1234")).thenReturn(List.of(simpleReading));
 
         HashMap<EnergyType, List<Reading>> result = portfolioService.getPortfolioConsumption(portfolio.getId());
         assertEquals(simpleReading, result.get(EnergyType.ELEC).get(0));
@@ -246,14 +243,11 @@ public class PortfolioServiceTest {
         SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
         portfolio.getSupplyPoints().add(supplyPoint);
 
-        MeterAllocation meterAllocation = new MeterAllocation("EAN1234", "2022-12-31", "2023-12-31", null, "", MeterAllocation.Status.ACTIVE);
-        when(meterService.getMeterAllocations("EAN1234")).thenReturn(List.of(meterAllocation));
-
         SimpleReading simpleReading = SimpleReading.builder()
                 .value(123)
                 .EAN("EAN1234")
                 .build();
-        when(readingService.getReadingsByDateBetween("2022-12-31", "2023-12-31", "EAN1234")).thenReturn(List.of(simpleReading));
+        when(readingService.getReadings("EAN1234")).thenReturn(List.of(simpleReading));
 
         List<Reading> result = portfolioService.getSupplyPointConsumption(portfolio.getId(), "EAN1234");
         assertEquals(simpleReading, result.get(0));
@@ -261,7 +255,7 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_getSupplyPointConsumption_ObjectNotFound() throws InvalidUserDetailsException, UnauthorizedAccessException {
+    public void test_getSupplyPointConsumption_ObjectNotFound() throws InvalidUserDetailsException {
 
         setUp();
 

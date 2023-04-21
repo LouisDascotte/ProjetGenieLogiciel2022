@@ -1,7 +1,6 @@
 package com.pgl.energenius.controller;
 
 
-import ch.qos.logback.core.net.server.Client;
 import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.exception.ObjectAlreadyExitsException;
 import com.pgl.energenius.exception.ObjectNotFoundException;
@@ -11,13 +10,10 @@ import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.model.dto.SupplierLoginDto;
-import com.pgl.energenius.model.projection.ClientProjection;
-import com.pgl.energenius.repository.ClientRepository;
 import com.pgl.energenius.service.ClientService;
 import com.pgl.energenius.service.SupplierService;
 import com.pgl.energenius.service.UserService;
 import jakarta.mail.MessagingException;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")

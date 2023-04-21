@@ -1,7 +1,7 @@
 import {React, useRef, useEffect, useState} from 'react'
 import axios from "../api/axios";
 import {Stack, TextField, Box, Typography, Button, IconButton, FormControl, MenuItem, Select, InputLabel, InputAdornment} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -28,9 +28,12 @@ const ContractRequest = () => {
     postal_code : "",
   });
 
+  const jwt = localStorage.getItem("jwt");
+
   const [ean1, setEan1] = useState("");
   const [ean2, setEan2] = useState("");
   const [contractType, setContractType] = useState("");
+  const [meterType, setMeterType] = useState("");
 
   useEffect(() => {
     autoCompleteRef.current = new window.google.maps.places.Autocomplete(
@@ -74,8 +77,49 @@ const ContractRequest = () => {
      });
   }, []);
 
-  const handleSelectChange = (e) => {
+  const handleSelectChangeContractType = (e) => {
     setContractType(e.target.value);
+  }
+
+  const handleSelectChangeType = (e) => {
+    setMeterType(e.target.value);
+  }
+
+  const [meterFuncType, setMeterFuncType] = useState("");
+
+  const handleSelectChangeMeterType = (e) => {
+    setMeterFuncType(e.target.value);
+  }
+
+  function cancel(){
+
+  }
+
+  let body = {};
+
+  function confirmRequest(){
+    const contractTypesList = ["ELEC", "GAZ", "WATER", "ELECTRICITY_AND_GAS"];
+    const meter_type = ["SIMPLE", "DOUBLE"]
+    const mechanism = ["NUMERIC", "MANUAL"]
+    if (contractType ===4){
+      body = {
+        "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
+        "energyType" : contractTypesList[contractType-1],
+        "hourType" : meter_type[meterType-1],
+        "EAN_GAZ" : ean1,
+        "EAN_ELEC" : ean2
+      }
+    } else {
+      body = {
+        "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
+        "energyType" : contractTypesList[contractType-1],
+        "hourType" : meter_type[meterType-1],
+        "EAN" : ean1,
+        "meterType" : mechanism[meterFuncType-1],
+      }
+    }
+    console.log(body);
+    navigate("/offers-page", {state: {body: body}})
   }
 
   return (
@@ -102,7 +146,7 @@ const ContractRequest = () => {
               <Typography variant='h6' sx={{mr:5}}>Contract type : </Typography>
               <FormControl sx={{minWidth:"100%"}}>
                 <InputLabel>Select contract type</InputLabel>
-                <Select sx={{width:"100%"}} label='Select contract type' onChange={handleSelectChange}>
+                <Select sx={{width:"100%"}} label='Select contract type' onChange={handleSelectChangeContractType}>
                   <MenuItem value={1}>Electricity</MenuItem>
                   <MenuItem value={2}>Gas</MenuItem>
                   <MenuItem value={3}>Water</MenuItem>
@@ -112,32 +156,50 @@ const ContractRequest = () => {
             </Stack>
             {contractType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>Supply point : </Typography>
-              <TextField type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
+              <TextField type='number' onChange={e => setEan1(e.target.value)}  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
             </Stack> : <Stack><Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Gas supply point : </Typography>
+              <Typography variant='h6' sx={{mr:5}} onChange={e=>setEan1(e.target.value)}>Gas supply point : </Typography>
               <TextField type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Electricity supply point : </Typography>
+              <Typography variant='h6' sx={{mr:5}} onChange={e=>setEan2(e.target.value)}>Electricity supply point : </Typography>
               <TextField type='number'InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
             </Stack></Stack>}
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Meter type : </Typography>
-              <TextField/>
+              <Typography variant='h6' sx={{mr:5}}>Hour type: </Typography>
+              <FormControl sx={{minWidth:"100%"}}>
+                <InputLabel>Select hour type:</InputLabel>
+                <Select sx={{width:"100%"}} label='Select hour type:' onChange={handleSelectChangeType}>
+                  <MenuItem value={1}>Mono-hourly</MenuItem>
+                  <MenuItem value={2}>Bi-hourly</MenuItem>
+                </Select>
+              </FormControl>
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Button size='large' variant='outlined' sx={{mr:8}}>
+              <Typography variant='h6' sx={{mr:5}}>Meter type : </Typography>
+              <FormControl sx={{minWidth:"100%"}}>
+                <InputLabel>Select meter type :</InputLabel>
+                <Select sx={{width:"100%"}} label='Select meter type :' onChange={handleSelectChangeMeterType}>
+                  <MenuItem value={1}>Electronic</MenuItem>
+                  <MenuItem value={2}>Mechanical</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+            <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
+              <Button size='large' variant='outlined' sx={{mr:8}} onClick={cancel}>
                 Cancel
               </Button>
-              <Button size='large' variant='outlined'>
+              
+              <Button size='large' variant='outlined' onClick={confirmRequest}>
                 Confirm
               </Button>
+              
             </Stack>
           </Stack>
         </Box>

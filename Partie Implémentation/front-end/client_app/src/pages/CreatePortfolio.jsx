@@ -47,13 +47,6 @@ const CreatePortfolio = () => {
   const pageAddress = "/create-portfolio";
   const pageName = "Create portfolio";
 
-  // The name of the portfolio
-  /*const [portfolioName, setPortfolioName] = useState("");
-  const [supplyPoint, setSupplyPoint] = useState("");
-  const [supplier, setSupplier] = useState("");
-  const [address, setAddress] = useState("");
-  const [contractType, setContractType] = useState("");*/
-
   const [energyType, setEnergyType] = useState("");
 
   const [data, setData] = useState({
@@ -195,8 +188,6 @@ const CreatePortfolio = () => {
     console.log(data);
     const body =  {
       name : data.name,
-      supply_point : data.supply_point,
-      supplier : data.supplier,
       address : data.address.street + " " + data.address.houseNo + " " +data.address.box + " " +data.address.postalCode + " " +data.address.city + " " +data.address.region + " " +data.address.country,
     }
     const jwt = localStorage.getItem("jwt");

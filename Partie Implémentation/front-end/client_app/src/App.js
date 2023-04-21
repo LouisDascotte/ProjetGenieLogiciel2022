@@ -19,7 +19,6 @@ import ResetPassword from './pages/ResetPassword';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
-import CoffeeTest from './pages/CoffeeTest'; 
 import history from './utils/history';
 import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
@@ -30,6 +29,7 @@ import AssignmentHistoryPage from './pages/AssignmentHistoryPage';
 import ConsumptionHistoryPage from './pages/ConsumptionHistoryPage';
 import { Portfolio2 } from './components/portfolio/Portfolio2';
 import ContractRequest from './pages/ContractRequest';
+import OffersPage from './pages/OffersPage';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -92,6 +92,7 @@ function App() {
                 <Route path="/contract-request" exact element={<PrivateRoute>
                   <ContractRequest/>
                   </PrivateRoute>}/>
+                  <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

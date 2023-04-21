@@ -1,0 +1,111 @@
+import {React, useState, useEffect} from 'react'
+import axios from "../api/axios";
+import {useNavigate, useLocation} from "react-router-dom";
+import Carousel from "react-material-ui-carousel";
+import {Paper, Button, Stack, IconButton , Dialog, DialogTitle, DialogContent} from "@mui/material";
+import TopMenu from "../components/TopMenu";
+import SideMenu from "../components/SideMenu";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Offer from '../components/Offer';
+
+
+const OffersPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pageAddress = "/offers";
+  const pageName = "Offers";
+  const CONTRACT_URL = "http://localhost:8080/api/contract";
+
+  const jwt = localStorage.getItem("jwt");
+
+  const offers = [
+    {
+      name: "Random Name #1",
+      description: "Probably lame!",
+      offer_id : "1"
+    },
+    {
+      name: "Random Name #2",
+      description: "Hello World!",
+      offer_id:"2"
+    }
+  ]; 
+
+
+
+  let parameters = {};
+
+  if (location.state.body === undefined){
+    navigate("/contract-request");
+  } else {
+    parameters = location.state.body;
+  }
+
+
+  const [selectedOffer, setSelectedOffer] = useState(null);
+  
+  const selectOffer = (offer_id) => {
+    setSelectedOffer(offer_id);
+    setOpen(true);
+  }
+
+  const [open, setOpen] = useState(false);
+
+  const handleCancel= ()=>{
+    setSelectedOffer(null);
+    setOpen(false);
+  }
+
+  const handleConfirm = () => {
+    console.log(parameters)
+    try{
+      const req = axios.post(CONTRACT_URL, parameters, {
+        headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+      , params : {
+        offerId : selectedOffer
+      }}).then(response => {
+        console.log(response.data);
+      })
+    } catch (err){
+      console.log(err);
+    }
+  }
+
+
+  console.log(selectedOffer)
+  return (
+    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
+      <SideMenu/>
+      <Stack sx={{display:'flex', width:"100%"}} alignItems={'center'}>
+        <TopMenu pageAddress={pageAddress} pageName={pageName}/>
+        <IconButton onClick={() => navigate(-1)} sx={{mt:2}}>
+          <ArrowBackIcon/>
+          <div> back</div>
+        </IconButton>
+        <Paper sx={{width:"60%", height:"60vh"}}>
+          <Dialog open={open} onClose={()=> setOpen(false)}>
+            <DialogTitle>Offer {selectedOffer}</DialogTitle>
+            <DialogContent>
+              <h1>Do you want to confirm this contract request ?</h1>
+              <Stack direction='row' alignItems='center' justifyContent={'space-evenly'}>
+                <Button onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button onClick={handleConfirm}>
+                  Confirm
+                </Button>
+              </Stack>
+            </DialogContent>
+          </Dialog>
+          <Carousel>
+            {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
+          </Carousel>
+        </Paper>
+      </Stack>
+    </Stack>
+  )
+}
+
+export default OffersPage

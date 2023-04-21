@@ -54,6 +54,7 @@ const PortfoliosList2 = () => {
         console.log(response.data);
       })
     reload();
+    window.location.reload();
 
   } 
 

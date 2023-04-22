@@ -12,34 +12,8 @@ const ConsumptionHistoryPage = () => {
   const {id} = useParams();
 
   const jwt = localStorage.getItem("jwt");
-
-
   const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
-
-  const readings = [
-    {
-    ean : "EAN1234",
-    date : "12/04/23",
-    value: "123",
-    status :"active"
-    },
-    {
-      ean : "EAN1234",
-      date : "12/05/23",
-      value: "563",
-      status :"active"
-  },
-  {
-    ean : "EAN1234",
-    date : "12/06/23",
-    value: "125",
-    status :"active"
-  }
-]
-
   const data = [];
-
-  
   
   useEffect(()=>{
     const response = axios.get(URL2, {

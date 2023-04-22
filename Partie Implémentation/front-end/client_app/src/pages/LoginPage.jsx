@@ -61,6 +61,8 @@ const LoginPage = () => {
         localStorage.setItem("user", response.data);
         setAuthToken(response.headers["authorization"]);
       });
+
+      
       
       navigate("/main-page");
     } catch(err){

@@ -2,6 +2,7 @@ import React from 'react'
 import {createTheme, Button, styled, Typography, Stack, Card,Grid, TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link } from "react-router-dom";
+import axios from "../api/axios"
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,15 @@ const CssTextField = styled(TextField)({
 
 const ResetPassword = () => {
 
+  const [email, setEmail] = React.useState('');
+
+  const submit = () => {
+    const response = axios.post('http://localhost:8080/api/auth/client/reset-password', null, {headers: {"Content-Type":"application/json",
+    //"Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}, params: {email : email}}).then(response=>{
+      console.log(response.data)
+    })
+  }
   // code part
   return (
     <Grid container
@@ -46,10 +56,10 @@ const ResetPassword = () => {
             <img className='login-logo' src={logo} alt='logo' width={70} height={70}/>
             <Typography className='typo' variant="h4">Reset your password</Typography>
             <Typography variant="h7" sx={{mt:1, color:'#262626'}}>Enter the email you registered with.</Typography>
-            <CssTextField className='login-textfield'size='small' variant='outlined' label='email' margin='normal' sx={{width:'80%'}}/>
+            <CssTextField className='login-textfield'size='small' variant='outlined' label='email' margin='normal' sx={{width:'80%'}} onChange={e => setEmail(e.target.value)}/>
             <ThemeProvider theme={theme}>
-              <Link to='/main-page' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
-                <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>Reset</Button>
+              <Link className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
+                <Button onClick={submit} variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>Reset</Button>
               </Link>
             </ThemeProvider>
             <Link className='link-2' to='/login'>

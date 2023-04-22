@@ -18,13 +18,15 @@ const MetersList = () => {
   useEffect(()=> {
     // getting the jwt
     const jwt = localStorage.getItem("jwt");
+    const client_id = localStorage.getItem("user");
   
     const response = axios.get(URL, {
     headers : {"Content-Type":"application/json",
     "Authorization" : `Bearer ${jwt}`,
     "Access-Control-Allow-Origin":true}
     }).then(response=>{
-    setMeters(response.data);
+    let temp_list = []
+    setMeters(response.data)
     });
   }, [])
   
@@ -54,7 +56,7 @@ const MetersList = () => {
       
       <List style={{maxHeight: '100%', overflow: 'auto'}}>
       {meters.map(meter =>  
-      <ListItem>
+      <ListItem key={meter.ean}>
         <ListItemButton onClick={()=>handleClick(meter.ean)}>
           <ListItemText>
             {meter.ean}

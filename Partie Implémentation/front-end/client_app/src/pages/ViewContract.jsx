@@ -20,7 +20,7 @@ const ViewContract = () => {
       <Grid align='center'>
         <Card sx={{width:'80%', m:2, height:'auto' }} >
           <Box sx={{height:'100%', width:'100%'}} alignment='center' >
-            <Link to={'/contracts'} >
+            <Link to={'/manage-contracts'} >
               <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
                 Retour
               </Button>
@@ -206,41 +206,19 @@ const ViewContract = () => {
             </Grid>
           </Box>
         </Card>
-        {1 === 1 ? (
+      
           <Grid container
           direction='row'
           justifyContent='center'
           alignItems='center'
           >
-            <Grid item xs={6} >
-              <Button  variant='outlined' color='secondary'  sx={{mt:2, width:'60%', mb:5}}>
-                  Cancel Changes
-              </Button>             
-            </Grid>
-            <Grid item xs={6} >
-              <Button  variant='outlined' color='error'  sx={{mt:2, width:'80%', mb:5}}>
-                Confirm Changes
-              </Button>
-            </Grid>
-          </Grid>
-        ) : (
-          <Grid container
-          direction='row'
-          justifyContent='center'
-          alignItems='center'
-          >
-            <Grid item xs={6} >
-              <Button  variant='outlined' color='secondary'  sx={{mt:2, width:'60%', mb:5}}>
-                Edit Contract
-              </Button>
-            </Grid>
             <Grid item xs={6} >
               <Button  variant='outlined' color='error'  sx={{mt:2, width:'80%', mb:5}}>
                 Cancel Contract
               </Button>
             </Grid>
           </Grid>
-        )}
+        
       </Grid>
     </Stack>
   </Stack>

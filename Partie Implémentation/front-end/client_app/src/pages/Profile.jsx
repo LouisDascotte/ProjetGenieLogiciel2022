@@ -16,14 +16,6 @@ const Profile = () => {
 
   const jwt = localStorage.getItem("jwt");
 
-  /*const [infos, setInfos] = useState({
-    last_name : "", 
-    first_name : "", 
-    phone_number : "", 
-    email : "", 
-    address : ""
-  });*/
-
   const [infos, setInfos] = useState({});
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -38,12 +30,11 @@ const Profile = () => {
     "Authorization" : `Bearer ${jwt}`,
     "Access-Control-Allow-Origin":true}
     }).then(response=>{
-      console.log(response.data);
-      setFirstName(response.data.firstName);
-      setLastName(response.data.lastName);
-      setPhoneNumber(response.data.phoneNo);
+      setFirstName(response.data.client.firstName);
+      setLastName(response.data.client.lastName);
+      setPhoneNumber(response.data.client.phoneNo);
       setEmail(response.data.email);
-      setAddress(response.data.address);
+      setAddress(response.data.client.address);
     })
   },[])
   

@@ -72,6 +72,13 @@ const Preferences = () => {
         "Access-Control-Allow-Origin" : true
     }}).then(response => {
       setPortfolios(response.data)
+      portfolios.map(portfolio => {
+        if (portfolio.id === favPortfolio){
+          console.log(portfolio.name)
+          setFavPortfolio(portfolio.name)
+        }
+        
+      })
     })
 
     console.log(portfolios)
@@ -108,9 +115,9 @@ const Preferences = () => {
             <Divider variant="middle" color='black' sx={{ borderBottomWidth: 2 , m:2, width:'60%'}}/>
             <Stack direction='row'  alignItems='center' justifyContent='center' sx={{mt:2}}>
               <Typography variant='h6' sx={{mr:1}} style={{whiteSpace:"nowrap"}}>Favorite portfolio :  </Typography>
-              <FormControl variant='standard' sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel sx={{width:'100%'}}>{favPortfolio}</InputLabel>
-                  <Select onChange={handleSelect} sx={{width:'100%'}} >
+              <FormControl sx={{ m: 1, minWidth: "100%" }}>
+                <InputLabel sx={{width:'100%'}}>Favorite portfolio : </InputLabel>
+                  <Select onChange={handleSelect} sx={{width:'100%'}} label="Favorite portfolio :">
                   
                   {portfolios.map(portfolio => {
                     return <MenuItem value={portfolio.id}>{portfolio.name}</MenuItem>

@@ -40,7 +40,6 @@ const ManageContracts = () => {
           }
         };
         const response = await axios.get("http://localhost:8080/api/contract/all", config);
-        console.log(response.data);
         setContracts(response.data);
       } catch (error) {
         console.log(error);
@@ -49,16 +48,6 @@ const ManageContracts = () => {
     getContracts();
   }, []);
   
-
-  const [selectedContract, setSelectedContract] = React.useState(null);
-
-  const handleContractClick = (contractID) => {
-    setSelectedContract(contractID);
-    console.log(contractID);
-  };
-  const handleResetClick = () => {
-    setSelectedContract(null);
-  };
   const getClientNameByContractId = (contractID) => {
     const client = ContractList.find((contract) => contract.id === contractID);
     return client.clientName;
@@ -77,11 +66,11 @@ const ManageContracts = () => {
                   Contracts List
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {ContractList.map((contract) => (
-                    <ListItem key={contract.contractId}>
-                      <ListItemText primary={`${contract.contractId}`} />
-                      <Link to={`/contracts/${contract.contractId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                        <Button variant="contained" onClick={() => handleContractClick(contract.contractId)}>
+                  {contracts.map((contract) => (
+                    <ListItem key={contract.id}>
+                      <ListItemText primary={`${contract.id}`.slice(0,15)} />
+                      <Link to={`/contracts/${contract.id}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                        <Button variant="contained" >
                           See Details
                         </Button>
                       </Link>

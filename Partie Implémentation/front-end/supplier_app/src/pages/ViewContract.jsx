@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ClientList as Clients, ContractList as Contracts} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import axios from 'axios';
 
 function ViewContract() {
   const id = useParams().contractId;
@@ -28,17 +28,68 @@ function ViewContract() {
     }
   });
 
+  const [Contracts, setContracts] = React.useState([]);
+  const [Clients, setClients] = React.useState([]);
+
+  useEffect(() => {
+    async function getContracts() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get("http://localhost:8080/api/contract/all", config);
+        console.log(response.data);
+        setContracts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getContracts();
+  }, []);
+  useEffect(() => {
+    async function getClients() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get("http://localhost:8080/api/supplier/clients", config);
+        console.log(response.data);
+        setClients(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getClients();
+  }, []);
+
+  
+
   const pageAddress = "/contracts/:id";
   const pageName = "View Contract";
 
   const getContractById = (id) => {
-    const idInt = parseInt(id,10);
-    return Contracts.find((contract) => contract.contractId === idInt);
+    const idInt = id;
+    const res = Contracts.find((contract) => contract.id === idInt);
+    console.log(Contracts);
+    console.log(res);
+    return res;
   };
   
   function getClientByContractId(id) {
-    const idInt = parseInt(id,10);
-    const owner = Contracts.find((contract) => contract.contractId === idInt).clientId;
+    const idInt = id;
+    console.log(idInt);
+    const owner = Contracts.find((contract) => contract.id === idInt).clientId;
+    console.log(owner);
     const ownerId = parseInt(owner,10);
     return Clients.find((client) => client.clientId === ownerId);
   }
@@ -88,6 +139,7 @@ function ViewContract() {
   const getContractEndDate = () => {
     return contract.endDate;
   }
+  
 
   const contractData = {
     clientId: getClientId(),
@@ -102,6 +154,7 @@ function ViewContract() {
     beginDate: getContractBeginDate(),
     endDate: getContractEndDate(),
   }
+
   const [editMode, setEditMode] = React.useState(false);
   const [editableData, setEditableData] = React.useState(contractData);
 

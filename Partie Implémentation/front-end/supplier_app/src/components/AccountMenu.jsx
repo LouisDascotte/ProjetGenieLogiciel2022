@@ -25,7 +25,7 @@ const AccountMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const name = "Dupont";
+  const name = localStorage.getItem('name');
 
   const handleLogout = () => {
     authServices.logout();

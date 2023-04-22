@@ -15,25 +15,7 @@ const Profile = () => {
   const pageName = "Profile";
 
   const jwt = localStorage.getItem("jwt");
-
-  const [infos, setInfos] = useState({
-    supplierName: "",
-    operatingArea: ""
-  });
-
-
-  const response = axios.get(URL + "me",{
-    headers : {"Content-Type":"application/json",
-  "Authorization" : `Bearer ${jwt}`,
-  "Access-Control-Allow-Origin":true}
-  }).then(response=>{
-    console.log(response.data);
-    console.log(response.data.firstName);
-    infos.supplierName = response.data.lastName;
-    infos.operatingArea = response.data.operatingArea;
-  })
-
-
+  const [supplierName, setSupplierName] = useState(localStorage.getItem("name"));
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
@@ -49,47 +31,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='Supplier Name'sx={{mr:4}}/>
-              </Grid>
-            </Grid>
-            <Grid direction='row' sx={{m:2}} justifyContent="center" container>
-              <Grid item xs={6}>
-                <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Last Name
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label='last name'sx={{mr:4}}/>
-              </Grid>
-            </Grid>
-            <Grid direction='row' sx={{m:2}} justifyContent="center" container>
-              <Grid item xs={6}>
-                <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Phone Number
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label='phone number'sx={{mr:4}}/>
-              </Grid>
-            </Grid>
-            <Grid direction='row' sx={{m:2}} justifyContent="center" container>
-              <Grid item xs={6}>
-                <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Email Address
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label='email'sx={{mr:4}}/>
-              </Grid>
-            </Grid>
-            <Grid direction='row' sx={{m:2}} justifyContent="center" container>
-              <Grid item xs={6}>
-                <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Address
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label='address' sx={{mr:4}}/>
+                <TextField sx={{mr:4}} InputProps={{ readOnly: true }} value={supplierName} />
               </Grid>
             </Grid>
           </Grid>

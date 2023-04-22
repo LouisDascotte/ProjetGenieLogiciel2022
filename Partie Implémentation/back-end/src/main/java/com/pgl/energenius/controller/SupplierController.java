@@ -1,16 +1,14 @@
 package com.pgl.energenius.controller;
 
-import com.pgl.energenius.exception.InvalidUserDetailsException;
-import com.pgl.energenius.exception.ObjectNotFoundException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
-import com.pgl.energenius.exception.UnauthorizedAccessException;
-import com.pgl.energenius.model.dto.ClientPreferencesDto;
-import com.pgl.energenius.model.dto.SupplierPreferenceDto;
-import com.pgl.energenius.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.model.dto.SupplierPreferenceDto;
+import com.pgl.energenius.service.SupplierService;
 
 /**
  * The EmployeeController class handles all HTTP requests related to employees
@@ -50,7 +48,7 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

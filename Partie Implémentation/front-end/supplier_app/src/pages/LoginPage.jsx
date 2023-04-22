@@ -59,6 +59,9 @@ const LoginPage = () => {
         setJwt(response.headers["authorization"], "jwt");
         localStorage.setItem("jwt", response.headers["authorization"]);
         localStorage.setItem("user", response.data);
+        localStorage.setItem("name", response.data.name);
+        localStorage.setItem("operatingArea", response.data.operatingArea);     
+        
         setAuthToken(response.headers["authorization"]);
       });
       

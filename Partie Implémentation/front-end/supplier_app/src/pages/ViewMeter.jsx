@@ -50,7 +50,8 @@ const ViewMeter = () => {
             "Access-Control-Allow-Origin": true,
           }
         };
-        const response = await axios.get(API_URL+`${meterId}/readings`, config);
+        const response = await axios.get(API_URL+meterId+"/readings", config);
+        console.log(response);
         console.log(response.data);
         setReadings(response.data);
       } catch (error) {
@@ -58,7 +59,7 @@ const ViewMeter = () => {
       }
     }
     getReadings();
-  }, []);
+  }, [meterId]);
 
   const handleMeterClick = (meterID) => {
     console.log(meterID);

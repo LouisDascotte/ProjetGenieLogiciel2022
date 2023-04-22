@@ -15,7 +15,7 @@ const ManageCons = () => {
       primary: {
         main: "#9bcc6c",
         contrastText: '#fff'
-      }, 
+      },
       secondary: {
         main: "#000",
         contrastText: '#000000'
@@ -33,6 +33,8 @@ const ManageCons = () => {
 
   const [meters, setMeters] = React.useState([]);
 
+  // useEffect is a hook that allows to execute a function when the component is rendered
+  // Here, we use it to get the list of offers from the API
   useEffect(() => {
     async function getMeters() {
       try {        

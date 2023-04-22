@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Stack, Grid, Card, Box, Button, Paper } from '@mui/material';
+import { Stack, Grid, Card, Box, Button, Paper, Typography } from '@mui/material';
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import Carousel from 'react-material-ui-carousel'
+import { Link } from 'react-router-dom';
+import axios from '../api/axios';
 
 
 
@@ -25,19 +27,66 @@ const ManageOffer = () => {
     }
   });
 
-  const items = [
+  const [offers, setOffers] = React.useState([]);
+
+  const API_URL = "http://localhost:8080/api/contract/supplier_offers";
+
+  useEffect(() => {
+    async function getOffers() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: { Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get(API_URL, config);
+        console.log(response.data);
+        setOffers(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getOffers();
+  }, []);
+
+  const getOfferIdFromIndex = (list, index) => {
+    const id = list[index].id.toString();
+    return id.slice(0, 12);
+  }
+
+  const offerTest = [
     {
-      title: 'Slide 1',
-      description: 'Description for Slide 1',
+      id: 62896,
+      contractLength: 12,
+      cost: 450,
+      priceType: "FIXED_PRICE",
+      supplierName: "Luminis",
+      type: "SIMPLE_OFFER",
+      energyType: "ELEC",
+      hourType: "SIMPLE"
     },
     {
-      title: 'Slide 2',
-      description: 'Description for Slide 2',
+      id: 215283,
+      hourType: "SIMPLE",
+      contractLength: 6,
+      cost: 500,
+      priceType: "FIXED_PRICE",
+      supplierName: "Luminis",
+      type: "SIMPLE_OFFER",
+      energyType: "ELEC"
     },
     {
-      title: 'Slide 3',
-      description: 'Description for Slide 3',
-    },
+      id: 523592,
+      hourType: "SIMPLE",
+      contractLength: 6,
+      cost: 435,
+      priceType: "VAR_PRICE",
+      supplierName: "EleCable",
+      type: "SIMPLE_OFFER",
+      energyType: "ELEC"
+    }
   ];
 
   return (
@@ -46,18 +95,79 @@ const ManageOffer = () => {
         <SideMenu mainPage={"false"} />
         <Stack sx={{display:'flex', width:"100%"}}>
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-          <Grid align='center'>
-            <Carousel>
-              {items.map((item, index) => (
-                <Paper key={index}>
-                  <h2>{item.title}</h2>
-                  <p>{item.description}</p>
-                  <Button variant="contained" color="primary">
-                    Read More
+          <Grid align='center' >
+
+            <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            margin={2} >
+              <Grid item xs={4}
+              >
+                <Carousel >
+                  {offers.map((item, index) => (
+                    <Paper key={index} >
+                      <Grid container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={2}
+                        padding={2}
+                        >
+                          <Grid item xs >
+                            <Typography variant="h4" component="h2" gutterBottom>
+                              Offer #{getOfferIdFromIndex(offers, index)}
+                            </Typography>
+                          </Grid>
+                          <Grid item container
+                          justifyContent='flex-start'
+                          >
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Duration: {item.contractLength} months
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Cost: {item.cost}€/month
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Price type: {item.priceType === "FIXED_PRICE" ? "Fixed" : "Variable" }
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Supplied by: {item.supplierName}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : "Electricity and Gas"}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs >
+                            <Button variant="contained" color="error" sx={{ width: "100%" }} >
+                              Delete
+                            </Button>
+                          </Grid>
+                        </Grid>
+                    </Paper>
+                  ))}
+                </Carousel>
+              </Grid>
+              <Grid item xs={12}>
+                <Link to="/offers/new" className='link' >
+                  <Button variant="contained" color="primary" sx={{ width: "33%" }} >
+                    Create new offer
                   </Button>
-                </Paper>
-              ))}
-            </Carousel>
+                </Link>
+              </Grid>
+            </Grid>
           </Grid>
         </Stack>
       </Stack>

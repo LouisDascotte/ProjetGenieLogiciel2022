@@ -23,7 +23,7 @@ const ManageClients = () => {
     }
   });
 
-  const API_URL = "http://localhost:8080/api/client";
+  const API_URL = "http://localhost:8080/api/supplier/clients";
 
   const pageAddress = "/client";
   const pageName = "Manage clients";

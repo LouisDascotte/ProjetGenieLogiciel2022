@@ -125,7 +125,7 @@ function ViewContract() {
   }
 
   const handleCancelContract = () => {
-    alert('DELETE request sent to server ');
+    alert('DELETE request sent to server');
   }
 
   return (

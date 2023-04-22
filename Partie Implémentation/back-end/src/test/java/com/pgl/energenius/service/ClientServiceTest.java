@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.mongodb.DuplicateKeyException;
+
 import com.pgl.energenius.config.WebSecurityConfig;
 import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.exception.*;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Optional;
 

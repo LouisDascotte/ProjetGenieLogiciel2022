@@ -28,6 +28,9 @@ const ManageOffer = () => {
   });
 
   const [offers, setOffers] = React.useState([]);
+  const avgCons = 320;
+  const avgConsDay = 133;
+  const avgConsNight = 158;
 
   const API_URL = "http://localhost:8080/api/contract/supplier_offers";
 
@@ -53,41 +56,9 @@ const ManageOffer = () => {
 
   const getOfferIdFromIndex = (list, index) => {
     const id = list[index].id.toString();
+    console.log(list[index].cost.toFixed(4)+" "+list[index].nightCost);
     return id.slice(0, 12);
   }
-
-  const offerTest = [
-    {
-      id: 62896,
-      contractLength: 12,
-      cost: 450,
-      priceType: "FIXED_PRICE",
-      supplierName: "Luminis",
-      type: "SIMPLE_OFFER",
-      energyType: "ELEC",
-      hourType: "SIMPLE"
-    },
-    {
-      id: 215283,
-      hourType: "SIMPLE",
-      contractLength: 6,
-      cost: 500,
-      priceType: "FIXED_PRICE",
-      supplierName: "Luminis",
-      type: "SIMPLE_OFFER",
-      energyType: "ELEC"
-    },
-    {
-      id: 523592,
-      hourType: "SIMPLE",
-      contractLength: 6,
-      cost: 435,
-      priceType: "VAR_PRICE",
-      supplierName: "EleCable",
-      type: "SIMPLE_OFFER",
-      energyType: "ELEC"
-    }
-  ];
 
   return (
     <ThemeProvider theme={theme}>
@@ -106,7 +77,10 @@ const ManageOffer = () => {
             margin={2} >
               <Grid item xs={4}
               >
-                <Carousel >
+                <Carousel
+                stopAutoPlayOnHover
+                index={5000}
+                >
                   {offers.map((item, index) => (
                     <Paper key={index} >
                       <Grid container
@@ -134,6 +108,13 @@ const ManageOffer = () => {
                                 Cost: {item.cost}€/month
                               </Typography>
                             </Grid>
+                            {item.hourType === "DOUBLE" ?
+                            <Grid item xs={12}>
+                              <Typography variant="body1" gutterBottom>
+                                Night cost: {item.nightCost}€/month
+                              </Typography>
+                            </Grid> 
+                            : null }
                             <Grid item xs={12}>
                               <Typography variant="body1" gutterBottom>
                                 Price type: {item.priceType === "FIXED_PRICE" ? "Fixed" : "Variable" }
@@ -148,6 +129,16 @@ const ManageOffer = () => {
                               <Typography variant="body1" gutterBottom>
                                 Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : "Electricity and Gas"}
                               </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              {item.hourType === "DOUBLE" ?
+                              <Typography variant="h6" gutterBottom>
+                                {(item.cost*avgConsDay + item.nightCost*avgConsNight).toFixed(2)}€/month
+                              </Typography>
+                              : <Typography variant="h6" gutterBottom>
+                                {(item.cost*avgCons).toFixed(2)}€/month
+                              </Typography>
+                              }
                             </Grid>
                           </Grid>
                           <Grid item xs >

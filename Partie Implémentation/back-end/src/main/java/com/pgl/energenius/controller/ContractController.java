@@ -1,18 +1,18 @@
 package com.pgl.energenius.controller;
 
-import com.pgl.energenius.enums.EnergyType;
-import com.pgl.energenius.enums.HourType;
-import com.pgl.energenius.exception.*;
-import com.pgl.energenius.model.dto.GazElecContractRequestDto;
-import com.pgl.energenius.model.dto.SimpleOfferDto;
-import com.pgl.energenius.model.dto.SimpleContractRequestDto;
-import com.pgl.energenius.service.ContractService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.enums.HourType;
+import com.pgl.energenius.exception.*;
+import com.pgl.energenius.model.dto.GazElecContractRequestDto;
+import com.pgl.energenius.model.dto.SimpleContractRequestDto;
+import com.pgl.energenius.service.ContractService;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -148,7 +148,7 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

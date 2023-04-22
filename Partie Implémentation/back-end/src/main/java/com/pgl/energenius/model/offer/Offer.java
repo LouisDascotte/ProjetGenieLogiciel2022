@@ -1,14 +1,16 @@
 package com.pgl.energenius.model.offer;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.pgl.energenius.enums.HourType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Offer that the supplier makes
@@ -40,9 +42,9 @@ public abstract class Offer {
     /**
      * The offer's cost
      */
-    private int cost;
+    private double cost;
 
-    private int nightCost;
+    private double nightCost;
 
     /**
      * The type of the contract

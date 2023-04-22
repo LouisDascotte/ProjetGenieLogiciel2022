@@ -51,14 +51,14 @@ const SideMenu = (mainPage) => {
                     Manage contracts
                   </MenuItem>
                 </Link>
-                <Link to="/consumption" className='link'>
-                  <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                    Manage consumption
-                  </MenuItem>
-                </Link>
                 <Link to="/offers" className='link'>
                   <MenuItem icon={<DescriptionIconOutlined />}>
                     Manage offers
+                  </MenuItem>
+                </Link>
+                <Link to="/consumption" className='link'>
+                  <MenuItem icon={<ElectricMeterOutlinedIcon />}>
+                    Manage consumption
                   </MenuItem>
                 </Link>
             </Menu>

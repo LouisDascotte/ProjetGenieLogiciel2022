@@ -1,7 +1,7 @@
 import React from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack,Card, Box, Grid, Button, ThemeProvider, createTheme} from '@mui/material';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
@@ -26,6 +26,8 @@ const ManageContracts = () => {
   });
   const pageAddress = "/manage-contracts";
   const pageName = "Manage contracts";
+  const navigate = useNavigate();
+  
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu mainPage={"false"} />

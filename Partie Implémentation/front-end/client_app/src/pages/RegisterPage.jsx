@@ -148,7 +148,7 @@ const RegisterPage = () => {
         lastName : form.lastName, 
         email : form.email, 
         phoneNumber : form.phoneNumber,
-        language : form.language, 
+        language : "EN", 
         password : form.password, 
         address : form.address.street + " " + form.address.houseNo + " " +form.address.box +" " + form.address.postalCode +" " + form.address.city +" " + form.address.country,
       };

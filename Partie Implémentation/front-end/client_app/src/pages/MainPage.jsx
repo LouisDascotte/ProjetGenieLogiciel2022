@@ -56,7 +56,7 @@ const MainPage = () => {
         if (page !== ""){
             setHasSelectedPortfolio(true);
         }
-    })
+    }, [])
 
     return (
         <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>

@@ -40,6 +40,10 @@ code {
   font-weight: 900;
 }
 
+.typoC{
+  white-space: nowrap;
+}
+
 .login-textfield{
   background-color: #f5fff5;
 }

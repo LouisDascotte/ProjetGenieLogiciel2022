@@ -32,8 +32,14 @@ const ContractRequest = () => {
 
   const [ean1, setEan1] = useState("");
   const [ean2, setEan2] = useState("");
-  const [contractType, setContractType] = useState("");
-  const [meterType, setMeterType] = useState("");
+
+  const [energyType, setEnergyType] = useState("");
+
+  const [meterType1, setMeterType] = useState("");
+  const [meterType2, setMeterType2] = useState("");
+
+  const [meterHourType1, setMeterHourType] = useState("");
+  const [meterHourType2, setMeterHourType2] = useState("");
 
   useEffect(() => {
     autoCompleteRef.current = new window.google.maps.places.Autocomplete(
@@ -77,19 +83,26 @@ const ContractRequest = () => {
      });
   }, []);
 
-  const handleSelectChangeContractType = (e) => {
-    setContractType(e.target.value);
+  const selectEnergyType = (e) => {
+    setEnergyType(e.target.value);
   }
 
-  const handleSelectChangeType = (e) => {
+  const selectMeterType1 = (e) => {
     setMeterType(e.target.value);
   }
 
-  const [meterFuncType, setMeterFuncType] = useState("");
-
-  const handleSelectChangeMeterType = (e) => {
-    setMeterFuncType(e.target.value);
+  const selectMeterHour1 = (e) => {
+    setMeterHourType(e.target.value);
   }
+
+  const selectMeterType2 = (e) => {
+    setMeterType(e.target.value);
+  }
+
+  const selectMeterHour2 = (e) => {
+    setMeterHourType(e.target.value);
+  }
+
 
   function cancel(){
 
@@ -101,24 +114,28 @@ const ContractRequest = () => {
     const contractTypesList = ["ELEC", "GAZ", "WATER", "ELECTRICITY_AND_GAS"];
     const meter_type = ["SIMPLE", "DOUBLE"]
     const mechanism = ["NUMERIC", "MANUAL"]
-    if (contractType ===4){
+    if (energyType === 4){
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
-        "energyType" : contractTypesList[contractType-1],
-        "hourType" : meter_type[meterType-1],
+        "energyType" : contractTypesList[energyType-1],
+        "hourType" : meter_type[meterHourType1-1],
         "EAN_GAZ" : ean1,
-        "EAN_ELEC" : ean2
+        "EAN_ELEC" : ean2,
+        "meterType": mechanism[meterType1-1],
       }
     } else {
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
-        "energyType" : contractTypesList[contractType-1],
-        "hourType" : meter_type[meterType-1],
+        "energyType" : contractTypesList[energyType-1],
+        "hourType" : meter_type[meterHourType1-1],
         "EAN" : ean1,
-        "meterType" : mechanism[meterFuncType-1],
+        "meterType" : mechanism[meterType1-1],
       }
     }
     console.log(body);
+    const request = axios.get("http://localhost:8080/api/contract/offers", {headers: {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}, params: body})
     navigate("/offers-page", {state: {body: body}})
   }
 
@@ -146,7 +163,7 @@ const ContractRequest = () => {
               <Typography variant='h6' sx={{mr:5}}>Contract type : </Typography>
               <FormControl sx={{minWidth:"100%"}}>
                 <InputLabel>Select contract type</InputLabel>
-                <Select sx={{width:"100%"}} label='Select contract type' onChange={handleSelectChangeContractType}>
+                <Select sx={{width:"100%"}} label='Select contract type' onChange={selectEnergyType}>
                   <MenuItem value={1}>Electricity</MenuItem>
                   <MenuItem value={2}>Gas</MenuItem>
                   <MenuItem value={3}>Water</MenuItem>
@@ -154,43 +171,68 @@ const ContractRequest = () => {
                 </Select>
               </FormControl>
             </Stack>
-            {contractType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
+            {energyType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>Supply point : </Typography>
               <TextField type='number' onChange={e => setEan1(e.target.value)}  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
-            </Stack> : <Stack><Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}} onChange={e=>setEan1(e.target.value)}>Gas supply point : </Typography>
-              <TextField type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
+            </Stack> : <Stack>
+              <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
+              <Typography variant='h6' sx={{mr:5}}>Gas supply point : </Typography>
+              <TextField onChange={e => setEan1(e.target.value)} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}} onChange={e=>setEan2(e.target.value)}>Electricity supply point : </Typography>
-              <TextField type='number'InputProps={{
+              <Typography variant='h6' sx={{mr:5}} >Electricity supply point : </Typography>
+              <TextField onChange={e => setEan2(e.target.value)} type='number'InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
             </Stack></Stack>}
+            {energyType !== 4 ? <Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Hour type: </Typography>
-              <FormControl sx={{minWidth:"100%"}}>
-                <InputLabel>Select hour type:</InputLabel>
-                <Select sx={{width:"100%"}} label='Select hour type:' onChange={handleSelectChangeType}>
-                  <MenuItem value={1}>Mono-hourly</MenuItem>
-                  <MenuItem value={2}>Bi-hourly</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
-            <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Meter type : </Typography>
-              <FormControl sx={{minWidth:"100%"}}>
-                <InputLabel>Select meter type :</InputLabel>
-                <Select sx={{width:"100%"}} label='Select meter type :' onChange={handleSelectChangeMeterType}>
-                  <MenuItem value={1}>Electronic</MenuItem>
-                  <MenuItem value={2}>Mechanical</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+            <Typography variant='h6' sx={{mr:5}}style={{whiteSpace:'nowrap'}}>Hour type: </Typography>
+            <FormControl sx={{minWidth:"100%"}}>
+              <InputLabel>Select hour type:</InputLabel>
+              <Select sx={{width:"100%"}} label='Select hour type:' onChange={selectMeterHour1}>
+                <MenuItem value={1}>Mono-hourly</MenuItem>
+                <MenuItem value={2}>Bi-hourly</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+          <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
+            <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}>Meter type : </Typography>
+            <FormControl sx={{minWidth:"100%"}}>
+              <InputLabel>Select meter type :</InputLabel>
+              <Select sx={{width:"100%"}} label='Select meter type :' onChange={selectMeterType1}>
+                <MenuItem value={1}>Electronic</MenuItem>
+                <MenuItem value={2}>Mechanical</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack> </Stack> : 
+          <Stack>
+          <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}} >
+          <Typography variant='h6' sx={{mr:5, display:'inline'}} style={{whiteSpace:'nowrap'}}>Hours type : </Typography>
+          <FormControl sx={{minWidth:"100%"}}>
+            <InputLabel>Select hour type:</InputLabel>
+            <Select sx={{width:"100%"}} label='Select hour type:' onChange={selectMeterHour1}>
+              <MenuItem value={1}>Mono-hourly</MenuItem>
+              <MenuItem value={2}>Bi-hourly</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+        <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
+          <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}>Meters type : </Typography>
+          <FormControl sx={{minWidth:"100%"}}>
+            <InputLabel>Select meter type :</InputLabel>
+            <Select sx={{width:"100%"}} label='Select meter type :' onChange={selectMeterType1}>
+              <MenuItem value={1}>Electronic</MenuItem>
+              <MenuItem value={2}>Mechanical</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+        </Stack>}
+            
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Button size='large' variant='outlined' sx={{mr:8}} onClick={cancel}>
                 Cancel

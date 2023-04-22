@@ -3,6 +3,7 @@ import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemT
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 import axios from "../api/axios";
+import {useNavigate} from 'react-router-dom';
 
 
 const URL = "http://localhost:8080/api/contract/all";
@@ -10,6 +11,7 @@ const URL = "http://localhost:8080/api/contract/all";
 
 const ContractsList = () => {
   const [contracts, setContracts] =  useState([]);
+  const navigate = useNavigate();
   useEffect(()=> {
     // getting the jwt
     const jwt = localStorage.getItem("jwt");
@@ -28,9 +30,9 @@ const ContractsList = () => {
       <List style={{maxHeight: '100%', overflow: 'auto'}}>
         {contracts.map(contract =>  
         <ListItem>
-          <ListItemButton>
+          <ListItemButton onClick={()=> navigate(`/view-contract`, {state : contract})}>
             <ListItemText>
-              {contract.name}
+              {contract.id}
             </ListItemText>
           </ListItemButton>
           <IconButton>

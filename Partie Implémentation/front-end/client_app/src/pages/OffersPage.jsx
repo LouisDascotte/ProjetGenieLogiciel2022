@@ -2,7 +2,7 @@ import {React, useState, useEffect} from 'react'
 import axios from "../api/axios";
 import {useNavigate, useLocation} from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
-import {Paper, Button, Stack, IconButton , Dialog, DialogTitle, DialogContent} from "@mui/material";
+import {Paper, Button, Stack, IconButton , Dialog, DialogTitle, DialogContent, Snackbar, Alert} from "@mui/material";
 import TopMenu from "../components/TopMenu";
 import SideMenu from "../components/SideMenu";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -50,10 +50,19 @@ const OffersPage = () => {
   }
 
   const [open, setOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleCancel= ()=>{
     setSelectedOffer(null);
     setOpen(false);
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway'){
+      return; 
+    }
+
+    setSuccess(false);
   }
 
   const handleConfirm = () => {
@@ -67,6 +76,8 @@ const OffersPage = () => {
         offerId : selectedOffer
       }}).then(response => {
         console.log(response.data);
+
+        navigate("/manage-contracts");
       })
     } catch (err){
       console.log(err);
@@ -102,6 +113,9 @@ const OffersPage = () => {
           <Carousel>
             {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
           </Carousel>
+          <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity='success'>Portfolio successfully created !</Alert>
+          </Snackbar>
         </Paper>
       </Stack>
     </Stack>

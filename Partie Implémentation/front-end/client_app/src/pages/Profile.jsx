@@ -1,4 +1,4 @@
-import {React, useState} from 'react'
+import {React, useState, useEffect} from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack, Box, Grid, Card, Typography, TextField} from '@mui/material';
 import logo from '../resources/logo.png';
@@ -16,28 +16,38 @@ const Profile = () => {
 
   const jwt = localStorage.getItem("jwt");
 
-  const [infos, setInfos] = useState({
+  /*const [infos, setInfos] = useState({
     last_name : "", 
     first_name : "", 
     phone_number : "", 
     email : "", 
     address : ""
-  });
+  });*/
 
+  const [infos, setInfos] = useState({});
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  
 
-  const response = axios.get(URL + "me",{
-    headers : {"Content-Type":"application/json",
-  "Authorization" : `Bearer ${jwt}`,
-  "Access-Control-Allow-Origin":true}
-  }).then(response=>{
-    console.log(response.data);
-    console.log(response.data.firstName);
-    infos.last_name = response.data.lastName; 
-    infos.first_name = response.data.firstName;
-    infos.phone_number = response.data.phoneNo; 
-    infos.email = response.data.email;
-  })
-
+  useEffect(()=>{
+    const response = axios.get(URL + "me",{
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(response=>{
+      console.log(response.data);
+      setFirstName(response.data.firstName);
+      setLastName(response.data.lastName);
+      setPhoneNumber(response.data.phoneNo);
+      setEmail(response.data.email);
+      setAddress(response.data.address);
+    })
+  },[])
+  
+console.log(infos.address);
 
 
   return (
@@ -54,7 +64,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='first name'sx={{mr:4}}/>
+                <Box sx={{backgroundColor:"#f3f4f6", borderRadius:"16px", width:'90%', mt:2, textAlign:'center'}}>{firstName}</Box>
               </Grid>
             </Grid>
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
@@ -64,7 +74,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='last name'sx={{mr:4}}/>
+              <Box sx={{backgroundColor:"#f3f4f6", borderRadius:"16px", width:'90%', mt:2, textAlign:'center'}}>{lastName}</Box>
               </Grid>
             </Grid>
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
@@ -74,7 +84,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='phone number'sx={{mr:4}}/>
+              <Box sx={{backgroundColor:"#f3f4f6", borderRadius:"16px", width:'90%', mt:2, textAlign:'center'}}>{phoneNumber}</Box>
               </Grid>
             </Grid>
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
@@ -84,7 +94,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='email'sx={{mr:4}}/>
+              <Box sx={{backgroundColor:"#f3f4f6", borderRadius:"16px", width:'90%', mt:2, textAlign:'center'}}>{email}</Box>
               </Grid>
             </Grid>
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
@@ -94,7 +104,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <TextField label='address' sx={{mr:4}}/>
+              <Box sx={{backgroundColor:"#f3f4f6", borderRadius:"16px", width:'90%', mt:2, textAlign:'center'}}>{address}</Box>
               </Grid>
             </Grid>
           </Grid>

@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "offers")
-public abstract class Offer {
+public class Offer {
 
     /**
      * The ID of the offer

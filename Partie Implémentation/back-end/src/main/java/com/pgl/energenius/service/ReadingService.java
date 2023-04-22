@@ -1,6 +1,5 @@
 package com.pgl.energenius.service;
 
-import com.mongodb.DuplicateKeyException;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
@@ -14,6 +13,7 @@ import com.pgl.energenius.repository.ReadingRepository;
 import com.pgl.energenius.utils.DateUtils;
 import com.pgl.energenius.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -72,6 +72,8 @@ public class ReadingService {
                 reading.setValue(value);
                 reading.setStatus(Reading.Status.PENDING);
                 saveReading(reading);
+
+                // TODO Supprimer ancienne notif si PENDING
 
             } else {
                 throw new ObjectAlreadyExitsException("Reading already exits with date: " + date);

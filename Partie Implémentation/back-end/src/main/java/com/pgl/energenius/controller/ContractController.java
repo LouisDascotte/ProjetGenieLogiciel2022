@@ -139,7 +139,7 @@ public class ContractController {
 
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @GetMapping("/supplier_offers")
-    public ResponseEntity<?> getOffers() {
+    public ResponseEntity<?> getSupplierOffers() {
 
         try {
             return new ResponseEntity<>(contractService.getSupplierOffers(), HttpStatus.OK);

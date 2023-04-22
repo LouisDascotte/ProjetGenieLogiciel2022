@@ -17,6 +17,7 @@ const Preferences = () => {
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
   const [favPortfolio, setFavPortfolio] = React.useState("");
+  const [favPortfolioId, setFavPortfolioId] = React.useState("");
   const [lang, setLang] = React.useState("");
   const [portfolios, setPortfolios] = React.useState([]);
 
@@ -26,7 +27,7 @@ const Preferences = () => {
       "lang" : lang,
       "old_password" : oldPassword,
       "new_password" : newPassword,
-      "favoritePortfolioId" : favPortfolio
+      "favoritePortfolioId" : favPortfolioId
     }
     const response = axios.put("http://localhost:8080/api/client/me", JSON.stringify(body),{
       headers : {
@@ -39,6 +40,29 @@ const Preferences = () => {
     })
   }
 
+  const updateSettings = () => {
+    console.log(favPortfolioId);
+    console.log(favPortfolio);
+    const jwt = localStorage.getItem("jwt");
+    const body = {
+      "lang" : lang,
+      "old_password" : oldPassword,
+      "new_password" : oldPassword,
+      "favoritePortfolioId" : favPortfolioId
+    }
+
+    const response = axios.put("http://localhost:8080/api/client/me", JSON.stringify(body),{
+      headers : {
+        "Content-Type" : "application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin" : true
+      }
+    }).then(response=>{
+      console.log(response);
+    })
+
+  }
+
 
 
   React.useEffect(()=>{
@@ -48,7 +72,8 @@ const Preferences = () => {
         "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
         "Access-Control-Allow-Origin" : true
     }}).then(response => {
-      setFavPortfolio(response.data.client.favoritePortfolioId);
+      setFavPortfolioId(response.data.client.favoritePortfolioId);
+
       setLang(response.data.client.lang);
     })
 
@@ -62,6 +87,7 @@ const Preferences = () => {
       portfolios.map(portfolio => {
         if (portfolio.id === favPortfolio){
           setFavPortfolio(portfolio.name)
+          setFavPortfolioId(portfolio.id)
         }
         
       })
@@ -70,7 +96,8 @@ const Preferences = () => {
    
   }, [])
   const handleSelect = (e) => {
-    setFavPortfolio(e.target.value);
+    setFavPortfolioId(e.target.value.id);
+    setFavPortfolio(e.target.value.name)
   }
 
 
@@ -103,12 +130,12 @@ const Preferences = () => {
                   <Select onChange={handleSelect} sx={{width:'100%'}} label="Favorite portfolio :">
                   
                   {portfolios.map(portfolio => {
-                    return <MenuItem value={portfolio.id}>{portfolio.name}</MenuItem>
+                    return <MenuItem value={portfolio}>{portfolio.name}</MenuItem>
                   })}
                   </Select>
                 </FormControl>
             </Stack>
-            <Button variant="outlined">
+            <Button variant="outlined" onClick={updateSettings} sx={{mt:2}}>
               Apply changes
             </Button>
           </Stack>

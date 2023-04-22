@@ -39,19 +39,6 @@ const Preferences = () => {
     })
   }
 
-  /*const test = () => {
-    const jwt = localStorage.getItem("jwt");
-    const response = axios.get("http://localhost:8080/api/auth/test", {
-      headers : {
-        "Content-Type" : "application/json",
-        "Authorization" : `Bearer ${jwt}`,
-        "Access-Control-Allow-Origin" : true
-      }
-    }
-    ).then(response=>{
-      console.log(response.data);
-    })
-  }*/
 
 
   React.useEffect(()=>{
@@ -74,21 +61,17 @@ const Preferences = () => {
       setPortfolios(response.data)
       portfolios.map(portfolio => {
         if (portfolio.id === favPortfolio){
-          console.log(portfolio.name)
           setFavPortfolio(portfolio.name)
         }
         
       })
     })
 
-    console.log(portfolios)
+   
   }, [])
-
   const handleSelect = (e) => {
     setFavPortfolio(e.target.value);
   }
-
-  console.log(portfolios)
 
 
   return (
@@ -125,7 +108,11 @@ const Preferences = () => {
                   </Select>
                 </FormControl>
             </Stack>
+            <Button variant="outlined">
+              Apply changes
+            </Button>
           </Stack>
+          
         </Box>
         
         

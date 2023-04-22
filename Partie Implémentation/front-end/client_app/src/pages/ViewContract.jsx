@@ -4,12 +4,16 @@ import SideMenu from '../components/SideMenu'
 import TopMenu from '../components/TopMenu'
 import {Link, useParams, useLocation} from 'react-router-dom'
 import { ArrowBack } from '@mui/icons-material'
+import axios from '../api/axios'
 
 const pageAddress = '/contracts'
 const pageName = 'Contract'
 
 const ViewContract = () => {
   const location = useLocation();
+  const jwt = localStorage.getItem('jwt')
+
+  
 
   console.log(location.state)
   return (

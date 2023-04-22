@@ -47,18 +47,6 @@ export const Portfolio2 = () => {
     })
   }, [state])
     
-
-  const meters_test = [
-    {
-      ean : "EAN1234",
-      supplyPointType : "SUPPLY_POINT",
-    },
-    {
-      ean : "EAN4567",
-      supplyPointType : "SUPPLY_POINT"
-    },
-  ];
-
   
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);

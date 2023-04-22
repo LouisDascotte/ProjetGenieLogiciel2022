@@ -23,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "readings")
-@CompoundIndex(def = "{'EAN':1, 'date':2}", unique = true)
+@CompoundIndex(def = "{'EAN':1, 'date':2}", unique=true)
 public abstract class Reading {
 
     @Id
@@ -35,6 +35,7 @@ public abstract class Reading {
     /**
      * the date of the reading
      */
+    //@Indexed(unique = true)
     private String date;
 
     private Status status;

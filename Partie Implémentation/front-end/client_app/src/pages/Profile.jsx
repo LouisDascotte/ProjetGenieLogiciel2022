@@ -38,7 +38,6 @@ const Profile = () => {
     })
   },[])
   
-console.log(infos.address);
 
 
   return (

@@ -10,6 +10,9 @@ import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.model.dto.SupplierLoginDto;
+import com.pgl.energenius.model.reading.DoubleReading;
+import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.repository.ReadingRepository;
 import com.pgl.energenius.service.ClientService;
 import com.pgl.energenius.service.SupplierService;
 import com.pgl.energenius.service.UserService;
@@ -38,6 +41,23 @@ public class AuthController {
 
     @Autowired
     private SupplierService supplierService;
+
+
+    @Autowired
+    private ReadingRepository readingRepository;
+
+    @GetMapping("/test")
+    public Reading test() {
+        return readingRepository.insert(DoubleReading.builder()
+                        .status(Reading.Status.ACCEPTED)
+                        .EAN("123")
+                        .dayValue(123)
+                        .nightValue(234)
+                        .date("2023-04-22")
+                        .build());
+    }
+
+    
 
     /**
      * POST method to register a new client.

@@ -25,6 +25,15 @@ const NotificationsList = () => {
 
   const handleClick = (notification) => {
     // METHOD TO MARK NOTIFICATION AS READ TO BE IMPLEMENTED
+    const response = axios.put(`http://localhost:8080/api/notification/${notification.id}/read`, {
+      headers : {
+        "Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true
+      }
+    }).then(response => {
+      console.log(response.data);
+    })
     navigate("/notification", {state : notification})
   }
 

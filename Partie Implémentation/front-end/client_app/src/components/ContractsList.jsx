@@ -24,6 +24,19 @@ const ContractsList = () => {
     setContracts(response.data);
     });
   }, [])
+
+
+  const handleDelete = (id) => {
+    const response = axios.delete(`http://localhost:8080/api/contract/${id}`, {
+      headers : {
+        "Content-Type":"application/json",
+        "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+        "Access-Control-Allow-Origin":true
+      }
+    }).then(response=>{
+      window.location.reload();
+    })
+  }
   
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
@@ -35,7 +48,7 @@ const ContractsList = () => {
               {contract.id}
             </ListItemText>
           </ListItemButton>
-          <IconButton>
+          <IconButton onClick={()=>handleDelete(contract.id)}>
             <DeleteIcon/>
           </IconButton>
         </ListItem>

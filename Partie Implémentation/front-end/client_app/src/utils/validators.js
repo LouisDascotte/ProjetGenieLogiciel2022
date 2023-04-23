@@ -1,17 +1,20 @@
 export const emailValidator = email => {
   if (!email){
     return "Email is required"; 
-  } /*else if (!new RegExp(/\S+@\S+\.\S+/).test(email)){
+  } else if (!new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  ).test(email)){
     return "Incorrect email format";
-  }*/
+  }
   return "";
 };
 
 export const passwordValidator = password => {
   if (!password) {
     return "Password is required";
-  } else if (password.length <2){ // TO CHANGE TO 8 CHARS LATER
+  } else if (password.length <8){ // TO CHANGE TO 8 CHARS LATER
     return "Password must have a minimum of 8 characters";
+  } else if (!new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).test(password)){
+    return "Password must contain at least one uppercase, one lowercase, one number and one special character"
   }
   return "";
 };

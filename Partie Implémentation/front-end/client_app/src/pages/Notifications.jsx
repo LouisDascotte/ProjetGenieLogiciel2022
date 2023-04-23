@@ -5,6 +5,7 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import{Card, Stack} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
+import NotificationsList from '../components/notifications/NotificationsList';
 
 
 const Notifications = () => {
@@ -57,14 +58,7 @@ const Notifications = () => {
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Card sx={{m:5, height:'100%', width:"90%"}}>
-          <DataGrid 
-          rows={rows} 
-          columns={columns} 
-          pageSize={10} 
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          />
+          <NotificationsList/>
         </Card>
       </Stack>
     </Stack>

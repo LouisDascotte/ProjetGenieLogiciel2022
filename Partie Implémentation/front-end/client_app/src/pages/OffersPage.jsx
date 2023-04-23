@@ -31,6 +31,18 @@ const OffersPage = () => {
     }
   ]; 
 
+  useEffect(() => {
+    const response = axios.get("http://localhost:8080/api/contract/offers", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}, params : { 
+        hourType : location.state.body.hourType,
+        energyType : location.state.body.energyType,
+        address : location.state.body.address,
+      }
+    }
+  )}, []);
+
 
 
   let parameters = {};
@@ -41,6 +53,7 @@ const OffersPage = () => {
     parameters = location.state.body;
   }
 
+  console.log(location.state.body)
 
   const [selectedOffer, setSelectedOffer] = useState(null);
   

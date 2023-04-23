@@ -13,51 +13,84 @@ const ConsumptionHistoryPage = () => {
 
   const jwt = localStorage.getItem("jwt");
   const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
-  const data = [];
-  
+  const [data, setData] = useState({});
+  const [elec, setElec] = useState([]);
+  const [gas, setGas] = useState([]);
+  const [water, setWater] = useState([]);
+
   useEffect(()=>{
     const response = axios.get(URL2, {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        data = response.data;
-        console.log(data);
+        setElec(response.data.ELEC);
+        setGas(response.data.GAZ);
+        setWater(response.data.WATER);
+        setData(response.data);
       })
-  })
+  }, [])
 
 
   const columns = [
     {
-      field:"ean", headerName : "EAN", minWidth: 100
+      field:"ean", headerName : "EAN", minWidth: 200
     }, 
     {
-      field:"assignment_date", headerName:"Assignment date", minWidth: 150
-    }, 
-    {
-      field:"supplier", headerName : "Supplier",  minWidth: 100
+      field:"date", headerName:"Date", minWidth: 150
     },
     {
-      field:"id", headerName :"ID",  minWidth: 150
+      field:"value", headerName:"Value", minWidth: 150
     }, 
     {
-      field:"expiration_date", headerName:"Expiration date",  minWidth: 150
-    },
-    {
-      field:"status", headerName:"Status", minWidth: 50
+      field:"energy", headerName:"Energy", minWidth: 150
     }
   ]
 
-  const rows = data.map((row)=>({
-    ean : row.ean, 
-    assignment_date : row.assignment_date, 
-    supplier : row.supplier,
-    id : row.id,
-    expiration_date : row.expiration_date,
-    status : row.status
-  }))
-  
+let elec_rows = []
+let gas_rows = []
+let water_rows = []
 
+if (!(data.ELEC === undefined)){
+  elec_rows = elec.map((row)=>({
+    ean : row.ean,
+    date : row.date, 
+    id : row.id, 
+    value : row.value,
+    energy : "ELEC"
+  }))
+} else {
+  elec_rows = []
+}
+
+if (!(data.GAZ === undefined)){
+  gas_rows = gas.map((row)=>({
+    ean : row.ean,
+    date : row.date,
+    id : row.id,
+    value : row.value,
+    energy : "GAS"
+  }))
+} else {
+  gas_rows = []
+}
+
+if (!(data.WATER === undefined)){
+  water_rows = water.map((row)=>({
+    ean : row.ean,
+    date : row.date,
+    id : row.id,
+    value : row.value,
+    energy : "WATER"
+  }))
+} else {
+  water_rows = []
+}
+
+
+  const rows = elec_rows.concat(gas_rows, water_rows);
+
+ 
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>

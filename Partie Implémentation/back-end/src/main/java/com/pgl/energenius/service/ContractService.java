@@ -10,7 +10,9 @@ import com.pgl.energenius.model.contract.Contract;
 import com.pgl.energenius.model.contract.GazElecContract;
 import com.pgl.energenius.model.contract.SimpleContract;
 import com.pgl.energenius.model.dto.GazElecContractRequestDto;
+import com.pgl.energenius.model.dto.OfferDto;
 import com.pgl.energenius.model.dto.SimpleContractRequestDto;
+import com.pgl.energenius.model.dto.SimpleOfferDto;
 import com.pgl.energenius.model.notification.ContractNotification;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.offer.GazElecOffer;
@@ -326,7 +328,50 @@ public class ContractService {
         return offerRepository.findBySupplierName(supplier.getName());
     }
 
-//    public SimpleOffer createOffer() {
-//
-//    }
+    public Offer createOffer(OfferDto offerDto) throws InvalidUserDetailsException, ObjectNotValidatedException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+        Offer offer;
+
+        if (offerDto instanceof SimpleOfferDto simpleOfferDto) {
+
+            offer = SimpleOffer.builder()
+                    .hourType(simpleOfferDto.getHourType())
+                    .contractLength(simpleOfferDto.getContractLength())
+                    .cost(simpleOfferDto.getCost())
+                    .nightCost(simpleOfferDto.getHourType() == HourType.SIMPLE ? 0 : simpleOfferDto.getNightCost())
+                    .priceType(simpleOfferDto.getPriceType())
+                    .supplierName(supplier.getName())
+                    .type(Offer.Type.SIMPLE_OFFER)
+                    .energyType(simpleOfferDto.getEnergyType())
+                    .build();
+
+
+        } else {
+
+            offer = Offer.builder()
+                    .hourType(offerDto.getHourType())
+                    .contractLength(offerDto.getContractLength())
+                    .cost(offerDto.getCost())
+                    .nightCost(offerDto.getHourType() == HourType.SIMPLE ? 0 : offerDto.getNightCost())
+                    .priceType(offerDto.getPriceType())
+                    .supplierName(supplier.getName())
+                    .type(Offer.Type.GAZ_ELEC_OFFER)
+                    .build();
+        }
+        validationUtils.validate(offer);
+        return offerRepository.insert(offer);
+    }
+
+    public void deleteOffer(ObjectId offerId) throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+        Offer offer = getOffer(offerId);
+
+        if (!Objects.equals(offer.getSupplierName(), supplier.getName())) {
+            throw new UnauthorizedAccessException("Authenticated supplier cannot delete the offer of id:" + offerId);
+        }
+        offerRepository.delete(offer);
+    }
 }

@@ -1,9 +1,15 @@
 package com.pgl.energenius.model.reading;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import lombok.Builder.Default;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * The reading of a meter
@@ -25,7 +31,6 @@ public abstract class Reading {
     /**
      * the date of the reading
      */
-    //@Indexed(unique = true)
     private String date;
 
     private Status status;

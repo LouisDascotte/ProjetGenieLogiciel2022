@@ -1,5 +1,6 @@
 package com.pgl.energenius.controller;
 
+import com.pgl.energenius.model.dto.OfferDto;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -152,31 +153,55 @@ public class ContractController {
         }
     }
 
-//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
-//    @PostMapping("/offer")
-//    public ResponseEntity<?> createOffer(@RequestBody SimpleOfferDto simpleOfferDto) {
-//
-//
-//    }
-//
-//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
-//    @PostMapping("/offer")
-//    public ResponseEntity<?> createOffer(@RequestBody SimpleOfferDto simpleOfferDto) {
-//
-//
-//    }
-//
-//    @GetMapping("/offer/{id}")
-//    public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {
-//
-//
-//
-//    }
-//
-//    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
-//    @DeleteMapping("/offer/{id}")
-//    public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) {
-//
-//
-//    }
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    @PostMapping("/offer")
+    public ResponseEntity<?> createOffer(@RequestBody OfferDto offerDto) {
+
+        try {
+            return new ResponseEntity<>(contractService.createOffer(offerDto), HttpStatus.OK);
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/offer/{id}")
+    public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {
+
+        try {
+            return new ResponseEntity<>(contractService.getOffer(offerId), HttpStatus.OK);
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    @DeleteMapping("/offer/{id}")
+    public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) {
+
+        try {
+            contractService.deleteOffer(offerId);
+            return ResponseEntity.ok().body("Deleted");
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

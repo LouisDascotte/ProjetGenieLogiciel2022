@@ -9,15 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferDto {
+public abstract class OfferDto {
 
     private HourType hourType;
 
     private int contractLength;
-
-    private double cost;
-
-    private double nightCost;
 
     private PriceType priceType;
 }

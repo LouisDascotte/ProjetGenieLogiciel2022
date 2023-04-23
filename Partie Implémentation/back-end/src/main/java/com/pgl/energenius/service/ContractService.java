@@ -9,10 +9,7 @@ import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.contract.Contract;
 import com.pgl.energenius.model.contract.GazElecContract;
 import com.pgl.energenius.model.contract.SimpleContract;
-import com.pgl.energenius.model.dto.GazElecContractRequestDto;
-import com.pgl.energenius.model.dto.OfferDto;
-import com.pgl.energenius.model.dto.SimpleContractRequestDto;
-import com.pgl.energenius.model.dto.SimpleOfferDto;
+import com.pgl.energenius.model.dto.*;
 import com.pgl.energenius.model.notification.ContractNotification;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.offer.GazElecOffer;
@@ -65,7 +62,7 @@ public class ContractService {
 
         validationUtils.validate(contract);
 
-        if (contractRepository.existsByEAN(contract.getEAN())) {
+        if (existsByEAN(contract.getEAN())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN());
         }
 
@@ -76,10 +73,10 @@ public class ContractService {
 
         validationUtils.validate(contract);
 
-        if (contractRepository.existsByEAN(contract.getEAN_ELEC())) {
+        if (existsByEAN(contract.getEAN_ELEC())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_ELEC());
 
-        } else if (contractRepository.existsByEAN(contract.getEAN_GAZ())) {
+        } else if (existsByEAN(contract.getEAN_GAZ())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_GAZ());
         }
 
@@ -258,7 +255,7 @@ public class ContractService {
             }
         }
 
-        Address address = addressService.getAddress(addressService.getFormattedAddress(addressStr));
+        Address address = addressService.createAddress(addressStr);
         List<Offer> validOffers = new ArrayList<>();
 
         for (String name : supplierOffers.keySet()) {
@@ -348,12 +345,15 @@ public class ContractService {
 
 
         } else {
+            GazElecOfferDto gazElecOfferDto = (GazElecOfferDto) offerDto;
 
-            offer = Offer.builder()
+            offer = GazElecOffer.builder()
                     .hourType(offerDto.getHourType())
                     .contractLength(offerDto.getContractLength())
-                    .cost(offerDto.getCost())
-                    .nightCost(offerDto.getHourType() == HourType.SIMPLE ? 0 : offerDto.getNightCost())
+                    .cost_ELEC(gazElecOfferDto.getCost_ELEC())
+                    .nightCost_ELEC(offerDto.getHourType() == HourType.SIMPLE ? 0 : gazElecOfferDto.getNightCost_ELEC())
+                    .cost_GAZ(gazElecOfferDto.getCost_GAZ())
+                    .nightCost_GAZ(offerDto.getHourType() == HourType.SIMPLE ? 0 : gazElecOfferDto.getNightCost_GAZ())
                     .priceType(offerDto.getPriceType())
                     .supplierName(supplier.getName())
                     .type(Offer.Type.GAZ_ELEC_OFFER)
@@ -373,5 +373,9 @@ public class ContractService {
             throw new UnauthorizedAccessException("Authenticated supplier cannot delete the offer of id:" + offerId);
         }
         offerRepository.delete(offer);
+    }
+
+    public boolean existsByEAN(String EAN) {
+        return contractRepository.findByEAN(EAN).isPresent();
     }
 }

@@ -18,18 +18,41 @@ const OffersPage = () => {
 
   const jwt = localStorage.getItem("jwt");
 
-  const offers = [
-    {
-      name: "Random Name #1",
-      description: "Probably lame!",
-      offer_id : "1"
-    },
-    {
-      name: "Random Name #2",
-      description: "Hello World!",
-      offer_id:"2"
+  const [offers, setOffers] = useState([]);
+
+  console.log(location.state.body.energyType);
+
+  useEffect(() => {
+    if (location.state.body.energyType === "ELECTRICITY_AND_GAS"){
+      console.log("BON ENDROIT")
+      const response = axios.get("http://localhost:8080/api/contract/offers/gaz_elec", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}, params : { 
+        hourType : location.state.body.hourType,
+        address : location.state.body.address,
+      }
     }
-  ]; 
+  ).then(response=>{
+    setOffers(response.data);
+  })
+
+    } else {
+      const response = axios.get("http://localhost:8080/api/contract/offers", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}, params : { 
+        hourType : location.state.body.hourType,
+        energyType : location.state.body.energyType,
+        address : location.state.body.address,
+      }
+    }
+  ).then(response=>{
+    setOffers(response.data);
+  })
+    }
+    
+}, []);
 
 
 
@@ -41,8 +64,9 @@ const OffersPage = () => {
     parameters = location.state.body;
   }
 
+  console.log(location.state.body)
 
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState("");
   
   const selectOffer = (offer_id) => {
     setSelectedOffer(offer_id);
@@ -68,7 +92,7 @@ const OffersPage = () => {
   const handleConfirm = () => {
     console.log(parameters)
     try{
-      const req = axios.post(CONTRACT_URL, parameters, {
+      const req = axios.post(CONTRACT_URL + "/apply", parameters, {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
@@ -84,8 +108,6 @@ const OffersPage = () => {
     }
   }
 
-
-  console.log(selectedOffer)
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
@@ -95,7 +117,7 @@ const OffersPage = () => {
           <ArrowBackIcon/>
           <div> back</div>
         </IconButton>
-        <Paper sx={{width:"60%", height:"60vh"}}>
+        <Paper sx={{width:"60%", height:"60vh"}} component={Stack} direction='column' justifyContent={'center'}>
           <Dialog open={open} onClose={()=> setOpen(false)}>
             <DialogTitle>Offer {selectedOffer}</DialogTitle>
             <DialogContent>

@@ -11,34 +11,9 @@ const jwt = localStorage.getItem("jwt");
 
 const AssignmentHistoryPage = () => {
 
-  const meters_allocs = [
-    {
-    ean : "EAN1234",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123134598653",
-    supplier : "Belfius",
-    status :"active"
-    },
-    {
-    ean : "EAN1334",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123138598653",
-    supplier : "Belfius",
-    status :"active"
-  },
-  {
-    ean : "EAN1834",
-    assignment_date : "12/04/23",
-    expiration_date : "12/04/24",
-    id : "123134598623",
-    supplier : "Belfius",
-    status :"active"
-  }
-]
+  
 
-  const data = [];
+  const [data, setData] = React.useState([]);
 
   
   
@@ -48,14 +23,14 @@ const AssignmentHistoryPage = () => {
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        data = response.data;
+        setData(response.data)
       })
   })
 
 
   const columns = [
     {
-      field:"ean", headerName : "EAN", minWidth: 100
+      field:"ean", headerName : "EAN", minWidth: 200
     }, 
     {
       field:"assignment_date", headerName:"Assignment date", minWidth: 150
@@ -63,9 +38,6 @@ const AssignmentHistoryPage = () => {
     {
       field:"supplier", headerName : "Supplier",  minWidth: 100
     },
-    {
-      field:"id", headerName :"ID",  minWidth: 150
-    }, 
     {
       field:"expiration_date", headerName:"Expiration date",  minWidth: 150
     },
@@ -76,10 +48,10 @@ const AssignmentHistoryPage = () => {
 
   const rows = data.map((row)=>({
     ean : row.ean, 
-    assignment_date : row.assignment_date, 
-    supplier : row.supplier,
-    id : row.id,
-    expiration_date : row.expiration_date,
+    assignment_date : row.beginDate, 
+    supplier : row.supplierName,
+    id : row.ean + row.beginDate,
+    expiration_date : row.endDate,
     status : row.status
   }))
   

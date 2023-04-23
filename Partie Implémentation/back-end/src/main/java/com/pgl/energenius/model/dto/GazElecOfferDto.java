@@ -1,6 +1,5 @@
 package com.pgl.energenius.model.dto;
 
-import com.pgl.energenius.enums.EnergyType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,11 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleOfferDto extends OfferDto {
+public class GazElecOfferDto extends OfferDto {
 
-    private double cost;
+    private double cost_ELEC;
 
-    private double nightCost;
+    private double nightCost_ELEC;
 
-    private EnergyType energyType;
+    private double cost_GAZ;
+
+    private double nightCost_GAZ;
 }

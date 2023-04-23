@@ -2,7 +2,7 @@ import React from 'react'
 import TopMenu from '../components/TopMenu'
 import SideMenu from '../components/SideMenu'
 import {Stack, Box, Typography, IconButton} from '@mui/material'
-import {useLocation} from 'react-router-dom'
+import { useLocation, useNavigate} from 'react-router-dom'
 import axios from '../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
 
@@ -10,11 +10,10 @@ const ViewContractPage = () => {
   const pageAddress = "/view-contract";
   const pageName = "View Contract";
   const location = useLocation();
+  const navigate = useNavigate();
   const jwt = localStorage.getItem('jwt')
   const [address, setAddress] = React.useState('')
   const [meter, setMeter] = React.useState({})
-
-  console.log(location.state);
 
   React.useEffect(()=> {
     let temp_meter = {}
@@ -26,9 +25,8 @@ const ViewContractPage = () => {
         "Access-Control-Allow-Origin":true
       }
     }).then(response => {
-      console.log(response.data)
       response.data.map(meter => {
-        if (meter.ean === location.state.ean)
+        if (meter.ean === location.state.ean){
           setAddress(meter.address)
           setMeter(meter);
           temp_meter = meter;
@@ -44,14 +42,10 @@ const ViewContractPage = () => {
             }
           }).then(request => {
             console.log(request.data)
-          } )
+          } )}
         })
       })
     }, [])
-
-
-    
-
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
@@ -60,7 +54,7 @@ const ViewContractPage = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Box sx={{width:"80%", m:5, borderRadius:'16px', backgroundColor:'white'}}>
           <Stack textAlign='center'>
-            <IconButton>
+            <IconButton onClick={()=>navigate(-1)}>
               <ArrowBackIcon/>
             </IconButton>
             <Box sx={{m:2, backgroundColor:'#9bcc6c', borderRadius:'16px'}}>
@@ -89,7 +83,7 @@ const ViewContractPage = () => {
                   <strong>Address :</strong> {address}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Energy type :</strong> {meter.energyType === 'ELEC' ? 'Electricity' : meter.energyType === 'GAS' ? 'Gas' : meter.energyType === 'WATER' ? 'Water' : 'Gas and electricity'}
+                  <strong>Energy type :</strong> {meter.energyType === 'ELEC' ? 'Electricity' : meter.energyType === 'GAZ' ? 'Gas' : meter.energyType === 'WATER' ? 'Water' : 'Gas and electricity'}
                 </Typography>
               </Stack>
             </Box>

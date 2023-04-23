@@ -63,14 +63,13 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
     public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
-
         try {
             contractService.createSimpleContractRequest(contractRequest, offerId);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -88,7 +87,7 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

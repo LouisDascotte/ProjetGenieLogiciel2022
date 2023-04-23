@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.mongodb.DuplicateKeyException;
+import org.springframework.dao.DuplicateKeyException;
 import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Client;

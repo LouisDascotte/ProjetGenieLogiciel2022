@@ -19,7 +19,6 @@ public class MeterController {
     @Autowired
     private MeterService meterService;
 
-    //@PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @GetMapping("/all")
     public ResponseEntity<?> getMeters() {
 

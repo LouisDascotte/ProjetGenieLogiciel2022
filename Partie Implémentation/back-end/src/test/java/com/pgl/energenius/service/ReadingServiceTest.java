@@ -1,6 +1,6 @@
 package com.pgl.energenius.service;
 
-import com.mongodb.DuplicateKeyException;
+import org.springframework.dao.DuplicateKeyException;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
@@ -65,7 +65,10 @@ public class ReadingServiceTest {
                 .value(value)
                 .build();
 
-        assertEquals(reading, readingService.createSimpleReading(EAN, date, value, false));
+        SimpleReading result = readingService.createSimpleReading(EAN, date, value, false);
+        reading.setId(result.getId());
+
+        assertEquals(reading, result);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
     }
 
@@ -91,7 +94,7 @@ public class ReadingServiceTest {
                 .value(value)
                 .build();
 
-        when(readingRepository.insert(reading)).thenThrow(DuplicateKeyException.class);
+        when(readingRepository.insert(any(SimpleReading.class))).thenThrow(DuplicateKeyException.class);
         assertThrows(ObjectAlreadyExitsException.class, () -> readingService.createSimpleReading(EAN, date, value, false));
 
 
@@ -104,7 +107,10 @@ public class ReadingServiceTest {
 
         when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(readingInDB);
 
-        assertEquals(reading, readingService.createSimpleReading(EAN, date, value, true));
+        SimpleReading result = readingService.createSimpleReading(EAN, date, value, true);
+        reading.setId(result.getId());
+
+        assertEquals(reading, result);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
     }
 
@@ -132,7 +138,10 @@ public class ReadingServiceTest {
                 .nightValue(nightValue)
                 .build();
 
-        assertEquals(reading, readingService.createDoubleReading(EAN, date, dayValue, nightValue, false));
+        DoubleReading result = readingService.createDoubleReading(EAN, date, dayValue, nightValue, false);
+        reading.setId(result.getId());
+
+        assertEquals(reading, result);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
     }
 
@@ -160,7 +169,7 @@ public class ReadingServiceTest {
                 .nightValue(nightValue)
                 .build();
 
-        when(readingRepository.insert(reading)).thenThrow(DuplicateKeyException.class);
+        when(readingRepository.insert(any(DoubleReading.class))).thenThrow(DuplicateKeyException.class);
         assertThrows(ObjectAlreadyExitsException.class, () -> readingService.createDoubleReading(EAN, date, dayValue, nightValue, false));
 
 
@@ -174,7 +183,10 @@ public class ReadingServiceTest {
 
         when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(readingInDB);
 
-        assertEquals(reading, readingService.createDoubleReading(EAN, date, dayValue, nightValue, true));
+        DoubleReading result = readingService.createDoubleReading(EAN, date, dayValue, nightValue, true);
+        reading.setId(result.getId());
+
+        assertEquals(reading, result);
         verify(notificationService, times(1)).insertNotification(Mockito.any(Notification.class));
     }
 

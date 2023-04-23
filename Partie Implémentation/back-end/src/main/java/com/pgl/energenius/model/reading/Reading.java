@@ -1,12 +1,9 @@
 package com.pgl.energenius.model.reading;
 
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder.Default;
 
 /**
  * The reading of a meter
@@ -19,11 +16,16 @@ import lombok.experimental.SuperBuilder;
 @CompoundIndex(def = "{'EAN':1, 'date':2}", unique = true)
 public abstract class Reading {
 
+    @Id
+    @Default
+    private ObjectId id = new ObjectId();
+
     private String EAN;
 
     /**
      * the date of the reading
      */
+    //@Indexed(unique = true)
     private String date;
 
     private Status status;

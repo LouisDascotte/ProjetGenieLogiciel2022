@@ -11,7 +11,7 @@ const Notifications = () => {
   const NOTIFICATIONS_URL = "http://localhost:8080/api/notification/all"
   const pageAddress = "/notifications";
   const pageName = "Notifications";
-  const data = [];
+  const [data, setData] = useState([]);
 
   useEffect(()=>{
     const jwt = localStorage.getItem("jwt");
@@ -20,10 +20,10 @@ const Notifications = () => {
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        data = response.data;
+        setData(response.data);
         console.log(data);
       })
-  })
+  }, [])
   
   const columns = [
     {
@@ -33,10 +33,7 @@ const Notifications = () => {
       field:"date", headerName : "Date", minWidth: 100
     },
     {
-      field:"status", headerName : "Status", minWidth: 100
-    }, 
-    {
-      field:"type", headerName : "Type", minWidth: 100
+      field:"type", headerName : "Type", minWidth: 200
     },
     {
       field : "sender", headerName : "Sender", minWidth: 100
@@ -45,10 +42,11 @@ const Notifications = () => {
   
 
   const rows = data.map((row)=>({
+    id : row.senderId + row.date,
     status : row.status,
     date : row.date,
     type : row.type,
-    sender : row.sender
+    sender : row.senderId
   }))
   
   

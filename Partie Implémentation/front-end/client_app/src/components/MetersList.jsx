@@ -36,37 +36,23 @@ const MetersList = () => {
 
   const navigate = useNavigate();
 
-  const handleClick = (ean) => {
-    setCurrentEan(ean);
-    setConsumption(true);
-  }
-
-  function handleArrowButton(){
-    setConsumption(false);
-  }
-
   return (
     <Box sx={{height:'100%', width:'100%'}} alignment='center'>
-      {consumption ? 
-      <Stack>
-        <IconButton onClick={handleArrowButton}><ArrowBackIcon/></IconButton>
-        <MeterConsumption ean={currentEan} update={setConsumption}/>
-      </Stack>
-       : 
       
-      <List style={{maxHeight: '100%', overflow: 'auto'}}>
-      {meters.map(meter =>  
-      <ListItem key={meter.ean}>
-        <ListItemButton onClick={()=>handleClick(meter.ean)}>
-          <ListItemText>
-            {meter.ean}
-          </ListItemText>
-        </ListItemButton>
         
-      </ListItem>
-      )}
-    </List>
-      }
+    <List style={{maxHeight: '100%', overflow: 'auto'}}>
+    {meters.map(meter =>  
+    <ListItem key={meter.ean}>
+      <ListItemButton onClick={()=>navigate("/enter-consumption", {state : meter})}>
+        <ListItemText>
+          {meter.ean}
+        </ListItemText>
+      </ListItemButton>
+      
+    </ListItem>
+    )}
+  </List>
+      
       
     </Box>
   )

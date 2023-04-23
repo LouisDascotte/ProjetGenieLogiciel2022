@@ -1,5 +1,6 @@
 package com.pgl.energenius.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,6 +44,7 @@ public class ClientLogin extends User {
      * Grant authorities to the client
      * @return the roles of the client
      */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
@@ -54,6 +56,7 @@ public class ClientLogin extends User {
      * Get the email
      * @return the email
      */
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;

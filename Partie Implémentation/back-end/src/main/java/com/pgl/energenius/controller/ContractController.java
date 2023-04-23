@@ -69,11 +69,9 @@ public class ContractController {
 
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
-    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam String offerId) {
-        ObjectId id = new ObjectId(offerId);
-        System.out.println(id);
+    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
         try {
-            contractService.createSimpleContractRequest(contractRequest, new ObjectId(offerId));
+            contractService.createSimpleContractRequest(contractRequest, offerId);
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (ObjectAlreadyExitsException e) {

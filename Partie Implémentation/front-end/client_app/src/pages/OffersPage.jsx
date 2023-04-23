@@ -92,7 +92,7 @@ const OffersPage = () => {
   const handleConfirm = () => {
     console.log(parameters)
     try{
-      const req = axios.post(CONTRACT_URL, parameters, {
+      const req = axios.post(CONTRACT_URL + "/apply", parameters, {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}

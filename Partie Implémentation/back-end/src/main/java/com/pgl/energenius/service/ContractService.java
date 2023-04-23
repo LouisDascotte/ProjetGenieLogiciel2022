@@ -65,7 +65,7 @@ public class ContractService {
 
         validationUtils.validate(contract);
 
-        if (contractRepository.existsByEAN(contract.getEAN())) {
+        if (existsByEAN(contract.getEAN())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN());
         }
 
@@ -76,10 +76,10 @@ public class ContractService {
 
         validationUtils.validate(contract);
 
-        if (contractRepository.existsByEAN(contract.getEAN_ELEC())) {
+        if (existsByEAN(contract.getEAN_ELEC())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_ELEC());
 
-        } else if (contractRepository.existsByEAN(contract.getEAN_GAZ())) {
+        } else if (existsByEAN(contract.getEAN_GAZ())) {
             throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_GAZ());
         }
 
@@ -373,5 +373,9 @@ public class ContractService {
             throw new UnauthorizedAccessException("Authenticated supplier cannot delete the offer of id:" + offerId);
         }
         offerRepository.delete(offer);
+    }
+
+    public boolean existsByEAN(String EAN) {
+        return contractRepository.findByEAN(EAN).isPresent();
     }
 }

@@ -232,7 +232,7 @@ public class ContractServiceTest {
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
-        when(contractRepository.existsByEAN(meter.getEAN())).thenReturn(false);
+        when(contractRepository.findByEAN(meter.getEAN())).thenReturn(Optional.empty());
 
         contractService.createSimpleContractRequest(cr, offer.getId());
 
@@ -368,8 +368,8 @@ public class ContractServiceTest {
         Client client = new Client();
         when(securityUtils.getCurrentClientLogin()).thenReturn(new ClientLogin("", "", client));
 
-        when(contractRepository.existsByEAN(meter_ELEC.getEAN())).thenReturn(false);
-        when(contractRepository.existsByEAN(meter_GAZ.getEAN())).thenReturn(false);
+        when(contractRepository.findByEAN(meter_ELEC.getEAN())).thenReturn(Optional.empty());
+        when(contractRepository.findByEAN(meter_GAZ.getEAN())).thenReturn(Optional.empty());
 
         contractService.createGazElecContractRequest(cr, offer.getId());
 
@@ -458,7 +458,7 @@ public class ContractServiceTest {
 
         SimpleContract contract = SimpleContract.builder().EAN("EAN123").build();
 
-        when(contractRepository.existsByEAN(contract.getEAN())).thenReturn(false);
+        when(contractRepository.findByEAN(contract.getEAN())).thenReturn(Optional.empty());
         when(contractRepository.insert(contract)).thenReturn(contract);
 
         assertEquals(contract, contractService.insertContract(contract));
@@ -468,7 +468,7 @@ public class ContractServiceTest {
     public void test_insertContract_SimpleContract_ObjectAlreadyExists() {
 
         SimpleContract contract = SimpleContract.builder().EAN("EAN123").build();
-        when(contractRepository.existsByEAN(contract.getEAN())).thenReturn(true);
+        when(contractRepository.findByEAN(contract.getEAN())).thenReturn(Optional.of(new SimpleContract()));
 
         assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
     }
@@ -478,8 +478,8 @@ public class ContractServiceTest {
 
         GazElecContract contract = GazElecContract.builder().EAN_ELEC("EAN123").EAN_GAZ("EAN456").build();
 
-        when(contractRepository.existsByEAN(contract.getEAN_GAZ())).thenReturn(false);
-        when(contractRepository.existsByEAN(contract.getEAN_ELEC())).thenReturn(false);
+        when(contractRepository.findByEAN(contract.getEAN_GAZ())).thenReturn(Optional.empty());
+        when(contractRepository.findByEAN(contract.getEAN_ELEC())).thenReturn(Optional.empty());
         when(contractRepository.insert(contract)).thenReturn(contract);
 
         assertEquals(contract, contractService.insertContract(contract));
@@ -489,12 +489,12 @@ public class ContractServiceTest {
     public void test_insertContract_GazElecContract_ObjectAlreadyExists() {
 
         GazElecContract contract = GazElecContract.builder().EAN_ELEC("EAN123").EAN_GAZ("EAN456").build();
-        when(contractRepository.existsByEAN(contract.getEAN_ELEC())).thenReturn(true);
+        when(contractRepository.findByEAN(contract.getEAN_ELEC())).thenReturn(Optional.of(new SimpleContract()));
 
         assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
 
-        when(contractRepository.existsByEAN(contract.getEAN_ELEC())).thenReturn(false);
-        when(contractRepository.existsByEAN(contract.getEAN_GAZ())).thenReturn(true);
+        when(contractRepository.findByEAN(contract.getEAN_ELEC())).thenReturn(Optional.empty());
+        when(contractRepository.findByEAN(contract.getEAN_GAZ())).thenReturn(Optional.of(new SimpleContract()));
 
         assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
     }

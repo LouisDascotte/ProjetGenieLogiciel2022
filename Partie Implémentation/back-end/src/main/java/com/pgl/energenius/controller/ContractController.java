@@ -70,6 +70,7 @@ public class ContractController {
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
     public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
+        System.out.println(contractRequest);
         try {
             contractService.createSimpleContractRequest(contractRequest, offerId);
             return ResponseEntity.status(HttpStatus.CREATED).build();

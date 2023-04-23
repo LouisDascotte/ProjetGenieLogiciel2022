@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,6 +22,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Document("notifications")
 public class Notification {
+
+    @Id
+    @Default
+    private ObjectId id = new ObjectId();
 
     /**
      * The ID of the person who sends the notification

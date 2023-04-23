@@ -61,4 +61,25 @@ public class NotificationService {
         Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
         return notificationRepository.findByReceiverId(supplier.getId());
     }
+
+    public void readNotification(ObjectId notificationId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, ObjectNotValidatedException {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ObjectNotFoundException("No notification found with id: " + notificationId));
+
+        ObjectId userId;
+        try {
+            userId = securityUtils.getCurrentClientLogin().getClient().getId();
+
+        } catch (InvalidUserDetailsException e) {
+            userId = securityUtils.getCurrentSupplierLogin().getSupplier().getId();
+        }
+
+        if (!Objects.equals(notification.getReceiverId(), userId)) {
+            throw new UnauthorizedAccessException("Authenticated user cannot access this notification of id: " + notificationId);
+        }
+
+        notification.setStatus(Notification.Status.READ);
+        saveNotification(notification);
+    }
 }

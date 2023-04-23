@@ -115,8 +115,7 @@ public class ContractServiceTest {
                 .build());
 
         Address address = new Address("123 Rue de Test, Test", 0d, 0d);
-        when(addressService.getFormattedAddress("123 Rue de Test, Test")).thenReturn("123 Rue de Test, Test");
-        when(addressService.getAddress("123 Rue de Test, Test")).thenReturn(address);
+        when(addressService.createAddress("123 Rue de Test, Test")).thenReturn(address);
 
         Supplier supplier1 = Supplier.builder()
                 .name("supplier1")
@@ -152,8 +151,7 @@ public class ContractServiceTest {
         when(offerRepository.findByHourTypeAndEnergyType(HourType.SIMPLE, EnergyType.GAZ)).thenReturn(offers);
 
         Address address = new Address("123 Rue de Test, Test", 0d, 0d);
-        when(addressService.getFormattedAddress("123 Rue de Test, Test")).thenReturn("123 Rue de Test, Test");
-        when(addressService.getAddress("123 Rue de Test, Test")).thenReturn(address);
+        when(addressService.createAddress("123 Rue de Test, Test")).thenReturn(address);
 
         Supplier supplier1 = Supplier.builder()
                 .name("supplier")
@@ -182,8 +180,7 @@ public class ContractServiceTest {
         when(offerRepository.findByHourType(HourType.SIMPLE)).thenReturn(offers);
 
         Address address = new Address("123 Rue de Test, Test", 0d, 0d);
-        when(addressService.getFormattedAddress("123 Rue de Test, Test")).thenReturn("123 Rue de Test, Test");
-        when(addressService.getAddress("123 Rue de Test, Test")).thenReturn(address);
+        when(addressService.createAddress("123 Rue de Test, Test")).thenReturn(address);
 
         Supplier supplier1 = Supplier.builder()
                 .name("supplier")

@@ -258,7 +258,7 @@ public class ContractService {
             }
         }
 
-        Address address = addressService.getAddress(addressService.getFormattedAddress(addressStr));
+        Address address = addressService.createAddress(addressStr);
         List<Offer> validOffers = new ArrayList<>();
 
         for (String name : supplierOffers.keySet()) {

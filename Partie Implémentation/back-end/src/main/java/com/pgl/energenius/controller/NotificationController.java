@@ -1,6 +1,8 @@
 package com.pgl.energenius.controller;
 
 import com.pgl.energenius.exception.InvalidUserDetailsException;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.service.NotificationService;
 import org.bson.types.ObjectId;
@@ -22,6 +24,27 @@ public class NotificationController {
 
         try {
             return new ResponseEntity<>(notificationService.getNotifications(), HttpStatus.OK);
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/{id}/read")
+    public ResponseEntity<?> readNotification(@PathVariable ObjectId id) {
+
+        try {
+            notificationService.readNotification(id);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

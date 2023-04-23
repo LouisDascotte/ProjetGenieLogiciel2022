@@ -9,10 +9,7 @@ import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.contract.Contract;
 import com.pgl.energenius.model.contract.GazElecContract;
 import com.pgl.energenius.model.contract.SimpleContract;
-import com.pgl.energenius.model.dto.GazElecContractRequestDto;
-import com.pgl.energenius.model.dto.OfferDto;
-import com.pgl.energenius.model.dto.SimpleContractRequestDto;
-import com.pgl.energenius.model.dto.SimpleOfferDto;
+import com.pgl.energenius.model.dto.*;
 import com.pgl.energenius.model.notification.ContractNotification;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.offer.GazElecOffer;
@@ -258,7 +255,7 @@ public class ContractService {
             }
         }
 
-        Address address = addressService.createAddress(addressService.getFormattedAddress(addressStr));
+        Address address = addressService.createAddress(addressStr);
         List<Offer> validOffers = new ArrayList<>();
 
         for (String name : supplierOffers.keySet()) {
@@ -348,12 +345,15 @@ public class ContractService {
 
 
         } else {
+            GazElecOfferDto gazElecOfferDto = (GazElecOfferDto) offerDto;
 
-            offer = Offer.builder()
+            offer = GazElecOffer.builder()
                     .hourType(offerDto.getHourType())
                     .contractLength(offerDto.getContractLength())
-                    .cost(offerDto.getCost())
-                    .nightCost(offerDto.getHourType() == HourType.SIMPLE ? 0 : offerDto.getNightCost())
+                    .cost_ELEC(gazElecOfferDto.getCost_ELEC())
+                    .nightCost_ELEC(offerDto.getHourType() == HourType.SIMPLE ? 0 : gazElecOfferDto.getNightCost_ELEC())
+                    .cost_GAZ(gazElecOfferDto.getCost_GAZ())
+                    .nightCost_GAZ(offerDto.getHourType() == HourType.SIMPLE ? 0 : gazElecOfferDto.getNightCost_GAZ())
                     .priceType(offerDto.getPriceType())
                     .supplierName(supplier.getName())
                     .type(Offer.Type.GAZ_ELEC_OFFER)

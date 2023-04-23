@@ -15,4 +15,11 @@ import lombok.experimental.SuperBuilder;
 public class SimpleOffer extends Offer {
 
     private EnergyType energyType;
+
+    /**
+     * The offer's cost
+     */
+    private double cost;
+
+    private double nightCost;
 }

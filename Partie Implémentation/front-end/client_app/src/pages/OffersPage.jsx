@@ -18,18 +18,7 @@ const OffersPage = () => {
 
   const jwt = localStorage.getItem("jwt");
 
-  const offers = [
-    {
-      name: "Random Name #1",
-      description: "Probably lame!",
-      offer_id : "1"
-    },
-    {
-      name: "Random Name #2",
-      description: "Hello World!",
-      offer_id:"2"
-    }
-  ]; 
+  const [offers, setOffers] = useState([]);
 
   useEffect(() => {
     const response = axios.get("http://localhost:8080/api/contract/offers", {
@@ -41,7 +30,10 @@ const OffersPage = () => {
         address : location.state.body.address,
       }
     }
-  )}, []);
+  ).then(response=>{
+    setOffers(response.data);
+  })
+}, []);
 
 
 
@@ -55,7 +47,7 @@ const OffersPage = () => {
 
   console.log(location.state.body)
 
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState("");
   
   const selectOffer = (offer_id) => {
     setSelectedOffer(offer_id);
@@ -108,7 +100,7 @@ const OffersPage = () => {
           <ArrowBackIcon/>
           <div> back</div>
         </IconButton>
-        <Paper sx={{width:"60%", height:"60vh"}}>
+        <Paper sx={{width:"60%", height:"60vh"}} component={Stack} direction='column' justifyContent={'center'}>
           <Dialog open={open} onClose={()=> setOpen(false)}>
             <DialogTitle>Offer {selectedOffer}</DialogTitle>
             <DialogContent>

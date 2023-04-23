@@ -28,11 +28,13 @@ const ManageOffer = () => {
   });
 
   const [offers, setOffers] = React.useState([]);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
   const avgCons = 320;
   const avgConsDay = 133;
   const avgConsNight = 158;
 
-  const API_URL = "http://localhost:8080/api/contract/supplier_offers";
+  const API_URL = "http://localhost:8080/api/contract";
 
   useEffect(() => {
     async function getOffers() {
@@ -44,7 +46,7 @@ const ManageOffer = () => {
           "Access-Control-Allow-Origin": true,
           }
         };
-        const response = await axios.get(API_URL, config);
+        const response = await axios.get(API_URL+"/supplier_offers", config);
         setOffers(response.data);
       } catch (error) {
         console.log(error);
@@ -53,10 +55,31 @@ const ManageOffer = () => {
     getOffers();
   }, []);
 
+  console.log(offers);
+
   const getOfferIdFromIndex = (list, index) => {
     const id = list[index].id.toString();
     return id.slice(0, 12);
   }
+
+  async function deleteOffer(offerId) {
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": true,
+        }
+      };
+      const response = await axios.delete(API_URL + "/offer/" + offerId, config);
+      console.log(response.data);
+      setOffers(offers.filter((item) => item.id !== offerId));
+      setActiveIndex(activeIndex - 1);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,7 +100,7 @@ const ManageOffer = () => {
               >
                 <Carousel
                 stopAutoPlayOnHover
-                index={5000}
+                index={activeIndex}
                 >
                   {offers.map((item, index) => (
                     <Paper key={index} >
@@ -140,7 +163,7 @@ const ManageOffer = () => {
                             </Grid>
                           </Grid>
                           <Grid item xs >
-                            <Button variant="contained" color="error" sx={{ width: "100%" }} >
+                            <Button variant="contained" onClick={() => deleteOffer(item.id) } color="error" sx={{ width: "100%" }} >
                               Delete
                             </Button>
                           </Grid>

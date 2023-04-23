@@ -16,19 +16,23 @@ const NewOffer = () => {
   const pageName = "Create new offer";
 
   const [energyType, setEnergyType] = React.useState('gas');
+  const [hourType, setHourType] = React.useState('simple');
   const [priceType, setPriceType] = React.useState('fixed');
-  const [type, setType] = React.useState('SIMPLE_OFFER');
+  const [contractLength, setContractLength] = React.useState(6);
+  const [cost, setCost] = React.useState(0.25);
+  const [nightCost, setNightCost] = React.useState(0);
 
-  let peakPrice;
-  let slackPrice;
+  const isWater = energyType === "water";
 
-  const handleEnergyType = (event, newEnergyType) => {
+  const handleEnergyType = (e) => {
+    const newEnergyType = e.target.value;
     setEnergyType(newEnergyType);
-    if (newEnergyType === "both") {
-      setType("GAZ_ELEC_OFFER");
+    if (newEnergyType === "water") {
+      setHourType("simple");
+      console.log(hourType+" "+energyType)
     }
-    else {
-      setType("SIMPLE_OFFER");
+    if (newEnergyType === "both") {
+      console.log("both");
     }
   };
 
@@ -42,13 +46,38 @@ const NewOffer = () => {
     }
   };
 
-  const body = {
-    contractLength: "",
-    cost: "",
-    priceType: "",
-    supplierName: "",
-    type: "",
-    operatingArea: "",
+  const handleHourType = (event, newHourType) => {
+    setHourType(newHourType);
+    setNightCost(0);
+  }
+
+  async function createOffer() {
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": true,
+        }
+      };
+      const response = await axios.post(API_URL, body, config);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const printForm = () => {
+    console.log(body);
+  }
+
+  let body = {
+    hourType: hourType,
+    contractLength: contractLength,
+    cost: cost,
+    nightCost: nightCost,
+    priceType: priceType,
+    energyType: energyType,
   }
 
   const theme = createTheme({
@@ -158,12 +187,41 @@ const NewOffer = () => {
                       </Grid>
                       <Grid item xs={8}>
                         <FormControl >
-                          <RadioGroup row aria-label="contractLength" name="row-radio-buttons-group" defaultValue={"6months"} >
-                            <FormControlLabel value="6months" control={<Radio />} label="6 months" />
-                            <FormControlLabel value="12months" control={<Radio />} label="12 months" />
-                            <FormControlLabel value="undefined" control={<Radio />} label="undefined*" />
+                          <RadioGroup row aria-label="contractLength" name="row-radio-buttons-group" defaultValue={contractLength} >
+                            <FormControlLabel value={6} control={<Radio />} label="6 mth" />
+                            <FormControlLabel value={12} control={<Radio />} label="12 mth" />
+                            <FormControlLabel value={24} control={<Radio />} label="24 mth" />
+                            <FormControlLabel value={-1} control={<Radio />} label="undefined*" />
                           </RadioGroup>
                         </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid item container
+                    justifyContent='center'
+                    alignItems='center'
+                    columnSpacing={1}
+                    >
+                      <Grid item xs={4}>
+                        <Typography variant="h6" component="h2" gutterBottom>
+                          Hour Type:
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <ToggleButtonGroup
+                          color="primary"
+                          value={hourType}
+                          exclusive
+                          onChange={handleHourType}
+                          aria-label="text alignment"
+                        >
+                          <ToggleButton value="simple" aria-label="left aligned">
+                            Simple
+                          </ToggleButton>
+                          <ToggleButton value="double" disabled={isWater} aria-label="centered">
+                            Double
+                          </ToggleButton>
+                        </ToggleButtonGroup>
                       </Grid>
                     </Grid>
 
@@ -181,7 +239,7 @@ const NewOffer = () => {
                         <TextField id="outlined-basic" label="Price" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} />
                       </Grid>
                     </Grid>
-                    { energyType === "both" &&
+                    { energyType === "both" && 
                     <Grid item container
                     justifyContent='center'
                     alignItems='center'
@@ -196,33 +254,16 @@ const NewOffer = () => {
                         <TextField id="outlined-basic" label="Price" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} />
                       </Grid>
                     </Grid>}
-
-                    <Grid item container
-                    justifyContent='center'
-                    alignItems='center'
-                    columnSpacing={1}
-                    >
-                      <Grid item xs={4}>
-                        <Typography variant="h6" component="h2" gutterBottom>
-                          Peak & Slack hour prices:
-                        </Typography>
-                      </Grid>
-                      <Grid item container
-                      justifyContent='center'
-                      alignItems='center'
-                      columnSpacing={1}
-                      xs={8}
-                      >
-                        <Grid item xs={4}>
-                        <TextField id="outlined-basic" label="Peak hour price" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} value={peakPrice} style={{width: 150}} />
-                        </Grid>
-                        <Grid item xs={4}>
-                          <TextField id="outlined-basic" label="Slack hour price" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} value={slackPrice} style={{width: 150}} />
-                        </Grid>
-                      </Grid>
-                      
-                    </Grid>
                     
+                    {(hourType === "double") && (energyType === "both") ?
+
+                    : (hourType === "simple" && energyType === "both") ?
+
+                    : (hourType === "double" && energyType !== "both") ?
+
+                    : 
+
+                    }
                   </Grid>
                 </Box>
                 <Grid container
@@ -252,6 +293,11 @@ const NewOffer = () => {
               <Grid item xs={4}>
                 <Button variant="contained" onClick={handleCreateOffer} color="primary" sx={{ width: '60%' }} >
                   Confirm offer
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" onClick={printForm} color="primary" sx={{ width: '60%' }} >
+                  Print
                 </Button>
               </Grid>
             </Grid>

@@ -45,7 +45,6 @@ const ManageOffer = () => {
           }
         };
         const response = await axios.get(API_URL, config);
-        console.log(response.data);
         setOffers(response.data);
       } catch (error) {
         console.log(error);
@@ -56,7 +55,6 @@ const ManageOffer = () => {
 
   const getOfferIdFromIndex = (list, index) => {
     const id = list[index].id.toString();
-    console.log(list[index].cost.toFixed(4)+" "+list[index].nightCost);
     return id.slice(0, 12);
   }
 

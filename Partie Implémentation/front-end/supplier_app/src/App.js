@@ -52,23 +52,22 @@ function App() {
                   <Route path="*" element={<ErrorPage/>}/>
                   <Route path="/reset-passwd" element={<ResetPassword/>}/>
 
-                  <Route path='/test' exact element={<Testing/>}/>
-                  <Route path='/main-page' exact element={<MainPage/>}/>
-                  <Route path='/contracts' exact element={<ManageContracts/>}/>
-                  <Route path='/clients' exact element={<ManageClients/>}/>
-                  <Route path='/consumption' exact element={<ManageConsumption/>}/>
-                  <Route path='/clients/:clientId' element={<ViewClient/>}/>
-                  <Route path='/clients/new' element={<AddClient/>}/>
-                  <Route path='/clients/:clientId/link-meter' element={<LinkMeter/>}/>
-                  <Route path='/contracts/:contractId' element={<ViewContract/>}/>
-                  <Route path='/contracts/new' element={<NewContract/>}/>
-                  <Route path='/contracts/requests' element={<ContractsRequests/>}/>
-                  <Route path='/contracts/requests/:requestId' element={<ViewContractRequest/>}/>
-                  <Route path='/consumption/meter/:meterId' element={<ViewMeter/>}/>
-                  <Route path='/consumption/meter/:meterId/:date' element={<ViewConsumption/>}/>
-                  <Route path='/consumption/meter/:meterId/import' element={<ImportConsumption/>}/>
-                  <Route path='/offers' element={<ManageOffer/>}/>
-                  <Route path='/offers/new' element={<NewOffer/>}/>
+                  <Route path='/main-page' exact element={<PrivateRoute><MainPage/></PrivateRoute>}/>
+                  <Route path='/contracts' exact element={<PrivateRoute><ManageContracts/></PrivateRoute>}/>
+                  <Route path='/clients' exact element={<PrivateRoute><ManageClients/></PrivateRoute>}/>
+                  <Route path='/consumption' exact element={<PrivateRoute><ManageConsumption/></PrivateRoute>}/>
+                  <Route path='/clients/:clientId' element={<PrivateRoute><ViewClient/></PrivateRoute>}/>
+                  <Route path='/clients/new' element={<PrivateRoute><AddClient/></PrivateRoute>}/>
+                  <Route path='/clients/:clientId/link-meter' element={<PrivateRoute><LinkMeter/></PrivateRoute>}/>
+                  <Route path='/contracts/:contractId' element={<PrivateRoute><ViewContract/></PrivateRoute>}/>
+                  <Route path='/contracts/new' element={<PrivateRoute><NewContract/></PrivateRoute>}/>
+                  <Route path='/contracts/requests' element={<PrivateRoute><ContractsRequests/></PrivateRoute>}/>
+                  <Route path='/contracts/requests/:requestId' element={<PrivateRoute><ViewContractRequest/></PrivateRoute>}/>
+                  <Route path='/consumption/meter/:meterId' element={<PrivateRoute><ViewMeter/></PrivateRoute>}/>
+                  <Route path='/consumption/meter/:meterId/:date' element={<PrivateRoute><ViewConsumption/></PrivateRoute>}/>
+                  <Route path='/consumption/meter/:meterId/import' element={<PrivateRoute><ImportConsumption/></PrivateRoute>}/>
+                  <Route path='/offers' element={<PrivateRoute><ManageOffer/></PrivateRoute>}/>
+                  <Route path='/offers/new' element={<PrivateRoute><NewOffer/></PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

@@ -5,8 +5,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ArrowBack} from '@mui/icons-material';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ContractList } from '../resources/Lists';
-import { getContracts } from '../api/contractApi';
 import axios from 'axios';
 
 const ManageContracts = () => {
@@ -27,6 +25,8 @@ const ManageContracts = () => {
   const pageName = "Manage contracts";
 
   const [contracts, setContracts] = React.useState([]);
+  const [selectedContract, setSelectedContract] = React.useState(null);
+
 
   useEffect(() => {
     async function getContracts() {
@@ -47,11 +47,7 @@ const ManageContracts = () => {
     }
     getContracts();
   }, []);
-  
-  const getClientNameByContractId = (contractID) => {
-    const client = ContractList.find((contract) => contract.id === contractID);
-    return client.clientName;
-  };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,7 +65,7 @@ const ManageContracts = () => {
                   {contracts.map((contract) => (
                     <ListItem key={contract.id}>
                       <ListItemText primary={`${contract.id}`.slice(0,15)} />
-                      <Link to={`/contracts/${contract.id}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+                      <Link to={`/contracts/${contract.id}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}} >
                         <Button variant="contained" >
                           See Details
                         </Button>

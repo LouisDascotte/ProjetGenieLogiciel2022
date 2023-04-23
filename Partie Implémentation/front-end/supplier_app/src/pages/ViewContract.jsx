@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
-import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, TextField} from '@mui/material';
+import {Button, Card, Grid, Stack, Typography, Box, TextField} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
@@ -28,10 +28,11 @@ function ViewContract() {
     }
   });
 
-  const [Contracts, setContracts] = React.useState([]);
-  const [Clients, setClients] = React.useState([]);
+  const [contracts, setContracts] = React.useState([]);
+  const [clients, setClients] = React.useState([]);
 
   useEffect(() => {
+    console.log("getContracts");
     async function getContracts() {
       try {
         const jwt = localStorage.getItem("jwt");
@@ -42,118 +43,39 @@ function ViewContract() {
             "Access-Control-Allow-Origin": true,
           }
         };
-        const response = await axios.get("http://localhost:8080/api/contract/all", config);
-        console.log(response.data);
-        setContracts(response.data);
+        const respCont = await axios.get("http://localhost:8080/api/contract/all", config);
+        const respClient = await axios.get("http://localhost:8080/api/supplier/clients", config);
+        console.log(respCont.data);
+        console.log(respClient.data);
+        setContracts(respCont.data);
+        setClients(respClient.data);
       } catch (error) {
         console.log(error);
       }
     }
     getContracts();
   }, []);
-  useEffect(() => {
-    async function getClients() {
-      try {
-        const jwt = localStorage.getItem("jwt");
-        const config = {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": true,
-          }
-        };
-        const response = await axios.get("http://localhost:8080/api/supplier/clients", config);
-        console.log(response.data);
-        setClients(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getClients();
-  }, []);
-
-  
 
   const pageAddress = "/contracts/:id";
   const pageName = "View Contract";
+  console.log(contracts);
 
-  const getContractById = (id) => {
-    const idInt = id;
-    const res = Contracts.find((contract) => contract.id === idInt);
-    console.log(Contracts);
-    console.log(res);
-    return res;
-  };
-  
-  function getClientByContractId(id) {
-    const idInt = id;
-    console.log(idInt);
-    const owner = Contracts.find((contract) => contract.id === idInt).clientId;
-    console.log(owner);
-    const ownerId = parseInt(owner,10);
-    return Clients.find((client) => client.clientId === ownerId);
-  }
-
-  const contract = getContractById(id);
-  const client = getClientByContractId(id);
-
-  const getClientName = () => {
-    return client.name;
-  }
-  const getClientEmail = () => {
-    return client.email;
-  }
-  const getClientId = () => {
-    return client.clientId;
-  }
-  const getClientPhone = () => {
-    return client.phone;
-  }
-
-  const getConsAddress = () => {
-    return contract.consumptionAddress;
-  }
-  const getConsType = () => {
-    return contract.contractType;
-  }
-  const getMeters = () => { 
-    const meterNbr = contract.meter.length;
-    let meters;
-    switch (meterNbr) {
-      default:
-      case 1:
-        return contract.meter[0];
-      case 2:
-        return meters = {meter1: contract.meter[0], meter2: contract.meter[1]};
-    }
-  }
-  const getOffer = () => {
-    return contract.offer;
-  }
-  const getSupplier = () => {
-    return contract.supplierId;
-  }
-  const getContractBeginDate = () => {
-    return contract.beginDate;
-  }
-  const getContractEndDate = () => {
-    return contract.endDate;
-  }
-  
+  const contract = null;
 
   const contractData = {
-    clientId: getClientId(),
-    clientName: getClientName(),
-    clientEmail: getClientEmail(),
-    clientPhone: getClientPhone(),
-    consumptionAddress: getConsAddress(),
-    contractType: getConsType(),
-    meter: getMeters(),
-    offer: getOffer(),
-    supplier: getSupplier(),
-    beginDate: getContractBeginDate(),
-    endDate: getContractEndDate(),
+    "id": contract.id,
+    "beginDate": contract.beginDate,
+    "endDate": contract.endDate,
+    "clientId": contract.clientId,
+    "supplierId": contract.supplierId,
+    "type": contract.type,
+    "status": contract.status,
+    "offerId": contract.offerId,
+    "EAN": contract.EAN,
   }
+
+
+  
 
   const [editMode, setEditMode] = React.useState(false);
   const [editableData, setEditableData] = React.useState(contractData);
@@ -312,7 +234,7 @@ function ViewContract() {
                 >
                   <Grid item xs={12} >
                     <Typography variant="h6" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                      {getConsType()}
+                      Elec
                     </Typography>
                   </Grid>
                   <Grid item xs='auto' >
@@ -378,7 +300,7 @@ function ViewContract() {
                 </Typography>
                 <Grid >
                   <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                    Subscribed to the base offer of {getOffer()}€/month for {getConsType().toLocaleLowerCase()} to {getSupplier()}.
+                    Subscribed to the base offer of XX€/month for YY.
                   </Typography>
                 </Grid>
               </Box>

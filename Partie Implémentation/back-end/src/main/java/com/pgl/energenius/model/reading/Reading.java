@@ -31,7 +31,6 @@ public abstract class Reading {
     /**
      * the date of the reading
      */
-    //@Indexed(unique = true)
     private String date;
 
     private Status status;

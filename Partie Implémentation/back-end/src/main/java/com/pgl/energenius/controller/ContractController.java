@@ -63,16 +63,17 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
-    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
-
+    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam String offerId) {
+        ObjectId id = new ObjectId(offerId);
+        System.out.println(id);
         try {
-            contractService.createSimpleContractRequest(contractRequest, offerId);
+            contractService.createSimpleContractRequest(contractRequest, new ObjectId(offerId));
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (ObjectAlreadyExitsException e) {

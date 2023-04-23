@@ -20,8 +20,25 @@ const OffersPage = () => {
 
   const [offers, setOffers] = useState([]);
 
+  console.log(location.state.body.energyType);
+
   useEffect(() => {
-    const response = axios.get("http://localhost:8080/api/contract/offers", {
+    if (location.state.body.energyType === "ELECTRICITY_AND_GAS"){
+      console.log("BON ENDROIT")
+      const response = axios.get("http://localhost:8080/api/contract/offers/gaz_elec", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}, params : { 
+        hourType : location.state.body.hourType,
+        address : location.state.body.address,
+      }
+    }
+  ).then(response=>{
+    setOffers(response.data);
+  })
+
+    } else {
+      const response = axios.get("http://localhost:8080/api/contract/offers", {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}, params : { 
@@ -33,6 +50,8 @@ const OffersPage = () => {
   ).then(response=>{
     setOffers(response.data);
   })
+    }
+    
 }, []);
 
 
@@ -89,8 +108,6 @@ const OffersPage = () => {
     }
   }
 
-
-  console.log(selectedOffer)
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>

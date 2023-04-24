@@ -13,9 +13,9 @@ export const passwordValidator = password => {
     return "Password is required";
   } else if (password.length <8){ // TO CHANGE TO 8 CHARS LATER
     return "Password must have a minimum of 8 characters";
-  } else if (!new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).test(password)){
+  } /*else if (!new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).test(password)){
     return "Password must contain at least one uppercase, one lowercase, one number and one special character"
-  }
+  }*/
   return "";
 };
 

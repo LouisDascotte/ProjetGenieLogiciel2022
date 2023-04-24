@@ -26,8 +26,10 @@ const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
 const MainPage = () => {
     // hardcoded const in order to test the "create portfolio message"
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
-    const [page, setPage] = useState("");
+    const [portfolio, setPortfolio] = useState({});
     const [portfolios, setPortfolios] = useState([]);
+    const [data, setData] = useState({});
+    const [state, setState] = useState(0);
 
     
     const pageAddress = "/main-page";
@@ -36,10 +38,42 @@ const MainPage = () => {
     const { collapseSidebar } = useProSidebar(); 
 
 
-    const handleChange = (e) => {
-        const{value} = e.target; 
-        setPage(value);
-    }
+    /*const handleChange = async (e) => {
+        
+        const value = e.target.value
+        const jwt = localStorage.getItem("jwt");
+        const selectedPortfolio = portfolios.find((portfolio) => portfolio.id === value);
+
+        const response = await axios.get(`http://localhost:8080/api/portfolio/${value}/consumption`, {
+            headers : {"Content-Type":"application/json",
+            "Authorization" : `Bearer ${jwt}`,
+            "Access-Control-Allow-Origin":true}
+        }).then(response => {
+            setData(response.data);
+            setPortfolio(selectedPortfolio);
+            setState(state+1);
+            setHasSelectedPortfolio(true);
+        })
+    }*/
+
+    const handleChange = async (e) => {
+        const value = e.target.value;
+        const jwt = localStorage.getItem("jwt");
+        const selectedPortfolio = portfolios.find((portfolio) => portfolio.id === value);
+      
+        const response = await axios.get(`http://localhost:8080/api/portfolio/${value}/consumption`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
+            "Access-Control-Allow-Origin": true
+          }
+        });
+      
+        setData(response.data);
+        setPortfolio(selectedPortfolio.id);
+        setState(state + 1);
+        setHasSelectedPortfolio(true);
+      };
 
     useEffect(()=> {
         const jwt = localStorage.getItem("jwt");
@@ -56,15 +90,8 @@ const MainPage = () => {
               "Authorization" : `Bearer ${jwt}`,
               "Access-Control-Allow-Origin":true}
               }).then(request => {
-                console.log(request.data);
                 localStorage.setItem("client_email", request.data.email);
               })
-
-
-
-        if (page !== ""){
-            setHasSelectedPortfolio(true);
-        }
     }, [])
 
     return (
@@ -84,20 +111,22 @@ const MainPage = () => {
                             <Menu>
                                 <Box sx={{ minWidth: 120 }}>
                                 <FormControl fullWidth size="small" margin="normal">
-                                <InputLabel margin="normal" id="select-portfolio-label">Portfolio :</InputLabel>
-                                    <Select
+                                <InputLabel margin="normal" id="select-portfolio-label">Portfolio:</InputLabel>
+                                <Select
                                     labelId="portfolio-select-label"
                                     id="portfolio-select"
-                                    value={page}
-                                    label="Portfolio :"
+                                    value={portfolio}
+                                    label="Portfolio:"
                                     onChange={handleChange}
-                                    >
-                                        {portfolios.map(portfolio => 
-                                             <MenuItem value={portfolio.id}>{portfolio.name}</MenuItem>
-                                        )}
-                                                    
-                                    </Select>
-                                </FormControl>   
+                                >
+                                    {portfolios.map((portfolio) => (
+                                    <MenuItem key={portfolio.id} value={portfolio.id}>
+                                        {portfolio.name}
+                                    </MenuItem>
+                                    ))}
+                                </Select>
+                                </FormControl>
+
                                 </Box>
                             </Menu>
                         </MenuItem>
@@ -139,7 +168,7 @@ const MainPage = () => {
             <Stack direction='row' justifyContent='center'>
                 { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
                 // 'Portfolio graphic' replaces an actual portfolio infographic for now
-                hasSelectedPortfolio ? <PortfolioMainGraph portfolio={page}/> : <PortfolioPlaceHolder/>
+                hasSelectedPortfolio ? <PortfolioMainGraph portfolio={data}/> : <PortfolioPlaceHolder/>
                 }
             </Stack>
         </Stack>

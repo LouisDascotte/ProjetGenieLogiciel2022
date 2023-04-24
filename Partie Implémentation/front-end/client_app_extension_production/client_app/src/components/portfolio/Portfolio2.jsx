@@ -159,7 +159,7 @@ export const Portfolio2 = () => {
           <IconButton>
             <ArrowBackIcon onClick={() => navigate(-1)}/>
           </IconButton>
-          <Card sx={{m:5}} container justify='center'>
+          <Card sx={{mt:5, ml:5, mr:5, mb:2}} container justify='center'>
             <Stack alignItems="center" alignContent="center" justifyContent='center' sx={{textAlign:"center"}}>
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
@@ -254,7 +254,10 @@ export const Portfolio2 = () => {
             
           </Card>
         </Stack>
-        <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
+        <Button variant="contained" onClick={()=> navigate(`/certificates/${id}`)} sx={{mb:1}}>
+          Green certificates
+        </Button>
+        <Button variant="contained" onClick={update} sx={{width:"60%"}}>
           Apply changes
         </Button>
       </Stack>

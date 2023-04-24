@@ -17,14 +17,8 @@ const Notification = () => {
 
   function notificationMessages(code){
     switch (code) {
-      case "READING_NOTIFICATION":
-        return "Your reading entry has been sent.";
-      case "CONTRACT_REQUEST_NOTIFICATION":
-        return "Your contract request has been sent.";
       case "ACCEPT_CONTRACT_NOTIFICATION":
         return "Your contract request has been accepted."
-      case "CANCEL_CONTRACT_REQUEST_NOTIFICATION":
-        return "Your contract cancellation request has been sent."
       case "END_CONTRACT_NOTIFICATION":
         return "Your contract has ended."
       case "CANCEL_CONTRACT_NOTIFICATION": 
@@ -33,8 +27,6 @@ const Notification = () => {
         return "Your meter has been linked."
       case "UNLINK_METER_NOTIFICATION":
         return "Your meter has been unlinked."
-      case "NOTIFICATION":
-        return "You received a notification."
     }
   }
   

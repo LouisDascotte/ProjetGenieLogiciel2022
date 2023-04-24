@@ -1,5 +1,9 @@
 package com.pgl.energenius.controller;
 
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.UnauthorizedAccessException;
+import com.pgl.energenius.service.ClientService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private ClientService clientService;
 
     @PutMapping("/me")
     public ResponseEntity<?> editPreferences(@RequestBody SupplierPreferenceDto supplierPreferenceDto) {
@@ -46,6 +53,23 @@ public class SupplierController {
 
         } catch (InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/client/{id}")
+    public ResponseEntity<?> getClient(@PathVariable("id") ObjectId clientId) {
+
+        try {
+            return new ResponseEntity<>(clientService.getClient(clientId), HttpStatus.OK);
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

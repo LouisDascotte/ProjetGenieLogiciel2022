@@ -1,4 +1,4 @@
-import { Button, FormControl, Select, IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, TextField, Typography, skeletonClasses, Box, Grid, Icon } from '@mui/material';
+import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup } from '@mui/material';
 import {React, useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios';
@@ -160,6 +160,7 @@ export const Portfolio2 = () => {
             <ArrowBackIcon onClick={() => navigate(-1)}/>
           </IconButton>
           <Card sx={{m:5}} container justify='center'>
+            <Stack alignItems="center" alignContent="center" justifyContent='center' sx={{textAlign:"center"}}>
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
             </Grid>
@@ -199,18 +200,27 @@ export const Portfolio2 = () => {
             </Stack>
               
             )}
+           
             <Typography variant="h5" sx={{m:2}}>
               Address : 
             </Typography>
             <Typography variant="h6" sx={{m:2}}>
               {portfolio.address}
             </Typography>
-            <Button sx={{m:2}} onClick={() => setOpen(true)} size="large">
-              Add supply point
-            </Button>
-            <Button onClick={()=> navigate(`/consumption/${id}`)}>
-              Show consumption
-            </Button>
+           
+            
+            <ButtonGroup sx={{mt:1, mb:1}}>
+              <Button onClick={() => setOpen(true)}>
+                Add supply point
+              </Button>
+              <Button onClick={()=> navigate(`/consumption/${id}`)}>
+                Show consumption
+              </Button>
+              <Button onClick={()=>navigate(`/production/${id}`)}>
+                Show production
+              </Button>
+            </ButtonGroup>
+            
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>
               <DialogTitle>
                 Add supply point
@@ -240,6 +250,8 @@ export const Portfolio2 = () => {
                 </Stack>
               </DialogContent>
             </Dialog>
+            </Stack>
+            
           </Card>
         </Stack>
         <Button variant="outlined" onClick={update} sx={{width:"60%"}}>

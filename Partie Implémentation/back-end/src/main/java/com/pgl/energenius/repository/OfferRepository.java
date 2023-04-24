@@ -7,6 +7,7 @@ import com.pgl.energenius.model.offer.Offer;
 import com.pgl.energenius.model.offer.SimpleOffer;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public interface OfferRepository extends MongoRepository<Offer, ObjectId> {
 
     List<SimpleOffer> findByHourTypeAndEnergyType(HourType hourType, EnergyType energyType);
 
+    @Query("{'hourType': ?0, 'type': 'GAZ_ELEC_OFFER'}")
     List<GazElecOffer> findByHourType(HourType hourType);
 
     List<Offer> findBySupplierName(String supplierName);

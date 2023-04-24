@@ -15,69 +15,81 @@ const NewOffer = () => {
   const pageAddress = "/offers/new";
   const pageName = "Create new offer";
 
-  const [energyType, setEnergyType] = React.useState('gas');
-  const [hourType, setHourType] = React.useState('simple');
-  const [priceType, setPriceType] = React.useState('fixed');
-  const [contractLength, setContractLength] = React.useState(6);
-  const [cost, setCost] = React.useState(0.25);
-  const [nightCost, setNightCost] = React.useState(0);
+  const [form, setForm] = React.useState({
+    hourType: "simple",
+    contractLength: 12,
+    priceType: "fixed",
+    cost: 0,
+    nightCost: 0,
+    cost_ELEC: 0,
+    nightCost_ELEC: 0,
+    cost_GAZ: 0,
+    nightCost_GAZ: 0,
+    energyType: "electricity",
+  });
 
-  const isWater = energyType === "water";
-
-  const handleEnergyType = (e) => {
-    const newEnergyType = e.target.value;
-    setEnergyType(newEnergyType);
-    if (newEnergyType === "water") {
-      setHourType("simple");
-      console.log(hourType+" "+energyType)
-    }
-    if (newEnergyType === "both") {
-      console.log("both");
-    }
+  const onUpdateField = e => {
+    const field = e.target.id; 
+    const nextFormState = {
+      ...form, 
+      [field] : e.target.value,
+    };
+    setForm(nextFormState);
   };
+
+  const isWater = form.energyType === "water";
+
+  const bools = {
+    "doubled": (form.energyType === "both") && form.hourType === "double",
+    "doubles": (form.energyType === "both") && form.hourType === "simple",
+    "simple": (form.energyType !== "both") && form.hourType === "simple",
+    "double": (form.energyType !== "both") && form.hourType === "double",
+  }
+  const isValidOffer = (form.energyType !== null) && (form.hourType !== null) && (form.contractLength !== null) && (form.priceType !== null) && (form.cost !== null) && (form.nightCost !== null) && (form.cost_ELEC !== null) && (form.nightCost_ELEC !== null) && (form.cost_GAZ !== null) && (form.nightCost_GAZ !== null) && (form.energyType !== null);
 
   const handleKeyPress = (event) => {
     const keyCode = event.keyCode || event.which;
     const keyValue = String.fromCharCode(keyCode);
     const regex = /^[0-9]*$/;
-
+    
     if (!regex.test(keyValue)) {
       event.preventDefault();
     }
   };
 
+  const handleEnergyType = (event, newEnergyType) => {
+    setForm({ ...form, energyType: newEnergyType });
+  };
+
+  const handleContractLength = (event, newContractLength) => {
+    setForm({ ...form, contractLength: newContractLength });
+  };
+
   const handleHourType = (event, newHourType) => {
-    setHourType(newHourType);
-    setNightCost(0);
+    setForm({ ...form, hourType: newHourType });
+  };
+
+  const handlePriceType = (event, newPriceType) => {
+    setForm({ ...form, priceType: newPriceType });
+  };
+
+  let bodySimple = {
+    hourType: form.hourType,
+    contractLength: form.contractLength,
+    cost: form.cost,
+    nightCost: form.nightCost,
+    priceType: form.priceType,
+    energyType: form.energyType
   }
 
-  async function createOffer() {
-    try {
-      const jwt = localStorage.getItem("jwt");
-      const config = {
-        headers: { Authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": true,
-        }
-      };
-      const response = await axios.post(API_URL, body, config);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const printForm = () => {
-    console.log(body);
-  }
-
-  let body = {
-    hourType: hourType,
-    contractLength: contractLength,
-    cost: cost,
-    nightCost: nightCost,
-    priceType: priceType,
-    energyType: energyType,
+  let bodyBoth = {
+    hourType: form.hourType,
+    contractLength: form.contractLength,
+    cost_ELEC: form.cost_ELEC/100,
+    nightCost_ELEC: form.nightCost_ELEC/100,
+    cost_GAZ: form.cost_GAZ/100,
+    nightCost_GAZ: form.nightCost_GAZ/100,
+    priceType: form.priceType
   }
 
   const theme = createTheme({
@@ -94,10 +106,9 @@ const NewOffer = () => {
   });
 
   const handleCreateOffer = () => {
-    switch (energyType) {
+    switch (form.energyType) {
       case "both":
-
-        axios.post(API_URL, body)
+        axios.post(API_URL, bodyBoth)
         .then((response) => {
           console.log(response);
         })
@@ -106,7 +117,7 @@ const NewOffer = () => {
         })
       break;
       default:
-        axios.post(API_URL, body)
+        axios.post(API_URL, bodySimple)
         .then((response) => {
           console.log(response);
         })
@@ -117,7 +128,7 @@ const NewOffer = () => {
 
   }
 
-  const API_URL = "http://localhost:8000/api/contract/offers";
+  const API_URL = "http://localhost:8000/api/contract/offer";
 
   return (
     <ThemeProvider theme={theme}>
@@ -154,7 +165,7 @@ const NewOffer = () => {
                       <Grid item xs={8}>
                         <ToggleButtonGroup
                           color="primary"
-                          value={energyType}
+                          value={form.energyType}
                           exclusive
                           onChange={handleEnergyType}
                           aria-label="text alignment"
@@ -187,11 +198,10 @@ const NewOffer = () => {
                       </Grid>
                       <Grid item xs={8}>
                         <FormControl >
-                          <RadioGroup row aria-label="contractLength" name="row-radio-buttons-group" defaultValue={contractLength} >
+                          <RadioGroup row aria-label="contractLength" name="row-radio-buttons-group" defaultValue={12} onChange={handleContractLength} >
                             <FormControlLabel value={6} control={<Radio />} label="6 mth" />
                             <FormControlLabel value={12} control={<Radio />} label="12 mth" />
                             <FormControlLabel value={24} control={<Radio />} label="24 mth" />
-                            <FormControlLabel value={-1} control={<Radio />} label="undefined*" />
                           </RadioGroup>
                         </FormControl>
                       </Grid>
@@ -210,7 +220,7 @@ const NewOffer = () => {
                       <Grid item xs={8}>
                         <ToggleButtonGroup
                           color="primary"
-                          value={hourType}
+                          value={form.hourType}
                           exclusive
                           onChange={handleHourType}
                           aria-label="text alignment"
@@ -232,39 +242,145 @@ const NewOffer = () => {
                     >
                       <Grid item xs={4}>
                         <Typography variant="h6" component="h2" gutterBottom>
-                          Price per {energyType === "gas" || energyType === "water" ? "m3" : "kWh"}:
+                          Price type:
                         </Typography>
                       </Grid>
                       <Grid item xs={8}>
-                        <TextField id="outlined-basic" label="Price" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} />
+                        <ToggleButtonGroup
+                          color="primary"
+                          value={form.priceType}
+                          exclusive
+                          onChange={handlePriceType}
+                          aria-label="text alignment"
+                        >
+                          <ToggleButton value="fixed" aria-label="left aligned">
+                            Fixed
+                          </ToggleButton>
+                          <ToggleButton value="variable" disabled={isWater} aria-label="centered">
+                            Variable
+                          </ToggleButton>
+                        </ToggleButtonGroup>
                       </Grid>
                     </Grid>
-                    { energyType === "both" && 
-                    <Grid item container
-                    justifyContent='center'
-                    alignItems='center'
-                    columnSpacing={1}
-                    >
-                      <Grid item xs={4}>
-                        <Typography variant="h6" component="h2" gutterBottom>
-                          Price per {energyType === "electricty" ? "kWh" : "m3"} :
-                        </Typography>
+
+                    { bools.doubles ?
+                      <Grid item container
+                      justifyContent='center'
+                      alignItems='center'
+                      columnSpacing={1}
+                      rowSpacing={1}
+                      >
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Price per kWh:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <TextField id="cost_ELEC" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} />
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Price per m3:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <TextField id="cost_GAZ" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} />
+                        </Grid>
                       </Grid>
-                      <Grid item xs={8}>
-                        <TextField id="outlined-basic" label="Price" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} />
+                      : null}
+                      
+                      { bools.simple ?
+                      <Grid item container
+                      justifyContent='center'
+                      alignItems='center'
+                      columnSpacing={1}
+                      rowSpacing={1}
+                      >
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Price per {form.energyType === "gas" || form.energyType === "water" ? "m3" : "kWh"}:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <TextField id="cost" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }}  onChange={onUpdateField} />
+                        </Grid>
                       </Grid>
-                    </Grid>}
-                    
-                    {(hourType === "double") && (energyType === "both") ?
-
-                    : (hourType === "simple" && energyType === "both") ?
-
-                    : (hourType === "double" && energyType !== "both") ?
-
-                    : 
-
-                    }
-                  </Grid>
+                      : null}
+                      
+                      {bools.doubled ?
+                      <Grid item container
+                      justifyContent='center'
+                      alignItems='center'
+                      columnSpacing={1}
+                      rowSpacing={1}
+                      >
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Prices per kWh:
+                          </Typography>
+                        </Grid>
+                        <Grid item container
+                        justifyContent='center'
+                        alignItems='center'
+                        columnSpacing={1}
+                        xs={8}
+                        >
+                          <Grid item xs={4}>
+                            <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Price per m3:
+                          </Typography>
+                        </Grid>
+                        <Grid item container
+                        justifyContent='center'
+                        alignItems='center'
+                        columnSpacing={1}
+                        xs={8}
+                        >
+                          <Grid item xs={4}>
+                          <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      : null}
+                      
+                      {bools.double ?
+                      <Grid item container
+                      justifyContent='center'
+                      alignItems='center'
+                      columnSpacing={1}
+                      rowSpacing={1}
+                      >
+                        <Grid item xs={4}>
+                          <Typography variant="h6" component="h2" gutterBottom>
+                            Prices per {form.energyType === "gas" || form.energyType === "water" ? "m3" : "kWh"}:
+                          </Typography>
+                        </Grid>
+                        <Grid item container
+                        justifyContent='center'
+                        alignItems='center'
+                        columnSpacing={1}
+                        xs={8}
+                        >
+                          <Grid item xs={4}>
+                            <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      : null }
+                  </Grid> 
                 </Box>
                 <Grid container
                 direction='row'
@@ -291,13 +407,8 @@ const NewOffer = () => {
                 </Link>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" onClick={handleCreateOffer} color="primary" sx={{ width: '60%' }} >
+                <Button variant="contained" onClick={handleCreateOffer} disabled={!isValidOffer} color="primary" sx={{ width: '60%' }} >
                   Confirm offer
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" onClick={printForm} color="primary" sx={{ width: '60%' }} >
-                  Print
                 </Button>
               </Grid>
             </Grid>

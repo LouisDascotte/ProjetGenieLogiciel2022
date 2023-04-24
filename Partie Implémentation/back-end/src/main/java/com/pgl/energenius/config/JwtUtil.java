@@ -91,7 +91,7 @@ public class JwtUtil implements Serializable {
      * @param token the JWT token
      * @return true if the token has expired, false otherwise
      */
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }

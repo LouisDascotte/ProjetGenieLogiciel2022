@@ -147,4 +147,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/expired_token")
+    public ResponseEntity<?> isTokenExpired(@RequestParam String token) {
+
+        try {
+            return new ResponseEntity<>(jwtUtil.isTokenExpired(token), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

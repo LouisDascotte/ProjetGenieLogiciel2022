@@ -37,6 +37,7 @@ public class NotificationController {
     public ResponseEntity<?> readNotification(@PathVariable ObjectId id) {
 
         try {
+            System.out.println(id);
             notificationService.readNotification(id);
             return ResponseEntity.ok().build();
 
@@ -47,6 +48,7 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            System.out.println("Bizarre");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {

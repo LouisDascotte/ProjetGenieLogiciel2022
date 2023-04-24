@@ -79,7 +79,7 @@ function App() {
                 <Route path="/notifications" exact element={<PrivateRoute>
                   <Notifications/>
                   </PrivateRoute>}/>
-                <Route path='/reset-passwd' exact element={<ResetPassword/>}/>
+                <Route path='/reset-password/:token' exact element={<ResetPassword/>}/>
                 <Route path="/enter-consumption" exact element={<PrivateRoute>
                   <MeterConsumption/>
                 </PrivateRoute>}/>
@@ -96,7 +96,6 @@ function App() {
                   <ContractRequest/>
                   </PrivateRoute>}/>
                   <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
-                  <Route path="/view-contracta" exact element={<PrivateRoute><ViewContract/></PrivateRoute>}/>
                   <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
                   <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
               </Routes>

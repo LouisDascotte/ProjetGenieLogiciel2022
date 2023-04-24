@@ -2,10 +2,12 @@ import React, { useEffect , useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from "../api/axios";
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import{Card, Stack} from "@mui/material";
+import{Card, Stack, ButtonGroup, Button, IconButton, Box} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
-
+import PortfolioMainGraph from '../components/PortfolioMainGraph';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 
 const ConsumptionHistoryPage = () => {
   
@@ -17,6 +19,8 @@ const ConsumptionHistoryPage = () => {
   const [elec, setElec] = useState([]);
   const [gas, setGas] = useState([]);
   const [water, setWater] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(()=>{
     const response = axios.get(URL2, {
@@ -90,24 +94,35 @@ if (!(data.WATER === undefined)){
 
   const rows = elec_rows.concat(gas_rows, water_rows);
 
- 
+  const [type, setType] = useState("TABLE");
 
   return (
-    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
+    <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >
       <SideMenu/>
-      <Stack sx={{display:'flex', width:"100%"}}>
+      <Stack sx={{display:'flex', width:"100%"}} >
         <TopMenu pageAddress={"/consumption-history"} pageName={"Consumption History"}/>
-        <Card sx={{m:5, height:'100%', width:"90%"}}>
-          <DataGrid 
-          rows={rows} 
-          columns={columns} 
-          pageSize={10} 
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          />
-        </Card>
-        
+        <Stack justifyContent='center' alignContent="center" alignItems='center' sx={{display:'flex'}}>
+          <IconButton onClick={()=>navigate(-1)}>
+            <ArrowBackIcon/>
+          </IconButton>
+          <Box sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}>
+            {type === "TABLE" ? 
+            <DataGrid 
+            rows={rows} 
+            columns={columns} 
+            pageSize={10} 
+            slots={{
+              toolbar: GridToolbar,
+            }}
+            /> : <PortfolioMainGraph portfolio={data}/>
+          }
+            
+          </Box>
+          <ButtonGroup variant="contained">
+            <Button onClick={()=> setType("TABLE")}>Table</Button>
+            <Button onClick={()=> setType("GRAPH")}>Graph</Button>
+          </ButtonGroup>
+        </Stack>
       </Stack>
     </Stack>
   )

@@ -45,7 +45,7 @@ const PortfolioMainGraph = ({portfolio}) => {
       
  }, [portfolio]);
 
- console.log(gaz.length)
+ console.log(gaz)
 
  /*const result = data.reduce((acc, curr) => {
   const date = curr.date;
@@ -77,8 +77,8 @@ const PortfolioMainGraph = ({portfolio}) => {
  
   return (
   <Stack justifyContent='center' paddingTop='10%' alignContent="center" alignItems='center'>
-    {isReady ? <Card sx={{boxShadow:'5px 5px 5px #A9A9A9', textAlign:'center'}}>
-      <Typography>
+    {isReady ? <Card sx={{boxShadow:'none', textAlign:'center'}}>
+      <Typography variant="h6">
         {view === "ELEC" ? "Electricity consumption" : view === "WATER" ? "Water consumption" : "Gas consumption"}
       </Typography>
       {view === "ELEC" ?  <LineChart

@@ -25,7 +25,7 @@ const AccountMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const name = "Dupont";
+  const name = localStorage.getItem("lastName").toUpperCase();
 
   const handleLogout = () => {
     authServices.logout();
@@ -79,13 +79,10 @@ const AccountMenu = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <StyledBadge 
-            overlap="circular"
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            variant="dot">
+            
             <Avatar sx={{ width: 50, height: 50, bgcolor:'rgba(5, 139, 7, 0.629)' }}>{name[0]
             // getting the first character of the name
-            }</Avatar></StyledBadge>
+            }</Avatar>
           </IconButton>
         </Tooltip>
     </Box>

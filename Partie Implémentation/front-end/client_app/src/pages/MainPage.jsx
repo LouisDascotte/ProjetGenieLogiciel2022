@@ -85,13 +85,7 @@ const MainPage = () => {
                 setPortfolios(response.data);
             })
 
-            const request = axios.get("http://localhost:8080/api/client/me", {
-                headers : {"Content-Type":"application/json",
-              "Authorization" : `Bearer ${jwt}`,
-              "Access-Control-Allow-Origin":true}
-              }).then(request => {
-                localStorage.setItem("client_email", request.data.email);
-              })
+            
     }, [])
 
     return (

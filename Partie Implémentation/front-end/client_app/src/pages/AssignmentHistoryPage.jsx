@@ -25,7 +25,7 @@ const AssignmentHistoryPage = () => {
       }).then(response=>{
         setData(response.data)
       })
-  })
+  }, [])
 
 
   const columns = [

@@ -3,8 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Stack, Grid, Card, Box, Button, Paper, Typography, TextField, FormControl, ToggleButton, ToggleButtonGroup, Checkbox, FormGroup } from '@mui/material';
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
-import Carousel from 'react-material-ui-carousel'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { RadioGroup, FormControlLabel, Radio } from '@mui/material';
 
@@ -14,18 +13,21 @@ const NewOffer = () => {
 
   const pageAddress = "/offers/new";
   const pageName = "Create new offer";
+  const jwt = localStorage.getItem("jwt");
+  const nav = useNavigate();
+  let config = {};
 
   const [form, setForm] = React.useState({
-    hourType: "simple",
+    hourType: "SIMPLE",
     contractLength: 12,
-    priceType: "fixed",
+    priceType: "FIXED_PRICE",
     cost: 0,
     nightCost: 0,
     cost_ELEC: 0,
     nightCost_ELEC: 0,
     cost_GAZ: 0,
     nightCost_GAZ: 0,
-    energyType: "electricity",
+    energyType: "ELEC",
   });
 
   const onUpdateField = e => {
@@ -37,15 +39,15 @@ const NewOffer = () => {
     setForm(nextFormState);
   };
 
-  const isWater = form.energyType === "water";
+  const isWater = form.energyType === "WATER";
 
   const bools = {
-    "doubled": (form.energyType === "both") && form.hourType === "double",
-    "doubles": (form.energyType === "both") && form.hourType === "simple",
-    "simple": (form.energyType !== "both") && form.hourType === "simple",
-    "double": (form.energyType !== "both") && form.hourType === "double",
+    "DOUBLED": (form.energyType === "both") && form.hourType === "DOUBLE",
+    "DOUBLES": (form.energyType === "both") && form.hourType === "SIMPLE",
+    "SIMPLE": (form.energyType !== "both") && form.hourType === "SIMPLE",
+    "DOUBLE": (form.energyType !== "both") && form.hourType === "DOUBLE",
   }
-  const isValidOffer = (form.energyType !== null) && (form.hourType !== null) && (form.contractLength !== null) && (form.priceType !== null) && (form.cost !== null) && (form.nightCost !== null) && (form.cost_ELEC !== null) && (form.nightCost_ELEC !== null) && (form.cost_GAZ !== null) && (form.nightCost_GAZ !== null) && (form.energyType !== null);
+  const isValidOffer = (form.energyType !== null) && (form.hourType !== null) && (form.contractLength !== null) && (form.priceType !== null) && (form.cost !== 0 || form.cost_ELEC !== 0 || form.cost_ELEC !== 0) && (form.nightCost !== null) && (form.nightCost_ELEC !== null) && (form.cost_GAZ !== null) && (form.nightCost_GAZ !== null) && (form.energyType !== null);
 
   const handleKeyPress = (event) => {
     const keyCode = event.keyCode || event.which;
@@ -74,22 +76,26 @@ const NewOffer = () => {
   };
 
   let bodySimple = {
-    hourType: form.hourType,
-    contractLength: form.contractLength,
-    cost: Number(form.cost)/100,
-    nightCost: form.nightCost/100,
-    priceType: form.priceType,
-    energyType: form.energyType
+    "hourType": form.hourType,
+    "contractLength": form.contractLength,
+    "cost": Number(form.cost)/100,
+    "nightCost": form.nightCost/100,
+    "priceType": form.priceType,
+    "energyType": form.energyType,
+    "supplierName": localStorage.getItem("name"),
+    "type": "SIMPLE_OFFER"
   }
 
   let bodyBoth = {
-    hourType: form.hourType,
-    contractLength: form.contractLength,
-    cost_ELEC: form.cost_ELEC/100,
-    nightCost_ELEC: form.nightCost_ELEC/100,
-    cost_GAZ: form.cost_GAZ/100,
-    nightCost_GAZ: form.nightCost_GAZ/100,
-    priceType: form.priceType
+    "hourType": form.hourType,
+    "contractLength": form.contractLength,
+    "cost_ELEC": form.cost_ELEC/100,
+    "nightCost_ELEC": form.nightCost_ELEC/100,
+    "cost_GAZ": form.cost_GAZ/100,
+    "nightCost_GAZ": form.nightCost_GAZ/100,
+    "priceType": form.priceType,
+    "supplierName": localStorage.getItem("name"),
+    "type": "GAZ_ELEC_OFFER"
   }
 
   const theme = createTheme({
@@ -104,28 +110,35 @@ const NewOffer = () => {
       }
     }
   });
+  const API_URL = "http://localhost:8080/api/contract/";
 
   const handleCreateOffer = () => {
     switch (form.energyType) {
       case "both":
-        console.log("both");
-        console.log(bodyBoth);
-        axios.post(API_URL+"offer_gaz_elec", bodyBoth)
+        config = {
+          headers: { "Autorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        }
+        axios.post(API_URL+"offer_gaz_elec", bodyBoth, config)
         .then((response) => {
-          console.log(response);
         })
         .catch((error) => {
           console.log(error);
         })
       break;
-      case "electricity":
-      case "gas":
-      case "water":
-        console.log("simple");
-        console.log(bodySimple);
-        axios.post(API_URL+"offer", bodySimple)
+      case "ELEC":
+      case "GAZ":
+      case "WATER":
+        config = {
+          headers: { Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        }
+        axios.post(API_URL+"offer", bodySimple, config)
         .then((response) => {
-          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -135,10 +148,8 @@ const NewOffer = () => {
         console.log("error");
         break;
     }
-
+    nav("/offers");
   }
-
-  const API_URL = "http://localhost:8080/api/contract/";
 
   return (
     <ThemeProvider theme={theme}>
@@ -180,13 +191,13 @@ const NewOffer = () => {
                           onChange={handleEnergyType}
                           aria-label="text alignment"
                         >
-                          <ToggleButton value="water" aria-label="left aligned">
+                          <ToggleButton value="WATER" aria-label="left aligned">
                             Water
                           </ToggleButton>
-                          <ToggleButton value="gas" aria-label="left aligned">
+                          <ToggleButton value="GAZ" aria-label="left aligned">
                             Gas
                           </ToggleButton>
-                          <ToggleButton value="electricity" aria-label="centered">
+                          <ToggleButton value="ELEC" aria-label="centered">
                             Electricity
                           </ToggleButton>
                           <ToggleButton value="both" aria-label="right aligned">
@@ -235,10 +246,10 @@ const NewOffer = () => {
                           onChange={handleHourType}
                           aria-label="text alignment"
                         >
-                          <ToggleButton value="simple" aria-label="left aligned">
+                          <ToggleButton value="SIMPLE" aria-label="left aligned">
                             Simple
                           </ToggleButton>
-                          <ToggleButton value="double" disabled={isWater} aria-label="centered">
+                          <ToggleButton value="DOUBLE" disabled={isWater} aria-label="centered">
                             Double
                           </ToggleButton>
                         </ToggleButtonGroup>
@@ -263,17 +274,17 @@ const NewOffer = () => {
                           onChange={handlePriceType}
                           aria-label="text alignment"
                         >
-                          <ToggleButton value="fixed" aria-label="left aligned">
+                          <ToggleButton value="FIXED_PRICE" aria-label="left aligned">
                             Fixed
                           </ToggleButton>
-                          <ToggleButton value="variable" disabled={isWater} aria-label="centered">
+                          <ToggleButton value="VAR_PRICE" aria-label="centered">
                             Variable
                           </ToggleButton>
                         </ToggleButtonGroup>
                       </Grid>
                     </Grid>
 
-                    { bools.doubles ?
+                    { bools.DOUBLES ?
                       <Grid item container
                       justifyContent='center'
                       alignItems='center'
@@ -299,7 +310,7 @@ const NewOffer = () => {
                       </Grid>
                       : null}
                       
-                      { bools.simple ?
+                      { bools.SIMPLE ?
                       <Grid item container
                       justifyContent='center'
                       alignItems='center'
@@ -308,7 +319,7 @@ const NewOffer = () => {
                       >
                         <Grid item xs={4}>
                           <Typography variant="h6" component="h2" gutterBottom>
-                            Price per {form.energyType === "gas" || form.energyType === "water" ? "m3" : "kWh"}:
+                            Price per {form.energyType === "GAZ" || form.energyType === "WATER" ? "m3" : "kWh"}:
                           </Typography>
                         </Grid>
                         <Grid item xs={8}>
@@ -317,7 +328,7 @@ const NewOffer = () => {
                       </Grid>
                       : null}
                       
-                      {bools.doubled ?
+                      {bools.DOUBLED ?
                       <Grid item container
                       justifyContent='center'
                       alignItems='center'
@@ -363,7 +374,7 @@ const NewOffer = () => {
                       </Grid>
                       : null}
                       
-                      {bools.double ?
+                      {bools.DOUBLE ?
                       <Grid item container
                       justifyContent='center'
                       alignItems='center'

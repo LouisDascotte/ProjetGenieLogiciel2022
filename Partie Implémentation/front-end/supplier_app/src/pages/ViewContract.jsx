@@ -236,7 +236,7 @@ function ViewContract() {
                 </Typography>
                 <Grid >
                   <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                    Subscribed to the offer of XX€/month for YY.
+                    Subscribed to the offer #{} of XX€/month for YY.
                   </Typography>
                 </Grid>
               </Box>

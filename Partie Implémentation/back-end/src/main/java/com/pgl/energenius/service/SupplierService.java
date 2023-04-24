@@ -3,10 +3,7 @@ package com.pgl.energenius.service;
 import com.pgl.energenius.config.WebSecurityConfig;
 import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.exception.ObjectNotFoundException;
-import com.pgl.energenius.exception.UnauthorizedAccessException;
-import com.pgl.energenius.model.Client;
-import com.pgl.energenius.model.ClientLogin;
-import com.pgl.energenius.model.dto.ClientPreferencesDto;
+import com.pgl.energenius.model.contract.Contract;
 import com.pgl.energenius.model.dto.SupplierLoginDto;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.Supplier;
@@ -26,7 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SupplierService {
@@ -99,7 +96,9 @@ public class SupplierService {
 
         Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
 
-        List<ObjectId> clientIds = contractRepository.findClientIdsBySupplierId(supplier.getId());
+        List<Contract> contracts = contractRepository.findBySupplierId(supplier.getId());
+        List<ObjectId> clientIds = contracts.stream().map(Contract::getClientId).collect(Collectors.toList());
+
         return clientRepository.findAllByIdIn(clientIds, ClientProjection.class);
     }
 }

@@ -73,8 +73,6 @@ public class ReadingService {
                 reading.setStatus(Reading.Status.PENDING);
                 saveReading(reading);
 
-                // TODO Supprimer ancienne notif si PENDING
-
             } else {
                 throw new ObjectAlreadyExitsException("Reading already exits with date: " + date);
             }

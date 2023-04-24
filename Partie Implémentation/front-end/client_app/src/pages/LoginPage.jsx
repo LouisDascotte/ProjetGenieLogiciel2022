@@ -16,8 +16,7 @@ const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 const LoginPage = () => {
 
   // ToDo : check usefulness of this part
-  const [jwt, setJwt] = useLocalState("", "jwt"); 
-  const [user, setUser] = useLocalState("", "user");
+  
   
 
   // Used for the redirection

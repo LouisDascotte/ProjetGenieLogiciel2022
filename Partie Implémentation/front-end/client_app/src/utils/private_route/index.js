@@ -17,7 +17,7 @@ const PrivateRoute = ({children}) => {
       }
     })
   }*/
-  return (jwt !== "\"\"") ? children : <Navigate to="/login"/>
+  return (jwt !== "") ? children : <Navigate to="/login"/>
 };
 
 export default PrivateRoute; 

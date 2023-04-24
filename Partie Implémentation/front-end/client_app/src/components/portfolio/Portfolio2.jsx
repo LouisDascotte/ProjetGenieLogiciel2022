@@ -20,6 +20,7 @@ export const Portfolio2 = () => {
   const pageAddress = "";
   const pageName= "Manage portfolio"; 
   const [activeMeters, setActiveMeters] = useState([]);
+  const [activeProductionPoints, setActiveProductionPoints] = useState([]);
   const [state, setState] = useState(0);
 
   useEffect(()=>{
@@ -174,6 +175,9 @@ export const Portfolio2 = () => {
             </Stack>
               
             )}
+            <Typography variant="h5" sx={{m:2}}>
+              Linked Production points :
+            </Typography>
             <Typography variant="h5" sx={{m:2}}>
               Selected supply points to add : 
             </Typography>

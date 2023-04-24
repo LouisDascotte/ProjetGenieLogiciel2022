@@ -158,9 +158,9 @@ const RegisterPage = () => {
         //"Authorization" : `Bearer ${jwt}`,
         "Access-Control-Allow-Origin":true},
         //withCredentials: true
-      }); 
-      
+      })
       navigate("/registration-success"); 
+
       // TODO : Clean input fields 
     } catch (err) {
       if (!err?.response) {

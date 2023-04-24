@@ -6,16 +6,23 @@ import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.enums.HourType;
+import com.pgl.energenius.model.contract.Contract;
+import com.pgl.energenius.model.notification.LinkMeterNotification;
+import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.repository.ContractRepository;
 import com.pgl.energenius.repository.MeterAllocationRepository;
 import com.pgl.energenius.repository.MeterRepository;
 import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +35,9 @@ public class MeterService {
     private MeterRepository meterRepository;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private MeterAllocationRepository meterAllocationRepository;
 
     @Autowired
@@ -38,6 +48,9 @@ public class MeterService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private ContractRepository contractRepository;
 
     public Meter insertMeter(Meter meter) throws ObjectNotValidatedException {
 
@@ -165,5 +178,104 @@ public class MeterService {
             insertMeter(meter);
         }
         return meter;
+    }
+
+    public void linkMeter(String EAN, ObjectId clientId) throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException, ObjectNotValidatedException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+        Contract contract = contractRepository.findByEAN(EAN)
+                .orElseThrow(() -> new ObjectNotFoundException("Cannot link this meter because there is no contract with this meter"));
+
+        if (contract.getStatus() == Contract.Status.PENDING) {
+            throw new UnauthorizedAccessException("Cannot link this meter because the contract has not been accepted yet");
+
+        } else if (!Objects.equals(clientId, contract.getClientId())) {
+            throw new UnauthorizedAccessException("Cannot link this meter because the id of the client is not same in the contract");
+
+        } else if (!Objects.equals(supplier.getId(), contract.getSupplierId())) {
+            throw new UnauthorizedAccessException("Authenticated supplier cannot link this meter");
+        }
+
+        Meter meter = meterRepository.findById(EAN)
+                .orElseThrow(() -> new ObjectNotFoundException("No meter found with ean: " + EAN));
+
+        meter.setStatus(Meter.Status.AFFECTED);
+        meter.setClientId(clientId);
+        meter.setSupplierId(supplier.getId());
+
+        saveMeter(meter);
+
+        MeterAllocation meterAllocation = new MeterAllocation(EAN, LocalDate.now().format(DateTimeFormatter.ISO_DATE), contract.getEndDate(), clientId, supplier.getName(), MeterAllocation.Status.ACTIVE);
+        meterAllocationRepository.insert(meterAllocation);
+
+        notificationService.insertNotification(LinkMeterNotification.builder()
+                .EAN(EAN)
+                .senderId(supplier.getId())
+                .receiverId(clientId)
+                .type(Notification.Type.LINK_METER_NOTIFICATION)
+                .build());
+    }
+
+    public void unlinkMeter(String EAN) throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException, ObjectNotValidatedException {
+
+        Meter meter = getMeter(EAN);
+        ObjectId clientId = meter.getClientId();
+        ObjectId supplierId = meter.getSupplierId();
+
+        meter.setSupplierId(null);
+        meter.setClientId(null);
+        meter.setStatus(Meter.Status.DISAFFECTED);
+
+        saveMeter(meter);
+
+        String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+        MeterAllocation meterAllocation = meterAllocationRepository.findByDateAndEAN(dateNow, EAN);
+        meterAllocation.setStatus(MeterAllocation.Status.ENDED);
+        meterAllocation.setEndDate(dateNow);
+
+        meterAllocationRepository.save(meterAllocation);
+
+        notificationService.insertNotification(LinkMeterNotification.builder()
+                .EAN(EAN)
+                .senderId(supplierId)
+                .receiverId(clientId)
+                .type(Notification.Type.UNLINK_METER_NOTIFICATION)
+                .build());
+    }
+
+    @Scheduled(cron = "50 23 * * ?")
+    public void checkMeterAllocations() {
+
+        String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+        List<MeterAllocation> meterAllocations = meterAllocationRepository.findByEndDate(dateNow);
+
+        for (MeterAllocation ma : meterAllocations) {
+            ma.setStatus(MeterAllocation.Status.ENDED);
+
+            Meter meter = meterRepository.findById(ma.getEAN()).get();
+            meter.setStatus(Meter.Status.DISAFFECTED);
+            meter.setClientId(null);
+            meter.setSupplierId(null);
+            ObjectId clientId = meter.getClientId();
+            ObjectId supplierId = meter.getSupplierId();
+
+            meter.setSupplierId(null);
+            meter.setClientId(null);
+            meter.setStatus(Meter.Status.DISAFFECTED);
+
+            try {
+                notificationService.insertNotification(LinkMeterNotification.builder()
+                        .EAN(ma.getEAN())
+                        .senderId(supplierId)
+                        .receiverId(clientId)
+                        .type(Notification.Type.UNLINK_METER_NOTIFICATION)
+                        .build());
+
+                saveMeter(meter);
+            } catch (ObjectNotValidatedException ignored) {}
+        }
     }
 }

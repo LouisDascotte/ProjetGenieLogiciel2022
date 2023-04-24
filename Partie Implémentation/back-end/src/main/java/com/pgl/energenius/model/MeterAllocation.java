@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -14,6 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "meter_allocations")
 public class MeterAllocation {
+
+    @Id
+    public ObjectId id;
 
     /**
      * The EAN of the meter
@@ -35,6 +39,17 @@ public class MeterAllocation {
     private String supplierName;
 
     private Status status;
+
+    public MeterAllocation(String EAN, String beginDate, String endDate, ObjectId clientId, String supplierName, Status status) {
+        this.EAN = EAN;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.clientId = clientId;
+        this.supplierName = supplierName;
+        this.status = status;
+        id = new ObjectId();
+    }
+
 
     public enum Status {
         ACTIVE,

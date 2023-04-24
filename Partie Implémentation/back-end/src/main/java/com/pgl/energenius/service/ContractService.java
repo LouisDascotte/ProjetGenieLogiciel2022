@@ -22,9 +22,13 @@ import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,9 +49,6 @@ public class ContractService {
 
     @Autowired
     private MeterService meterService;
-
-    @Autowired
-    private MeterRepository meterRepository;
 
     @Autowired
     private AddressService addressService;
@@ -299,9 +300,11 @@ public class ContractService {
 
             Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
 
+            checkMeterNotAffected(contract);
+
             Notification notification = Notification.builder()
                     .senderId(supplier.getId())
-                    .receiverId(contract.getSupplierId())
+                    .receiverId(contract.getClientId())
                     .type(Notification.Type.CANCEL_CONTRACT_NOTIFICATION)
                     .build();
             notificationService.insertNotification(notification);
@@ -316,6 +319,26 @@ public class ContractService {
 
             meterService.deleteMeterIf_AWAITING_APPROVAL(gazElecContract.getEAN_ELEC());
             meterService.deleteMeterIf_AWAITING_APPROVAL(gazElecContract.getEAN_GAZ());
+        }
+    }
+
+    private void checkMeterNotAffected(Contract contract) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        if (contract instanceof SimpleContract simpleContract) {
+
+            Meter meter = meterService.getMeter(simpleContract.getEAN());
+
+            if (meter.getStatus() == Meter.Status.AFFECTED)
+                throw new UnauthorizedAccessException("Cannot cancel this contract because the meter is still affected");
+
+        } else {
+            GazElecContract gazElecContract = (GazElecContract) contract;
+
+            Meter meter_ELEC = meterService.getMeter(gazElecContract.getEAN_ELEC());
+            Meter meter_GAZ = meterService.getMeter(gazElecContract.getEAN_GAZ());
+
+            if (meter_GAZ.getStatus() == Meter.Status.AFFECTED || meter_ELEC.getStatus() == Meter.Status.AFFECTED)
+                throw new UnauthorizedAccessException("Cannot cancel this contract because one of the meter is still affected");
         }
     }
 
@@ -377,5 +400,57 @@ public class ContractService {
 
     public boolean existsByEAN(String EAN) {
         return contractRepository.findByEAN(EAN).isPresent();
+    }
+
+    public void acceptContract(ObjectId contractId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException, ObjectNotValidatedException {
+
+        Contract contract = getContract(contractId);
+
+        if (contract.getStatus() != Contract.Status.PENDING)
+            throw new BadRequestException("This contract is already accepted");
+
+        Offer offer = offerRepository.findById(contract.getOfferId())
+                .orElseThrow(() -> new ObjectNotFoundException("No offer found with id: " + contract.getOfferId()));
+
+        contract.setStatus(Contract.Status.ACCEPTED);
+
+        LocalDate now = LocalDate.now();
+        LocalDate nowPlusLength = now.plusMonths(offer.getContractLength());
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+        contract.setBeginDate(now.format(formatter));
+        contract.setEndDate(nowPlusLength.format(formatter));
+
+        saveContract(contract);
+
+        notificationService.insertNotification(ContractNotification.builder()
+                        .contract(contract)
+                        .receiverId(contract.getClientId())
+                        .senderId(contract.getSupplierId())
+                        .type(Notification.Type.ACCEPT_CONTRACT_NOTIFICATION)
+                        .build());
+    }
+
+    @Scheduled(cron = "55 23 * * ?")
+    public void checkContract() {
+
+        String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+        List<Contract> contracts = contractRepository.findByEndDate(dateNow);
+
+        for (Contract c : contracts) {
+
+            Notification notification = Notification.builder()
+                    .senderId(c.getSupplierId())
+                    .receiverId(c.getClientId())
+                    .type(Notification.Type.END_CONTRACT_NOTIFICATION)
+                    .build();
+
+            try {
+                notificationService.insertNotification(notification);
+
+            } catch (ObjectNotValidatedException ignored) {}
+
+            contractRepository.delete(c);
+        }
     }
 }

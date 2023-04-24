@@ -20,4 +20,6 @@ public interface ContractRepository extends MongoRepository<Contract, ObjectId> 
     Optional<Contract> findByEAN(String EAN);
 
     boolean existsByClientIdAndSupplierId(ObjectId clientId, ObjectId supplierId);
+
+    List<Contract> findByEndDate(String endDate);
 }

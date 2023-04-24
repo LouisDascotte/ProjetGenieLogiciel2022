@@ -216,9 +216,6 @@ export const Portfolio2 = () => {
               <Button onClick={()=> navigate(`/consumption/${id}`)}>
                 Show consumption
               </Button>
-              <Button onClick={()=>navigate(`/production/${id}`)}>
-                Show production
-              </Button>
             </ButtonGroup>
             
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>

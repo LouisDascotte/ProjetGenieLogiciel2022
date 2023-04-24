@@ -7,30 +7,37 @@ const JWT_VALIDATION_URL = "http://localhost:8080/api/"
 
 const PrivateRoute = ({children}) => {
   //const [jwt, setJwt] = useLocalState("", "jwt");
-  const jwt = localStorage.getItem("jwt");
-  console.log(jwt);
+  let jwt = localStorage.getItem("jwt");
+  let auth = localStorage.getItem("authenticated");
+  if (jwt === null) {
+    jwt = "null";
+  }
+
   React.useEffect(()=>{
-    const response = axios.get(JWT_VALIDATION_URL + "auth/expired_token", {
-      headers : {
-        "Content-Type":"application/json",
-        "Access-Control-Allow-Origin":true,
-      }, params : {
-        token : jwt
-      }
-    }).then(response => {
-      console.log(response.data)
-    })
+    if(auth === false || auth === null){
+      const response = axios.get(JWT_VALIDATION_URL + "auth/expired_token", {
+        headers : {
+          "Content-Type":"application/json",
+          "Access-Control-Allow-Origin":true,
+        }, params : {
+          token : jwt
+        }
+      }).then(response => {
+        if(response.status === 200 && response.data === false){
+          localStorage.setItem("authenticated", true)
+          auth = true; 
+        } else if (response.status === 200 && response.data === true){
+          localStorage.setItem("authenticated", false);
+          auth = false; 
+        }
+      }).catch(err=>{
+        console.log(err.response.data);
+        localStorage.setItem("authenticated", false)
+        auth = false; 
+      })
+    }
   })
-  /*if (jwt) {
-    const response = axios.get(JWT_VALIDATION_URL, {headers : {"Content-Type":"application/json",
-    "Authorization" : `Bearer ${jwt}`,
-    "Access-Control-Allow-Origin":true}}).then(response => {
-      if (response === true){
-        console.log("idk");
-      }
-    })
-  }*/
-  return (jwt !== "") ? children : <Navigate to="/login"/>
+  return auth ? children : <Navigate to="/login"/>
 };
 
 export default PrivateRoute; 

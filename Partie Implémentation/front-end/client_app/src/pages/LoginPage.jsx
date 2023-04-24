@@ -29,7 +29,6 @@ const LoginPage = () => {
     
   });
 
-
   // Used for the regex
   const {errors, validateForm, onBlurField} = useLoginFieldValidator(form);
 
@@ -58,6 +57,7 @@ const LoginPage = () => {
         //setJwt(response.headers["authorization"], "jwt");
         localStorage.setItem("jwt", response.headers["authorization"]);
         localStorage.setItem("user", response.data);
+        localStorage.setItem("authenticated", true);
         setAuthToken(response.headers["authorization"]);
       });
 
@@ -70,7 +70,10 @@ const LoginPage = () => {
                 localStorage.setItem("lastName", request.data.client.lastName);
               })
       
-      navigate("/main-page");
+      setTimeout(()=>{
+        navigate("/main-page");
+      }, 1000);
+              
     } catch(err){
       if(!err?.response){
         console.log("No server response.");

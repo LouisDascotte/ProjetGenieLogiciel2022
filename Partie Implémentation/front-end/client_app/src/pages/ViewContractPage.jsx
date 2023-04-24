@@ -64,11 +64,16 @@ const ViewContractPage = () => {
             </Box>
             <Box sx={{m:2}}>
               <Stack textAlign={'center'}>
+                {location.state.status === 'ACCEPTED' ? <Stack>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>Begin Date :</strong> {location.state.beginDate}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>End Date :</strong> {location.state.endDate}
+                </Typography>
+                  </Stack> : null}
+                <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
+                  <strong>Status :</strong> {location.state.status}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>Offer :</strong> {location.state.offerId}

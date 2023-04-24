@@ -132,10 +132,6 @@ const ContractRequest = () => {
         "meterType" : mechanism[meterType1-1],
       }
     }
-    console.log(body);
-    const request = axios.get("http://localhost:8080/api/contract/offers", {headers: {"Content-Type":"application/json",
-    "Authorization" : `Bearer ${jwt}`,
-    "Access-Control-Allow-Origin":true}, params: body})
     navigate("/offers-page", {state: {body: body}})
   }
 

@@ -1,6 +1,5 @@
 package com.pgl.energenius.controller;
 
-import com.pgl.energenius.model.dto.OfferDto;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.dto.GazElecContractRequestDto;
+import com.pgl.energenius.model.dto.OfferDto;
 import com.pgl.energenius.model.dto.SimpleContractRequestDto;
 import com.pgl.energenius.service.ContractService;
 

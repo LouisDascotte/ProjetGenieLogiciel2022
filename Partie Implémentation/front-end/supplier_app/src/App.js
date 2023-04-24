@@ -11,13 +11,11 @@ import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
 import ResetPassword from "./pages/ResetPassword";
 import ErrorPage from './pages/ErrorPage';
-import Testing from './pages/Testing';
 import MainPage from './pages/MainPage';
 import ManageClients from './pages/ManageClients';
 import ManageContracts from './pages/ManageContracts';
 import ManageConsumption from './pages/ManageConsumption';
 import ViewClient from './pages/ViewClient';
-import AddClient from './pages/NewClient';
 import LinkMeter from './pages/LinkMeter';
 import ViewContract from './pages/ViewContract';
 import NewContract from './pages/NewContract';
@@ -57,7 +55,6 @@ function App() {
                   <Route path='/clients' exact element={<PrivateRoute><ManageClients/></PrivateRoute>}/>
                   <Route path='/consumption' exact element={<PrivateRoute><ManageConsumption/></PrivateRoute>}/>
                   <Route path='/clients/:clientId' element={<PrivateRoute><ViewClient/></PrivateRoute>}/>
-                  <Route path='/clients/new' element={<PrivateRoute><AddClient/></PrivateRoute>}/>
                   <Route path='/clients/:clientId/link-meter' element={<PrivateRoute><LinkMeter/></PrivateRoute>}/>
                   <Route path='/contracts/:contractId' element={<PrivateRoute><ViewContract/></PrivateRoute>}/>
                   <Route path='/contracts/new' element={<PrivateRoute><NewContract/></PrivateRoute>}/>

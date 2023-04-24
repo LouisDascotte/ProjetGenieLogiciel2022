@@ -26,7 +26,7 @@ public class EmailUtils {
         helper.setTo(email);
         helper.setSubject("Reset Password Request");
 
-        String resetUrl = "http://localhost:3000/reset-password/" + token;
+        String resetUrl = "http://localhost:3000/create-pass/" + token;
         helper.setText("To reset your password, click on this link: " + resetUrl);
 
         javaMailSender.send(message);

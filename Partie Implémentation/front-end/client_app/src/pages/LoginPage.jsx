@@ -189,7 +189,7 @@ const LoginPage = () => {
             </form>
             <Link 
               className='link-2' 
-              to='/reset-passwd'>
+              to='/reset-password'>
               <Typography 
                 variant="h7" >
                 Forgot your password ? Click here to reset.

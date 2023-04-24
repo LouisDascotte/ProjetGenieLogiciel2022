@@ -1,7 +1,7 @@
 import React from 'react'
-import {createTheme, Button, styled, Typography, Stack, Card,Grid, TextField, ThemeProvider} from '@mui/material';
+import {createTheme, Button, styled, Typography, Stack, Card,Grid, TextField, ThemeProvider, Alert, Snackbar} from '@mui/material';
 import logo from '../resources/logo.png';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios"
 
 const theme = createTheme({
@@ -33,14 +33,32 @@ const CssTextField = styled(TextField)({
 
 const ResetPassword = () => {
 
-  const [email, setEmail] = React.useState('');
+  
 
+  const [email, setEmail] = React.useState('');
+  const [success, setSuccess] = React.useState(false);
+  const navigate = useNavigate();
   const submit = () => {
     const response = axios.post('http://localhost:8080/api/auth/client/reset-password', null, {headers: {"Content-Type":"application/json",
     //"Authorization" : `Bearer ${jwt}`,
     "Access-Control-Allow-Origin":true}, params: {email : email}}).then(response=>{
       console.log(response.data)
+      setSuccess(true);
+      setTimeout(()=>{
+        setSuccess(false);
+        navigate('/login');
+      }, 3000)
+
+    }).catch(err=>{
+      console.log(err);
     })
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccess(false);
   }
   // code part
   return (
@@ -67,6 +85,11 @@ const ResetPassword = () => {
             </Link>
           </Stack>
         </Card>
+        <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            The reset mail has been sent !
+          </Alert>
+        </Snackbar>
       </Grid>
     </Grid>
   )

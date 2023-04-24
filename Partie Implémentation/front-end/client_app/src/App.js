@@ -47,7 +47,7 @@ function App() {
                 <Route path='/' element={<Navigate to="/login"/>}></Route>
 
                 <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
-                <Route path='/create-pass' exact element={<PrivateRoute>
+                <Route path='/create-pass/:token' exact element={<PrivateRoute>
                     <CreateNewPassword/>
                 </PrivateRoute>}/>
                 <Route path='/create-pass-success' exact element={<PrivateRoute>
@@ -79,7 +79,7 @@ function App() {
                 <Route path="/notifications" exact element={<PrivateRoute>
                   <Notifications/>
                   </PrivateRoute>}/>
-                <Route path='/reset-password/:token' exact element={<ResetPassword/>}/>
+                <Route path='/reset-password' exact element={<ResetPassword/>}/>
                 <Route path="/enter-consumption" exact element={<PrivateRoute>
                   <MeterConsumption/>
                 </PrivateRoute>}/>

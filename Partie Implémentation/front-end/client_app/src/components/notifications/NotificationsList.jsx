@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemText } from '@mui/material';
+import { Box, Stack, Grid, List, ListItem, ListItemButton, IconButton, ListItemText , Snackbar, Alert} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 import axios from "../../api/axios";
@@ -11,6 +11,32 @@ const NotificationsList = () => {
   const [notifications, setNotifications] = useState([]);
   const jwt = localStorage.getItem("jwt");
   const [state, setState] = useState(0);
+  const [error, setError]  = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+
+  function notificationMessages(code){
+    switch (code) {
+      case "READING_NOTIFICATION":
+        return "Your reading entry has been sent.";
+      case "CONTRACT_REQUEST_NOTIFICATION":
+        return "Your contract request has been sent.";
+      case "ACCEPT_CONTRACT_NOTIFICATION":
+        return "Your contract request has been accepted."
+      case "CANCEL_CONTRACT_REQUEST_NOTIFICATION":
+        return "Your contract cancellation request has been sent."
+      case "END_CONTRACT_NOTIFICATION":
+        return "Your contract has ended."
+      case "CANCEL_CONTRACT_NOTIFICATION": 
+        return "Your contract has been cancelled."
+      case "LINK_METER_NOTIFICATION"  :
+        return "Your meter has been linked."
+      case "UNLINK_METER_NOTIFICATION":
+        return "Your meter has been unlinked."
+      case "NOTIFICATION":
+        return "You received a notification."
+    }
+  }
 
   useEffect(()=> {
     const response = axios.get("http://localhost:8080/api/notification/all", {
@@ -19,20 +45,24 @@ const NotificationsList = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
         setNotifications(response.data);
-        console.log(notifications);
+      }).catch(err=>{
+        setErrorMsg(err.message);
+        setError(true);
       })
   }, [])
 
   const handleClick = (notification) => {
     // METHOD TO MARK NOTIFICATION AS READ TO BE IMPLEMENTED
-    const response = axios.put(`http://localhost:8080/api/notification/${notification.id}/read`, {
+    const response = axios.put(`http://localhost:8080/api/notification/${notification.id}/read`, null, {
       headers : {
         "Content-Type":"application/json",
         "Authorization" : `Bearer ${jwt}`,
         "Access-Control-Allow-Origin":true
       }
     }).then(response => {
-      console.log(response.data);
+      
+    }).catch(err =>{
+      
     })
     navigate("/notification", {state : notification})
   }
@@ -45,15 +75,17 @@ const NotificationsList = () => {
         <ListItem>
           <ListItemButton onClick={()=>handleClick(notification)}>
             <ListItemText>
-              {notification.status === "UNREAD" ? <div style={{color:"red"}}>{notification.date}</div> : notification.date}
+              {notification.status === "UNREAD" ? <div style={{color:"red", justifyContent:"space-between"}}>{notificationMessages(notification.type)} {notification.date}</div> : <div style={{display:"flex" ,justifyContent:"space-between"}}><div>{notificationMessages(notification.type)} </div><div>[DATE : {notification.date}]</div></div>}
             </ListItemText>
           </ListItemButton>
-          <IconButton onClick={()=>console.log("hello")}>
-            <DeleteIcon/>
-          </IconButton>
         </ListItem>
         )}
       </List>
+      <Snackbar open={error} autoHideDuration={6000} onClose={()=>setError(false)}>
+        <Alert onClose={()=>setError(false)} severity="error" sx={{ width: '100%' }}>
+          {errorMsg}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import {createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import clsx from 'clsx';
-import { redirect, Navigate, useNavigate } from 'react-router-dom';
+import { redirect, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
-
+import axios from "../api/axios";
 
 const theme = createTheme({
   palette: {
@@ -38,6 +38,8 @@ const CssTextField = styled(TextField)({
 const CreateNewPassword = () => {
 
   const navigate = useNavigate();
+
+  const {token} = useParams();
   // PARTIE VALIDATION DE MOT DE PASSE 
 
   // code inspiré par https://www.telerik.com/blogs/how-to-create-validate-react-form-hooks
@@ -53,11 +55,25 @@ const CreateNewPassword = () => {
 
   const onSubmitForm = e => {
     e.preventDefault();
-    const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "confirmPassword");
+    /*const {isValid} = validateForm( { form, errors, forceTouchErrors: true}, "confirmPassword");
     if (!isValid)
       return; 
-    alert(JSON.stringify(form, null, 2));
-    navigate("/create-pass-success");
+    */
+    const response = axios.put("http://localhost:8080/api/auth/client/change-password", null, 
+    {
+      headers : {
+        "Content-Type":"application/json",
+        "Access-Control-Allow-Origin":true,
+      }, params : {
+        newPassword  : form.password, 
+        token : token
+      }
+    }).then(response=>{
+      console.log(response.data);
+      navigate("/create-pass-success");
+    })
+
+    
   };
 
   const onUpdateField = e => {
@@ -67,13 +83,13 @@ const CreateNewPassword = () => {
       [field] : e.target.value,
     };
     setForm(nextFormState);
-    if (errors[field].dirty){
+    /*if (errors[field].dirty){
       validateForm({
         form: nextFormState, 
         errors, 
         field,
       });
-    }
+    }*/
   };
 
  
@@ -175,8 +191,3 @@ const CreateNewPassword = () => {
 }
 
 export default CreateNewPassword
-
-/*<Link 
-                  to='/newpasswdsuccess' 
-                  className='link-4' 
-                  style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>*/

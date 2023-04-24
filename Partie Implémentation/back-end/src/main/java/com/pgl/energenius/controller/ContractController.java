@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
-import com.pgl.energenius.model.dto.GazElecContractRequestDto;
-import com.pgl.energenius.model.dto.OfferDto;
-import com.pgl.energenius.model.dto.SimpleContractRequestDto;
+import com.pgl.energenius.model.dto.*;
 import com.pgl.energenius.service.ContractService;
 
 @RestController
@@ -153,9 +151,7 @@ public class ContractController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
-    @PostMapping("/offer")
-    public ResponseEntity<?> createOffer(@RequestBody OfferDto offerDto) {
+    private ResponseEntity<?> createOffer(OfferDto offerDto) {
 
         try {
             return new ResponseEntity<>(contractService.createOffer(offerDto), HttpStatus.OK);
@@ -171,6 +167,17 @@ public class ContractController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    @PostMapping("/offer")
+    public ResponseEntity<?> createSimpleOffer(@RequestBody SimpleOfferDto offerDto) {
+        return createOffer(offerDto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    @PostMapping("/offer_gaz_elec")
+    public ResponseEntity<?> createGazElecOffer(@RequestBody GazElecOfferDto offerDto) {
+        return createOffer(offerDto);
+    }
 
     @GetMapping("/offer/{id}")
     public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {

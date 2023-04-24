@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, Stack, Typography, Box, TextField} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import axios from 'axios';
+import axios from '../api/axios';
+
 
 function ViewContract() {
-  const id = useParams().contractId;
 
   const theme = createTheme({
     palette: {
@@ -28,52 +28,43 @@ function ViewContract() {
     }
   });
 
-  const [contracts, setContracts] = React.useState([]);
-  const [clients, setClients] = React.useState([]);
+  const location = useLocation();
+  const contract = location.state;
+  const [offers, setOffers] = React.useState([]);
+
+  const pageAddress = "/contracts/:id";
+  const pageName = "View Contract";
+
+  const contractData = {
+    id: contract.id,
+    beginDate: contract.beginDate,
+    endDate: contract.endDate,
+    clientId: contract.clientId,
+    supplierId: contract.supplierId,
+    type: contract.type,
+    status: contract.status,
+    offerId: contract.offerId,
+    ean: contract.ean,
+  }
 
   useEffect(() => {
-    console.log("getContracts");
-    async function getContracts() {
+    async function getOffers() {
       try {
         const jwt = localStorage.getItem("jwt");
         const config = {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": true,
+          headers: { Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
           }
         };
-        const respCont = await axios.get("http://localhost:8080/api/contract/all", config);
-        const respClient = await axios.get("http://localhost:8080/api/supplier/clients", config);
-        console.log(respCont.data);
-        console.log(respClient.data);
-        setContracts(respCont.data);
-        setClients(respClient.data);
+        const response = await axios.get("http://localhost:8080/api/contract/supplier_offers", config);
+        setOffers(response.data);
       } catch (error) {
         console.log(error);
       }
     }
-    getContracts();
+    getOffers();
   }, []);
-
-  const pageAddress = "/contracts/:id";
-  const pageName = "View Contract";
-  console.log(contracts);
-
-  const contract = null;
-
-  const contractData = {
-    "id": contract.id,
-    "beginDate": contract.beginDate,
-    "endDate": contract.endDate,
-    "clientId": contract.clientId,
-    "supplierId": contract.supplierId,
-    "type": contract.type,
-    "status": contract.status,
-    "offerId": contract.offerId,
-    "EAN": contract.EAN,
-  }
-
 
   
 
@@ -84,6 +75,16 @@ function ViewContract() {
     setEditMode(!editMode);
     setEditableData(contractData);
   }
+  const getClientById = async (id) => {
+    try {
+      const response = await axios.get(`/clients/${id}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const handleEditableDataChange = (event) => {
     const {name, value} = event.target;
@@ -146,78 +147,13 @@ function ViewContract() {
                       <TextField
                       name="clientId"
                       label="Client id"
-                      value={editableData.clientId}
+                      value={editableData.clientId || ''}
                       size='small'
                       onChange={handleEditableDataChange}
                       disabled={!editMode}
-                      sx={{width: '150px'}}
+                      sx={{width: 'auto'}}
                       />
                     </Grid>
-                    <Grid item xs={12} >
-                      <TextField
-                      name="clientName"
-                      label="Client name"
-                      value={editableData.clientName}
-                      size='small'
-                      onChange={handleEditableDataChange}
-                      disabled={!editMode}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item container xs={7}
-                  columnSpacing={1}
-                  rowSpacing={2}
-                  justifyContent='left'
-                  >
-                    <Grid item xs='auto' >
-                      <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                        Email:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs='auto' >
-                      <TextField
-                      name="clientEmail"
-                      label="Client email"
-                      value={editableData.clientEmail}
-                      size='small'
-                      onChange={handleEditableDataChange}
-                      disabled={!editMode}
-                      />
-                    </Grid>
-                    <Box sx={{width:'100%', height:'10px'}} />
-                    <Grid item xs='auto' >
-                      <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                        Phone:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs='auto' >
-                      <TextField
-                      name="clientPhone"
-                      label="Client phone"
-                      value={editableData.clientPhone}
-                      size='small'
-                      onChange={handleEditableDataChange}
-                      disabled={!editMode}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} >
-                    <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                      Consumption address
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}
-                  justifyContent='left'
-                  >
-                    <TextField
-                    name="consumptionAddress"
-                    label="Consumption address"
-                    value={editableData.consumptionAddress}
-                    onChange={handleEditableDataChange}
-                    size='small'
-                    disabled={!editMode}
-                    sx={{width:'80%'}}
-                    />
                   </Grid>
                 </Grid>
 
@@ -234,7 +170,7 @@ function ViewContract() {
                 >
                   <Grid item xs={12} >
                     <Typography variant="h6" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                      Elec
+                      { }
                     </Typography>
                   </Grid>
                   <Grid item xs='auto' >
@@ -246,7 +182,7 @@ function ViewContract() {
                     <TextField
                     name="meter"
                     label="EAN"
-                    value={editableData.meter}
+                    value={editableData.ean || ''}
                     size='small'
                     onChange={handleEditableDataChange}
                     disabled={!editMode}
@@ -300,7 +236,7 @@ function ViewContract() {
                 </Typography>
                 <Grid >
                   <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                    Subscribed to the base offer of XX€/month for YY.
+                    Subscribed to the offer of XX€/month for YY.
                   </Typography>
                 </Grid>
               </Box>

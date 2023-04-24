@@ -3,7 +3,7 @@ import SideMenu from '../components/SideMenu';
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ArrowBack} from '@mui/icons-material';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import axios from 'axios';
 
@@ -21,12 +21,12 @@ const ManageContracts = () => {
     }
   });
 
+  const nav = useNavigate();
+
   const pageAddress = "/contracts";
   const pageName = "Manage contracts";
 
   const [contracts, setContracts] = React.useState([]);
-  const [selectedContract, setSelectedContract] = React.useState(null);
-
 
   useEffect(() => {
     async function getContracts() {
@@ -62,14 +62,14 @@ const ManageContracts = () => {
                   Contracts List
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {contracts.map((contract) => (
+                  { contracts.length === 0 ? <ListItem>No contracts found</ListItem>
+                  :
+                  contracts.map((contract) => (
                     <ListItem key={contract.id}>
                       <ListItemText primary={`${contract.id}`.slice(0,15)} />
-                      <Link to={`/contracts/${contract.id}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}} >
-                        <Button variant="contained" >
+                        <Button variant="contained" onClick={() => nav(`/contracts/${contract.id}`, { state : contract})}>
                           See Details
                         </Button>
-                      </Link>
                     </ListItem>
                   ))}
                 </List>

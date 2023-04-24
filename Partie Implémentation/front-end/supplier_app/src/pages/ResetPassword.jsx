@@ -16,6 +16,8 @@ const theme = createTheme({
   }
 });
 
+const jwt = localStorage.getItem("jwt");
+
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
     color: '#9acd6c',
@@ -48,7 +50,7 @@ const ResetPassword = () => {
             <Typography variant="h7" sx={{mt:1, color:'#262626'}}>Enter the id that was given to you.</Typography>
             <CssTextField className='login-textfield'size='small' variant='outlined' label='id' margin='normal' sx={{width:'80%'}}/>
             <ThemeProvider theme={theme}>
-              <Link to='/main-page' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
+              <Link to={ jwt === null ? '/login' : '/main-page'}className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
                 <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>Reset</Button>
               </Link>
             </ThemeProvider>

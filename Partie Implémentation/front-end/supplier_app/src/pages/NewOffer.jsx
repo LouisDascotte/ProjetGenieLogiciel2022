@@ -76,8 +76,8 @@ const NewOffer = () => {
   let bodySimple = {
     hourType: form.hourType,
     contractLength: form.contractLength,
-    cost: form.cost,
-    nightCost: form.nightCost,
+    cost: Number(form.cost)/100,
+    nightCost: form.nightCost/100,
     priceType: form.priceType,
     energyType: form.energyType
   }
@@ -108,7 +108,9 @@ const NewOffer = () => {
   const handleCreateOffer = () => {
     switch (form.energyType) {
       case "both":
-        axios.post(API_URL, bodyBoth)
+        console.log("both");
+        console.log(bodyBoth);
+        axios.post(API_URL+"offer_gaz_elec", bodyBoth)
         .then((response) => {
           console.log(response);
         })
@@ -116,19 +118,27 @@ const NewOffer = () => {
           console.log(error);
         })
       break;
-      default:
-        axios.post(API_URL, bodySimple)
+      case "electricity":
+      case "gas":
+      case "water":
+        console.log("simple");
+        console.log(bodySimple);
+        axios.post(API_URL+"offer", bodySimple)
         .then((response) => {
           console.log(response);
         })
         .catch((error) => {
           console.log(error);
         })
+        break;
+      default:
+        console.log("error");
+        break;
     }
 
   }
 
-  const API_URL = "http://localhost:8000/api/contract/offer";
+  const API_URL = "http://localhost:8080/api/contract/";
 
   return (
     <ThemeProvider theme={theme}>
@@ -326,10 +336,10 @@ const NewOffer = () => {
                         xs={8}
                         >
                           <Grid item xs={4}>
-                            <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                            <TextField id="cost_ELEC" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                           <Grid item xs={4}>
-                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                            <TextField id="nightCost_ELEC" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                         </Grid>
                         <Grid item xs={4}>
@@ -344,10 +354,10 @@ const NewOffer = () => {
                         xs={8}
                         >
                           <Grid item xs={4}>
-                          <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                          <TextField id="cost_GAZ" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                           <Grid item xs={4}>
-                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                            <TextField id="nightCost_GAZ" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                         </Grid>
                       </Grid>
@@ -372,26 +382,16 @@ const NewOffer = () => {
                         xs={8}
                         >
                           <Grid item xs={4}>
-                            <TextField id="outlined-basic" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                            <TextField id="cost" label="Day: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                           <Grid item xs={4}>
-                            <TextField id="outlined-basic" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
+                            <TextField id="nightCost" label="Night: c€" variant="outlined" size='small' inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} style={{width: 150}} />
                           </Grid>
                         </Grid>
                       </Grid>
                       : null }
                   </Grid> 
                 </Box>
-                <Grid container
-                direction='row'
-                justifyContent='start'
-                alignItems='baseline'
-                >
-                  <Typography variant="body" component="body3" gutterBottom>
-                    * - undefined contract length means that the contract will be automatically renewed after the end of the contract period, unless the customer cancels the contract.
-                  </Typography>
-                </Grid>
-                
               </Card>
             </Grid>
             <Grid container

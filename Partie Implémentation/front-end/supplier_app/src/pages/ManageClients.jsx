@@ -5,7 +5,6 @@ import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ClientList as Clients } from '../resources/Lists';
 import axios from '../api/axios';
 
 const ManageClients = () => {
@@ -30,9 +29,13 @@ const ManageClients = () => {
 
   const [clients, setClients] = React.useState([]);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   useEffect(() => {
     async function getClients() {
-      try {        
+      try {
         const jwt = localStorage.getItem("jwt");
         const config = {
           headers: { Authorization: `Bearer ${jwt}`,
@@ -41,8 +44,6 @@ const ManageClients = () => {
           }
         };
         const response = await axios.get(API_URL, config);
-        console.log("Hello");
-        console.log(response.data);
         setClients(response.data);
       } catch (error) {
         console.log(error);
@@ -67,29 +68,24 @@ const ManageClients = () => {
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
             <Card sx={{width:'50%', m:2, height:'60%' }} >
-              <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+              <Box sx={{height:'auto', width:'100%'}} alignment='center' marginBottom={4} >
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
                   Client List
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-              {Clients.map((client) => (
-                <ListItem key={client.clientId}>
-                  <ListItemText primary={`${client.name}`} />
-                  <Link to={`/clients/${client.clientId}`}>
-                    <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
-                      See Details
-                    </Button>
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
+                  {clients.map((client) => (
+                    <ListItem key={client.id}>
+                    <ListItemText primary={capitalizeFirstLetter(client.firstName)+" "+capitalizeFirstLetter(client.lastName)} />
+                      <Link to={`/clients/${client.clientId}`}>
+                        <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
+                          See Details
+                        </Button>
+                      </Link>
+                    </ListItem>
+                  ))}
+                </List>
               </Box>
             </Card>
-            <Link to='/clients/new' className='link-3' style={{display: 'inline-block', mt:2, width:'50%', mb:5}}>
-              <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                Add New Client
-              </Button>
-            </Link>
           </Grid>
         </Stack>
       </Stack>

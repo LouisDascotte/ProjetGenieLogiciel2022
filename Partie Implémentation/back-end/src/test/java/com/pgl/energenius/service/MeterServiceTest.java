@@ -250,6 +250,7 @@ public class MeterServiceTest {
                 .energyType(EnergyType.ELEC)
                 .hourType(HourType.SIMPLE)
                 .meterType(MeterType.MANUAL)
+                .status(Meter.Status.DISAFFECTED)
                 .address("123 Rue de Test, Test")
                 .build();
         when(meterRepository.findById(meter.getEAN())).thenReturn(Optional.of(meter));
@@ -282,6 +283,7 @@ public class MeterServiceTest {
                 .energyType(EnergyType.ELEC)
                 .hourType(HourType.SIMPLE)
                 .meterType(MeterType.MANUAL)
+                .status(Meter.Status.DISAFFECTED)
                 .address("123 Rue de Test, Test")
                 .build();
         when(meterRepository.findById(meter.getEAN())).thenReturn(Optional.of(meter));
@@ -298,6 +300,7 @@ public class MeterServiceTest {
                 .energyType(EnergyType.ELEC)
                 .hourType(HourType.SIMPLE)
                 .meterType(MeterType.MANUAL)
+                .status(Meter.Status.DISAFFECTED)
                 .address("123 Rue de Test, Test")
                 .build();
         when(meterRepository.findById(meter.getEAN())).thenReturn(Optional.of(meter));
@@ -314,6 +317,7 @@ public class MeterServiceTest {
                 .energyType(EnergyType.ELEC)
                 .hourType(HourType.SIMPLE)
                 .meterType(MeterType.MANUAL)
+                .status(Meter.Status.DISAFFECTED)
                 .address("123 Rue de Test, Test")
                 .build();
         when(meterRepository.findById(meter.getEAN())).thenReturn(Optional.of(meter));
@@ -330,6 +334,7 @@ public class MeterServiceTest {
                 .energyType(EnergyType.ELEC)
                 .hourType(HourType.SIMPLE)
                 .meterType(MeterType.MANUAL)
+                .status(Meter.Status.DISAFFECTED)
                 .address("123 Rue de Test, Test")
                 .build();
         when(meterRepository.findById(meter.getEAN())).thenReturn(Optional.of(meter));

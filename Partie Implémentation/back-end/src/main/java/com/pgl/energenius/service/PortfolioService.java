@@ -1,23 +1,33 @@
 package com.pgl.energenius.service;
 
+import com.google.maps.errors.ApiException;
 import com.pgl.energenius.enums.EnergyType;
+import com.pgl.energenius.enums.HourType;
+import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
+import com.pgl.energenius.model.dto.ProductionPointDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
+import com.pgl.energenius.model.notification.Notification;
+import com.pgl.energenius.model.notification.ProductionPointNotification;
 import com.pgl.energenius.model.projection.PortfolioProjection;
+import com.pgl.energenius.model.reading.ProductionReading;
 import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.repository.GreenCertificateRepository;
+import com.pgl.energenius.repository.MeterAllocationRepository;
 import com.pgl.energenius.repository.PortfolioRepository;
 import com.pgl.energenius.exception.*;
+import com.pgl.energenius.repository.ReadingRepository;
 import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * This class provides services related to PortfolioRepository.
@@ -45,6 +55,21 @@ public class PortfolioService {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private SupplierService supplierService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private MeterAllocationRepository meterAllocationRepository;
+
+    @Autowired
+    private ReadingRepository readingRepository;
+
+    @Autowired
+    private GreenCertificateRepository greenCertificateRepository;
 
     public Portfolio insertPortfolio(Portfolio portfolio) throws ObjectNotValidatedException {
 
@@ -126,13 +151,42 @@ public class PortfolioService {
         return portfolioRepository.findByClientId(client.getId(), PortfolioProjection.class);
     }
 
-    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException {
+    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
-        Meter meter = meterService.getMeter(supplyPointDto.getEAN());
+        Meter meter;
 
-        if (!Objects.equals(meter.getAddress(), portfolio.getAddress())) {
-            throw new AddressesNotEqualsException("The meter's address is not equal to the portfolio's address");
+        if (supplyPointDto.getType() == SupplyPoint.Type.SUPPLY_POINT) {
+
+            meter = meterService.getMeter(supplyPointDto.getEAN());
+
+            if (!Objects.equals(meter.getAddress(), portfolio.getAddress())) {
+                throw new AddressesNotEqualsException("The meter's address is not equal to the portfolio's address");
+            }
+
+        } else {
+            if (!(supplyPointDto instanceof ProductionPointDto productionPointDto)) {
+                throw new BadRequestException("Cannot create a production point without the supplier name");
+            }
+
+            meter = meterService.createMeterIfNotExistsAndCheck(productionPointDto.getEAN(),
+                    portfolio.getAddress(),
+                    MeterType.NUMERIC,
+                    EnergyType.ELEC_PRODUCTION,
+                    HourType.SIMPLE);
+            meter.setStatus(Meter.Status.AWAITING_APPROVAL);
+            meter.setClientId(securityUtils.getCurrentClientLogin().getClient().getId());
+            meter.setSupplierId(supplierService.getSupplierByName(productionPointDto.getSupplierName()).getId());
+
+            meterService.saveMeter(meter);
+
+            ProductionPointNotification notification = ProductionPointNotification.builder()
+                    .type(Notification.Type.PRODUCTION_POINT_REQUEST_NOTIFICATION)
+                    .receiverId(meter.getSupplierId())
+                    .senderId(meter.getClientId())
+                    .EAN(meter.getEAN())
+                    .build();
+            notificationService.insertNotification(notification);
         }
 
         String EAN = meter.getEAN();
@@ -160,6 +214,27 @@ public class PortfolioService {
 
         portfolio.getSupplyPoints().remove(supplyPoint);
 
+        if (supplyPoint.getType() == SupplyPoint.Type.PRODUCTION_POINT) {
+
+            Meter meter = meterService.getMeter(EAN);
+
+            meter.setSupplierId(null);
+            meter.setClientId(null);
+            meter.setStatus(Meter.Status.DISAFFECTED);
+
+            meterService.saveMeter(meter);
+
+            String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+            MeterAllocation meterAllocation = meterAllocationRepository.findByDateAndEAN(dateNow, meter.getEAN());
+
+            if (meterAllocation != null) {
+                meterAllocation.setStatus(MeterAllocation.Status.ENDED);
+                meterAllocation.setEndDate(dateNow);
+                meterAllocationRepository.save(meterAllocation);
+            }
+        }
+
         savePortfolio(portfolio);
     }
 
@@ -173,5 +248,108 @@ public class PortfolioService {
         }
 
         return readingService.getReadings(EAN);
+    }
+
+    public void acceptProductionPoint(String EAN) throws InvalidUserDetailsException, ObjectNotFoundException, UnauthorizedAccessException, BadRequestException, ObjectNotValidatedException {
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+        Meter meter = meterService.getMeter(EAN);
+
+        if (meter.getEnergyType() != EnergyType.ELEC_PRODUCTION) {
+            throw new UnauthorizedAccessException("This meter is not used for electricity production");
+
+        } else if (meter.getStatus() != Meter.Status.AWAITING_APPROVAL) {
+            throw new BadRequestException("This production point has already been accepted");
+        }
+
+        meter.setStatus(Meter.Status.AFFECTED);
+        meterService.saveMeter(meter);
+
+        MeterAllocation meterAllocation = new MeterAllocation(meter.getEAN(),
+                LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+                "9999-99-99",
+                meter.getClientId(),
+                supplier.getName(),
+                MeterAllocation.Status.ACTIVE);
+        meterAllocationRepository.insert(meterAllocation);
+
+        ProductionPointNotification notification = ProductionPointNotification.builder()
+                .type(Notification.Type.PRODUCTION_POINT_ACCEPTED_NOTIFICATION)
+                .senderId(meter.getSupplierId())
+                .receiverId(meter.getClientId())
+                .EAN(meter.getEAN())
+                .build();
+        notificationService.insertNotification(notification);
+    }
+
+    public void requestGreenCertificate(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
+
+        Portfolio portfolio = getPortfolio(portfolioId);
+
+        for (SupplyPoint sp : portfolio.getSupplyPoints()) {
+
+            if (sp.getType() == SupplyPoint.Type.PRODUCTION_POINT) {
+
+                String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+                ProductionReading lastReading = (ProductionReading) (readingRepository.findByEANAndDate(sp.getEAN(), dateNow).get());
+
+                if (lastReading.getThreshold() >= 1000) {
+
+                    Meter meter = meterService.getMeter(sp.getEAN());
+
+                    GreenCertificate greenCertificate = new GreenCertificate(portfolioId, dateNow, GreenCertificate.Status.PENDING);
+                    greenCertificateRepository.insert(greenCertificate);
+
+                    ProductionPointNotification notification = ProductionPointNotification.builder()
+                            .type(Notification.Type.GREEN_CERTIFICATE_REQUEST_NOTIFICATION)
+                            .receiverId(meter.getSupplierId())
+                            .senderId(meter.getClientId())
+                            .EAN(meter.getEAN())
+                            .build();
+                    notificationService.insertNotification(notification);
+                }
+                break;
+            }
+        }
+    }
+
+    public void acceptGreenCertificate(String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
+
+        Meter meter = meterService.getMeter(EAN);
+        String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+        ProductionReading lastReading = (ProductionReading) (readingRepository.findByEANAndDate(EAN, dateNow).get());
+
+        if (lastReading.getThreshold() >= 1000) {
+
+            GreenCertificate greenCertificate = greenCertificateRepository.findByEANAndStatus(EAN, GreenCertificate.Status.PENDING)
+                    .orElseThrow(() -> new ObjectNotFoundException("There is no green certificate request"));
+            greenCertificate.setStatus(GreenCertificate.Status.ACCEPTED);
+            greenCertificateRepository.save(greenCertificate);
+
+            lastReading.setThreshold(lastReading.getThreshold() - 1000);
+            readingRepository.save(lastReading);
+
+            ProductionPointNotification notification = ProductionPointNotification.builder()
+                    .type(Notification.Type.GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION)
+                    .senderId(meter.getSupplierId())
+                    .receiverId(meter.getClientId())
+                    .EAN(meter.getEAN())
+                    .build();
+            notificationService.insertNotification(notification);
+        }
+    }
+
+    public List<GreenCertificate> getGreenCertificates(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        Portfolio portfolio = getPortfolio(portfolioId);
+
+        for (SupplyPoint sp : portfolio.getSupplyPoints()) {
+
+            if (sp.getType() == SupplyPoint.Type.PRODUCTION_POINT)
+                return greenCertificateRepository.findByEAN(sp.getEAN());
+        }
+        return new ArrayList<>();
     }
 }

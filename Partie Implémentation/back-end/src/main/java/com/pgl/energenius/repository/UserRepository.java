@@ -1,5 +1,6 @@
 package com.pgl.energenius.repository;
 
+import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.User;
@@ -30,4 +31,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
      * @return an Optional containing the ClientLogin object, or empty if not found
      */
     Optional<SupplierLogin> findByLoginId(String loginId);
+
+    Optional<ClientLogin> findByClient(Client client);
 }

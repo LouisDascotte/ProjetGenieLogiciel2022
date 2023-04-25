@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MeterService {
@@ -96,7 +97,9 @@ public class MeterService {
         } catch (InvalidUserDetailsException ignored) {}
 
         Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
-        return meterRepository.findBySupplierId(supplier.getId());
+        List<Meter> meters = meterRepository.findBySupplierId(supplier.getId());
+
+        return meters.stream().filter(m -> m.getEnergyType() != EnergyType.ELEC_PRODUCTION).collect(Collectors.toList());
     }
 
     public List<String> getLinkedMetersEAN(ObjectId clientId) throws UnauthorizedAccessException, InvalidUserDetailsException {
@@ -151,7 +154,7 @@ public class MeterService {
         if (optionalMeter.isPresent()) {
             meter = optionalMeter.get();
 
-            if (meter.getStatus() == Meter.Status.AFFECTED) {
+            if (meter.getStatus() == Meter.Status.AFFECTED || meter.getStatus() == Meter.Status.AWAITING_APPROVAL) {
                 throw new UnauthorizedAccessException("The meter is already affected");
 
             } else if (!Objects.equals(meter.getAddress(), addressService.getFormattedAddress(addressStr))) {

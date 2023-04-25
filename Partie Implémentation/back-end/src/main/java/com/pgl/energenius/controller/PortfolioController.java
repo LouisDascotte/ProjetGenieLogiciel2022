@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -124,7 +125,7 @@ public class PortfolioController {
         } catch (ObjectAlreadyExitsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 
-        } catch (ObjectNotValidatedException e) {
+        } catch (ObjectNotValidatedException | BadRequestException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (Exception e) {
@@ -177,6 +178,90 @@ public class PortfolioController {
             return new ResponseEntity<>(portfolioService.getPortfolioIdsAndNames(), HttpStatus.OK);
 
         } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/accept_production_point")
+    public ResponseEntity<?> acceptProductionPoint(@RequestParam String EAN, @PathVariable("id") ObjectId portfolioId) {
+
+        try {
+            portfolioService.acceptProductionPoint(EAN);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException | BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/{id}/request_green_certificate")
+    public ResponseEntity<?> requestGreenCertificate(@PathVariable("id") ObjectId portfolioId) {
+
+        try {
+            portfolioService.requestGreenCertificate(portfolioId);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{id}/green_certificates")
+    public ResponseEntity<?> getGreenCertificates(@PathVariable("id") ObjectId portfolioId) {
+
+        try {
+            portfolioService.requestGreenCertificate(portfolioId);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/accept_green_certificate")
+    public ResponseEntity<?> acceptGreenCertificate(@RequestParam String EAN) {
+
+        try {
+            portfolioService.acceptGreenCertificate(EAN);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {

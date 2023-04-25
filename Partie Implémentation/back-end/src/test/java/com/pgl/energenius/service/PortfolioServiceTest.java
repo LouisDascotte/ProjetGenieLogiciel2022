@@ -1,5 +1,6 @@
 package com.pgl.energenius.service;
 
+import com.google.maps.errors.ApiException;
 import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -170,14 +172,14 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException {
+    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
 
         setUp();
         Meter meter = Meter.builder().EAN("EAN1234").build();
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
-        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", null);
-        SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
+        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
+        SupplyPoint supplyPoint = new SupplyPoint("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
 
         assertEquals(supplyPoint, portfolioService.createSupplyPoint(portfolio.getId(), supplyPointDto));
         assertTrue(portfolio.getSupplyPoints().contains(supplyPoint));
@@ -191,7 +193,7 @@ public class PortfolioServiceTest {
         Meter meter = Meter.builder().EAN("EAN1234").address("test").build();
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
-        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", null);
+        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
 
         assertThrows(AddressesNotEqualsException.class, () -> portfolioService.createSupplyPoint(portfolio.getId(), supplyPointDto));
     }
@@ -203,12 +205,12 @@ public class PortfolioServiceTest {
         Meter meter = Meter.builder().EAN("EAN1234").build();
 
 
-        SupplyPoint supplyPoint = new SupplyPoint("EAN1234", null);
+        SupplyPoint supplyPoint = new SupplyPoint("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
         portfolio.getSupplyPoints().add(supplyPoint);
 
         when(meterService.getMeter("EAN1234")).thenReturn(meter);
 
-        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", null);
+        SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
 
         assertThrows(ObjectAlreadyExitsException.class, () -> portfolioService.createSupplyPoint(portfolio.getId(), supplyPointDto));
     }

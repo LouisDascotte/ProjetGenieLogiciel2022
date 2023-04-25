@@ -31,4 +31,16 @@ public class EmailUtils {
 
         javaMailSender.send(message);
     }
+
+    public void sendExceedThreshold(String email, String EAN) throws MessagingException {
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setTo(email);
+        helper.setSubject("Production threshold");
+        helper.setText("The production threshold of the production point " + EAN + "is exceeded. You can ask for a green certificate.");
+
+        javaMailSender.send(message);
+    }
 }

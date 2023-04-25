@@ -314,42 +314,44 @@ public class PortfolioService {
         }
     }
 
-    public void acceptGreenCertificate(String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
-
-        Meter meter = meterService.getMeter(EAN);
-        String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-
-        ProductionReading lastReading = (ProductionReading) (readingRepository.findByEANAndDate(EAN, dateNow).get());
-
-        if (lastReading.getThreshold() >= 1000) {
-
-            GreenCertificate greenCertificate = greenCertificateRepository.findByEANAndStatus(EAN, GreenCertificate.Status.PENDING)
-                    .orElseThrow(() -> new ObjectNotFoundException("There is no green certificate request"));
-            greenCertificate.setStatus(GreenCertificate.Status.ACCEPTED);
-            greenCertificateRepository.save(greenCertificate);
-
-            lastReading.setThreshold(lastReading.getThreshold() - 1000);
-            readingRepository.save(lastReading);
-
-            ProductionPointNotification notification = ProductionPointNotification.builder()
-                    .type(Notification.Type.GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION)
-                    .senderId(meter.getSupplierId())
-                    .receiverId(meter.getClientId())
-                    .EAN(meter.getEAN())
-                    .build();
-            notificationService.insertNotification(notification);
-        }
-    }
-
-    public List<GreenCertificate> getGreenCertificates(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+    public void acceptGreenCertificate(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
 
         for (SupplyPoint sp : portfolio.getSupplyPoints()) {
 
-            if (sp.getType() == SupplyPoint.Type.PRODUCTION_POINT)
-                return greenCertificateRepository.findByEAN(sp.getEAN());
+            if (sp.getType() == SupplyPoint.Type.PRODUCTION_POINT) {
+
+                String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+                Meter meter = meterService.getMeter(sp.getEAN());
+                ProductionReading lastReading = (ProductionReading) (readingRepository.findByEANAndDate(sp.getEAN(), dateNow).get());
+
+                if (lastReading.getThreshold() >= 1000) {
+
+                    GreenCertificate greenCertificate = greenCertificateRepository.findByPortfolioIdAndStatus(portfolioId, GreenCertificate.Status.PENDING)
+                            .orElseThrow(() -> new ObjectNotFoundException("There is no green certificate request"));
+                    greenCertificate.setStatus(GreenCertificate.Status.ACCEPTED);
+                    greenCertificateRepository.save(greenCertificate);
+
+                    lastReading.setThreshold(lastReading.getThreshold() - 1000);
+                    readingRepository.save(lastReading);
+
+                    ProductionPointNotification notification = ProductionPointNotification.builder()
+                            .type(Notification.Type.GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION)
+                            .senderId(meter.getSupplierId())
+                            .receiverId(meter.getClientId())
+                            .EAN(meter.getEAN())
+                            .build();
+                    notificationService.insertNotification(notification);
+                }
+                break;
+            }
         }
-        return new ArrayList<>();
+    }
+
+    public List<GreenCertificate> getGreenCertificates(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        getPortfolio(portfolioId);
+        return greenCertificateRepository.findByPortfolioId(portfolioId);
     }
 }

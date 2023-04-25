@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface GreenCertificateRepository extends MongoRepository<GreenCertificate, ObjectId> {
 
-    Optional<GreenCertificate> findByEANAndStatus(String EAN, GreenCertificate.Status status);
+    Optional<GreenCertificate> findByPortfolioIdAndStatus(ObjectId portfolioId, GreenCertificate.Status status);
 
-    List<GreenCertificate> findByEAN(String EAN);
+    List<GreenCertificate> findByPortfolioId(ObjectId portfolioId);
 }

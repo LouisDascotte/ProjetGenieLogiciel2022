@@ -248,11 +248,11 @@ public class PortfolioController {
         }
     }
 
-    @PutMapping("/accept_green_certificate")
-    public ResponseEntity<?> acceptGreenCertificate(@RequestParam String EAN) {
+    @PutMapping("/{id}/accept_green_certificate")
+    public ResponseEntity<?> acceptGreenCertificate(@PathVariable("id") ObjectId portfolioId) {
 
         try {
-            portfolioService.acceptGreenCertificate(EAN);
+            portfolioService.acceptGreenCertificate(portfolioId);
             return ResponseEntity.ok().build();
 
         } catch (ObjectNotValidatedException e) {

@@ -6,10 +6,12 @@ import TopMenu from '../TopMenu';
 import SideMenu from '../SideMenu';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {useTranslation} from 'react-i18next';
 
 const METER_URL = "http://localhost:8080/api/meter/all";
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio";
 export const Portfolio2 = () => {
+  const {t} = useTranslation();
   const {id} = useParams();
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ export const Portfolio2 = () => {
   });
   const [meters, setMeters] = useState([]);
   const pageAddress = "";
-  const pageName= "Manage portfolio"; 
+  const pageName= t('manage_portfolio'); 
   const [activeMeters, setActiveMeters] = useState([]);
   const [activeProductionPoints, setActiveProductionPoints] = useState([]);
   const [state, setState] = useState(0);
@@ -181,7 +183,7 @@ export const Portfolio2 = () => {
               <Typography variant="h4">{portfolio.name}</Typography>
             </Grid>
             <Typography variant="h5" sx={{m:2}}>
-              Linked supply points :
+              {t('linked_meters')} :
             </Typography>
             {activeMeters.map(meter => 
             <Stack direction="row">
@@ -193,10 +195,7 @@ export const Portfolio2 = () => {
               
             )}
             <Typography variant="h5" sx={{m:2}}>
-              Linked Production points :
-            </Typography>
-            <Typography variant="h5" sx={{m:2}}>
-              Selected supply points to add : 
+              {t('selected_meters_add')} : 
             </Typography>
             {selectedMeters.map(meter => 
             <Stack direction="row">
@@ -208,7 +207,7 @@ export const Portfolio2 = () => {
               
             )}
             <Typography variant="h5" sx={{m:2}}>
-              Selected supply points to delete :
+              {t('selected_meters_remove')} :
             </Typography>
             {selectedMetersToRemove.map(meter => 
             <Stack direction="row">
@@ -218,7 +217,7 @@ export const Portfolio2 = () => {
             )}
            
             <Typography variant="h5" sx={{m:2}}>
-              Address : 
+              {t('address')} :
             </Typography>
             <Typography variant="h6" sx={{m:2}}>
               {portfolio.address}
@@ -227,16 +226,16 @@ export const Portfolio2 = () => {
             
             <ButtonGroup sx={{mt:1, mb:1}}>
               <Button onClick={() => setOpen(true)}>
-                Add supply point
+               {t('add_meter')}
               </Button>
               <Button onClick={()=> navigate(`/consumption/${id}`)}>
-                Show consumption
+                {t('show_consumption')}
               </Button>
             </ButtonGroup>
             
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>
               <DialogTitle>
-                Add supply point
+                {t('add_meter')}
               </DialogTitle>
               <DialogContent>
                 <FormControl fullWidth >
@@ -255,10 +254,10 @@ export const Portfolio2 = () => {
                 </FormControl>
                 <Stack direction="row" justifyContent={"center"}>
                   <Button onClick={handleConfirm}>
-                    Confirm
+                    {t('confirm')}
                   </Button>
                   <Button onClick={handleCancel}>
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </Stack>
               </DialogContent>
@@ -268,12 +267,12 @@ export const Portfolio2 = () => {
           </Card>
         </Stack>
         <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
-          Apply changes
+          {t('apply_changes')}
         </Button>
       </Stack>
       <Snackbar open={alreadyInPortfolio} autoHideDuration={6000} onClose={() => setAlreadyInPortfolio(false)}>
           <Alert severity="warning">
-            A supply point with EAN : {problemMeter} is already linked to this portfolio.
+            {t('meter_already_linked', {ean : problemMeter})}
           </Alert>
         </Snackbar>
     </Stack>

@@ -5,7 +5,8 @@ import { FixedSizeList} from 'react-window';
 import axios from "../api/axios";
 import { useNavigate } from 'react-router-dom';
 import MeterConsumption from "../pages/MeterConsumption";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
+import {useTranslation} from 'react-i18next';
 
 const URL = "http://localhost:8080/api/meter/all";
 
@@ -14,6 +15,8 @@ const MetersList = () => {
   const [meters, setMeters] =  useState([]);
   const [consumption, setConsumption] = useState(false);
   const [currentEan, setCurrentEan] = useState("");
+
+  const {t} = useTranslation();
 
   useEffect(()=> {
     // getting the jwt

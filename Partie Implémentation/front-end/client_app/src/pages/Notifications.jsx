@@ -6,12 +6,14 @@ import{Card, Stack} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import NotificationsList from '../components/notifications/NotificationsList';
+import { useTranslation } from 'react-i18next';
 
 
 const Notifications = () => {
   const NOTIFICATIONS_URL = "http://localhost:8080/api/notification/all"
+  const {t} = useTranslation();
   const pageAddress = "/notifications";
-  const pageName = "Notifications";
+  const pageName = t('notifications');
   const [data, setData] = useState([]);
 
   useEffect(()=>{

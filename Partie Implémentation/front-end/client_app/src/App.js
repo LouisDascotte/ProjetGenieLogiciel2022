@@ -1,14 +1,10 @@
 import React from 'react';
-import NavigationBar from './components/NavigationBar';
 import SideMenu from './components/SideMenu';
 import MainPage from './pages/MainPage';
 import { Stack, Grid } from "@mui/material";
 import { BrowserRouter, Routes , Route, Navigate, useLocation} from 'react-router-dom';
-
-import { Sidebar, Menu, MenuItem, useProSidebar} from 'react-pro-sidebar';
 import ManagePortfolios from './pages/ManagePortfolios';
 import ManageMeters from './pages/ManageMeters';
-import ManageInvoices from './pages/ManageInvoices';
 import ManageContracts from './pages/ManageContracts';
 import Preferences from './pages/Preferences';
 import Profile from './pages/Profile';
@@ -20,7 +16,6 @@ import RegistrationSuccess from './pages/RegistrationSuccess';
 import CreateNewPassword from './pages/CreateNewPassword';
 import NewPasswordSuccess from './pages/NewPasswordSuccess';
 import history from './utils/history';
-import { useLocalState } from './utils/useLocalStorage';
 import PrivateRoute from './utils/private_route';
 import {setAuthToken} from "./utils/setAuthToken";
 import CreatePortfolio from './pages/CreatePortfolio';
@@ -30,37 +25,12 @@ import ConsumptionHistoryPage from './pages/ConsumptionHistoryPage';
 import { Portfolio2 } from './components/portfolio/Portfolio2';
 import ContractRequest from './pages/ContractRequest';
 import OffersPage from './pages/OffersPage';
-import ViewContract from './pages/ViewContract';
 import ViewContractPage from './pages/ViewContractPage';
 import Notification from './components/notifications/Notification';
-import ProductionHistoryPage from './pages/ProductionHistoryPage';
 import { createRoot } from 'react-dom/client';
-import i18n from "i18next";
-import { useTranslation, initReactI18next } from "react-i18next";
-import HttpApi from "i18next-http-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-
-// Got from the react-i18next documentation and a youtube video https://www.youtube.com/watch?v=w04LXKlusCQ&ab_channel=Classsed
-i18n
-  .use(initReactI18next) 
-  .use(LanguageDetector)
-  .init({
-    lng: document.querySelector('html').getAttribute('lang'), 
-    fallbackLng: "en",
-    detection: {
-      order: [ 'cookie', 'htmlTag', 'localStorage', 'sessionStorage', 'navigator', 'path', 'subdomain'],
-      caches: ['cookie']
-    },
-    backend : {
-      'loadPath': '/assets/locales/{{lng}}/translation.json'
-    }, 
-    react : {
-      useSuspense: false
-    },
-  });
 
 function App() {
-  const { t } = useTranslation();
+ // const { t } = useTranslation();
 
   const token = localStorage.getItem("jwt");
   if (token){
@@ -115,9 +85,6 @@ function App() {
               </PrivateRoute>}/>
               <Route path="/consumption/:id" exact element={<PrivateRoute>
                 <ConsumptionHistoryPage/>
-              </PrivateRoute>}/>
-              <Route path="/production/:id" exact element={<PrivateRoute>
-                <ProductionHistoryPage/>
               </PrivateRoute>}/>
               <Route path="/contract-request" exact element={<PrivateRoute>
                 <ContractRequest/>

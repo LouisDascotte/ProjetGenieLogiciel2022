@@ -4,10 +4,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 import axios from "../../api/axios";
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 
 const NotificationsList = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState([]);
   const jwt = localStorage.getItem("jwt");
   const [state, setState] = useState(0);
@@ -17,24 +18,18 @@ const NotificationsList = () => {
 
   function notificationMessages(code){
     switch (code) {
-      case "READING_NOTIFICATION":
-        return "Your reading entry has been sent.";
-      case "CONTRACT_REQUEST_NOTIFICATION":
-        return "Your contract request has been sent.";
       case "ACCEPT_CONTRACT_NOTIFICATION":
-        return "Your contract request has been accepted."
-      case "CANCEL_CONTRACT_REQUEST_NOTIFICATION":
-        return "Your contract cancellation request has been sent."
+        return t('ACCEPT_CONTRACT_NOTIFICATION');
       case "END_CONTRACT_NOTIFICATION":
-        return "Your contract has ended."
+        return t('END_CONTRACT_NOTIFICATION');
       case "CANCEL_CONTRACT_NOTIFICATION": 
-        return "Your contract has been cancelled."
+        return t('CANCEL_CONTRACT_NOTIFICATION');
       case "LINK_METER_NOTIFICATION"  :
-        return "Your meter has been linked."
+        return t('LINK_METER_NOTIFICATION');
       case "UNLINK_METER_NOTIFICATION":
-        return "Your meter has been unlinked."
-      case "NOTIFICATION":
-        return "You received a notification."
+        return t('UNLINK_METER_NOTIFICATION');
+      default :
+        return t('DEFAULT_NOTIFICATION');
     }
   }
 
@@ -75,7 +70,7 @@ const NotificationsList = () => {
         <ListItem>
           <ListItemButton onClick={()=>handleClick(notification)}>
             <ListItemText>
-              {notification.status === "UNREAD" ? <div style={{color:"red", justifyContent:"space-between"}}>{notificationMessages(notification.type)} {notification.date}</div> : <div style={{display:"flex" ,justifyContent:"space-between"}}><div>{notificationMessages(notification.type)} </div><div>[DATE : {notification.date}]</div></div>}
+              {notification.status === "UNREAD" ? <div style={{color:"red", justifyContent:"space-between"}}>{notificationMessages(notification.type)} {notification.date}</div> : <div style={{display:"flex" ,justifyContent:"space-between"}}><div>{notificationMessages(notification.type)} </div><div>[ {t('date')} : {notification.date}]</div></div>}
             </ListItemText>
           </ListItemButton>
         </ListItem>

@@ -4,11 +4,10 @@ import {Stack,Card, Box, Grid, Button, ThemeProvider, createTheme, IconButton} f
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
-import TempList from '../components/TempList';
-import ElementsList from '../components/ElementsList';
 import {Link} from 'react-router-dom';
 import axios from '../api/axios';
 import MetersList from '../components/MetersList';
+import { useTranslation } from 'react-i18next';
 
 const theme = createTheme({
   palette: {
@@ -27,11 +26,11 @@ const METER_URL = "http://localhost:8080/api/meter/"
 
 const ManageMeters = () => {
   const jwt = localStorage.getItem("jwt");
-
+  const {t} = useTranslation();
   
   
   const pageAddress = "/manage-meters";
-  const pageName = "Manage meters";
+  const pageName = t('manage_meters');
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
@@ -44,7 +43,7 @@ const ManageMeters = () => {
           <ThemeProvider theme={theme}>
             <Link to='/assignment-history' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                Assignment history
+                {t('assignment_history')}
               </Button>
             </Link>
           </ThemeProvider>

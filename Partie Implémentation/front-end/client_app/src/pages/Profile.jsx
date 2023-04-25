@@ -5,14 +5,16 @@ import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
 import axios from '../api/axios';
+import {useTranslation} from 'react-i18next';
 
 const URL = "http://localhost:8080/api/client/"
 
 
 const Profile = () => {
 
+  const {t} = useTranslation();
   const pageAddress = "/profile";
-  const pageName = "Profile";
+  const pageName = t('profile');
 
   const jwt = localStorage.getItem("jwt");
 
@@ -50,7 +52,7 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  First Name
+                  {t('first_name')}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -60,7 +62,7 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Last Name
+                  {t('last_name')}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -70,7 +72,7 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Phone Number
+                  {t('phone_num')}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -80,7 +82,7 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Email Address
+                  {t('email')}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -90,7 +92,7 @@ const Profile = () => {
             <Grid direction='row' sx={{m:2}} justifyContent="center" container>
               <Grid item xs={6}>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}}>
-                  Address
+                  {t('address')}
                 </Typography>
               </Grid>
               <Grid item xs={6}>

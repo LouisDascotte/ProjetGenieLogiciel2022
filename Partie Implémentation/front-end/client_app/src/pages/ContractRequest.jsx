@@ -5,10 +5,12 @@ import {Link, useNavigate} from "react-router-dom";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useTranslation } from 'react-i18next';
 
 const ContractRequest = () => {
+  const {t} = useTranslation();
   const pageAddress = "/contract-request";
-  const pageName = "Contract request";
+  const pageName = t('contract_request');
   const navigate = useNavigate();
   const autoCompleteRef = useRef(); 
   const inputRef = useRef();
@@ -169,87 +171,87 @@ const ContractRequest = () => {
         <Box sx={{backgroundColor:"white", borderRadius:"16px", width:'90%', mt:2}}>
           <Stack alignItems='center' justifyContent={"center"} sx={{m:4}}>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"}>
-              <Typography variant='h6' sx={{mr:8}}>Client's name : </Typography>
-              <Typography variant='h6' >Godwill Louhou</Typography>
+              <Typography variant='h6' sx={{mr:8}}>{t('client_name')} : </Typography>
+              <Typography variant='h6' >{localStorage.getItem("firstName")  +" " +localStorage.getItem("lastName") }</Typography>
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:8}}>Address of the property : </Typography>
+              <Typography variant='h6' sx={{mr:8}}>{t('property_address')} : </Typography>
               <Stack>
                 <TextField inputRef={inputRef}/>
               </Stack>
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Contract type : </Typography>
+              <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:"nowrap"}}>{t('contract_type')} : </Typography>
               <FormControl sx={{minWidth:"100%"}}>
-                <InputLabel>Select contract type</InputLabel>
-                <Select sx={{width:"100%"}} label='Select contract type' onChange={selectEnergyType}>
-                  <MenuItem value={1}>Electricity</MenuItem>
-                  <MenuItem value={2}>Gas</MenuItem>
-                  <MenuItem value={3}>Water</MenuItem>
-                  <MenuItem value={4}>Gas/Electricity</MenuItem>
+                <InputLabel style={{whiteSpace:'nowrap'}}>{t('select_contract_type')}</InputLabel>
+                <Select sx={{width:"100%"}} label={t('select_contract_type')} onChange={selectEnergyType}>
+                  <MenuItem value={1}>{t('elec')}</MenuItem>
+                  <MenuItem value={2}>{t('gas')}</MenuItem>
+                  <MenuItem value={3}>{t('water')}</MenuItem>
+                  <MenuItem value={4}>{t('gas_elec')}</MenuItem>
                 </Select>
               </FormControl>
             </Stack>
             {energyType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Supply point : </Typography>
+              <Typography variant='h6' sx={{mr:5}}>{t('meter')} EAN : </Typography>
               <TextField type='number' onChange={setEan1Value}  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
-          {ean1Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
+          {ean1Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
             </Stack> : <Stack>
               <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}}>Gas supply point : </Typography>
+              <Typography variant='h6' sx={{mr:5}}>{t('gas_meter')} : </Typography>
               <TextField onChange={setEan1Value} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
-          {ean1Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
+          {ean1Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mr:5}} >Electricity supply point : </Typography>
+              <Typography variant='h6' sx={{mr:5}} > {t('elec_meter')} : </Typography>
               <TextField onChange={setEan2Value} type='number'InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
-          {ean2Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
+          {ean2Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
             </Stack></Stack>}
             {energyType !== 4 ? <Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-            <Typography variant='h6' sx={{mr:5}}style={{whiteSpace:'nowrap'}}>Hour type: </Typography>
+            <Typography variant='h6' sx={{mr:5}}style={{whiteSpace:'nowrap'}}> {t('hour_type')} </Typography>
             <FormControl sx={{minWidth:"100%"}}>
-              <InputLabel>Select hour type:</InputLabel>
-              <Select sx={{width:"100%"}} label='Select hour type:' onChange={selectMeterHour1}>
-                <MenuItem value={1}>Mono-hourly</MenuItem>
-                <MenuItem value={2}>Bi-hourly</MenuItem>
+              <InputLabel> {t('select_hour_type')} :</InputLabel>
+              <Select sx={{width:"100%"}} label={t('select_hour_type')} onChange={selectMeterHour1}>
+                <MenuItem value={1}>{t('mono_hour')}</MenuItem>
+                <MenuItem value={2}>{t('bi_hour')}</MenuItem>
               </Select>
             </FormControl>
           </Stack>
           <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-            <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}>Meter type : </Typography>
+            <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}> {t('meter_type')}: </Typography>
             <FormControl sx={{minWidth:"100%"}}>
-              <InputLabel>Select meter type :</InputLabel>
-              <Select sx={{width:"100%"}} label='Select meter type :' onChange={selectMeterType1}>
-                <MenuItem value={1}>Electronic</MenuItem>
-                <MenuItem value={2}>Mechanical</MenuItem>
+              <InputLabel> {t('select_meter_type')} :</InputLabel>
+              <Select sx={{width:"100%"}} label={t('select_meter_type')} onChange={selectMeterType1}>
+                <MenuItem value={1}> {t('numerical')}</MenuItem>
+                <MenuItem value={2}> {t('mechanical')} </MenuItem>
               </Select>
             </FormControl>
           </Stack> </Stack> : 
           <Stack>
           <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}} >
-          <Typography variant='h6' sx={{mr:5, display:'inline'}} style={{whiteSpace:'nowrap'}}>Hours type : </Typography>
+          <Typography variant='h6' sx={{mr:5, display:'inline'}} style={{whiteSpace:'nowrap'}}>{t('hour_type')} </Typography>
           <FormControl sx={{minWidth:"100%"}}>
-            <InputLabel>Select hour type:</InputLabel>
+            <InputLabel>{t('select_hour_type')}:</InputLabel>
             <Select sx={{width:"100%"}} label='Select hour type:' onChange={selectMeterHour1}>
-              <MenuItem value={1}>Mono-hourly</MenuItem>
-              <MenuItem value={2}>Bi-hourly</MenuItem>
+              <MenuItem value={1}>{t('mono_hour')}</MenuItem>
+              <MenuItem value={2}>{t('bi_hour')}</MenuItem>
             </Select>
           </FormControl>
         </Stack>
         <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
-          <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}>Meters type : </Typography>
+          <Typography variant='h6' sx={{mr:5}} style={{whiteSpace:'nowrap'}}>{t('meter_type')} </Typography>
           <FormControl sx={{minWidth:"100%"}}>
-            <InputLabel>Select meter type :</InputLabel>
+            <InputLabel>{t('select_meter_type')} :</InputLabel>
             <Select sx={{width:"100%"}} label='Select meter type :' onChange={selectMeterType1}>
-              <MenuItem value={1}>Electronic</MenuItem>
-              <MenuItem value={2}>Mechanical</MenuItem>
+              <MenuItem value={1}> {t('numerical')}</MenuItem>
+              <MenuItem value={2}>{t('mechanical')}</MenuItem>
             </Select>
           </FormControl>
         </Stack>
@@ -257,11 +259,11 @@ const ContractRequest = () => {
             
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Button size='large' variant='outlined' sx={{mr:8}} onClick={cancel}>
-                Cancel
+                {t('cancel')}
               </Button>
               
               <Button size='large' variant='outlined' onClick={confirmRequest}>
-                Confirm
+                {t('confirm')}
               </Button>
               
             </Stack>
@@ -270,9 +272,9 @@ const ContractRequest = () => {
         
       </Stack>
       <Dialog open={openError} onClose={() => setOpenError(false)}>
-        <DialogTitle>Error</DialogTitle>
+        <DialogTitle>{t('error')}</DialogTitle>
         <DialogContent>
-          <Alert severity="error">Please check the form</Alert>
+          <Alert severity="error">{t('check_form')}</Alert>
         </DialogContent>
       </Dialog>
     </Stack>

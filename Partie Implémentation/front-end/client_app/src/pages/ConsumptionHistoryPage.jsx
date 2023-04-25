@@ -13,11 +13,12 @@ import TopMenu from '../components/TopMenu';
 import PortfolioMainGraph from '../components/PortfolioMainGraph';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 const ConsumptionHistoryPage = () => {
   
   const {id} = useParams();
-
+  const {t} = useTranslation();
   const jwt = localStorage.getItem("jwt");
   const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
   const [data, setData] = useState({});
@@ -117,7 +118,7 @@ if (!(data.WATER === undefined)){
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}} >
-        <TopMenu pageAddress={"/consumption-history"} pageName={"Consumption History"}/>
+        <TopMenu pageAddress={"/consumption-history"} pageName={t('consumption_history')}/>
         <Stack justifyContent='center' alignContent="center" alignItems='center' sx={{display:'flex'}}>
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
@@ -139,7 +140,7 @@ if (!(data.WATER === undefined)){
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>
             <Button variant="contained" onClick={exportData}>
-          Export as JSON
+          {t('export_json')}
         </Button>
           </ButtonGroup>
         </Stack>

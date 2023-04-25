@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from '../api/axios';
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
 import { useRegisterFieldValidator } from '../components/hooks/useRegisterFieldValidator';
-
+import {useTranslation} from "react-i18next";
 
 // Styling part
 
@@ -40,6 +40,8 @@ const REGISTER_URL = "/api/auth/client/register"; // endpoint for the registrati
 
 
 const RegisterPage = () => {
+
+  const { t } = useTranslation();
 
   let address = {
     street_number : "",
@@ -219,12 +221,12 @@ const RegisterPage = () => {
             <Typography 
             className='typo' 
             variant="h4">
-              Sign up
+              {t('signup')}
               </Typography>
             <Typography 
             variant="h7" 
             sx={{mt:1, color:'#262626'}}>
-              Register an account
+              {t('register_account')}
               </Typography>       
             <form onSubmit={onSubmitForm} align="center"> 
             <Box 
@@ -242,7 +244,7 @@ const RegisterPage = () => {
                   sx={{width:"90%"}} 
                   size='small' 
                   variant='outlined' 
-                  label='first name' 
+                  label={t('first_name')} 
                   margin='normal' 
                   name='firstName' 
                   value={form.firstName} 
@@ -260,7 +262,7 @@ const RegisterPage = () => {
                   sx={{width:"90%"}} 
                   size='small' 
                   variant='outlined' 
-                  label='last name' 
+                  label={t('last_name')}
                   margin='normal' 
                   name='lastName' 
                   value={form.lastName} 
@@ -289,7 +291,7 @@ const RegisterPage = () => {
                   type='email' 
                   size='small' 
                   variant='outlined' 
-                  label='email' 
+                  label={t('email')}
                   margin='normal' 
                   name='email' 
                   value={form.email} 
@@ -308,7 +310,7 @@ const RegisterPage = () => {
                   size='small' 
                   variant='outlined' 
                   type='tel' 
-                  label='phone number' 
+                  label={t('phone_num')}
                   margin='normal' 
                   name='phoneNumber' 
                   value={form.phoneNumber} 
@@ -336,7 +338,7 @@ const RegisterPage = () => {
                   sx={{width:"90%"}} 
                   size='small' 
                   variant='outlined' 
-                  label='address' 
+                  label={t('address')}
                   margin='normal'
                   name='address' 
                   value={address.street} 
@@ -367,7 +369,7 @@ const RegisterPage = () => {
                   size='small' 
                   variant='outlined' 
                   type='password' 
-                  label='password' 
+                  label={t('password')}
                   margin='normal' 
                   name='password' 
                   value={form.password} 
@@ -386,7 +388,7 @@ const RegisterPage = () => {
                   size='small' 
                   variant='outlined' 
                   type='password' 
-                  label='confirm password'
+                  label={t('confirm_password')}
                   name="confirmPassword"
                   value={form.confirmPassword}
                   onChange={onUpdateField} 
@@ -407,7 +409,7 @@ const RegisterPage = () => {
               color='primary' 
               sx={{mt:2, width:'80%', mb:2}}
               type='submit'>
-                Sign up
+                {t('signup')}
                 </Button>
               
             </ThemeProvider>
@@ -418,7 +420,7 @@ const RegisterPage = () => {
               to='/login'>
                 <Typography 
                 variant="h7">
-                  Already registered ? Click here to log in.
+                  {t('already_registered')}
                   </Typography>
               </Link>
             </Box>

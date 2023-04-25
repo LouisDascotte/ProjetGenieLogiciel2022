@@ -3,11 +3,12 @@ import { BarChart, LineChart, Line,  Bar, Cell, XAxis, YAxis, CartesianGrid, Too
 import { Stack, CircularProgress, Card, Grid, Typography, ButtonGroup, Button } from '@mui/material';
 import  {datas} from "../resources/hardcodedGraphData";
 import PortfolioPlaceHolder from './PortfolioPlaceHolder';
+import { useTranslation } from 'react-i18next';
 
 
 const PortfolioMainGraph = ({portfolio}) => { 
 
-  console.log(portfolio)
+  const {t} = useTranslation();
 
   const [isReady, setIsReady] = React.useState(false);
   const [elec, setElec] = React.useState([]);
@@ -47,39 +48,12 @@ const PortfolioMainGraph = ({portfolio}) => {
 
  console.log(gaz)
 
- /*const result = data.reduce((acc, curr) => {
-  const date = curr.date;
-  const energy = curr.energy.toLowerCase();
-
-  // initialise l'objet s'il n'existe pas encore pour cette date
-  if (!acc[date]) {
-    acc[date] = {
-      date: date,
-      elec: 0,
-      gaz: 0
-    }
-  }
-
-  // met à jour la valeur de la consommation pour l'énergie donnée
-  acc[date][energy] += curr.value;
-
-  return acc;
-  }, {})
-
-  const chartData = Object.values(result).map(item => ({
-    date: item.date,
-    electricity: item.elec,
-    gas: item.gaz
-  }));
-
- console.log(chartData)*/
-
  
   return (
   <Stack justifyContent='center' paddingTop='10%' alignContent="center" alignItems='center'>
     {isReady ? <Card sx={{boxShadow:'none', textAlign:'center'}}>
       <Typography variant="h6">
-        {view === "ELEC" ? "Electricity consumption" : view === "WATER" ? "Water consumption" : "Gas consumption"}
+        {view === "ELEC" ? t('elec_cons') : view === "WATER" ? t('water_cons') : t('gas_cons')}
       </Typography>
       {view === "ELEC" ?  <LineChart
         width={700}
@@ -141,9 +115,9 @@ const PortfolioMainGraph = ({portfolio}) => {
         </Card>
          : <CircularProgress/>}
         {isReady ? <ButtonGroup variant='contained' sx={{mt:1}}>
-          <Button onClick={() => setView("ELEC")}>Electricity</Button>
-          <Button onClick={() => setView("WATER")}>Water</Button>
-          <Button onClick={() => setView("GAZ")}>Gas</Button>
+          <Button onClick={() => setView("ELEC")}>{t('elec')}</Button>
+          <Button onClick={() => setView("WATER")}>{t('water')}</Button>
+          <Button onClick={() => setView("GAZ")}>{t('gas')}</Button>
         </ButtonGroup> : null }
       </Stack>
     );

@@ -5,13 +5,12 @@ import {Link, useNavigate} from 'react-router-dom';
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
-import TempList from '../components/TempList';
-import ElementsList from '../components/ElementsList';
 import ContractsList from '../components/ContractsList';
-
+import { useTranslation } from 'react-i18next';
 
 
 const ManageContracts = () => {
+  const {t} = useTranslation();
   const theme = createTheme({
     palette: {
       primary: {
@@ -25,7 +24,7 @@ const ManageContracts = () => {
     }
   });
   const pageAddress = "/manage-contracts";
-  const pageName = "Manage contracts";
+  const pageName = t('manage_contracts');
   const navigate = useNavigate();
   
   return (
@@ -40,7 +39,7 @@ const ManageContracts = () => {
           <ThemeProvider theme={theme}>
             <Link to='/contract-request' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                New contract request
+                {t('new_contract')}
               </Button>
             </Link>
           </ThemeProvider>

@@ -3,6 +3,7 @@ import {createTheme, Button, styled, Typography, Stack, Card,Grid, TextField, Th
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios"
+import {useTranslation} from "react-i18next";
 
 const theme = createTheme({
   palette: {
@@ -32,9 +33,7 @@ const CssTextField = styled(TextField)({
 });
 
 const ResetPassword = () => {
-
-  
-
+  const {t} = useTranslation();
   const [email, setEmail] = React.useState('');
   const [success, setSuccess] = React.useState(false);
   const navigate = useNavigate();
@@ -72,22 +71,22 @@ const ResetPassword = () => {
         <Card sx={{height: 'auto', boxShadow:'5px 5px 5px #9bcc6c', pb:3}}>
           <Stack alignItems='center'>
             <img className='login-logo' src={logo} alt='logo' width={70} height={70}/>
-            <Typography className='typo' variant="h4">Reset your password</Typography>
-            <Typography variant="h7" sx={{mt:1, color:'#262626'}}>Enter the email you registered with.</Typography>
+            <Typography className='typo' variant="h4">{t('reset_password')}</Typography>
+            <Typography variant="h7" sx={{mt:1, color:'#262626'}}>{t('enter_reset_mail')}</Typography>
             <CssTextField className='login-textfield'size='small' variant='outlined' label='email' margin='normal' sx={{width:'80%'}} onChange={e => setEmail(e.target.value)}/>
             <ThemeProvider theme={theme}>
               <Link className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
-                <Button onClick={submit} variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>Reset</Button>
+                <Button onClick={submit} variant='contained' color='primary' sx={{mt:2, width:'100%', mb:5}}>{t('reset')}</Button>
               </Link>
             </ThemeProvider>
             <Link className='link-2' to='/login'>
-              <Typography variant="h7">You remember your password ? Click here.</Typography>
+              <Typography variant="h7">{t('remember_password')}</Typography>
             </Link>
           </Stack>
         </Card>
         <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-            The reset mail has been sent !
+            {t('reset_mail_sent')}
           </Alert>
         </Snackbar>
       </Grid>

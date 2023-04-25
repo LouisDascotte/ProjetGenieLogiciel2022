@@ -4,24 +4,31 @@ import {createTheme, Button, styled , alpha, Typography, Stack, Card, Box, Grid,
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import PortfolioPlaceHolder from '../components/PortfolioPlaceHolder';
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink , useNavigate} from "react-router-dom";
 import TopMenu from '../components/TopMenu';
+import {useTranslation} from 'react-i18next';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#9bcc6c",
+      contrastText: '#fff'
+    }, 
+    secondary: {
+      main: "#000",
+      contrastText: '#000000'
+    }
+  }
+});
 
 const RegistrationSuccess = () => {
-  // Styling part
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#9bcc6c",
-        contrastText: '#fff'
-      }, 
-      secondary: {
-        main: "#000",
-        contrastText: '#000000'
-      }
-    }
-  });
+  const {t} = useTranslation();
+  const navigate = useNavigate();
+  
+  setTimeout(()=>{
+    navigate("/login");
+  }, 3000);
 
 
   // code part
@@ -36,14 +43,14 @@ const RegistrationSuccess = () => {
         <Card sx={{height: 'auto', boxShadow:'5px 5px 5px #9bcc6c', pb:2}}>
           <Stack alignItems='center'>
             <img className='login-logo' src={logo} alt='logo' width={70} height={70}/>
-            <Typography className='typo' variant="h4">Registration successful!</Typography>
+            <Typography className='typo' variant="h4">{t('registration_success')}</Typography>
             <ThemeProvider theme={theme}>
               <Link to='/login' className='link-4' style={{display: 'inline-block', mt:2, width:'80%', mb:5}}>
-                <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:3}}>Welcome</Button>
+                <Button variant='contained' color='primary' sx={{mt:2, width:'100%', mb:3}}>{t('welcome')}</Button>
               </Link>
             </ThemeProvider>
             <Link className='link-2' to='/login'>
-              <Typography variant="h7" >Click here if you're not redirected.</Typography>
+              <Typography variant="h7" >{t('redirect')}</Typography>
             </Link>
           </Stack>
         </Card>

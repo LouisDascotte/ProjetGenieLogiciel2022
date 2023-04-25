@@ -5,17 +5,18 @@ import {Stack, Box, Typography, IconButton, Button, Dialog, DialogContent, Dialo
 import { useLocation, useNavigate} from 'react-router-dom'
 import axios from '../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
+import {useTranslation} from 'react-i18next'
 
 const ViewContractPage = () => {
   const pageAddress = "/view-contract";
-  const pageName = "View Contract";
   const location = useLocation();
   const navigate = useNavigate();
   const jwt = localStorage.getItem('jwt')
   const [address, setAddress] = React.useState('')
   const [meter, setMeter] = React.useState({})
   const [open, setOpen] = React.useState(false);
-
+  const {t} = useTranslation();
+  const pageName = t('view_contract');
   React.useEffect(()=> {
     let temp_meter = {}
 
@@ -73,51 +74,51 @@ const ViewContractPage = () => {
             </IconButton>
             <Box sx={{m:2, backgroundColor:'#9bcc6c', borderRadius:'16px'}}>
               <Typography variant='h4' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                Contract  #{location.state.id}
+                {t('contract')}  #{location.state.id}
               </Typography>
             </Box>
             <Box sx={{m:2}}>
               <Stack textAlign={'center'} alignContent='center' alignItems='center'>
                 {location.state.status === 'ACCEPTED' ? <Stack>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Begin Date :</strong> {location.state.beginDate}
+                  <strong>{t('begin_date')} :</strong> {location.state.beginDate}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>End Date :</strong> {location.state.endDate}
+                  <strong>{t('end_date')} :</strong> {location.state.endDate}
                 </Typography>
                   </Stack> : null}
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Status :</strong> {location.state.status}
+                  <strong>{t('status')} :</strong> {location.state.status}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Offer :</strong> {location.state.offerId}
+                  <strong>{t('offer')} :</strong> {location.state.offerId}
                 </Typography>
                 <Typography variant='h4' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Technical characteristics</strong>
+                  <strong>{t('tech_chars')}</strong>
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>EAN :</strong> {location.state.ean}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Address :</strong> {address}
+                  <strong>{t('address')} :</strong> {address}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>Energy type :</strong> {meter.energyType === 'ELEC' ? 'Electricity' : meter.energyType === 'GAZ' ? 'Gas' : meter.energyType === 'WATER' ? 'Water' : 'Gas and electricity'}
+                  <strong> {t('energy_type')} :</strong> {meter.energyType === 'ELEC' ? t('elec') : meter.energyType === 'GAZ' ? t('gas') : meter.energyType === 'WATER' ? t('water') : t('gas_elec')}
                 </Typography>
                 <Button variant='contained' onClick={()=> setOpen(true)} sx={{mt:2, backgroundColor:"red", width:'40%'}}>
-                  Cancel contract
+                  {t('cancel_contract')}
                 </Button>
                 <Dialog open={open} onClose={()=>setOpen(false)}>
                   <DialogTitle>
-                    Are you sure you want to cancel this contract ?
+                    {t('cancel_contract_confirm')}
                   </DialogTitle>
                   <DialogContent>
                     <Stack direction='row' justifyContent='center' alignItems='center' alignContent='center'>
                       <Button variant='contained' sx={{backgroundColor:'red', width:'40%', mr:3}} onClick={handleCancelContract}>
-                        Yes
+                        {t('yes')}
                       </Button>
                       <Button variant='contained' sx={{backgroundColor:'green', width:'40%'}} onClick={()=> setOpen(false)}>
-                        No
+                        {t('no')}
                       </Button>
                     </Stack>
                     

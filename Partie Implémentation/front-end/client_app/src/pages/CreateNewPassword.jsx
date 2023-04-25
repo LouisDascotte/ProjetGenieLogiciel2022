@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { redirect, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
 import axios from "../api/axios";
+import { useTranslation } from 'react-i18next';
 
 const theme = createTheme({
   palette: {
@@ -36,7 +37,7 @@ const CssTextField = styled(TextField)({
 
 
 const CreateNewPassword = () => {
-
+  const {t} = useTranslation();
   const navigate = useNavigate();
 
   const {token} = useParams();
@@ -107,8 +108,7 @@ const CreateNewPassword = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh', margin:'auto' }}
-      key={"test"}>
+      style={{ minHeight: '100vh', margin:'auto' }}>
       <Grid 
         item xs={12} 
         width={400} >
@@ -125,12 +125,12 @@ const CreateNewPassword = () => {
             <Typography 
               className='typo' 
               variant="h4">
-              Create a new password
+              {t('create_new_pass')}
             </Typography>
             <Typography 
               variant="h7" 
               sx={{mt:1, color:'#262626'}}>
-              Enter your new password.
+              {t('enter_new_pass')}
             </Typography>
               <form onSubmit={onSubmitForm} align='center'>
               <CssTextField 
@@ -138,7 +138,7 @@ const CreateNewPassword = () => {
                 size='small' 
                 variant='outlined' 
                 type='password' 
-                label='new password' 
+                label={t('new_password')}
                 margin='normal' 
                 name='password'
                 value={form.password}
@@ -157,7 +157,7 @@ const CreateNewPassword = () => {
                 className='login-textfield' 
                 size='small' 
                 variant='outlined' 
-                label='confirm password' 
+                label={t('confirm_new_password')}
                 margin='normal' 
                 name='confirmPassword'
                 value={form.confirmPassword}
@@ -178,7 +178,7 @@ const CreateNewPassword = () => {
                     sx={{mt:2, width:'80%', mb:5}}
                     type='submit'
                     >
-                    Confirm
+                    {t('confirm')}
                   </Button>
                 
               </ThemeProvider>

@@ -9,13 +9,14 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
 import authServices from "../utils/services/auth-service";
+import { useTranslation } from 'react-i18next';
 
 // Content from the original MUI React documentation.
 
 
 const AccountMenu = () => {
 
-
+  const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -124,26 +125,26 @@ const AccountMenu = () => {
     <Link to="/profile" className='link'><MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonIcon/>
-            </ListItemIcon> Profile
+            </ListItemIcon> {t('profile')}
         </MenuItem></Link>
         <Link to="/notifications" className='link'><MenuItem onClick={handleClose}>
           <ListItemIcon>
             <NotificationsNoneIcon/>
           </ListItemIcon>
-          Notifications
+          {t('notifications')}
         </MenuItem></Link>
         <Divider />
         <Link to="/preferences" className='link'><MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Settings
+          {t('settings')}
         </MenuItem></Link>
         <Link to="/login" className='link'><MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
+          {t('logout')}
         </MenuItem></Link>
         </Menu>
       </React.Fragment>

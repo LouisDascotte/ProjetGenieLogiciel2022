@@ -5,15 +5,16 @@ import {Stack, Box, Typography, IconButton} from '@mui/material'
 import {useLocation, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
-
+import { useTranslation } from 'react-i18next'
 
 
 
 const Notification = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const pageAddress = "/notification";
-  const pageName = "Notification";
+  const pageName = t('notifications');
 
   function notificationMessages(code){
     switch (code) {
@@ -47,7 +48,7 @@ const Notification = () => {
         <Stack textAlign='center'>
           <IconButton onClick={()=> navigate(-1)}>
             <ArrowBackIcon/>
-            back
+            {t('back')}
           </IconButton>
           <Box sx={{m:2, backgroundColor:'#9bcc6c', borderRadius:'16px'}}>
             <Typography variant='h4' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
@@ -57,10 +58,10 @@ const Notification = () => {
           <Box sx={{m:2}}>
             <Stack textAlign={'center'}>
               <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                <strong>Date :</strong> {location.state.date}
+                <strong> {t('date')} :</strong> {location.state.date}
               </Typography>
               <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                <strong>Sender :</strong> {location.state.senderId}
+                <strong> {t('sender')} :</strong> {location.state.senderId}
               </Typography>
             </Stack>
           </Box>

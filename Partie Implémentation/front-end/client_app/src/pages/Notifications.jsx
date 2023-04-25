@@ -22,7 +22,6 @@ const Notifications = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
         setData(response.data);
-        console.log(data);
       })
   }, [])
   

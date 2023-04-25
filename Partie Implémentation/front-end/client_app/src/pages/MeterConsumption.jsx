@@ -27,6 +27,8 @@ const MeterConsumption = () => {
   const meter_ean = location.state.ean; 
   const navigate = useNavigate();
 
+  console.log(location.state)
+
   const cancel = () => {
     navigate("/manage-meters");
   }
@@ -110,7 +112,7 @@ const MeterConsumption = () => {
               {location.state.hourType === "SIMPLE" ? <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label='Enter consumption' onChange={(event)=> {
                 setValue(event.target.value);
               }} InputProps={{
-                endAdornment: <InputAdornment position="end">kWh</InputAdornment>
+                endAdornment: <InputAdornment position="end">{location.state.energyType === "ELEC" ? 'kWh' : 'm3'}</InputAdornment>
               }}/>: <Stack>
                 <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label='Enter day consumption' onChange={(event)=> {
                 setDayValue(event.target.value);

@@ -33,6 +33,7 @@ const ManageOffer = () => {
   const avgCons = 320;
   const avgConsDay = 133;
   const avgConsNight = 158;
+  const avgWtrCons = 0.148*30;
 
   const API_URL = "http://localhost:8080/api/contract";
 
@@ -72,7 +73,6 @@ const ManageOffer = () => {
         }
       };
       const response = await axios.delete(API_URL + "/offer/" + offerId, config);
-      console.log(response.data);
       setOffers(offers.filter((item) => item.id !== offerId));
       setActiveIndex(activeIndex - 1);
     } catch (error) {
@@ -99,6 +99,7 @@ const ManageOffer = () => {
               <Grid item xs={4}
               >
                 <Carousel
+                autoPlay={false}
                 stopAutoPlayOnHover
                 index={activeIndex}
                 >
@@ -124,18 +125,84 @@ const ManageOffer = () => {
                                 Duration: {item.contractLength} months
                               </Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                              <Typography variant="body1" gutterBottom>
-                                Cost: {item.cost}€/month
-                              </Typography>
-                            </Grid>
-                            {item.hourType === "DOUBLE" ?
-                            <Grid item xs={12}>
-                              <Typography variant="body1" gutterBottom>
-                                Night cost: {item.nightCost}€/month
-                              </Typography>
-                            </Grid> 
-                            : null }
+                            { item.type === "GAZ_ELEC_OFFER" && item.hourType === "DOUBLE" ?
+                              <Grid container
+                              justifyContent='center'
+                              >
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Elec during day: {(item.cost_ELEC)}€/kWh
+                                  </Typography>
+                                </Grid> 
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Elec during night: {(item.nightCost_ELEC)}€/kWh
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Gas during day: {(item.cost_GAZ)}€/m3
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Gas during night: {(item.nightCost_GAZ)}€/m3
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            : null}
+
+                            { item.type === "GAZ_ELEC_OFFER" && item.hourType === "SIMPLE" ?
+                              <Grid container
+                              justifyContent='center'
+                              >
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Elec: {(item.cost_ELEC)}€/kWh
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    Gas: {(item.cost_GAZ)}€/m3
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            : null}
+
+                            { item.type !== "GAZ_ELEC_OFFER" && item.hourType === "SIMPLE" ?
+                              <Grid container
+                              justifyContent='center'
+                              >
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    {item.energyType === "ELEC" ? "Elec" : item.energyType === "GAS" ? "Gas" : "Water"}: {(item.cost)}€/{item.energyType === "ELEC" ? "kWh" : "m3"}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            : null}
+
+                            { item.type !== "GAZ_ELEC_OFFER" && item.hourType === "DOUBLE" ?
+                              <Grid container
+                              justifyContent='center'
+                              >
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    {item.energyType === "ELEC" ? "Elec" : "Gas"} during day: {(item.cost)}€/{item.energyType === "ELEC" ? "kWh" : "m3"}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant="body1" gutterBottom>
+                                    {item.energyType === "ELEC" ? "Elec" : "Gas"} during night: {(item.nightCost)}€/{item.energyType === "ELEC" ? "kWh" : "m3"}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            : null}
+
                             <Grid item xs={12}>
                               <Typography variant="body1" gutterBottom>
                                 Price type: {item.priceType === "FIXED_PRICE" ? "Fixed" : "Variable" }
@@ -148,17 +215,24 @@ const ManageOffer = () => {
                             </Grid>
                             <Grid item xs={12}>
                               <Typography variant="body1" gutterBottom>
-                                Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : "Electricity and Gas"}
+                                Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : item.energyType === "WATER" ? "Water" : "Electricity and Gas"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                              {item.hourType === "DOUBLE" ?
-                              <Typography variant="h6" gutterBottom>
-                                {(item.cost*avgConsDay + item.nightCost*avgConsNight).toFixed(2)}€/month
-                              </Typography>
-                              : <Typography variant="h6" gutterBottom>
-                                {(item.cost*avgCons).toFixed(2)}€/month
-                              </Typography>
+                              { item.type === "GAZ_ELEC_OFFER" ?
+                                <Typography variant="h5" gutterBottom>
+                                  { item.nightCost_ELEC !== 0 ? item.cost_ELEC*avgConsDay + item.nightCost_ELEC*avgConsNight + item.cost_GAZ*avgConsDay + item.nightCost_GAZ*avgConsNight
+                                  :
+                                  item.cost_ELEC*avgCons + item.cost_GAZ*avgCons}€/month
+                                </Typography>
+                              : 
+                                <Typography variant="h5" gutterBottom>
+                                  { item.nightCost !== 0 ? 
+                                  item.cost*avgConsDay + item.nightCost*avgConsNight
+                                  :
+                                  item.energyType === "WATER" ? (item.cost*avgWtrCons).toFixed(2) :
+                                  (item.cost*avgCons).toFixed(2)}€/month
+                                </Typography>
                               }
                             </Grid>
                           </Grid>

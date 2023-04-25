@@ -21,8 +21,7 @@ const Notifications = () => {
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        setData(response.data);
-        console.log(data);
+        setData(response.data); 
       })
   }, [])
   

@@ -33,74 +33,101 @@ import OffersPage from './pages/OffersPage';
 import ViewContract from './pages/ViewContract';
 import ViewContractPage from './pages/ViewContractPage';
 import Notification from './components/notifications/Notification';
+import ProductionHistoryPage from './pages/ProductionHistoryPage';
+import { createRoot } from 'react-dom/client';
+import i18n from "i18next";
+import { useTranslation, initReactI18next } from "react-i18next";
+import HttpApi from "i18next-http-backend";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+// Got from the react-i18next documentation and a youtube video https://www.youtube.com/watch?v=w04LXKlusCQ&ab_channel=Classsed
+i18n
+  .use(initReactI18next) 
+  .use(LanguageDetector)
+  .init({
+    lng: document.querySelector('html').getAttribute('lang'), 
+    fallbackLng: "en",
+    detection: {
+      order: [ 'cookie', 'htmlTag', 'localStorage', 'sessionStorage', 'navigator', 'path', 'subdomain'],
+      caches: ['cookie']
+    },
+    backend : {
+      'loadPath': '/assets/locales/{{lng}}/translation.json'
+    }, 
+    react : {
+      useSuspense: false
+    },
+  });
 
 function App() {
-    const token = localStorage.getItem("jwt");
-    if (token){
-      setAuthToken(token);
-    }
-    return (
-      <BrowserRouter history={history}>
-              <Routes>   
-                <Route path="/login" exact element={<LoginPage/>}/>
-                <Route path="/register-account" exact element={<RegisterPage/>}/>
-                <Route path='/' element={<Navigate to="/login"/>}></Route>
+  const { t } = useTranslation();
 
-                <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
-                <Route path='/create-pass/:token' exact element={<PrivateRoute>
-                    <CreateNewPassword/>
+  const token = localStorage.getItem("jwt");
+  if (token){
+    setAuthToken(token);
+  }
+  return (
+    <BrowserRouter history={history}>
+            <Routes>   
+              <Route path="/login" exact element={<LoginPage/>}/>
+              <Route path="/register-account" exact element={<RegisterPage/>}/>
+              <Route path='/' element={<Navigate to="/login"/>}></Route>
+
+              <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
+              <Route path='/create-pass/:token' exact element={<PrivateRoute>
+                  <CreateNewPassword/>
+              </PrivateRoute>}/>
+              <Route path='/create-pass-success' exact element={<PrivateRoute>
+                <NewPasswordSuccess/>
                 </PrivateRoute>}/>
-                <Route path='/create-pass-success' exact element={<PrivateRoute>
-                  <NewPasswordSuccess/>
-                  </PrivateRoute>}/>
-                <Route path="/main-page" exact element={<PrivateRoute>
-                  <MainPage/>
-                  </PrivateRoute>}/>
-                <Route path="/manage-portfolios" exact element={<PrivateRoute>
-                  <ManagePortfolios/>
+              <Route path="/main-page" exact element={<PrivateRoute>
+                <MainPage/>
                 </PrivateRoute>}/>
-                <Route path="/create-portfolio" exact element={
-                <PrivateRoute><CreatePortfolio/></PrivateRoute>}/>
-                <Route path="/manage-meters" exact element={<PrivateRoute>
-                  <ManageMeters/>
+              <Route path="/manage-portfolios" exact element={<PrivateRoute>
+                <ManagePortfolios/>
+              </PrivateRoute>}/>
+              <Route path="/create-portfolio" exact element={
+              <PrivateRoute><CreatePortfolio/></PrivateRoute>}/>
+              <Route path="/manage-meters" exact element={<PrivateRoute>
+                <ManageMeters/>
+              </PrivateRoute>}/>
+              <Route path="/manage-contracts" exact element={<PrivateRoute>
+                <ManageContracts/>
                 </PrivateRoute>}/>
-                <Route path="/manage-invoices" exact element={<PrivateRoute>
-                  <ManageInvoices/>
-                  </PrivateRoute>}/>
-                <Route path="/manage-contracts" exact element={<PrivateRoute>
-                  <ManageContracts/>
-                  </PrivateRoute>}/>
-                <Route path="/preferences" exact element={<PrivateRoute>
-                  <Preferences/>
-                  </PrivateRoute>}/>
-                <Route path="/profile" exact element={<PrivateRoute>
-                  <Profile/>
-                  </PrivateRoute>}/>
-                <Route path="/notifications" exact element={<PrivateRoute>
-                  <Notifications/>
-                  </PrivateRoute>}/>
-                <Route path='/reset-password' exact element={<ResetPassword/>}/>
-                <Route path="/enter-consumption" exact element={<PrivateRoute>
-                  <MeterConsumption/>
+              <Route path="/preferences" exact element={<PrivateRoute>
+                <Preferences/>
                 </PrivateRoute>}/>
-                <Route path="/assignment-history" exact element={<PrivateRoute>
-                  <AssignmentHistoryPage/>
+              <Route path="/profile" exact element={<PrivateRoute>
+                <Profile/>
                 </PrivateRoute>}/>
-                <Route path="/portfolio/:id" exact element={<PrivateRoute>
-                  <Portfolio2/>
+              <Route path="/notifications" exact element={<PrivateRoute>
+                <Notifications/>
                 </PrivateRoute>}/>
-                <Route path="/consumption/:id" exact element={<PrivateRoute>
-                  <ConsumptionHistoryPage/>
+              <Route path='/reset-password' exact element={<ResetPassword/>}/>
+              <Route path="/enter-consumption" exact element={<PrivateRoute>
+                <MeterConsumption/>
+              </PrivateRoute>}/>
+              <Route path="/assignment-history" exact element={<PrivateRoute>
+                <AssignmentHistoryPage/>
+              </PrivateRoute>}/>
+              <Route path="/portfolio/:id" exact element={<PrivateRoute>
+                <Portfolio2/>
+              </PrivateRoute>}/>
+              <Route path="/consumption/:id" exact element={<PrivateRoute>
+                <ConsumptionHistoryPage/>
+              </PrivateRoute>}/>
+              <Route path="/production/:id" exact element={<PrivateRoute>
+                <ProductionHistoryPage/>
+              </PrivateRoute>}/>
+              <Route path="/contract-request" exact element={<PrivateRoute>
+                <ContractRequest/>
                 </PrivateRoute>}/>
-                <Route path="/contract-request" exact element={<PrivateRoute>
-                  <ContractRequest/>
-                  </PrivateRoute>}/>
-                  <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
-                  <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
-                  <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
-              </Routes>
-            
-      </BrowserRouter>
+                <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
+                <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
+                <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
+            </Routes>
+          
+    </BrowserRouter>
 
   );
 };

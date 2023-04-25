@@ -132,9 +132,11 @@ const OffersPage = () => {
               </Stack>
             </DialogContent>
           </Dialog>
-          <Carousel>
-            {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
-          </Carousel>
+           {offers.length === 0 ? <h1 alignItems='center' justifyContent='center' style={{textAlign:"center"}}>No offers available</h1> :
+           <Carousel>
+           {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
+         </Carousel> }
+          
           <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity='success'>Portfolio successfully created !</Alert>
           </Snackbar>

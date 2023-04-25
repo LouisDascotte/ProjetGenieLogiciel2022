@@ -1,4 +1,4 @@
-import { Button, FormControl, Select, IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, TextField, Typography, skeletonClasses, Box, Grid, Icon } from '@mui/material';
+import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup, Snackbar, Alert } from '@mui/material';
 import {React, useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios';
@@ -55,29 +55,47 @@ export const Portfolio2 = () => {
   const [selectedMeters, setSelectedMeters] = useState([]);
   const [selectedMetersToRemove, setSelectedMetersToRemove] = useState([]);
   const [tempMeter, setTempMeter] = useState("");
-  
+
+  // used to display the error message
+  const[problemMeter, setProblemMeter] = useState("");
+  const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
   }
 
   function checkMeter(ean){
-    
-    meters.map(meter=>{
-      if (meter.ean === ean){
-        return false; 
+    for (let i = 0; i < meters.length; i++){
+      if (meters[i].ean === ean){
+        return true; 
       }
-    })
-    return true;
+    }
+    return false; 
+  }
+
+  function inActiveMeters(meter){
+    for (let i = 0; i < activeMeters.length; i++){
+      if (activeMeters[i].ean === meter){
+        return true; 
+      }
+    }
+    return false; 
   }
 
   const handleConfirm = () => {
-    if ((!selectedMeters.includes(tempMeter))){
-     
-      if (checkMeter(tempMeter)){
-        
-        selectedMeters.push(tempMeter);
+    if (selectedMeters.includes(tempMeter) === false){
+      if (inActiveMeters(tempMeter) === false){
+        if (checkMeter(tempMeter)){
+          if (tempMeter !== "")
+            selectedMeters.push(tempMeter);
+        }
+      } else if (inActiveMeters(tempMeter) === true){
+        console.log("pass")
+        setProblemMeter(tempMeter);
+        setAlreadyInPortfolio(true);
       }
+      
     }
     setOpen(false);
   }
@@ -87,6 +105,7 @@ export const Portfolio2 = () => {
     setOpen(false);
   }
 
+
   const removeSelected = (meter) => {
     const index = selectedMeters.indexOf(meter);
     if (index > -1) {
@@ -95,7 +114,7 @@ export const Portfolio2 = () => {
     setState(state+1);
   }
 
-  const update = () => {
+  const update = async () => {
     
     let body = [];
     selectedMeters.map(meter => {
@@ -106,18 +125,17 @@ export const Portfolio2 = () => {
         }
       }
     });
+    console.log(meters)
 
-    
-
+    const responses = [];
+   
     for (let i = 0; i < body.length; i++) {
       
-      const req = axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(body[i]), {
+      responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(body[i]), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
-      }).then(req => {
-        
-      })
+      }))
     }
 
     let body2 = [];
@@ -130,13 +148,11 @@ export const Portfolio2 = () => {
     })
 
     for (let i = 0; i < body2.length; i++) {
-      const req = axios.delete(PORTFOLIO_URL + `/${id}/supply_point/${body2[i].ean}`, {
+      responses.push( await axios.delete(PORTFOLIO_URL + `/${id}/supply_point/${body2[i].ean}`, {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
-      }).then(req => {
-        
-      })
+      }))
     }
 
     setState(state+1);
@@ -160,6 +176,7 @@ export const Portfolio2 = () => {
             <ArrowBackIcon onClick={() => navigate(-1)}/>
           </IconButton>
           <Card sx={{m:5}} container justify='center'>
+            <Stack alignItems="center" alignContent="center" justifyContent='center' sx={{textAlign:"center"}}>
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
             </Grid>
@@ -199,18 +216,24 @@ export const Portfolio2 = () => {
             </Stack>
               
             )}
+           
             <Typography variant="h5" sx={{m:2}}>
               Address : 
             </Typography>
             <Typography variant="h6" sx={{m:2}}>
               {portfolio.address}
             </Typography>
-            <Button sx={{m:2}} onClick={() => setOpen(true)} size="large">
-              Add supply point
-            </Button>
-            <Button onClick={()=> navigate(`/consumption/${id}`)}>
-              Show consumption
-            </Button>
+           
+            
+            <ButtonGroup sx={{mt:1, mb:1}}>
+              <Button onClick={() => setOpen(true)}>
+                Add supply point
+              </Button>
+              <Button onClick={()=> navigate(`/consumption/${id}`)}>
+                Show consumption
+              </Button>
+            </ButtonGroup>
+            
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>
               <DialogTitle>
                 Add supply point
@@ -240,12 +263,19 @@ export const Portfolio2 = () => {
                 </Stack>
               </DialogContent>
             </Dialog>
+            </Stack>
+            
           </Card>
         </Stack>
         <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
           Apply changes
         </Button>
       </Stack>
+      <Snackbar open={alreadyInPortfolio} autoHideDuration={6000} onClose={() => setAlreadyInPortfolio(false)}>
+          <Alert severity="warning">
+            A supply point with EAN : {problemMeter} is already linked to this portfolio.
+          </Alert>
+        </Snackbar>
     </Stack>
   )
 }

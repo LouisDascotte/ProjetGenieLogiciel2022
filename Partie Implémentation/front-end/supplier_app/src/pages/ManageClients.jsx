@@ -3,7 +3,7 @@ import SideMenu from '../components/SideMenu'
 import {ArrowBack} from '@mui/icons-material'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import axios from '../api/axios';
 
@@ -21,6 +21,8 @@ const ManageClients = () => {
       }
     }
   });
+
+  const nav = useNavigate();
 
   const API_URL = "http://localhost:8080/api/supplier/clients";
 
@@ -52,13 +54,6 @@ const ManageClients = () => {
     getClients();
   }, []);
 
-
-  const handleClientClick = (clientID) => {
-    console.log(clientID);
-  };
-
-  
-
   return (
 
     <ThemeProvider theme={theme}>
@@ -73,14 +68,17 @@ const ManageClients = () => {
                   Client List
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {clients.map((client) => (
+                  {clients.length === 0 ?
+                  <ListItem>
+                    <ListItemText primary="No clients found" />
+                  </ListItem>
+                  :
+                  clients.map((client) => (
                     <ListItem key={client.id}>
                     <ListItemText primary={capitalizeFirstLetter(client.firstName)+" "+capitalizeFirstLetter(client.lastName)} />
-                      <Link to={`/clients/${client.clientId}`}>
-                        <Button variant="contained" onClick={() => handleClientClick(client.clientId)} >
-                          See Details
-                        </Button>
-                      </Link>
+                      <Button variant="contained" onClick={() => nav(`/clients/${client.id}`, { state : client })} >
+                        See Details
+                      </Button>
                     </ListItem>
                   ))}
                 </List>

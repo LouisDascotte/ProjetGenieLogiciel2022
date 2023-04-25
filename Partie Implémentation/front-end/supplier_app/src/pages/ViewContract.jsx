@@ -30,7 +30,6 @@ function ViewContract() {
 
   const location = useLocation();
   const contract = location.state;
-  const [offers, setOffers] = React.useState([]);
 
   const pageAddress = "/contracts/:id";
   const pageName = "View Contract";
@@ -45,28 +44,10 @@ function ViewContract() {
     status: contract.status,
     offerId: contract.offerId,
     ean: contract.ean,
+    elecEan: contract.ean_ELEC,
+    gasEan: contract.ean_GAZ
   }
 
-  useEffect(() => {
-    async function getOffers() {
-      try {
-        const jwt = localStorage.getItem("jwt");
-        const config = {
-          headers: { Authorization: `Bearer ${jwt}`,
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": true,
-          }
-        };
-        const response = await axios.get("http://localhost:8080/api/contract/supplier_offers", config);
-        setOffers(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getOffers();
-  }, []);
-
-  
 
   const [editMode, setEditMode] = React.useState(false);
   const [editableData, setEditableData] = React.useState(contractData);
@@ -75,16 +56,6 @@ function ViewContract() {
     setEditMode(!editMode);
     setEditableData(contractData);
   }
-  const getClientById = async (id) => {
-    try {
-      const response = await axios.get(`/clients/${id}`);
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
 
   const handleEditableDataChange = (event) => {
     const {name, value} = event.target;
@@ -120,10 +91,7 @@ function ViewContract() {
                   </Button>
                 </Link>
                 <Typography variant="h5" component="h2" align="center" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                  Contract n° {contract.contractId}
-                </Typography>
-                <Typography variant="h6" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                  Client's Details
+                  Contract #{contract.id}
                 </Typography>
                 <Grid container 
                 columnSpacing={2}
@@ -139,7 +107,7 @@ function ViewContract() {
                   justifyContent='left'
                   >
                     <Grid item xs='auto' >
-                      <Typography variant="h6" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                      <Typography variant="h6" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} fontWeight={800} >
                         Client id :
                       </Typography>
                     </Grid>
@@ -157,9 +125,12 @@ function ViewContract() {
                   </Grid>
                 </Grid>
 
-                <Typography variant="h6" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                  Technical characteristics
-                </Typography>
+                <Grid item>
+                  <Typography variant="h6" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                    Technical characteristics
+                  </Typography>
+                </Grid>
+                
                 <Grid container
                 spacing={2}
                 columnSpacing={2}
@@ -173,23 +144,78 @@ function ViewContract() {
                       { }
                     </Typography>
                   </Grid>
-                  <Grid item xs='auto' >
-                    <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                      Furniture Number (EAN) :
-                    </Typography>
+                  {contract.type ==='GAZ_ELEC_CONTRACT' ?
+                  <Grid item container xs={12}
+                  columnSpacing={1}
+                  rowSpacing={2}
+                  justifyContent='left'
+                  >
+                    <Grid item container xs={6}
+                    columnSpacing={1}
+                    >
+                      <Grid item xs='auto' >
+                        <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                          Elec Meter EAN :
+                        </Typography>
+                      </Grid>
+                      <Grid item xs='auto' >
+                        <TextField
+                        name="elecMeter"
+                        label="Elec Meter EAN"
+                        value={editableData.elecEan || ''}
+                        size='small'
+                        onChange={handleEditableDataChange}
+                        disabled={!editMode}
+                        />
+                      </Grid>
+                      <Grid item xs={2} >
+                      </Grid>
+                    </Grid>
+                    <Grid item container xs={6}
+                    columnSpacing={1}
+                    >
+                      <Grid item xs='auto' >
+                        <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                          Gas Meter EAN : 
+                        </Typography>
+                      </Grid>
+                      <Grid item xs='auto' >
+                        <TextField
+                        name="gasMeter"
+                        label="Gas Meter EAN"
+                        value={editableData.gasEan || ''}
+                        size='small'
+                        onChange={handleEditableDataChange}
+                        disabled={!editMode}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item xs='auto' >
-                    <TextField
-                    name="meter"
-                    label="EAN"
-                    value={editableData.ean || ''}
-                    size='small'
-                    onChange={handleEditableDataChange}
-                    disabled={!editMode}
-                    />
+                  :
+                  <Grid item container xs={12}
+                  columnSpacing={1}
+                  rowSpacing={2}
+                  justifyContent='left'
+                  >
+                    <Grid item xs='auto' >
+                      <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
+                        Furniture Number (EAN) :
+                      </Typography>
+                    </Grid>
+                    <Grid item xs='auto' >
+                      <TextField
+                      name="meter"
+                      label="EAN"
+                      value={editableData.ean || ''}
+                      size='small'
+                      onChange={handleEditableDataChange}
+                      disabled={!editMode}
+                      />
+                    </Grid>
+                    <Grid item xs={2} >
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2} >
-                  </Grid>
+                  }
                   <Grid item container xs='auto'
                   columnSpacing={1}
                   >
@@ -235,8 +261,8 @@ function ViewContract() {
                   Client's offer
                 </Typography>
                 <Grid >
-                  <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                    Subscribed to the offer #{} of XX€/month for YY.
+                  <Typography variant="body1" component="h2" align="left" sx={{paddingLeft: '4px', paddingTop: '4px', paddingBottom: '4px'}} >
+                    Subscribed to the offer #{contract.offerId}
                   </Typography>
                 </Grid>
               </Box>

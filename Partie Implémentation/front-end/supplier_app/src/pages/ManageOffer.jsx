@@ -210,11 +210,6 @@ const ManageOffer = () => {
                             </Grid>
                             <Grid item xs={12}>
                               <Typography variant="body1" gutterBottom>
-                                Supplied by: {item.supplierName}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Typography variant="body1" gutterBottom>
                                 Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : item.energyType === "WATER" ? "Water" : "Electricity and Gas"}
                               </Typography>
                             </Grid>

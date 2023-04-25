@@ -45,7 +45,7 @@ const ViewMeter = () => {
         const jwt = localStorage.getItem("jwt");
         const config = {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            "Authorization": `Bearer ${jwt}`,
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": true,
           }

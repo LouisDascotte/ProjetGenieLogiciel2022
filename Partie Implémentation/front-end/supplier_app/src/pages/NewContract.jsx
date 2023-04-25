@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SideMenu from '../components/SideMenu'
-import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Select} from '@mui/material';
+import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Select, MenuItem, ToggleButtonGroup, ToggleButton} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import { ClientList as Clients} from '../resources/Lists';
 import TopMenu from '../components/TopMenu';
 import TextField from '@mui/material/TextField';
+import axios from '../api/axios';
+import WaterIcon from '@mui/icons-material/Water';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 
 function NewContract() {
 
@@ -26,42 +29,111 @@ function NewContract() {
     }
   });
 
-  const [energyChosen, setEnergyChosen] = React.useState('elec');
+  const API_URL = 'http://localhost:8080/api/contract/supplier_offers';
 
   const handleContractCreation = () => {
-    alert('PUT request to create a new contract');
+    /*
+    async function createContract() {
+      try {
+        const jwt = localStorage.getItem('jwt');
+        const config = {
+          headers: {
+          "Authorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        };
+        if (form.contractType === 'GAZ_ELEC') {
+          const response = await axios.post('http://localhost:8080/api/contract', bodyDouble, config);
+          console.log(response.data);
+        } else {
+          const response = await axios.post('http://localhost:8080/api/contract', bodySimple, config);
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    createContract();
+    */
   };
 
-  let gasVisible;
-  let elecVisible;
-  
-  switch(energyChosen) {
-    case 'elecGas':
-      gasVisible = true;
-      elecVisible = true;
-      break;
-    case 'gas':
-      gasVisible = true;
-      elecVisible = false;
-      break;
-    default:
-    case 'elec':
-      gasVisible = false;
-      elecVisible = true;
-      break;
-  }
+  const handleContractTypeChange = (event, newContractType) => {
+    setForm({ ...form, contractType: newContractType });
+    console.log(form.contractType);
+  };
 
-  const newContractData = {
-    clientID: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    country: '',
-    contractType: '',
-    meterIdGas: '',
-    meterIdElec: '',
-    meterType: '',
-    offer: '',
+  const [offerDispo, setOfferDispo] = React.useState([]);
+
+  useEffect(() => {
+    async function getOffers() {
+      try {
+        const jwt = localStorage.getItem('jwt');
+        const config = {
+          headers: {
+          "Authorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get(API_URL, config);
+        setOfferDispo(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getOffers();
+  }, []);
+
+  const [form, setForm] = useState({
+    clientId: '',
+    contractType: 'WATER',
+    offerId: '',
+    startDate: '',
+    endDate: '',
+    EAN_ELEC: '',
+    EAN_GAZ: '',
+    EAN: '',
+    supplierId: '',
+    energyType: 'ELEC',
+  });
+
+  const formValid = (form.clientId.length === 18) && (form.offerId !== ''); 
+
+  const offers = offerDispo.filter(offer => offer.energyType === form.contractType);
+
+  const onUpdateField = e => {
+    const field = e.target.id; 
+    const nextFormState = {
+      ...form, 
+      [field] : e.target.value,
+    };
+    setForm(nextFormState);
+    console.log(form);
+  };
+
+  const bodySimple = {
+    "clientId": form.clientId,
+    "supplierId": form.supplierId,
+    "startDate": form.startDate,
+    "endDate": form.endDate,
+    "type": 'SIMPLE_CONTRACT',
+    "EAN": form.EAN,
+    "offerId": form.offerId,
+    "status": 'ACCEPTED'
+  };
+
+  const bodyDouble = {
+    "clientId": form.clientId,
+    "supplierId": form.supplierId,
+    "startDate": form.startDate,
+    "endDate": form.endDate,
+    "type": 'GAZ_ELEC_CONTRACT',
+    "EAN_ELEC": form.EAN_ELEC,
+    "EAN_GAZ": form.EAN_GAZ,
+    "offerId": form.offerId,
+    "status": 'ACCEPTED'
   };
 
   const pageAddress = "/contracts/new";
@@ -87,36 +159,16 @@ function NewContract() {
                   xs={12}
                   alignItems='center'
                   direction='row-reverse'
-                  columnSpacing={2}
                   rowSpacing={1}
                   >
                     <Grid item
                     xs={9}
                     >
                       <TextField
-                      id="clientID"
-                      required
+                      id="clientId"
                       label="enter the client's ID"
-                      variant="outlined"
-                      size='small'
-                      fullWidth
-                      type='number'
-                      />
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Client ID : 
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      required
-                      id="address"
-                      label="enter the client's address"
+                      value={form.clientId || ''}
+                      onChange={(event) => onUpdateField(event)}
                       variant="outlined"
                       size='small'
                       fullWidth
@@ -126,58 +178,8 @@ function NewContract() {
                     xs={3}
                     >
                       <Typography variant="body1" component="h2" align="center" >
-                        Address :
+                        Client's ID:
                       </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      id="city"
-                      required
-                      label="city :"
-                      variant="outlined"  
-                      size='small'
-                      fullWidth
-                      />
-                    </Grid>
-                    <Grid item
-                    container
-                    justifyContent='space-between'
-                    xs={9}
-                    >
-                      <Grid item
-                      xs={5.5}
-                      >
-                        <Select
-                        native
-                        id="country"
-                        required
-                        label=""
-                        defaultValue={'BE'}
-                        variant="outlined"
-                        size='small'
-                        fullWidth
-                        >
-                          <option value="FR">France</option>
-                          <option value="BE">Belgium</option>
-                          <option value="DE">Germany</option>
-                          <option value="NL">Netherlands</option>
-                        </Select>
-                      </Grid>
-                      <Grid item
-                      xs={5.5}
-                      >
-                        <TextField
-                        id="zipCode"
-                        required
-                        label="postal code :"
-                        variant="outlined"
-                        size='small'
-                        fullWidth
-                        type='number'
-                        />
-                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid item container
@@ -190,22 +192,26 @@ function NewContract() {
                     <Grid item
                     xs={9}
                     >
-                      <Select
-                      native
-                      id="contractType"
-                      required
-                      label=""
-                      defaultValue={'electricity'}
-                      value={energyChosen}
-                      onChange={(event) => {setEnergyChosen(event.target.value)}}
-                      variant="outlined"
-                      size='small'
-                      fullWidth
-                      >
-                        <option value="elec">Electricity</option>
-                        <option value="gas">Gas</option>
-                        <option value="elecGas">Electricity and Gas</option>
-                      </Select>
+                      <ToggleButtonGroup
+                          color="primary"
+                          value={form.contractType}
+                          exclusive
+                          onChange={handleContractTypeChange}
+                          aria-label="text alignment"
+                        >
+                          <ToggleButton value="WATER" aria-label="left aligned">
+                            <WaterIcon />
+                          </ToggleButton>
+                          <ToggleButton value="ELEC" aria-label="centered">
+                            <ElectricBoltIcon />
+                          </ToggleButton>
+                          <ToggleButton value="GAZ" aria-label="centered">
+                            <WhatshotIcon />
+                          </ToggleButton>
+                          <ToggleButton value="GAZ_ELEC" aria-label="right aligned">
+                            <ElectricBoltIcon /> + <WhatshotIcon />
+                          </ToggleButton>
+                        </ToggleButtonGroup>
                     </Grid>
                     <Grid item
                     xs={3}
@@ -214,6 +220,42 @@ function NewContract() {
                         Contract type :
                       </Typography>
                     </Grid>
+
+                    <Grid item
+                    xs={9}
+                    >
+                      <Select
+                      native
+                      id="offerId"
+                      label=""
+                      value={form.offerId}
+                      onChange={(event) => onUpdateField(event)}
+                      variant="outlined"
+                      size='small'
+                      fullWidth
+                      >
+                        {offers.map((offer) => (
+                          <option key={offer.id} value={offer.id}>
+                            {offer.id}
+                          </option>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid item
+                    xs={3}
+                    >
+                      <Typography variant="body1" component="h2" align="center" >
+                        Offer :
+                      </Typography>
+                    </Grid>
+
+                    <Grid item container
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    direction='row-reverse'
+                    rowSpacing={1}
+                  >
                     <Grid item
                     xs={9}
                     >
@@ -224,8 +266,6 @@ function NewContract() {
                       variant="outlined"
                       size='small'
                       fullWidth
-                      disabled={gasVisible ? false : true}
-                      type='number'
                       />
                     </Grid>
                     <Grid item
@@ -235,18 +275,17 @@ function NewContract() {
                         EAN (gas) :
                       </Typography>
                     </Grid>
+                  </Grid>
+                    
                     <Grid item
                     xs={9}
                     >
                       <TextField
                       id="meterIdElec"
-                      required
                       label="enter EAN (elec) :"
                       variant="outlined"
                       size='small'
                       fullWidth
-                      disabled={elecVisible ? false : true}
-                      type='number'
                       />
                     </Grid>
                     <Grid item
@@ -254,54 +293,6 @@ function NewContract() {
                     >
                       <Typography variant="body1" component="h2" align="center" >
                         EAN (elec) :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <Select
-                      native
-                      id="meterType"
-                      required
-                      label=""
-                      defaultValue={'manual'}
-                      variant="outlined"
-                      size='small'
-                      fullWidth
-                      >
-                        <option value="manual">Manual</option>
-                        <option value="auto">Automatic</option>
-                      </Select>
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Meter type :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <Select
-                      native
-                      id="offer"
-                      required
-                      label=""
-                      defaultValue={'basic'}
-                      variant="outlined"
-                      size='small'
-                      fullWidth
-                      >
-                        <option value="basic">Basic</option>
-                        <option value="premium">Premium</option>
-                      </Select>
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Offer :
                       </Typography>
                     </Grid>
                   </Grid>
@@ -322,7 +313,7 @@ function NewContract() {
                   </Grid>
                   <Grid item
                   >
-                    <Button variant="outlined" onClick={handleContractCreation} color="primary" >
+                    <Button variant="outlined" disabled={!formValid} onClick={handleContractCreation} color="primary" >
                       Confirm Contract
                     </Button>
                   </Grid>

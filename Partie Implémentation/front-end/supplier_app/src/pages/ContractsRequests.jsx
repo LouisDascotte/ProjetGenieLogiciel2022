@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SideMenu from '../components/SideMenu';
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ArrowBack} from '@mui/icons-material';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
-import { ContractList, ContractRequestList } from '../resources/Lists';
-
+import axios from 'axios';
 
 
 const ContractsRequests = () => {
@@ -22,6 +21,31 @@ const ContractsRequests = () => {
       }
     }
   });
+
+  const nav = useNavigate();
+
+  const [contracts, setContracts] = React.useState([]);
+
+  useEffect(() => {
+    async function getContracts() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get("http://localhost:8080/api/contract/all", config);
+        const actCont =response.data.filter((contract) => contract.status === "PENDING")
+        setContracts(actCont);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getContracts();
+  }, []);
 
   const pageAddress = "/contracts/requests";
   const pageName = "Manage Contract Requests";
@@ -39,14 +63,12 @@ const ContractsRequests = () => {
                   Contract Requests
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                  {ContractRequestList.map((contractRequest) => (
-                    <ListItem key={contractRequest.contractRequestId}>
-                      <ListItemText primary={`${contractRequest.contractRequestId}`} />
-                      <Link to={`/contracts/requests/${contractRequest.contractRequestId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                        <Button variant="contained" >
+                  {contracts.map((contractRequest) => (
+                    <ListItem key={contractRequest.id}>
+                      <ListItemText primary={`${contractRequest.id}`} />
+                        <Button variant="contained" onClick={() => nav(`/contracts/requests/${contractRequest.id}`, { state : contractRequest})} >
                           See Details
                         </Button>
-                      </Link>
                     </ListItem>
                   ))}
                 </List>

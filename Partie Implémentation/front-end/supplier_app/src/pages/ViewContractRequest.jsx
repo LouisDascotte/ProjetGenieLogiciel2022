@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Select} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
-import { ClientList as Clients, ContractRequestList as Requests } from '../resources/Lists';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import TextField from '@mui/material/TextField';
+import axios from '../api/axios';
+import { ArrowBack } from '@mui/icons-material';
+
 
 function ContractRequest() {
-  const id = useParams().requestId;
+  const request = useLocation().state;
+  const [offer, setOffer] = React.useState([]);
+  console.log(request);
 
   const theme = createTheme({
     palette: {
@@ -28,44 +32,63 @@ function ContractRequest() {
     }
   });
 
-  const [energyChosen, setEnergyChosen] = React.useState('elec');
+  useEffect(() => {
+    async function getOfferDetails() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          }
+        };
+        const response = await axios.get("http://localhost:8080/api/contract/supplier_offers", config);
+        const myOffer = response.data.filter((offer) => offer.id === request.offerId)[0];
+        setOffer(myOffer);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getOfferDetails();
+  }, []);
+
 
   const handleContractCreation = () => {
-    alert('PUT request to create contract & DELETE request to delete request && send email to client');
+    const API_URL = `http://localhost:8080/api/contract/${request.id}/accept`;
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const config = {
+        headers: {
+          "Authorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+        }
+      };
+      axios.put(API_URL, {}, config);
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   const handleContractDenial = () => {
-    alert('DELETE request to delete request && send email to client');
-  };
-
-  let gasVisible = false;
-  let elecVisible = false;
-
-  switch(energyChosen) {
-    case 'elecGas':
-      gasVisible = true;
-      elecVisible = true;
-      break;
-    case 'gas':
-      gasVisible = true;
-      elecVisible = false;
-      break;
-    default:
-    case 'elec':
-      gasVisible = false;
-      elecVisible = true;
-      break;
-  }
-  function getRequestDataById(id) {
-    const idInt = parseInt(id,10);
-    const request = Requests.find((request) => request.contractRequestId === idInt)
-    if (request) {
-      return request.data;
+    const API_URL = `http://localhost:8080/api/contract/${request.id}`;
+    try {
+      const jwt = localStorage.getItem("jwt");
+      const config = {
+        headers: {
+          "Authorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+        }
+      };
+      axios.delete(API_URL, config);
     }
-    return null;
-  }
-
-  const requestData = getRequestDataById(id);
+    catch (error) {
+      console.log(error);
+    }
+  };
 
   const pageAddress = "/contracts/requests/:id";
   const pageName = "Contract Request";
@@ -80,6 +103,11 @@ function ContractRequest() {
           <Grid align='center'>
             <Card sx={{width:'80%', m:2, height:'auto'}}>
               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
+                <Link to={'/contracts/requests'} >
+                  <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
+                    Retour
+                  </Button>
+                </Link>
                 <Grid container
                 spacing={2}
                 sx={{width:'80%', height:'100%'}}
@@ -88,9 +116,9 @@ function ContractRequest() {
                 >
                   <Grid item container
                   xs={12}
+                  justifyContent='center'
                   alignItems='center'
                   direction='row-reverse'
-                  columnSpacing={2}
                   rowSpacing={1}
                   >
                     <Grid item
@@ -100,13 +128,12 @@ function ContractRequest() {
                       id="clientID"
                       label=""
                       variant="outlined"
-                      value={requestData.clientId}
+                      value={request.clientId}
                       InputProps={{
                         readOnly: true,
                       }}
                       size='small'
                       fullWidth
-                      type='number'
                       />
                     </Grid>
                     <Grid item
@@ -120,97 +147,14 @@ function ContractRequest() {
                     xs={9}
                     >
                       <TextField
-                      id="address"
-                      label=""
-                      value={requestData.address}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      variant="outlined"
-                      size='small'
-                      fullWidth
-                      />
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Address :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      id="city"
-                      label=""
-                      variant="outlined"
-                      value={requestData.city}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      size='small'
-                      fullWidth
-                      />
-                    </Grid>
-                    <Grid item
-                    container
-                    justifyContent='space-between'
-                    xs={9}
-                    >
-                      <Grid item
-                      xs={5.5}
-                      >
-                        <TextField
-                        id='country'
-                        label=""
-                        variant="outlined"
-                        value={requestData.country}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        size='small'
-                        fullWidth
-                        >
-                        </TextField>
-                      </Grid>
-                      <Grid item
-                      xs={5.5}
-                      >
-                        <TextField
-                        id="zipCode"
-                        label=""
-                        variant="outlined"
-                        value={requestData.zipCode}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        size='small'
-                        fullWidth
-                        type='number'
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item container
-                  xs={12}
-                  justifyContent='center'
-                  alignItems='center'
-                  direction='row-reverse'
-                  rowSpacing={1}
-                  >
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
                       id="contractType"
                       label=""
                       variant="outlined"
-                      value={requestData.contractType}
+                      value={request.type === "SIMPLE_CONTRACT" ? "Simple contract" : "Gaz & Electricity"}
                       size='small'
                       fullWidth
                       InputProps={{
-                        readonly: true,
+                        readOInly: true,
                       }}
                       >
                       </TextField>
@@ -222,97 +166,188 @@ function ContractRequest() {
                         Contract type :
                       </Typography>
                     </Grid>
+                    { request.type === "SIMPLE_CONTRACT" && offer.energyType === "ELEC" ?
+                    <Grid item container
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    direction='row-reverse'
+                    rowSpacing={1}
+                    >
+                      <Grid item
+                      xs={9}
+                      >
+                        <TextField
+                        id="meterIdElec"
+                        label=""
+                        variant="outlined"
+                        value={request.ean || ""}
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                      </Grid>
+                      <Grid item
+                      xs={3}
+                      >
+                        <Typography variant="body1" component="h2" align="center" >
+                          EAN (electricity) :
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    : 
+                    request.type === "SIMPLE_CONTRACT" && offer.energyType === "GAZ" ?
+                    <Grid item container
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    direction='row-reverse'
+                    rowSpacing={1}
+                    >
+                      <Grid item
+                      xs={9}
+                      >
+                        <TextField
+                        id="meterIdGas"
+                        label=""
+                        variant="outlined"
+                        value={request.ean || ""}
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                      </Grid>
+                      <Grid item
+                      xs={3}
+                      >
+                        <Typography variant="body1" component="h2" align="center" >
+                          EAN (gas) :
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    : 
+                    request.type === "SIMPLE_CONTRACT" && offer.energyType === "WATER" ?
+                    <Grid item container
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    direction='row-reverse'
+                    rowSpacing={1}
+                    >
+                      <Grid item
+                      xs={9}
+                      >
+                        <TextField
+                        id="meterIdWater"
+                        label=""
+                        variant="outlined"
+                        value={request.ean || ""}
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                      </Grid>
+                      <Grid item
+                      xs={3}
+                      >
+                        <Typography variant="body1" component="h2" align="center" >
+                          EAN (water) :
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    : 
+                    <Grid item container
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    direction='row-reverse'
+                    rowSpacing={1}
+                    >
+                      <Grid item
+                      xs={9}
+                      >
+                        <TextField
+                        id="meterIdElec"
+                        label=""
+                        variant="outlined"
+                        value={request.ean_ELEC || ""}
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                      </Grid>
+                      <Grid item
+                      xs={3}
+                      >
+                        <Typography variant="body1" component="h2" align="center" >
+                          EAN (electricity) :
+                        </Typography>
+                      </Grid>
+                      <Grid item
+                      xs={9}
+                      >
+                        <TextField
+                        id="meterIdGas"
+                        label=""
+                        variant="outlined"
+                        value={request.ean_GAZ || ""}
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        />
+                      </Grid>
+                      <Grid item
+                      xs={3}
+                      >
+                        <Typography variant="body1" component="h2" align="center" >
+                          EAN (gas) :
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    }
+                  </Grid>
+                  { offer !== null ?
+                  <Grid item container
+                  xs={12}
+                  justifyContent='center'
+                  alignItems='center'
+                  direction='row-reverse'
+                  rowSpacing={1}
+                  >
                     <Grid item
                     xs={9}
                     >
                       <TextField
-                      id="meterIdGas"
+                      id="offerId"
                       label=""
                       variant="outlined"
-                      value={requestData.meterIdGas}
+                      value={request.offerId}
                       size='small'
                       fullWidth
                       InputProps={{
                         readOnly: true,
                       }}
-                      type='number'
                       />
                     </Grid>
                     <Grid item
                     xs={3}
                     >
                       <Typography variant="body1" component="h2" align="center" >
-                        EAN (gas) :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      id="meterIdElec"
-                      label=""
-                      variant="outlined"
-                      value={requestData.meterIdElec}
-                      size='small'
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      type='number'
-                      />
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        EAN (elec) :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      id="meterType"
-                      label=""
-                      variant="outlined"
-                      value={requestData.meterType}
-                      size='small'
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      />
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Meter type :
-                      </Typography>
-                    </Grid>
-                    <Grid item
-                    xs={9}
-                    >
-                      <TextField
-                      id="offer"
-                      label=""
-                      variant="outlined"
-                      value={requestData.offer}
-                      size='small'
-                      fullWidth
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      />
-                    </Grid>
-                    <Grid item
-                    xs={3}
-                    >
-                      <Typography variant="body1" component="h2" align="center" >
-                        Offer :
+                        Offer ID :
                       </Typography>
                     </Grid>
                   </Grid>
+                : null }
                 </Grid>
                 <Grid container
                 spacing={2}
@@ -323,7 +358,7 @@ function ContractRequest() {
                   <Grid item
                   >
                     <Link to='/contracts/requests' className='link-3' >
-                      <Button variant="outlined" color="error" onClick={handleContractDenial} >
+                      <Button variant="outlined" color="error" onClick={handleContractDenial} > 
                         Deny Request
                       </Button>
                     </Link>

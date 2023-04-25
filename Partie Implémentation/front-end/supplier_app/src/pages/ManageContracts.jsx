@@ -40,7 +40,8 @@ const ManageContracts = () => {
           }
         };
         const response = await axios.get("http://localhost:8080/api/contract/all", config);
-        setContracts(response.data);
+        const actCont =response.data.filter((contract) => contract.status === "ACCEPTED")
+        setContracts(actCont);
       } catch (error) {
         console.log(error);
       }
@@ -66,7 +67,7 @@ const ManageContracts = () => {
                   :
                   contracts.map((contract) => (
                     <ListItem key={contract.id}>
-                      <ListItemText primary={`${contract.id}`.slice(0,15)} />
+                      <ListItemText primary={"contract #"+`${contract.id}`.slice(0,15)} />
                         <Button variant="contained" onClick={() => nav(`/contracts/${contract.id}`, { state : contract})}>
                           See Details
                         </Button>

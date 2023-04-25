@@ -17,8 +17,6 @@ function LinkMeter() {
   const pageAddress = "/consumption/meter/:meterId/:date";
   const pageName = "View consumption";
 
-  const API_URL = "http://localhost:8080/api/meter/";
-
   
   const handleEditClick = () => {
     setEditMode(!editMode);

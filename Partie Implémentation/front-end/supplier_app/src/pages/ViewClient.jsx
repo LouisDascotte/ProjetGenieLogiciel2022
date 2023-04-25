@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { ClientList as Clients, MeterList as Meters} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import axios from '../api/axios';
+
 
 
 function ViewClient() {
-  const id = useParams().clientId;
+  const client = useLocation().state;
+  console.log(client);
 
   const theme = createTheme({
     palette: {
@@ -29,29 +32,36 @@ function ViewClient() {
     }
   });
 
+  const [linkedMeters, setLinkedMeters] = React.useState([]);
+
+  const API_LINK = "http://localhost:8080/api/meter/linked";
+
+  useEffect(() => {
+    async function getLinkedMeters() {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: { "Authorization": `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true, },
+          params : {clientId : client.id}
+        };
+        const response = await axios.get(API_LINK, config);
+        setLinkedMeters(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getLinkedMeters();
+  }, [client.id]);
+
   const pageAddress = "/client/:id";
   const pageName = "View Client";
 
   const [openDialog, setOpenDialog] = React.useState(false);
 
-
-  const getClientById = (id) => {
-    const idInt = parseInt(id,10);
-    return Clients.find((client) => client.clientId === idInt);
-  };
-  const client = getClientById(id);
-
   function getClientName() {
     return client.name;
-  }
-  function getClientAddress() {
-    return client.address;
-  }
-  function getClientPhone() {
-    return client.phone;
-  }
-  function getClientEmail() {
-    return client.email;
   }
 
   const handleRemoveClient = () => {
@@ -72,11 +82,11 @@ function ViewClient() {
     return Meters.filter((meter) => meter.clientId === idInt);
   };
 
-  const title = "Linked Meters of Client n°"+id+" :";
-  const description = getMetersByClientId(id).map((meter) => (
+  const title = "Linked Meters of Client n°"+client.id+" :";
+  const description =  linkedMeters.map((meter) => (
     <List>
       <ListItem>
-        <ListItemText primary={`meter n°${meter.meterId}`} />
+        <ListItemText primary={`meter n°${meter.id}`} />
       </ListItem>
     </List>
   ));
@@ -109,12 +119,12 @@ function ViewClient() {
                 >
                   <Grid item xs={5}>
                     <Typography variant="h6" component="h4" align="left" fontWeight={800} >
-                      Client ID: {id}
+                      Client ID: {client.id}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography component="h2" align="left" >
-                      Email: {getClientEmail()}
+                      Email: 
                     </Typography>
                   </Grid>
                   <Grid item xs >
@@ -126,7 +136,7 @@ function ViewClient() {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography component="h2" align="left" >
-                      Phone: {getClientPhone()}
+                      Phone: 
                     </Typography>
                   </Grid>
                   <Grid item xs >
@@ -136,7 +146,7 @@ function ViewClient() {
                       Client's address:
                     </Typography>
                     <Typography component="h2" align="left" >
-                      {getClientAddress()}
+                     
                     </Typography>
                   </Grid>
                 </Grid>
@@ -165,7 +175,7 @@ function ViewClient() {
                       {title}
                     </DialogTitle>
                     <DialogContent dividers>
-                      {getMetersByClientId(id).map((meter) => (
+                      {getMetersByClientId(client.id).map((meter) => (
                         <List>
                           <ListItem>
                             <Link to={`/consumption/meter/${meter.meterId}`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>

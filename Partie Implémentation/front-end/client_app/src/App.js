@@ -65,9 +65,6 @@ function App() {
                 <Route path="/manage-meters" exact element={<PrivateRoute>
                   <ManageMeters/>
                 </PrivateRoute>}/>
-                <Route path="/manage-invoices" exact element={<PrivateRoute>
-                  <ManageInvoices/>
-                  </PrivateRoute>}/>
                 <Route path="/manage-contracts" exact element={<PrivateRoute>
                   <ManageContracts/>
                   </PrivateRoute>}/>

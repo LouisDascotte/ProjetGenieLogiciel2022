@@ -61,11 +61,6 @@ const SideMenu = (mainPage) => {
                         Manage contracts
                     </MenuItem>
                 </Link>
-                <Link to="/manage-invoices" className='link'>
-                    <MenuItem icon={<ReceiptOutlinedIcon />} >
-                        Manage invoices
-                    </MenuItem>
-                </Link>
             </Menu>
         </Sidebar>
   );

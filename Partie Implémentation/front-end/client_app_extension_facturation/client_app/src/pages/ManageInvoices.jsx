@@ -7,21 +7,23 @@ import TopMenu from '../components/TopMenu';
 import TempList from '../components/TempList';
 import ElementsList from '../components/ElementsList';
 import {Link} from 'react-router-dom';
+import InvoicesList from '../components/InvoicesList';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#9bcc6c",
+      contrastText: '#fff'
+    }, 
+    secondary: {
+      main: "#000",
+      contrastText: '#000000'
+    }
+  }
+});
 
 const ManageInvoices = () => {
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#9bcc6c",
-        contrastText: '#fff'
-      }, 
-      secondary: {
-        main: "#000",
-        contrastText: '#000000'
-      }
-    }
-  });
+ 
   const pageAddress = "/manage-invoices";
   const pageName = "Manage invoices";
   return (
@@ -31,7 +33,7 @@ const ManageInvoices = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <Grid align='center'>
           <Card sx={{width:'40%', m:2, height:'60%'}}>
-            <ElementsList/>
+            <InvoicesList/>
 
           </Card>
           <ThemeProvider theme={theme}>

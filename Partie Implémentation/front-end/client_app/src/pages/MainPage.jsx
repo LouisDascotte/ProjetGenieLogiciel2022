@@ -150,11 +150,6 @@ const MainPage = () => {
                             Manage contracts
                         </MenuItem>
                     </Link>
-                    <Link to="/manage-invoices" className='link'>
-                        <MenuItem icon={<ReceiptOutlinedIcon />} >
-                            Manage invoices
-                        </MenuItem>
-                    </Link>
                 </Menu>
             </Sidebar>
         <Stack sx={{display:'flex', width:"100%"}}>  

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
+import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider, Snackbar} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
@@ -15,9 +15,10 @@ const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 
 const LoginPage = () => {
 
-  // ToDo : check usefulness of this part
-  
-  
+ 
+  const [open, setOpen] = React.useState(false);
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Used for the redirection
   const navigate = useNavigate();
@@ -47,41 +48,50 @@ const LoginPage = () => {
     }
 
 
-    try{
-      const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
-        headers : {"Content-Type":"application/json",
-      //"Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      }).then(response => {
-        console.log("auth: " + response.headers["authorization"]);
-        //setJwt(response.headers["authorization"], "jwt");
-        localStorage.setItem("jwt", response.headers["authorization"]);
-        localStorage.setItem("user", response.data);
-        localStorage.setItem("authenticated", true);
-        setAuthToken(response.headers["authorization"]);
-      });
+    
+    const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
+      headers : {"Content-Type":"application/json",
+    //"Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(response => {
+      console.log("auth: " + response.headers["authorization"]);
+      //setJwt(response.headers["authorization"], "jwt");
+      localStorage.setItem("jwt", response.headers["authorization"]);
+      localStorage.setItem("user", response.data);
+      localStorage.setItem("authenticated", true);
+      setAuthToken(response.headers["authorization"]);
+    }).catch(err => {
+      switch(err.response.status){
+        case 401:
+          setErrorMessage("Invalid mail or password");
+          break;
+        case 403:
+          setErrorMessage("You are not authorized to access this page");
+          break;
+        default:
+          setErrorMessage("An error occured");
+          break;
+      }
+      setOpenError(true);
+      return;
+    });
 
-      const request = axios.get("http://localhost:8080/api/client/me", {
-                headers : {"Content-Type":"application/json",
-              "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
-              "Access-Control-Allow-Origin":true}
-              }).then(request => {
-                localStorage.setItem("client_email", request.data.email);
-                localStorage.setItem("lastName", request.data.client.lastName);
-              })
-      
+    const request = axios.get("http://localhost:8080/api/client/me", {
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(request => {
+      localStorage.setItem("client_email", request.data.email);
+      localStorage.setItem("lastName", request.data.client.lastName);
+      setOpen(true);
       setTimeout(()=>{
         navigate("/main-page");
       }, 1000);
-              
-    } catch(err){
-      if(!err?.response){
-        console.log("No server response.");
-      } else {
-        console.log("Login failed");
-      }
-    }
+    }).catch(err => {
+      
+    })
     
+  
   }
 
   const onUpdateField = e => {
@@ -214,6 +224,12 @@ const LoginPage = () => {
           </Stack>
         </Card>
       </Grid>
+      <Snackbar open={open} autoHideDuration={3000} onClose={()=> setOpen(false)}>
+        <Alert severity="success">Login successful!</Alert>
+      </Snackbar>
+      <Snackbar open={openError} autoHideDuration={3000} onClose={()=> setOpenError(false)}>
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
     </Grid>
   )
 }

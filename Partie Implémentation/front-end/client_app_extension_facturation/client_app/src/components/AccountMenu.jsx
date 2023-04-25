@@ -9,6 +9,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
 import authServices from "../utils/services/auth-service";
+import EuroIcon from '@mui/icons-material/Euro';
 
 // Content from the original MUI React documentation.
 
@@ -132,6 +133,14 @@ const AccountMenu = () => {
           </ListItemIcon>
           Notifications
         </MenuItem></Link>
+        <Link to="/billing-informations" className='link'>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <EuroIcon fontSize="small" />
+            </ListItemIcon>
+            Billing informations
+          </MenuItem>
+        </Link>
         <Divider />
         <Link to="/preferences" className='link'><MenuItem onClick={handleClose}>
           <ListItemIcon>

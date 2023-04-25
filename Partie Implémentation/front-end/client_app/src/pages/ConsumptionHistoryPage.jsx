@@ -1,7 +1,12 @@
 import React, { useEffect , useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from "../api/axios";
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {DataGrid, GridToolbar, GridToolbarContainer,
+  GridToolbarExportContainer,
+  GridCsvExportMenuItem,
+  useGridApiContext,
+  gridFilteredSortedRowIdsSelector,
+  gridVisibleColumnFieldsSelector,} from '@mui/x-data-grid';
 import{Card, Stack, ButtonGroup, Button, IconButton, Box} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
@@ -34,6 +39,17 @@ const ConsumptionHistoryPage = () => {
         setData(response.data);
       })
   }, [])
+
+  const exportData = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(data)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "consumption.json";
+
+    link.click();
+  };
 
 
   const columns = [
@@ -121,8 +137,12 @@ if (!(data.WATER === undefined)){
           <ButtonGroup variant="contained">
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>
+            <Button variant="contained" onClick={exportData}>
+          Export as JSON
+        </Button>
           </ButtonGroup>
         </Stack>
+        
       </Stack>
     </Stack>
   )

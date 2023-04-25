@@ -1,6 +1,6 @@
 import {React, useRef, useEffect, useState} from 'react'
 import axios from "../api/axios";
-import {Stack, TextField, Box, Typography, Button, IconButton, FormControl, MenuItem, Select, InputLabel, InputAdornment} from "@mui/material";
+import {Stack, TextField, Box, Typography, Button, IconButton, FormControl, MenuItem, Select, InputLabel, InputAdornment, Alert, Dialog, DialogContent, DialogTitle} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
@@ -95,17 +95,37 @@ const ContractRequest = () => {
     setMeterHourType(e.target.value);
   }
 
-  const selectMeterType2 = (e) => {
-    setMeterType(e.target.value);
+  const [ean1Error, setEan1Error] = useState(false);
+  const [ean2Error, setEan2Error] = useState(false);
+
+  const setEan1Value = (e) => {
+    const reg = new RegExp(/^\d{18}$/);
+    if (reg.test(e.target.value)){
+      setEan1(e.target.value);
+      setEan1Error(false);
+    } else {
+      setEan1("");
+      setEan1Error(true);
+    }
   }
 
-  const selectMeterHour2 = (e) => {
-    setMeterHourType(e.target.value);
+  const setEan2Value = (e) => {
+    const reg = new RegExp(/^\d{18}$/);
+    if (reg.test(e.target.value)){
+      setEan2(e.target.value);
+      setEan2Error(false);
+    } else {
+      setEan2("");
+      setEan2Error(true);
+    }
   }
+
+
+  const [openError, setOpenError] = useState(false);
 
 
   function cancel(){
-
+    navigate(-1);
   }
 
   let body = {};
@@ -114,7 +134,7 @@ const ContractRequest = () => {
     const contractTypesList = ["ELEC", "GAZ", "WATER", "ELECTRICITY_AND_GAS"];
     const meter_type = ["SIMPLE", "DOUBLE"]
     const mechanism = ["NUMERIC", "MANUAL"]
-    if (energyType === 4){
+    if (energyType === 4 && ean1Error === false && ean2Error === false && ean1 !== ean2 && ean1 !== "" && ean2 !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined ){
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
         "energyType" : contractTypesList[energyType-1],
@@ -123,7 +143,7 @@ const ContractRequest = () => {
         "EAN_ELEC" : ean2,
         "meterType": mechanism[meterType1-1],
       }
-    } else {
+    } else if (energyType !== 4 && ean1Error === false && ean1 !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined){
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
         "energyType" : contractTypesList[energyType-1],
@@ -131,6 +151,9 @@ const ContractRequest = () => {
         "EAN" : ean1,
         "meterType" : mechanism[meterType1-1],
       }
+    } else {
+      setOpenError(true);
+      return; 
     }
     navigate("/offers-page", {state: {body: body}})
   }
@@ -169,21 +192,24 @@ const ContractRequest = () => {
             </Stack>
             {energyType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>Supply point : </Typography>
-              <TextField type='number' onChange={e => setEan1(e.target.value)}  onkeydown="return event.keyCode !== 69" InputProps={{
+              <TextField type='number' onChange={setEan1Value}  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
+          {ean1Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
             </Stack> : <Stack>
               <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>Gas supply point : </Typography>
-              <TextField onChange={e => setEan1(e.target.value)} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
+              <TextField onChange={setEan1Value} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
+          {ean1Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}} >Electricity supply point : </Typography>
-              <TextField onChange={e => setEan2(e.target.value)} type='number'InputProps={{
+              <TextField onChange={setEan2Value} type='number'InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
+          {ean2Error ? <Alert sx={{ml: 2}}severity="error">EAN must be 18 digits</Alert> : null}
             </Stack></Stack>}
             {energyType !== 4 ? <Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
@@ -243,6 +269,12 @@ const ContractRequest = () => {
         </Box>
         
       </Stack>
+      <Dialog open={openError} onClose={() => setOpenError(false)}>
+        <DialogTitle>Error</DialogTitle>
+        <DialogContent>
+          <Alert severity="error">Please check the form</Alert>
+        </DialogContent>
+      </Dialog>
     </Stack>
   )
 }

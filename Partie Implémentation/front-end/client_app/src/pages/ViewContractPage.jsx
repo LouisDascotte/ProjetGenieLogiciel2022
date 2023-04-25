@@ -1,7 +1,7 @@
 import React from 'react'
 import TopMenu from '../components/TopMenu'
 import SideMenu from '../components/SideMenu'
-import {Stack, Box, Typography, IconButton} from '@mui/material'
+import {Stack, Box, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle} from '@mui/material'
 import { useLocation, useNavigate} from 'react-router-dom'
 import axios from '../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
@@ -14,6 +14,7 @@ const ViewContractPage = () => {
   const jwt = localStorage.getItem('jwt')
   const [address, setAddress] = React.useState('')
   const [meter, setMeter] = React.useState({})
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(()=> {
     let temp_meter = {}
@@ -47,6 +48,19 @@ const ViewContractPage = () => {
       })
     }, [])
 
+  
+  const handleCancelContract = () => {
+    const response = axios.delete(`http://localhost:8080/api/contract/${location.state.id}`, {
+      headers : {
+        "Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true
+      }
+    }).then(response => {
+      console.log(response.data);
+    })
+  }
+
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
@@ -63,7 +77,7 @@ const ViewContractPage = () => {
               </Typography>
             </Box>
             <Box sx={{m:2}}>
-              <Stack textAlign={'center'}>
+              <Stack textAlign={'center'} alignContent='center' alignItems='center'>
                 {location.state.status === 'ACCEPTED' ? <Stack>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>Begin Date :</strong> {location.state.beginDate}
@@ -90,6 +104,25 @@ const ViewContractPage = () => {
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                   <strong>Energy type :</strong> {meter.energyType === 'ELEC' ? 'Electricity' : meter.energyType === 'GAZ' ? 'Gas' : meter.energyType === 'WATER' ? 'Water' : 'Gas and electricity'}
                 </Typography>
+                <Button variant='contained' onClick={()=> setOpen(true)} sx={{mt:2, backgroundColor:"red", width:'40%'}}>
+                  Cancel contract
+                </Button>
+                <Dialog open={open} onClose={()=>setOpen(false)}>
+                  <DialogTitle>
+                    Are you sure you want to cancel this contract ?
+                  </DialogTitle>
+                  <DialogContent>
+                    <Stack direction='row' justifyContent='center' alignItems='center' alignContent='center'>
+                      <Button variant='contained' sx={{backgroundColor:'red', width:'40%', mr:3}} onClick={handleCancelContract}>
+                        Yes
+                      </Button>
+                      <Button variant='contained' sx={{backgroundColor:'green', width:'40%'}} onClick={()=> setOpen(false)}>
+                        No
+                      </Button>
+                    </Stack>
+                    
+                  </DialogContent>
+                </Dialog>
               </Stack>
             </Box>
           </Stack>

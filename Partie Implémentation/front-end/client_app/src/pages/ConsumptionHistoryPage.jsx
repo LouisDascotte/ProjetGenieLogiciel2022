@@ -40,6 +40,7 @@ const ConsumptionHistoryPage = () => {
       })
   }, [])
 
+  // Snippet of code obtained on stackOverflow
   const exportData = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(data)

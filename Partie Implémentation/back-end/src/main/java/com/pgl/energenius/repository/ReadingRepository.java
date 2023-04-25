@@ -7,11 +7,12 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReadingRepository extends MongoRepository<Reading, ObjectId> {
 
-    Reading findByEANAndDate(String EAN, String date);
+    Optional<Reading> findByEANAndDate(String EAN, String date);
 
     @Query("{'date': {$gte: ?0, $lte: ?1}, 'EAN': ?2}")
     List<Reading> findByDateBetweenAndEAN(String beginDate, String endDate, String EAN);

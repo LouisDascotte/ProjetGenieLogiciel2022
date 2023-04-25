@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -105,7 +106,7 @@ public class ReadingServiceTest {
                 .value(111)
                 .build();
 
-        when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(readingInDB);
+        when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(Optional.of(readingInDB));
 
         SimpleReading result = readingService.createSimpleReading(EAN, date, value, true);
         reading.setId(result.getId());
@@ -181,7 +182,7 @@ public class ReadingServiceTest {
                 .nightValue(222)
                 .build();
 
-        when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(readingInDB);
+        when(readingRepository.findByEANAndDate(EAN, date)).thenReturn(Optional.of(readingInDB));
 
         DoubleReading result = readingService.createDoubleReading(EAN, date, dayValue, nightValue, true);
         reading.setId(result.getId());

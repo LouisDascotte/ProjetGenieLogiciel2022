@@ -1,6 +1,7 @@
 package com.pgl.energenius.service;
 
 import com.pgl.energenius.enums.HourType;
+import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Meter;
 import com.pgl.energenius.model.MeterAllocation;
@@ -51,7 +52,10 @@ public class ReadingService {
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
 
-        if (meter.getHourType() != HourType.SIMPLE) {
+        if (meter.getMeterType() == MeterType.NUMERIC) {
+            throw new UnauthorizedAccessException("Cannot add a SimpleReading for a meter that is numeric");
+
+        } else if (meter.getHourType() != HourType.SIMPLE) {
             throw new UnauthorizedAccessException("Cannot add a SimpleReading for a meter that is double");
         }
 
@@ -68,7 +72,7 @@ public class ReadingService {
         } catch (DuplicateKeyException e) {
 
             if (overwrite) {
-                reading = (SimpleReading) readingRepository.findByEANAndDate(EAN, date);
+                reading = (SimpleReading) readingRepository.findByEANAndDate(EAN, date).get();
                 reading.setValue(value);
                 reading.setStatus(Reading.Status.PENDING);
                 saveReading(reading);
@@ -95,7 +99,10 @@ public class ReadingService {
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
 
-        if (meter.getHourType() != HourType.DOUBLE) {
+        if (meter.getMeterType() == MeterType.NUMERIC) {
+            throw new UnauthorizedAccessException("Cannot add a DoubleReading for a meter that is numeric");
+
+        } else if (meter.getHourType() != HourType.DOUBLE) {
             throw new UnauthorizedAccessException("Cannot add a DoubleReading for a meter that is simple");
         }
 
@@ -113,7 +120,7 @@ public class ReadingService {
         } catch (DuplicateKeyException e) {
 
             if (overwrite) {
-                reading = (DoubleReading) readingRepository.findByEANAndDate(EAN, date);
+                reading = (DoubleReading) readingRepository.findByEANAndDate(EAN, date).get();
                 reading.setDayValue(dayValue);
                 reading.setNightValue(nightValue);
                 reading.setStatus(Reading.Status.PENDING);

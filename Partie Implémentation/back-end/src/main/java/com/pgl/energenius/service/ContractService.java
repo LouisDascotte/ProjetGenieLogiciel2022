@@ -282,7 +282,11 @@ public class ContractService {
             Client client = securityUtils.getCurrentClientLogin().getClient();
 
             if (contract.getStatus() == Contract.Status.PENDING) {
-                notificationService.deleteByContract(contract);
+
+                try {
+                    notificationService.deleteByContract(contract);
+
+                } catch (ObjectNotFoundException ignored) {}
 
             } else {
 
@@ -394,6 +398,9 @@ public class ContractService {
 
         if (!Objects.equals(offer.getSupplierName(), supplier.getName())) {
             throw new UnauthorizedAccessException("Authenticated supplier cannot delete the offer of id:" + offerId);
+
+        } else if (contractRepository.existsByOfferId(offerId)) {
+            throw new UnauthorizedAccessException("Cannot delete this offer because there is one or more contracts using it");
         }
         offerRepository.delete(offer);
     }

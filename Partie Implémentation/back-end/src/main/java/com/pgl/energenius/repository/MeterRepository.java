@@ -1,5 +1,6 @@
 package com.pgl.energenius.repository;
 
+import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.model.Meter;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -17,4 +18,6 @@ public interface MeterRepository extends MongoRepository<Meter, String> {
     List<String> findIdsByClientId(ObjectId clientId);
 
     List<String> findIdsByClientIdAndSupplierId(ObjectId clientId, ObjectId supplierId);
+
+    List<Meter> findByMeterType(MeterType meterType);
 }

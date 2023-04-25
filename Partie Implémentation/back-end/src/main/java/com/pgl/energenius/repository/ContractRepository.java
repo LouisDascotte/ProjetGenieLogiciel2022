@@ -22,4 +22,6 @@ public interface ContractRepository extends MongoRepository<Contract, ObjectId> 
     boolean existsByClientIdAndSupplierId(ObjectId clientId, ObjectId supplierId);
 
     List<Contract> findByEndDate(String endDate);
+
+    boolean existsByOfferId(ObjectId objectId);
 }

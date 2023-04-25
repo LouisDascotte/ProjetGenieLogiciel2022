@@ -47,8 +47,7 @@ public class Notification {
     /**
      * The message of the notification
      */
-    @Default
-    private Type type = Type.NOTIFICATION;
+    private Type type;
 
     @Default
     private Status status = Status.UNREAD;
@@ -66,7 +65,6 @@ public class Notification {
         END_CONTRACT_NOTIFICATION,
         CANCEL_CONTRACT_NOTIFICATION,
         LINK_METER_NOTIFICATION,
-        UNLINK_METER_NOTIFICATION,
-        NOTIFICATION
+        UNLINK_METER_NOTIFICATION
     }
 }

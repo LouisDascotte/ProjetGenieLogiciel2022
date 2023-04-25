@@ -24,6 +24,6 @@ public class SupplyPoint {
 
     public enum Type {
         SUPPLY_POINT,
-        PRODUCTION_SUPPLY_POINT // Extension 5
+        PRODUCTION_POINT // Extension 5
     }
 }

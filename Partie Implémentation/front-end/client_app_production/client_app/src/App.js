@@ -94,10 +94,10 @@ function App() {
                 <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
                 <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
                 <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
-                <Route path="/production/:id" exact element={<PrivateRoute>
+                <Route path="/production/:id/:ean" exact element={<PrivateRoute>
                   <ProductionHistoryPage/>
                 </PrivateRoute>}/>
-                <Route path="/certificates/:id" exact element={<PrivateRoute><GreenCertificatesPage/></PrivateRoute>}/>
+                <Route path="/certificates/:id/:ean" exact element={<PrivateRoute><GreenCertificatesPage/></PrivateRoute>}/>
             </Routes>
           
     </BrowserRouter>

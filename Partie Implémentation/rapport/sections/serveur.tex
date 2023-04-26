@@ -1,0 +1,29 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+
+\subsection{API}
+
+L'api est séparée en trois parties : la partie Repository, la partie Service et la partie Controller.
+
+\begin{itemize}
+    \item \textbf{Repository:} Cette partie permet d'interagir avec la base de donnée MongoDB, et de céer toutes les requêtes pour récuperer les documents dans la DB.
+    \item \textbf{Service:} Cette partie sert à tous ce qui est de la logique de l'api. Elle permet aussi la gestion des exceptions et des erreurs en envoyant des exceptions à la couche supérieur.
+    \item \textbf{Controller:} Cette couche permet a l'application client d'interagir avec toutes la partie api de l'application. Elle gère aussi la gestion des exceptions envoyer par la couche service. 
+\end{itemize}
+
+\subsection{Base de données}
+
+La base de données ne respecte pas totalement la modélisation de l'ERD éffectuer dans la première partie du projet.
+Ces changements ont été effectués pour mieux fonctionner avec la base de données qui est du NoSQL.
+
+\subsection{Tests unitaires}
+
+Des tests unitaires ont été réalisés pour pratiquement toute la couche service de l'application. Malheuresement, par manque de temps certaines fonctions de la couche n'ont pas pu être tester. Pour la couche Repository, nous n'avons pas réussi à faire fonctionner une base de données embarqué pour tester la couche Repository de l'app.
+
+\section{JWT}
+ 
+Pour ne pas devoir faire des requêtes d'authentification pour chaque requêtes à l'api, nous avons choisi d'utiliser JWT qui va permet d'envoyer un token lors de la connexion d'un utilisateur. Ce token va être envoyer dans chaque requêtes et va permettre à l'api de vérifier que la requête viens bien de l'utilisateur connecté.
+
+
+\end{document}

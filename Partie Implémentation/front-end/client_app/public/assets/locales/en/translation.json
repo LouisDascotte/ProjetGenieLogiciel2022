@@ -152,5 +152,6 @@
   "cons_m3" : "Consumption (m3)",
   "date_error" : "The selected date must be at most today's date.",
   "portfolio_name_error": "The portfolio name can't contain special characters.", 
-  "password_error_size" : "The password must contain at least 8 characters."
+  "password_error_size" : "The password must contain at least 8 characters.", 
+  "password_changed" : "Password successfully changed !"
 } 

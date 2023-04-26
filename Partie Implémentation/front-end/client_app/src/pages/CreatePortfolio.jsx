@@ -191,7 +191,7 @@ const CreatePortfolio = () => {
       address : data.address.street + " " + data.address.houseNo + " " +data.address.box + " " +data.address.postalCode + " " +data.address.city + " " +data.address.region + " " +data.address.country,
     }
     const jwt = localStorage.getItem("jwt");
-    const reg = new RegExp("^[0-9]{4}$");
+    const reg = new RegExp("^[a-zA-Z0-9\s]*$");
     if (reg.test(data.name) === false){
       setError(true);
       return;

@@ -6,7 +6,7 @@ import axios from "../../api/axios";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const NotificationsList = () => {
+const NotificationsList = ({fresh}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState([]);

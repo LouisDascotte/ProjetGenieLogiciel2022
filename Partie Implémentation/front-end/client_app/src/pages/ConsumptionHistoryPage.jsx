@@ -78,7 +78,7 @@ if (!(data.ELEC === undefined)){
     ean : row.ean,
     date : row.date, 
     id : row.id, 
-    value : row.value,
+    value : (row.value === undefined ? row.dayValue + row.nightValue : row.value),
     energy : "ELEC"
   }))
 } else {
@@ -123,9 +123,10 @@ if (!(data.WATER === undefined)){
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Stack alignItems="center" justifyContent='center' alignContent='center' sx={{display:'flex', minHeight:"100%"}}>
+          <Stack alignItems="center" justifyContent='center' alignContent='center'>
 
            {type === "TABLE" ? 
+           <Card sx={{mt:5, mb:2, minHeight:'60vh', width:"90%"}}>
               <DataGrid 
               rows={rows} 
               columns={columns} 
@@ -133,22 +134,17 @@ if (!(data.WATER === undefined)){
               slots={{
                 toolbar: GridToolbar,
               }}
-              /> : <PortfolioMainGraph portfolio={data}/>
-            }
-     
-              
-            
+              /> </Card>: <Stack sx={{mt:5, minHeight:'60vh', width:"90%"}}><PortfolioMainGraph portfolio={data}/></Stack> 
+            }      
           </Stack>
-          
           <ButtonGroup variant="contained">
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>
             <Button variant="contained" onClick={exportData}>
-          {t('export_json')}
-        </Button>
+                {t('export_json')}
+            </Button>
           </ButtonGroup>
         </Stack>
-        
       </Stack>
     </Stack>
   )

@@ -1,23 +1,28 @@
 import React, { useEffect } from 'react';
 import axios from "../api/axios";
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import{Card, Stack, Button, Dialog, DialogTitle, DialogContent, Typography} from "@mui/material";
+import{Card, Stack, Button, Dialog, DialogTitle, DialogContent, Typography, Snackbar, Alert, IconButton} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import {useTranslation} from 'react-i18next';
+import {useParams, useNavigate} from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // GET LES GREEN CERTIFICATES 
-const URL = "http://localhost:8080/api/meter/allocations";
+const URL = "http://localhost:8080/api/portfolio/";
 const jwt = localStorage.getItem("jwt");
 
 
 const GreenCertificatesPage = () => {
   const {t} = useTranslation();
+  const {id} = useParams();
+  const navigate = useNavigate();
   const [data, setData] = React.useState([]);
   const [open, setOpen] = React.useState(false); 
+  const [success, setSuccess] = React.useState(false); 
 
   useEffect(()=>{
-    const response = axios.get(URL, {
+    const response = axios.get(URL + `${id}/green_certificates`, {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
@@ -29,23 +34,20 @@ const GreenCertificatesPage = () => {
 
   const columns = [
     {
-      field:"ean", headerName : "EAN", minWidth: 200
+      field:"id", headerName : "ID", minWidth: 200
     }, 
     {
-      field:"assignment_date", headerName:"Assignment date", minWidth: 150
+      field:"portfolio_id", headerName:"Portfolio ID", minWidth: 150
     }, 
     {
-      field:"supplier", headerName : "Supplier",  minWidth: 100
+      field:"date", headerName : "Date",  minWidth: 100
     },
     {
-      field:"expiration_date", headerName:"Expiration date",  minWidth: 150
+      field:"status", headerName:"Status",  minWidth: 150
     },
-    {
-      field:"status", headerName:"Status", minWidth: 50
-    }
   ]
 
-  const rows = data.map((row)=>({
+  const rows = data.length === 0 ? null : data.map((row)=>({
     ean : row.ean, 
     assignment_date : row.beginDate, 
     supplier : row.supplierName,
@@ -54,8 +56,22 @@ const GreenCertificatesPage = () => {
     status : row.status
   }))
 
-  const requestConfirmation = () => {
+  const requestConfirmation = async () => {
     // TODO : request green certificate
+    const request = await axios.post('http://localhost:8080/api/portfolio/' + `${id}/request_green_certificate`, null, {
+      headers : {
+        "Content-Type" : "application/json", 
+        "Authorization" : `Bearer ${jwt}`, 
+        "Access-Control-Allow-Origin" : true
+      }
+    }).then(request => {
+      setOpen(false);
+      setSuccess(true);
+    }).catch(err=>{
+      console.log(err.data);
+    })
+      
+    
   }
 
   return (
@@ -64,15 +80,20 @@ const GreenCertificatesPage = () => {
       <Stack sx={{display:'flex', width:"100%", height:'90%'}}>
         <TopMenu pageAddress={"/certificates"} pageName={t('green_certificates')}/>
         <Stack justifyContent={'center'} alignContent="center" alignItems='center' sx={{height:"100%"}}>
+          <IconButton onClick={()=>navigate(-1)}>
+            <ArrowBackIcon/>
+          </IconButton>
           <Card sx={{m:5, height:'80%', width:"90%"}}>
-            <DataGrid 
-            rows={rows} 
-            columns={columns} 
-            pageSize={10} 
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            />
+            <Stack justifyContent={'center'} alignItems='center' alignContent='center'>
+              {data.length === 0 ? <Typography variant='h4'> {t('no_green')}</Typography> : <DataGrid 
+              rows={rows} 
+              columns={columns} 
+              pageSize={10} 
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              />}
+            </Stack>
           </Card>
           <Button variant='contained' sx={{width:"50%"}} onClick={()=>setOpen(true)}>
             {t('request_green')}
@@ -95,6 +116,9 @@ const GreenCertificatesPage = () => {
               </Stack>
             </Stack>
           </Dialog>
+          <Snackbar open={success} autoHideDuration={3000} onClose={()=> setSuccess(false)}>
+            <Alert severity='success'>{t('request_success')}</Alert>
+          </Snackbar>
         </Stack>
       </Stack>
     </Stack>

@@ -128,5 +128,16 @@
   "CANCEL_CONTRACT_NOTIFICATION" :  "Your contract has been cancelled.", 
   "LINK_METER_NOTIFICATION" : "Your meter has been linked.", 
   "UNLINK_METER_NOTIFICATION" : "Your meter has been unlinked.", 
-  "DEFAULT_NOTIFICATION" : "You received a notification."
+  "DEFAULT_NOTIFICATION" : "You received a notification.", 
+  "production_history" : "Production history", 
+  "green_certificates" : "Green certificates", 
+  "request_green" : "Request green certificate",
+  "request_green_confirm" : "Do you want to request a green certificate ?", 
+  "show_production" : "Show production",
+  "production_point" : "Production point",
+  "add_production_point" : "Add production point", 
+  "production_point_add" : "Production point to add", 
+  "no_green" : "No green certificates.", 
+  "request_success" : "Request successfully sent!", 
+  "refresh" : "Refresh"
 } 

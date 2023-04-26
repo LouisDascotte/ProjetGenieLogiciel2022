@@ -366,6 +366,9 @@ export const Portfolio2 = () => {
             
           </Card>
         </Stack>
+        <Button variant="contained" onClick={()=> navigate(`/certificates/${id}`)} sx={{mb:1}}>
+          {t('green_certificates')}
+        </Button>
         <Button variant="contained" onClick={update} sx={{width:"40%"}}>
           {t('apply_changes')}
         </Button>

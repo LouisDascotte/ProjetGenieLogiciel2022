@@ -136,5 +136,8 @@
   "show_production" : "Show production",
   "production_point" : "Production point",
   "add_production_point" : "Add production point", 
-  "production_point_add" : "Production point to add"
+  "production_point_add" : "Production point to add", 
+  "no_green" : "No green certificates.", 
+  "request_success" : "Request successfully sent!", 
+  "refresh" : "Refresh"
 } 

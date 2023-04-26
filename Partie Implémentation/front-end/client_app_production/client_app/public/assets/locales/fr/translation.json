@@ -134,10 +134,12 @@
   "production_history" : "Historique de production", 
   "green_certificates" : "Certificats verts", 
   "request_green" : "Demander des certificats verts", 
-  "request_grene_confirm" : "Êtes-vous sûr de vouloir demander des certificats verts ?", 
+  "request_green_confirm" : "Êtes-vous sûr de vouloir demander des certificats verts ?", 
   "show_production" : "Afficher la production", 
   "production_point" : "Point de production", 
   "add_production_point" : "Ajouter un point de production",
-  "production_point_add" : "Point de production à ajouter"
-
+  "production_point_add" : "Point de production à ajouter",
+  "no_green" : "Pas de certificats verts", 
+  "request_success" : "Demande envoyée avec succès !", 
+  "refresh" : "Rafraîchir"
 }

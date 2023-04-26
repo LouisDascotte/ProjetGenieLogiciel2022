@@ -65,7 +65,7 @@ const SideMenu = (mainPage) => {
                 </Link>
                 <Link to="/chart" className='link'>
                     <MenuItem icon={<TimelineIcon />}>
-                        {t('consumption_chart')}
+                        {t('Chart Analysis')}
                     </MenuItem>
                 </Link>
             </Menu>

@@ -18,6 +18,7 @@ import { useForceUpdate } from '../components/hooks/useForceUpdate';
 import {createBrowserHistory} from "history";
 import axios from "../api/axios";
 import { useTranslation } from "react-i18next";
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
@@ -153,6 +154,11 @@ const MainPage = () => {
                             {t('manage_contracts')}
                         </MenuItem>
                     </Link>
+                    <Link to="/chart" className='link'>
+                        <MenuItem icon={<TimelineIcon />}>
+                            {t('Chart Analysis')}
+                        </MenuItem>
+                </Link>
                 </Menu>
             </Sidebar>
         <Stack sx={{display:'flex', width:"100%"}}>  

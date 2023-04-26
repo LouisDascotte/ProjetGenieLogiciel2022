@@ -316,7 +316,7 @@ export const Portfolio2 = () => {
               <Button onClick={()=> navigate(`/consumption/${id}`)}>
                 {t('show_consumption')}
               </Button>
-              <Button onClick={()=>navigate(`/production/${id}`)}>
+              <Button onClick={()=>navigate(`/production/${id}/${productionPoint.ean}`)}>
                 {t('show_production')}
               </Button>
               <Button onClick={()=> setOpenProd(true)}>
@@ -376,7 +376,7 @@ export const Portfolio2 = () => {
             
           </Card>
         </Stack>
-        <Button variant="contained" onClick={()=> navigate(`/certificates/${id}`)} sx={{mb:1}}>
+        <Button variant="contained" onClick={()=> navigate(`/certificates/${id}/${productionPoint.ean}`)} sx={{mb:1}}>
           {t('green_certificates')}
         </Button>
         <Button variant="contained" onClick={update} sx={{width:"40%"}}>

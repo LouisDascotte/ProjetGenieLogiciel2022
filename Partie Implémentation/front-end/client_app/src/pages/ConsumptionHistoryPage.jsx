@@ -123,9 +123,9 @@ if (!(data.WATER === undefined)){
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Stack alignItems="center" justifyContent='center' alignContent='center' sx={{height:800}}>
-           
-              {type === "TABLE" ? 
+          <Stack alignItems="center" justifyContent='center' alignContent='center' sx={{display:'flex', minHeight:"100%"}}>
+
+           {type === "TABLE" ? 
               <DataGrid 
               rows={rows} 
               columns={columns} 
@@ -135,6 +135,7 @@ if (!(data.WATER === undefined)){
               }}
               /> : <PortfolioMainGraph portfolio={data}/>
             }
+     
               
             
           </Stack>

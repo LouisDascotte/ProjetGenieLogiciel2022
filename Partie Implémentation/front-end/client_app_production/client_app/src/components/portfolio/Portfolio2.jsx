@@ -1,4 +1,4 @@
-import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup, Snackbar, Alert, TextField, InputAdornment } from '@mui/material';
+import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup, Snackbar, Alert } from '@mui/material';
 import {React, useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios';
@@ -24,8 +24,6 @@ export const Portfolio2 = () => {
   const [activeMeters, setActiveMeters] = useState([]);
   const [activeProductionPoints, setActiveProductionPoints] = useState([]);
   const [state, setState] = useState(0);
-  const [productionPoint, setProductionPoint] = useState({});
-  const [removePp, setRemovePp] = useState(false); 
 
   useEffect(()=>{
 
@@ -46,22 +44,11 @@ export const Portfolio2 = () => {
       portfolios.data.map(portfolio => {
         if (portfolio.id === id) {
           setPortfolio(portfolio);
-          for (let i = 0; i < portfolio.supplyPoints.length; i++){
-            console.log(activeMeters)
-            if (portfolio.supplyPoints[i].type === "SUPPLY_POINT" && !inActiveMeters(portfolio.supplyPoints[i].ean)){
-              activeMeters.push(portfolio.supplyPoints[i]);
-            } else if (portfolio.supplyPoints[i].type === "PRODUCTION_POINT"){
-              setProductionPoint(portfolio.supplyPoints[i]);
-            }
-            
-          }
+          setActiveMeters(portfolio.supplyPoints)
         }
       })
     })
   }, [state])
-
-
-  
     
   
   const [name, setName] = useState("");
@@ -75,8 +62,6 @@ export const Portfolio2 = () => {
   const[problemMeter, setProblemMeter] = useState("");
   const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
   const [openError, setOpenError] = useState(false);
-
-  const [supplier, setSupplier] = useState("");
 
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
@@ -137,11 +122,8 @@ export const Portfolio2 = () => {
     selectedMeters.map(meter => {
       for (let i = 0; i < meters.length; i++) {
         if (meter === meters[i].ean) {
-          var obj = {
-            "EAN": meters[i].ean,
-            "type" : "SUPPLY_POINT",
-          }
-          body.push(obj);
+         
+          body.push(meters[i]);
         }
       }
     });
@@ -150,7 +132,7 @@ export const Portfolio2 = () => {
     const responses = [];
    
     for (let i = 0; i < body.length; i++) {
-      console.log(body[i]);
+      
       responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(body[i]), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
@@ -175,59 +157,17 @@ export const Portfolio2 = () => {
       }))
     }
 
-
-    // LUMINIS A CHANGER
-    if (tempProductionPoint !== "" && supplier !== ""){
-      let prodBody = {
-        "EAN" : tempProductionPoint, 
-        "type" : "PRODUCTION_POINT", 
-        "supplierName" : supplier
-      }
-  
-      const addProd = await axios.post(PORTFOLIO_URL + `/${id}/production_point`, JSON.stringify(prodBody), {
-        headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      })
-    }
-    
-
     setState(state+1);
 
     window.location.reload(true);
   }
 
   const deleteMeter = (ean) => {
-    if (selectedMetersToRemove.includes(ean) === false && ean !== ""){
+    if (selectedMetersToRemove.includes(ean) === false){
       selectedMetersToRemove.push(ean);
+      setState(state+1);
     }
-    
-    setState(state+1);
-  }
 
-  const [openProd, setOpenProd] = useState(false);
-  const [tempProductionPoint, setTempProductionPoint] = useState("");
-
-
-
-  const productionCancel = () => {
-    setTempProductionPoint("");
-    setOpenProd(false);
-  }
-
-  const removeSelectedProd = () => {
-    setTempProductionPoint("");
-  }
-
-  const removeProductionPoint = () => {
-    setRemovePp(true);
-    selectedMetersToRemove.push(productionPoint);
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
-      event.preventDefault();
-    }
   }
 
 
@@ -240,7 +180,7 @@ export const Portfolio2 = () => {
           <IconButton>
             <ArrowBackIcon onClick={() => navigate(-1)}/>
           </IconButton>
-          <Card sx={{m:1}} container justify='center'>
+          <Card sx={{m:5}} container justify='center'>
             <Stack alignItems="center" alignContent="center" justifyContent='center' sx={{textAlign:"center"}}>
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
@@ -257,28 +197,6 @@ export const Portfolio2 = () => {
             </Stack>
               
             )}
-            <Typography variant='h5' sx={{m:2}}>
-              {t('production_point')} :
-            </Typography>
-            { productionPoint.ean === undefined ? null : <Stack direction='row'>
-            <Typography variant="h6" sx={{m:2}}>{productionPoint.ean}</Typography>
-            <IconButton sx={{mr:2}} onClick={() => {deleteMeter(productionPoint.ean)}}>
-                <DeleteIcon/>
-              </IconButton>
-            </Stack>}
-            
-            
-            <Typography variant='h5' sx={{m:2}}>
-              {t('production_point_add')} :
-            </Typography>
-            <Stack direction="row">
-              {tempProductionPoint === "" ? null : <Typography variant="h6" sx={{m:2}}>• {tempProductionPoint}</Typography> }
-
-              {tempProductionPoint === "" ? null : <IconButton sx={{mr:2}} onClick={removeSelectedProd}>
-                <DeleteIcon/>
-              </IconButton> }
-            </Stack>
-            
             <Typography variant="h5" sx={{m:2}}>
               {t('selected_meters_add')} : 
             </Typography>
@@ -316,12 +234,6 @@ export const Portfolio2 = () => {
               <Button onClick={()=> navigate(`/consumption/${id}`)}>
                 {t('show_consumption')}
               </Button>
-              <Button onClick={()=>navigate(`/production/${id}`)}>
-                {t('show_production')}
-              </Button>
-              <Button onClick={()=> setOpenProd(true)}>
-                {t('add_production_point')}
-              </Button>
             </ButtonGroup>
             
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>
@@ -353,33 +265,11 @@ export const Portfolio2 = () => {
                 </Stack>
               </DialogContent>
             </Dialog>
-            <Dialog open={openProd} onClose={()=>setOpenProd(false)}>
-              <DialogTitle>
-                {t('add_production_point')}
-              </DialogTitle>
-              <DialogContent>
-                <TextField onChange={e => setTempProductionPoint(e.target.value)} type='number'  onKeyDown={handleKeyDown} InputProps={{
-                  startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
-                }}/>  
-                <TextField onChange={e => setSupplier(e.target.value)} />
-                <Stack>
-                    <Button onClick={()=>setOpenProd(false)}>
-                      {t('confirm')}
-                    </Button>
-                    <Button onClick={productionCancel}>
-                      {t('cancel')}
-                    </Button>
-                </Stack>
-              </DialogContent>
-            </Dialog>
             </Stack>
             
           </Card>
         </Stack>
-        <Button variant="contained" onClick={()=> navigate(`/certificates/${id}`)} sx={{mb:1}}>
-          {t('green_certificates')}
-        </Button>
-        <Button variant="contained" onClick={update} sx={{width:"40%"}}>
+        <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
           {t('apply_changes')}
         </Button>
       </Stack>

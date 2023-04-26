@@ -132,8 +132,11 @@ export const Portfolio2 = () => {
     const responses = [];
    
     for (let i = 0; i < body.length; i++) {
-      
-      responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(body[i]), {
+      let newBod = {
+        "EAN": body[i].ean,
+        "type" : "SUPPLY_POINT"
+      }
+      responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(newBod), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
@@ -163,8 +166,11 @@ export const Portfolio2 = () => {
   }
 
   const deleteMeter = (ean) => {
-    selectedMetersToRemove.push(ean);
-    setState(state+1);
+    if (selectedMetersToRemove.includes(ean) === false){
+      selectedMetersToRemove.push(ean);
+      setState(state+1);
+    }
+
   }
 
 

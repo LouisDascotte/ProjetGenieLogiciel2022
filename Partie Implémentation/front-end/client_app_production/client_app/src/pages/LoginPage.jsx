@@ -12,6 +12,7 @@ import {authServices} from "../utils/services/auth-service";
 import { useTranslation } from 'react-i18next';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import i18next from 'i18next';
+import Cookies from "js-cookie";
 
 const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 
@@ -116,7 +117,7 @@ const LoginPage = () => {
   };
 
 
-const [language, setLanguage] = React.useState('en');
+const [language, setLanguage] = React.useState(Cookies.get("i18next") || "en");
 
 
 const handleChange= (e) => {
@@ -232,12 +233,12 @@ const languages = [
             <Grid container sx={{width:"100%", mb:1, ml:5}} justifyContent='center' alignContent='center' alignItems={'center'} >
               <Grid item xs={6}>
                 <FormControl sx={{width:'100%'}}>
-                  <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                  <InputLabel id="demo-simple-select-label">{t('language')}</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={language}
-                    label="Language"
+                    label={t('language')}
                     name='language'
                     onChange={handleChange}
                     sx={{width:'80%'}}

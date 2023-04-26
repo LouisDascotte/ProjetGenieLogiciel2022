@@ -8,6 +8,7 @@ import axios from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import i18next from 'i18next';
+import Cookies from "js-cookie";
 
 const URL = "http://localhost:8080/api/s";
 
@@ -23,7 +24,7 @@ const Preferences = () => {
   const [lang, setLang] = React.useState("");
   const [portfolios, setPortfolios] = React.useState([]);
 
-  const [language, setLanguage] = React.useState('en');
+  const [language, setLanguage] = React.useState(Cookies.get("i18next") || "en");
 
   const {t} = useTranslation();
 

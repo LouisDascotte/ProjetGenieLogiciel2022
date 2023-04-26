@@ -153,5 +153,7 @@
   "date_error" : "The selected date must be at most today's date.",
   "portfolio_name_error": "The portfolio name can't contain special characters.", 
   "password_error_size" : "The password must contain at least 8 characters.", 
-  "password_changed" : "Password successfully changed !"
+  "password_changed" : "Password successfully changed !", 
+  "error.street_number" : "You must specify a street number in your address.",
+  "error.check_form" : "Please check the content of your form."
 } 

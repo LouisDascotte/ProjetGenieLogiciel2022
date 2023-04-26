@@ -124,6 +124,7 @@ const ContractRequest = () => {
 
 
   const [openError, setOpenError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
 
   function cancel(){
@@ -136,7 +137,7 @@ const ContractRequest = () => {
     const contractTypesList = ["ELEC", "GAZ", "WATER", "ELECTRICITY_AND_GAS"];
     const meter_type = ["SIMPLE", "DOUBLE"]
     const mechanism = ["NUMERIC", "MANUAL"]
-    if (energyType === 4 && ean1Error === false && ean2Error === false && ean1 !== ean2 && ean1 !== "" && ean2 !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined ){
+    if (energyType === 4 && ean1Error === false && address.street_number !== "" && ean2Error === false && ean1 !== ean2 && ean1 !== "" && ean2 !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined ){
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
         "energyType" : contractTypesList[energyType-1],
@@ -145,7 +146,7 @@ const ContractRequest = () => {
         "EAN_ELEC" : ean2,
         "meterType": mechanism[meterType1-1],
       }
-    } else if (energyType !== 4 && ean1Error === false && ean1 !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined){
+    } else if (energyType !== 4 && ean1Error === false && ean1 !== "" && address.street_number !== "" && meter_type[meterHourType1-1] !== undefined && contractTypesList[energyType-1] !== undefined && address.street_name !== "" && mechanism[meterType1-1] !== undefined){
       body = {
         "address" : address.street_name + " " + address.street_number + ", " + address.city + ", " + address.postal_code + ", " + address.country,
         "energyType" : contractTypesList[energyType-1],
@@ -154,6 +155,11 @@ const ContractRequest = () => {
         "meterType" : mechanism[meterType1-1],
       }
     } else {
+      if (address.street_number === ""){
+        setErrorMsg(t('error.street_number'));
+      } else {
+        setErrorMsg(t('error.check_form'));
+      }
       setOpenError(true);
       return; 
     }
@@ -280,7 +286,7 @@ const ContractRequest = () => {
       <Dialog open={openError} onClose={() => setOpenError(false)}>
         <DialogTitle>{t('error')}</DialogTitle>
         <DialogContent>
-          <Alert severity="error">{t('check_form')}</Alert>
+          <Alert severity="error">{errorMsg}</Alert>
         </DialogContent>
       </Dialog>
     </Stack>

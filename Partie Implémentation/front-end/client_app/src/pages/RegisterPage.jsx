@@ -1,5 +1,5 @@
 import {React, useState, useRef, useEffect} from 'react'
-import {Alert, createTheme, Button, styled ,Typography, Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
+import {Alert, createTheme, Button, styled ,Typography, Snackbar,  Stack, Card, Box, Grid,  TextField, ThemeProvider} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import axios from '../api/axios';
@@ -135,11 +135,19 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const{errors, validateForm, onBlurField} = useRegisterFieldValidator(form);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [error, setError] = useState(false);
 
   const onSubmitForm = async (e) => {
     e.preventDefault(); 
     const {isValid} = validateForm( {form, errors, forceTouchErrors:true}, "register");
     if (!isValid){
+      return;
+    }
+
+    if (address.street_number === ""){
+      setErrorMsg(t('error.street_number'));
+      setError(true);
       return;
     }
 
@@ -434,6 +442,11 @@ const RegisterPage = () => {
             </form>
           </Stack>
         </Card>
+        <Snackbar open={error} autoHideDuration={6000} onClose={()=>setError(false)}>
+          <Alert onClose={()=>setError(false)} severity="error" sx={{ width: '100%' }}>
+            {errorMsg}
+          </Alert>
+        </Snackbar>
       </Grid>
     </Grid>
   )
@@ -441,17 +454,3 @@ const RegisterPage = () => {
 
 export default RegisterPage
 
-/**
- * <Grid container
-              direction="row"
-              justifyContent="space-around"
-              alignItems="center"
-              sx={{flexGrow:1}}>
-              <Grid item xs={'auto'}>
-                <CssTextField variant='outlined' label='firstname' margin='normal'/>
-              </Grid>
-              <Grid item xs={'auto'}>
-                <CssTextField variant='outlined' label='lastname' margin='normal'/>
-              </Grid>             
-            </Grid>   
- */

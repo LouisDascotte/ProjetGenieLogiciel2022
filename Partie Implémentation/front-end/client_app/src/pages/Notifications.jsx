@@ -24,7 +24,7 @@ const Notifications = () => {
   const refresh =  () => {
     setState(state+1);
   }
-  
+
 
   const [notifications, setNotifications] = useState([]);
   const jwt = localStorage.getItem("jwt");
@@ -51,6 +51,10 @@ const Notifications = () => {
   }
 
   useEffect(()=> {
+    const interval = setInterval(() => {
+      setState(state+1)
+    }, 5 * 60 * 1000);
+    
     const response = axios.get("http://localhost:8080/api/notification/all", {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
@@ -61,6 +65,8 @@ const Notifications = () => {
         setErrorMsg(err.message);
         setError(true);
       })
+
+      return () => clearInterval(interval);
   }, [state])
 
   const handleClick = (notification) => {
@@ -95,7 +101,7 @@ const Notifications = () => {
         <ListItem>
           <ListItemButton onClick={()=>handleClick(notification)}>
             <ListItemText>
-              {notification.status === "UNREAD" ? <div style={{color:"red", justifyContent:"space-between"}}>{notificationMessages(notification.type)} {notification.date}</div> : <div style={{display:"flex" ,justifyContent:"space-between"}}><div>{notificationMessages(notification.type)} </div><div>[ {t('date')} : {notification.date}]</div></div>}
+              {notification.status === "UNREAD" ? <div style={{color:"red", justifyContent:"space-between"}}><div>{notificationMessages(notification.type)}</div> <div>{notification.date}</div></div> : <div style={{display:"flex" ,justifyContent:"space-between"}}><div>{notificationMessages(notification.type)} </div><div>[ {t('date')} : {notification.date}]</div></div>}
             </ListItemText>
           </ListItemButton>
         </ListItem>

@@ -546,7 +546,7 @@ public class ContractServiceTest {
         when(securityUtils.getCurrentClientLogin()).thenThrow(InvalidUserDetailsException.class);
 
         SimpleContract contract = SimpleContract.builder()
-                .status(Contract.Status.ACCEPTED)
+                .status(Contract.Status.PENDING)
                 .clientId(new ObjectId())
                 .supplierId(supplier.getId())
                 .build();

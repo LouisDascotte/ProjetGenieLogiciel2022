@@ -41,6 +41,19 @@ const ConsumptionHistoryPage = () => {
       })
   }, [])
 
+
+  useEffect(()=>{
+    const req = axios.get(`http://localhost:8080/api/portfolio/${id}/supply_point/${98466848897998}/consumption`, {
+      headers : {
+        "Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true
+      }
+    }).then(response=>{
+      console.log(response.data);
+    })
+  }, [])
+
   // Snippet of code obtained on stackOverflow
   const exportData = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(

@@ -849,6 +849,13 @@ INPUT sections/extension5.tex
 INPUT ./sections/extension5.tex
 INPUT ./sections/extension5.tex
 INPUT sections/extension5.tex
+INPUT ./sections/extension_godwill.tex
+INPUT ./sections/extension_godwill.tex
+INPUT ./sections/extension_godwill.tex
+INPUT sections/extension_godwill.tex
+INPUT ./sections/extension_godwill.tex
+INPUT ./sections/extension_godwill.tex
+INPUT sections/extension_godwill.tex
 INPUT rapport.aux
 INPUT ./rapport.out
 INPUT ./rapport.out

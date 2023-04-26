@@ -44,12 +44,12 @@ function App() {
               <Route path='/' element={<Navigate to="/login"/>}></Route>
 
               <Route path='/registration-success' exact element={<RegistrationSuccess/>}/>
-              <Route path='/create-pass/:token' exact element={<PrivateRoute>
+              <Route path='/create-pass/:token' exact element={
                   <CreateNewPassword/>
-              </PrivateRoute>}/>
-              <Route path='/create-pass-success' exact element={<PrivateRoute>
+              }/>
+              <Route path='/create-pass-success' exact element={
                 <NewPasswordSuccess/>
-                </PrivateRoute>}/>
+              }/>
               <Route path="/main-page" exact element={<PrivateRoute>
                 <MainPage/>
                 </PrivateRoute>}/>

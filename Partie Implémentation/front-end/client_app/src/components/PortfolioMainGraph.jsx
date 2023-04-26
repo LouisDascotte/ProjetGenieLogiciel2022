@@ -20,7 +20,12 @@ const PortfolioMainGraph = ({portfolio}) => {
     
       if (portfolio.ELEC !== undefined) {
         setElec(portfolio.ELEC.map((item)=>{
-          return {...item, energy: "ELEC"}
+          if (item.value === undefined) {
+            return {...item, value: item.dayValue + item.nightValue, energy: "ELEC"}}
+            else {
+              return {...item, energy: "ELEC"}
+            }
+          
         }))
       } else {
         setElec([])
@@ -50,14 +55,13 @@ const PortfolioMainGraph = ({portfolio}) => {
 
  
   return (
-  <Stack justifyContent='center'  alignContent="center" alignItems='center' sx={{height:"80%", width:"80%"}}>
-    {isReady ? <Card sx={{boxShadow:'none'}}>
-      <Typography variant="h6">
+  <Stack justifyContent='center'  alignContent="center" alignItems='center' sx={{mb:2}}>
+    {isReady ?  
+    <Stack>
+    <Typography variant="h6">
         {view === "ELEC" ? t('elec_cons') : view === "WATER" ? t('water_cons') : t('gas_cons')}
       </Typography>
-      <CardContent sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      
-      {view === "ELEC" ?  <LineChart
+      {view === "ELEC" ? <Card> <LineChart
         width={700}
         height={500}
         data={elec}
@@ -74,9 +78,9 @@ const PortfolioMainGraph = ({portfolio}) => {
         <Tooltip />
         <Line type="monotone" dataKey="value" name={t('cons_kwh')} stroke="red" />
         <Legend />
-      </LineChart>
+      </LineChart></Card>
        : view === "WATER" ? 
-       <LineChart
+       <Card><LineChart
         width={700}
         height={500}
         data={water}
@@ -93,9 +97,9 @@ const PortfolioMainGraph = ({portfolio}) => {
         <Tooltip />
         <Line type="monotone" dataKey="value" name={t('cons_m3')} stroke="blue" />
         <Legend />
-      </LineChart>
+      </LineChart></Card>
        : 
-       <LineChart
+       <Card><LineChart
         width={700}
         height={500}
         data={gaz}
@@ -112,12 +116,8 @@ const PortfolioMainGraph = ({portfolio}) => {
         <Tooltip />
         <Line type="monotone" dataKey="value" name={t('cons_kwh')} stroke="green" />
         <Legend />
-      </LineChart>}
-        
-      </CardContent>
-      
-      
-        </Card>
+      </LineChart></Card>}
+       </Stack>
          : <CircularProgress/>}
         {isReady ? <ButtonGroup variant='contained' sx={{mt:1}}>
           <Button onClick={() => setView("ELEC")}>{t('elec')}</Button>

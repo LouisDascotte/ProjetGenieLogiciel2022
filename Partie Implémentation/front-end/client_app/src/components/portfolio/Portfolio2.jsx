@@ -188,12 +188,12 @@ export const Portfolio2 = () => {
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
             </Grid>
-            <Typography variant="h5" sx={{m:2}}>
+            <Typography variant="h5" sx={{m:1}}>
               {t('linked_meters')} :
             </Typography>
             {activeMeters.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}} value={meter.id}>• {meter.ean}</Typography>
+              <Typography variant="h6" sx={{m:1}} value={meter.id}>• {meter.ean}</Typography>
               <IconButton sx={{mr:2}} onClick={() => {deleteMeter(meter.ean)}}>
                 <DeleteIcon/>
               </IconButton>
@@ -205,27 +205,27 @@ export const Portfolio2 = () => {
             </Typography>
             {selectedMeters.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}}>• {meter}</Typography>
+              <Typography variant="h6" sx={{m:1}}>• {meter}</Typography>
               <IconButton sx={{mr:2}} onClick={() => {removeSelected(meter)}}>
                 <DeleteIcon/>
               </IconButton>
             </Stack>
               
             )}
-            <Typography variant="h5" sx={{m:2}}>
+            <Typography variant="h5" sx={{m:1}}>
               {t('selected_meters_remove')} :
             </Typography>
             {selectedMetersToRemove.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}}>• {meter}</Typography>
+              <Typography variant="h6" sx={{m:1}}>• {meter}</Typography>
             </Stack>
               
             )}
            
-            <Typography variant="h5" sx={{m:2}}>
+            <Typography variant="h5" sx={{m:1}}>
               {t('address')} :
             </Typography>
-            <Typography variant="h6" sx={{m:2}}>
+            <Typography variant="h6" sx={{m:1}}>
               {portfolio.address}
             </Typography>
            
@@ -272,7 +272,7 @@ export const Portfolio2 = () => {
             
           </Card>
         </Stack>
-        <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
+        <Button variant="outlined" onClick={update} sx={{width:"10%"}}>
           {t('apply_changes')}
         </Button>
       </Stack>

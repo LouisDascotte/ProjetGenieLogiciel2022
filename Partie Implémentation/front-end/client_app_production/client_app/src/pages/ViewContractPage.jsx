@@ -1,7 +1,7 @@
 import React from 'react'
 import TopMenu from '../components/TopMenu'
 import SideMenu from '../components/SideMenu'
-import {Stack, Box, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle} from '@mui/material'
+import {Stack, Box, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle, Snackbar, Alert} from '@mui/material'
 import { useLocation, useNavigate} from 'react-router-dom'
 import axios from '../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
@@ -50,6 +50,8 @@ const ViewContractPage = () => {
     }, [])
 
   
+  const [success, setSuccess] = React.useState(false);
+
   const handleCancelContract = () => {
     const response = axios.delete(`http://localhost:8080/api/contract/${location.state.id}`, {
       headers : {
@@ -58,7 +60,11 @@ const ViewContractPage = () => {
         "Access-Control-Allow-Origin":true
       }
     }).then(response => {
-      console.log(response.data);
+      setSuccess(true);
+      setOpen(false);
+      setTimeout(()=>{
+        navigate(-1);
+      }, 2000)
     })
   }
 
@@ -126,6 +132,11 @@ const ViewContractPage = () => {
                 </Dialog>
               </Stack>
             </Box>
+            <Snackbar open={success} autoHideDuration={6000} onClose={()=>setSuccess(false)}>
+              <Alert onClose={()=>setSuccess(false)} severity="success" sx={{ width: '100%' }}>
+                {t('contract_cancelled')}
+              </Alert>
+            </Snackbar>
           </Stack>
         </Box>
       </Stack>

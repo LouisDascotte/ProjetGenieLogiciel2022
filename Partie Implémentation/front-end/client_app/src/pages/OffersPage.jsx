@@ -88,18 +88,37 @@ const OffersPage = () => {
     setSuccess(false);
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     console.log(parameters)
     try{
-      const req = axios.post(CONTRACT_URL, parameters, {
-        headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      , params : {
-        offerId : selectedOffer
-      }}).then(response => {
-        navigate("/manage-contracts");
-      })
+      if (parameters.energyType === "ELECTRICITY_AND_GAS"){
+        const req = await axios.post("http://localhost:8080/api/contract/gaz_elec", parameters, {
+          headers : {
+            "Content-Type":"application/json",
+            "Authorization" : `Bearer ${jwt}`,
+            "Access-Control-Allow-Origin":true
+          }, params : {
+            offerId : selectedOffer,
+          }
+        }).then(response => {
+          setSuccess(true);
+          setOpen(false);
+          setTimeout(()=>{
+            navigate("/manage-contracts");
+          }, 2000)
+        })
+      } else {
+        const req =await  axios.post(CONTRACT_URL, parameters, {
+          headers : {"Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true}
+        , params : {
+          offerId : selectedOffer
+        }}).then(response => {
+          navigate("/manage-contracts");
+        })
+      }
+      
     } catch (err){
       console.log(err);
     }

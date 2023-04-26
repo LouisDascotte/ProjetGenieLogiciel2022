@@ -145,7 +145,7 @@ const RegisterPage = () => {
       return;
     }
 
-    if (address.street_number === ""){
+    if (address.houseNo === ""){
       setErrorMsg(t('error.street_number'));
       setError(true);
       return;

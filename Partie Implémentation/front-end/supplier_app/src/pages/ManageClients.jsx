@@ -63,7 +63,7 @@ const ManageClients = () => {
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'>
             <Card sx={{width:'50%', m:2, height:'60%' }} >
-              <Box sx={{height:'auto', width:'100%'}} alignment='center' marginBottom={4} >
+              <Box sx={{height:'auto', width:'100%'}} alignment='center' marginBottom={4} paddingBottom={4}>
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
                   Client List
                 </Typography>

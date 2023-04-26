@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden, List, ListItem,ListItemText, Typography} from '@mui/material';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import axios from 'axios';
 
-const handleMeterClick = (meterID) => {
-  console.log(meterID);
-};
 
 const ManageCons = () => {
   const theme = createTheme({
@@ -26,6 +23,7 @@ const ManageCons = () => {
       }
     }
   });
+  const nav = useNavigate();
   const pageAddress = "/consumption";
   const pageName = "Manage consumption";
 
@@ -69,7 +67,7 @@ const ManageCons = () => {
                   {meters.map((meter) => (
                     <ListItem key={meter.meterId}>
                       <Link to={`/consumption/meter/${meter.ean}`} className='link-3' style={{display: 'inline-block', mt:2, width:'100%', mb:5}} >
-                        <Button variant="contained" color='primary' onClick={() => handleMeterClick(meter.meterId)} fullWidth >
+                        <Button variant="contained" color='primary' onClick={() => { console.log(meter); localStorage.setItem("meterNrjType", meter.energyType); console.log(localStorage.getItem("meterNrjType").ean) ; nav(`/consumption/${meter.id}`, { state : meter})}} fullWidth >
                         {`Meter n°${meter.ean}`}
                         </Button>
                       </Link>

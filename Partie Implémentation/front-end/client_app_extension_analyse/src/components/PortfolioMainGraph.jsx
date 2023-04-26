@@ -1,13 +1,14 @@
 import React, { PureComponent , useEffect} from 'react';
-import { BarChart, LineChart, Line,  Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Stack, CircularProgress, Card, Grid, Typography, ButtonGroup, Button } from '@mui/material';
+import { BarChart, LineChart, Line, Label,  Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Stack, CircularProgress, Card, CardContent,  Grid, Typography, ButtonGroup, Button } from '@mui/material';
 import  {datas} from "../resources/hardcodedGraphData";
 import PortfolioPlaceHolder from './PortfolioPlaceHolder';
+import { useTranslation } from 'react-i18next';
 
 
 const PortfolioMainGraph = ({portfolio}) => { 
 
-  console.log(portfolio)
+  const {t} = useTranslation();
 
   const [isReady, setIsReady] = React.useState(false);
   const [elec, setElec] = React.useState([]);
@@ -19,7 +20,12 @@ const PortfolioMainGraph = ({portfolio}) => {
     
       if (portfolio.ELEC !== undefined) {
         setElec(portfolio.ELEC.map((item)=>{
-          return {...item, energy: "ELEC"}
+          if (item.value === undefined) {
+            return {...item, value: item.dayValue + item.nightValue, energy: "ELEC"}}
+            else {
+              return {...item, energy: "ELEC"}
+            }
+          
         }))
       } else {
         setElec([])
@@ -47,41 +53,15 @@ const PortfolioMainGraph = ({portfolio}) => {
 
  console.log(gaz)
 
- /*const result = data.reduce((acc, curr) => {
-  const date = curr.date;
-  const energy = curr.energy.toLowerCase();
-
-  // initialise l'objet s'il n'existe pas encore pour cette date
-  if (!acc[date]) {
-    acc[date] = {
-      date: date,
-      elec: 0,
-      gaz: 0
-    }
-  }
-
-  // met à jour la valeur de la consommation pour l'énergie donnée
-  acc[date][energy] += curr.value;
-
-  return acc;
-  }, {})
-
-  const chartData = Object.values(result).map(item => ({
-    date: item.date,
-    electricity: item.elec,
-    gas: item.gaz
-  }));
-
- console.log(chartData)*/
-
  
   return (
-  <Stack justifyContent='center' paddingTop='10%' alignContent="center" alignItems='center'>
-    {isReady ? <Card sx={{boxShadow:'none', textAlign:'center'}}>
-      <Typography variant="h6">
-        {view === "ELEC" ? "Electricity consumption" : view === "WATER" ? "Water consumption" : "Gas consumption"}
+  <Stack justifyContent='center'  alignContent="center" alignItems='center' sx={{mb:2}}>
+    {isReady ?  
+    <Stack>
+    <Typography variant="h6">
+        {view === "ELEC" ? t('elec_cons') : view === "WATER" ? t('water_cons') : t('gas_cons')}
       </Typography>
-      {view === "ELEC" ?  <LineChart
+      {view === "ELEC" ? <Card> <LineChart
         width={700}
         height={500}
         data={elec}
@@ -94,13 +74,13 @@ const PortfolioMainGraph = ({portfolio}) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis  dataKey='value' />
+        <YAxis  dataKey='value'/>
         <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="red" />
+        <Line type="monotone" dataKey="value" name={t('cons_kwh')} stroke="red" />
         <Legend />
-      </LineChart>
+      </LineChart></Card>
        : view === "WATER" ? 
-       <LineChart
+       <Card><LineChart
         width={700}
         height={500}
         data={water}
@@ -115,11 +95,11 @@ const PortfolioMainGraph = ({portfolio}) => {
         <XAxis dataKey="date" />
         <YAxis  dataKey='value' />
         <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="red" />
+        <Line type="monotone" dataKey="value" name={t('cons_m3')} stroke="blue" />
         <Legend />
-      </LineChart>
+      </LineChart></Card>
        : 
-       <LineChart
+       <Card><LineChart
         width={700}
         height={500}
         data={gaz}
@@ -134,16 +114,15 @@ const PortfolioMainGraph = ({portfolio}) => {
         <XAxis dataKey="date" />
         <YAxis  dataKey='value' />
         <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="red" />
+        <Line type="monotone" dataKey="value" name={t('cons_kwh')} stroke="green" />
         <Legend />
-      </LineChart>}
-        
-        </Card>
+      </LineChart></Card>}
+       </Stack>
          : <CircularProgress/>}
         {isReady ? <ButtonGroup variant='contained' sx={{mt:1}}>
-          <Button onClick={() => setView("ELEC")}>Electricity</Button>
-          <Button onClick={() => setView("WATER")}>Water</Button>
-          <Button onClick={() => setView("GAZ")}>Gas</Button>
+          <Button onClick={() => setView("ELEC")}>{t('elec')}</Button>
+          <Button onClick={() => setView("WATER")}>{t('water')}</Button>
+          <Button onClick={() => setView("GAZ")}>{t('gas')}</Button>
         </ButtonGroup> : null }
       </Stack>
     );

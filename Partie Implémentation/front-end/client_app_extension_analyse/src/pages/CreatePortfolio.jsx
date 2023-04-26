@@ -4,10 +4,9 @@ import {Stack,Card, Dialog, DialogContent, DialogTitle, DialogContentText, Input
 import logo from '../resources/logo.png';
 import AccountMenu from '../components/AccountMenu';
 import TopMenu from '../components/TopMenu';
-import TempList from '../components/TempList';
-import ElementsList from '../components/ElementsList';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from '../api/axios';
+import { useTranslation } from 'react-i18next';
 
 const delay = ms => new Promise(
   resolve => setTimeout(resolve, ms)
@@ -44,8 +43,9 @@ const URL = "http://localhost:8080/api/portfolio";
 
 
 const CreatePortfolio = () => {
+  const {t} = useTranslation();
   const pageAddress = "/create-portfolio";
-  const pageName = "Create portfolio";
+  const pageName = t('create_portfolio');
 
   const [energyType, setEnergyType] = useState("");
 
@@ -181,7 +181,7 @@ const CreatePortfolio = () => {
 
   const navigate = useNavigate();
 
- 
+  const [error, setError] = useState(false);
 
   const onSubmitForm = async e => {
     e.preventDefault();
@@ -191,6 +191,11 @@ const CreatePortfolio = () => {
       address : data.address.street + " " + data.address.houseNo + " " +data.address.box + " " +data.address.postalCode + " " +data.address.city + " " +data.address.region + " " +data.address.country,
     }
     const jwt = localStorage.getItem("jwt");
+    const reg = new RegExp("^[a-zA-Z0-9\s]*$");
+    if (reg.test(data.name) === false){
+      setError(true);
+      return;
+    }
     try {
       const response = axios.post(URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
@@ -239,11 +244,11 @@ const CreatePortfolio = () => {
           <Card sx={{width:'100%', m:2, mt:5}}>
             <Stack sx={{width:'95%'}}>
               
-              <CssTextField name="name" label="Enter a name for your portfolio" sx={{m:2, mt:5}} onChange={onUpdateField}/>
+              <CssTextField name="name" label={t('portfolio_name')} sx={{m:2, mt:5}} onChange={onUpdateField}/>
               
               
               <CssTextField variant='outlined' 
-                  label='address' 
+                  label={t('address')} 
                   margin='normal'
                   name='address' 
                   value={address.street} 
@@ -255,11 +260,14 @@ const CreatePortfolio = () => {
           </Card>
           <ThemeProvider theme={theme}>    
               <Button type="submit" variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                Create portfolio
+                {t('create_portfolio')}
               </Button>
           </ThemeProvider>
           <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity='success'>Portfolio successfully created !</Alert>
+            <Alert onClose={handleClose} severity='success'>{t('portfolio_success')}</Alert>
+          </Snackbar>
+          <Snackbar open={error} autoHideDuration={6000} onClose={()=>setError(false)}>
+            <Alert onClose={handleClose} severity='error'>{t('portfolio_name_error')}</Alert>
           </Snackbar>
           </Stack>
           </Box>

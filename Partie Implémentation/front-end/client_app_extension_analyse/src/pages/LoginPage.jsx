@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
+import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider, Snackbar, FormControl, InputLabel,  Select, MenuItem} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
@@ -9,15 +9,20 @@ import AuthContext from "../context/AuthProvider";
 import { useLocalState } from '../utils/useLocalStorage';
 import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
-
+import { useTranslation } from 'react-i18next';
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+import i18next from 'i18next';
+import Cookies from "js-cookie";
 
 const LOGIN_URL = "http://localhost:8080/api/auth/client/login";
 
 const LoginPage = () => {
 
-  // ToDo : check usefulness of this part
-  
-  
+  const {t} = useTranslation();
+ 
+  const [open, setOpen] = React.useState(false);
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Used for the redirection
   const navigate = useNavigate();
@@ -47,41 +52,51 @@ const LoginPage = () => {
     }
 
 
-    try{
-      const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
-        headers : {"Content-Type":"application/json",
-      //"Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      }).then(response => {
-        console.log("auth: " + response.headers["authorization"]);
-        //setJwt(response.headers["authorization"], "jwt");
-        localStorage.setItem("jwt", response.headers["authorization"]);
-        localStorage.setItem("user", response.data);
-        localStorage.setItem("authenticated", true);
-        setAuthToken(response.headers["authorization"]);
-      });
+    
+    const response = await axios.post(LOGIN_URL, JSON.stringify(body), {
+      headers : {"Content-Type":"application/json",
+    //"Authorization" : `Bearer ${jwt}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(response => {
+      console.log("auth: " + response.headers["authorization"]);
+      //setJwt(response.headers["authorization"], "jwt");
+      localStorage.setItem("jwt", response.headers["authorization"]);
+      localStorage.setItem("user", response.data);
+      localStorage.setItem("authenticated", true);
+      setAuthToken(response.headers["authorization"]);
+    }).catch(err => {
+      switch(err.response.status){
+        case 401:
+          setErrorMessage(t('invalid_creds'));
+          break;
+        case 403:
+          setErrorMessage(t('unauthorized'));
+          break;
+        default:
+          setErrorMessage("An error occured");
+          break;
+      }
+      setOpenError(true);
+      return;
+    });
 
-      const request = axios.get("http://localhost:8080/api/client/me", {
-                headers : {"Content-Type":"application/json",
-              "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
-              "Access-Control-Allow-Origin":true}
-              }).then(request => {
-                localStorage.setItem("client_email", request.data.email);
-                localStorage.setItem("lastName", request.data.client.lastName);
-              })
-      
+    const request = axios.get("http://localhost:8080/api/client/me", {
+      headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+    "Access-Control-Allow-Origin":true}
+    }).then(request => {
+      localStorage.setItem("client_email", request.data.email);
+      localStorage.setItem('firstName', request.data.client.firstName);
+      localStorage.setItem("lastName", request.data.client.lastName);
+      setOpen(true);
       setTimeout(()=>{
         navigate("/main-page");
       }, 1000);
-              
-    } catch(err){
-      if(!err?.response){
-        console.log("No server response.");
-      } else {
-        console.log("Login failed");
-      }
-    }
+    }).catch(err => {
+      
+    })
     
+  
   }
 
   const onUpdateField = e => {
@@ -102,6 +117,26 @@ const LoginPage = () => {
   };
 
 
+const [language, setLanguage] = React.useState(Cookies.get("i18next") || "en");
+
+
+const handleChange= (e) => {
+  setLanguage(e.target.value);
+  i18next.changeLanguage(e.target.value);
+}
+
+const languages = [
+  {
+    code : 'fr', 
+    name : 'Français', 
+    country_code : 'fr'
+  }, 
+  {
+    code : 'en', 
+    name : 'English',
+    country_code : 'gb'
+  }
+]
 
 
   // RENDERED PART 
@@ -113,14 +148,19 @@ const LoginPage = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
+      alignContent='center'
       style={{ minHeight: '100vh', margin:'auto' }}>
       <Grid 
         item xs={12} 
-        width={400} >
+        width={400} 
+        alignItems={'center'}
+        alignContent='center'
+        justifyContent={"center"}
+        sx={{textAlign:'center'}}>
         <Card 
           sx={{height: "auto", boxShadow:'5px 5px 5px #9bcc6c'}}>
           <Stack 
-            alignItems='center'>
+            alignItems='center' justifyContent='center' alignContent='center'>
             <img 
               className='login-logo' 
               src={logo} 
@@ -135,10 +175,10 @@ const LoginPage = () => {
             <Typography 
               variant="h7" 
               sx={{mt:1, color:'#262626'}}>
-              Sign in to your account
+              {t('sign_in_to_account')}
             </Typography>
             <form 
-              align='center' 
+              align='center' justifyContent='center'
               style={{textAlign:'center'}} onSubmit={onSubmitForm}>
               <CssTextField 
                 className='login-textfield'
@@ -177,26 +217,49 @@ const LoginPage = () => {
                     <Alert severity='error' sx={{width:"75%"}}>{errors.password.message}</Alert>
                       ) : null}
             
+            
             <ThemeProvider 
               theme={theme}>
                 <Button 
                   variant='contained' 
                   color='primary' 
                   type='submit'
-                  sx={{mt:2, width:'80%', mb:5}} 
+                  sx={{mt:2, width:'80%', mb:3}} 
                   >
-                  Login
+                  {t('login')}
                 </Button>
             </ThemeProvider>
             </form>
+            <Grid container sx={{width:"100%", mb:1, ml:5}} justifyContent='center' alignContent='center' alignItems={'center'} >
+              <Grid item xs={6}>
+                <FormControl sx={{width:'100%'}}>
+                  <InputLabel id="demo-simple-select-label">{t('language')}</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={language}
+                    label={t('language')}
+                    name='language'
+                    onChange={handleChange}
+                    sx={{width:'80%'}}
+                  >
+                    {languages.map(({code, name, country_code}) => (
+                      <MenuItem key={country_code} value={code}> <span className={`fi fi-${country_code}`}></span> {name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <Link 
               className='link-2' 
               to='/reset-password'>
               <Typography 
                 variant="h7" >
-                Forgot your password ? Click here to reset.
+                {t('forgot_password')}
               </Typography>
             </Link>
+            
+            
             <ThemeProvider 
               theme={theme}>
               <Link 
@@ -207,13 +270,19 @@ const LoginPage = () => {
                   variant='outlined' 
                   color='secondary' 
                   sx={{mt:2, width:'100%', mb:5}}>
-                  Register New Account
+                  {t('register')}
                 </Button>
               </Link>
             </ThemeProvider>
           </Stack>
         </Card>
       </Grid>
+      <Snackbar open={open} autoHideDuration={3000} onClose={()=> setOpen(false)}>
+        <Alert severity="success">{t('login_success')}</Alert>
+      </Snackbar>
+      <Snackbar open={openError} autoHideDuration={3000} onClose={()=> setOpenError(false)}>
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
     </Grid>
   )
 }

@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FixedSizeList} from 'react-window';
 import axios from "../../api/axios";
 import { useNavigate } from 'react-router-dom';
-import Portfolio from './Portfolio';
+
 
 
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio";

@@ -72,7 +72,22 @@ function ViewContract() {
   }
 
   const handleCancelContract = () => {
-    alert('DELETE request sent to server');
+    const jwt = localStorage.getItem("jwt");
+    axios.delete(`http://localhost:8080/api/contract/${contract.id}`, {
+      headers: {
+        "Authorization": `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": true,
+      }
+    })
+    .then((response) => {
+      console.log(response);
+    }
+    )
+    .catch((error) => {
+      console.log(error);
+    }
+    )
   }
 
   return (
@@ -267,41 +282,11 @@ function ViewContract() {
                 </Grid>
               </Box>
             </Card>
-            {editMode ? (
-              <Grid container
-              direction='row'
-              justifyContent='center'
-              alignItems='center'
-              >
-                <Grid item xs={6} >
-                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'60%', mb:5}}>
-                      Cancel Changes
-                  </Button>             
-                </Grid>
-                <Grid item xs={6} >
-                  <Button  variant='outlined' color='error' onClick={handleSaveClick} sx={{mt:2, width:'80%', mb:5}}>
-                    Confirm Changes
-                  </Button>
-                </Grid>
-              </Grid>
-            ) : (
-              <Grid container
-              direction='row'
-              justifyContent='center'
-              alignItems='center'
-              >
-                <Grid item xs={6} >
-                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'60%', mb:5}}>
-                    Edit Contract
-                  </Button>
-                </Grid>
-                <Grid item xs={6} >
-                  <Button  variant='outlined' color='error' onClick={handleCancelContract} sx={{mt:2, width:'80%', mb:5}}>
-                    Cancel Contract
-                  </Button>
-                </Grid>
-              </Grid>
-            )}
+            <Grid item xs={6} >
+              <Button  variant='outlined' color='error' onClick={handleCancelContract} sx={{mt:2, width:'80%', mb:5}}>
+                Cancel Contract
+              </Button>
+            </Grid>
           </Grid>
         </Stack>
       </Stack>

@@ -1,22 +1,27 @@
-import React from 'react'
+import React, { useTransition } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
+import {Link, useLoaderData, useLocation} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import DatePicker from 'react-datepicker';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+
 
 function LinkMeter() {
   const date = useParams().date;
   const meterId = useParams().meterId;
+  const {t} = useTranslation();
+  const meter = localStorage.getItem("meter");
+  console.log(meter);
 
   const pageAddress = "/consumption/meter/:meterId/:date";
   const pageName = "View consumption";
-
+  const location = useLocation();
   
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -29,11 +34,44 @@ function LinkMeter() {
       [name]: value,
       }));
   }
-  const handleSaveClick = () => {
+  const handleSaveClick = async() => {
     setEditableData(editableData);
     setEditMode(false);
-    alert('POST data to server');
+    const jwt = localStorage.getItem("jwt");
+     const response = await axios.put(`http://localhost:8080/api/reading/edit_reading`, null, {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true},
+      params : {
+        readingId : "64493b0a7c723c3c5a673a05",
+        value : Number(200)
+      }
+      }).then(response=>{
+        console.log(response);
+      }
+      ).catch(err=>{
+        console.log(err);
+      }
+    );
   }
+  const handleDeleteReading = () => {
+    const jwt = localStorage.getItem("jwt");
+    const response = axios.delete(`http://localhost:8080/api/meter/reject_reading`, {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true},
+      
+      }).then(response=>{
+        console.log(response);
+      }
+      ).catch(err=>{
+        console.log(err);
+      }
+    );
+    setEditableData(readingData);
+    setEditMode(false);
+  }
+
 
   const theme = createTheme({
     palette: {
@@ -52,12 +90,10 @@ function LinkMeter() {
     }
   });
 
-
-
   const readingData = {
     date: date,
-    value: (meterId, date).value,
-    meterId: meterId
+    value: location.state.value,
+    readingId: location.state.id,
   };
 
   const [editMode, setEditMode] = React.useState(false);
@@ -134,17 +170,6 @@ function LinkMeter() {
                   }
                   />
                 </Grid>
-                <Grid item xs={4} >
-                  <TextField
-                  id="unit"
-                  label=""
-                  variant="outlined"
-                  value={true === 'electricity' ? "kWh" : "m3"}
-                  InputProps={
-                    {readOnly: true}
-                  }
-                  />
-                </Grid>
               </Grid>
               <Grid item xs={4} >
               </Grid>
@@ -156,13 +181,13 @@ function LinkMeter() {
               alignItems='center'
               >
                 <Grid item xs={12} >
-                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'40%', mb:5}}>
+                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'35%', mb:5}}>
                     Cancel Changes
                   </Button>             
                 </Grid>
                 <Grid item xs={12} >
                   <Link to={`/consumption/meter/${meterId}`}>
-                    <Button  variant='outlined' color='error' onClick={handleSaveClick} sx={{mt:2, width:'40%', mb:5}}>
+                    <Button  variant='outlined' color='error' onClick={handleSaveClick} sx={{mt:2, width:'35%', mb:5}}>
                       Confirm Changes
                     </Button>
                   </Link>
@@ -174,14 +199,14 @@ function LinkMeter() {
               alignItems='center'
               >
                 <Grid item xs={12} >
-                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'40%', mb:5}}>
+                  <Button  variant='outlined' color='secondary' onClick={handleEditClick} sx={{mt:2, width:'35%', mb:5}}>
                     Edit data
                   </Button>
                 </Grid>
                 <Grid item xs={12} >
                   <Link to={`/consumption/meter/${meterId}`}>
-                    <Button  variant='outlined' color='error' sx={{mt:2, width:'20%', mb:5}}>
-                      Cancel
+                    <Button  variant='outlined' onClick={handleDeleteReading} color='error' sx={{mt:2, width:'35%', mb:5}}>
+                      Delete reading
                     </Button>
                   </Link>
                 </Grid>

@@ -116,7 +116,7 @@ const NewOffer = () => {
     switch (form.energyType) {
       case "both":
         config = {
-          headers: { "Autorization": `Bearer ${jwt}`,
+          headers: { "Authorization": `Bearer ${jwt}`,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": true,
           }
@@ -132,7 +132,7 @@ const NewOffer = () => {
       case "GAZ":
       case "WATER":
         config = {
-          headers: { Authorization: `Bearer ${jwt}`,
+          headers: { "Authorization": `Bearer ${jwt}`,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": true,
           }
@@ -297,7 +297,7 @@ const NewOffer = () => {
                           </Typography>
                         </Grid>
                         <Grid item xs={8}>
-                          <TextField id="cost_ELEC" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} />
+                          <TextField id="cost_ELEC" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} defaultValue={16}  onChange={onUpdateField} />
                         </Grid>
                         <Grid item xs={4}>
                           <Typography variant="h6" component="h2" gutterBottom>
@@ -305,7 +305,7 @@ const NewOffer = () => {
                           </Typography>
                         </Grid>
                         <Grid item xs={8}>
-                          <TextField id="cost_GAZ" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} onChange={onUpdateField} />
+                          <TextField id="cost_GAZ" label="Price in c€" size='small' variant="outlined" inputProps={{ onKeyPress: handleKeyPress }} defaultValue={68} onChange={onUpdateField} />
                         </Grid>
                       </Grid>
                       : null}

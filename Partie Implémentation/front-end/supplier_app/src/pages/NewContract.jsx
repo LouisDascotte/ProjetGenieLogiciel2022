@@ -32,7 +32,6 @@ function NewContract() {
   const API_URL = 'http://localhost:8080/api/contract/supplier_offers';
 
   const handleContractCreation = () => {
-    /*
     async function createContract() {
       try {
         const jwt = localStorage.getItem('jwt');
@@ -55,7 +54,6 @@ function NewContract() {
       }
     };
     createContract();
-    */
   };
 
   const handleContractTypeChange = (event, newContractType) => {
@@ -99,7 +97,7 @@ function NewContract() {
     energyType: 'ELEC',
   });
 
-  const formValid = (form.clientId.length === 18) && (form.offerId !== ''); 
+  const formValid = (form.clientId.length !=='') && (form.offerId !== ''); 
 
   const offers = offerDispo.filter(offer => offer.energyType === form.contractType);
 

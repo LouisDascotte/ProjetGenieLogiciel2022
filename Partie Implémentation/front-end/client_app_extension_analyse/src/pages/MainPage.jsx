@@ -17,6 +17,7 @@ import {  Link, useLocation, useNavigate} from 'react-router-dom';
 import { useForceUpdate } from '../components/hooks/useForceUpdate';
 import {createBrowserHistory} from "history";
 import axios from "../api/axios";
+import { useTranslation } from "react-i18next";
 
 
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
@@ -24,6 +25,8 @@ const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
 
 
 const MainPage = () => {
+    const { t } = useTranslation();
+
     // hardcoded const in order to test the "create portfolio message"
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
     const [portfolio, setPortfolio] = useState({});
@@ -33,7 +36,7 @@ const MainPage = () => {
 
     
     const pageAddress = "/main-page";
-    const pageName = "General overview";
+    const pageName = t('general_overview');
 
     const { collapseSidebar } = useProSidebar(); 
 
@@ -105,7 +108,7 @@ const MainPage = () => {
                             <Menu>
                                 <Box sx={{ minWidth: 120 }}>
                                 <FormControl fullWidth size="small" margin="normal">
-                                <InputLabel margin="normal" id="select-portfolio-label">Portfolio:</InputLabel>
+                                <InputLabel margin="normal" id="select-portfolio-label">{t('portfolio')}:</InputLabel>
                                 <Select
                                     labelId="portfolio-select-label"
                                     id="portfolio-select"
@@ -132,34 +135,29 @@ const MainPage = () => {
                     </MenuItem>
                     <Link to="/main-page" className='link' >
                         <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
-                            General overview
+                            {t('general_overview')}
                         </MenuItem>
                     </Link>
                     <Link to="/manage-portfolios" className='link'>
                         <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
-                            Manage portfolios
+                            {t('manage_portfolios')}
                         </MenuItem>
                     </Link>
                     <Link to="/manage-meters" className='link'>
                         <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                            Manage meters
+                            {t('manage_meters')}
                         </MenuItem>
                     </Link>
                     <Link to="/manage-contracts" className='link'>
                         <MenuItem icon={<AssignmentIndOutlinedIcon />}>
-                            Manage contracts
-                        </MenuItem>
-                    </Link>
-                    <Link to="/manage-invoices" className='link'>
-                        <MenuItem icon={<ReceiptOutlinedIcon />} >
-                            Manage invoices
+                            {t('manage_contracts')}
                         </MenuItem>
                     </Link>
                 </Menu>
             </Sidebar>
         <Stack sx={{display:'flex', width:"100%"}}>  
             <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
-            <Stack direction='row' justifyContent='center'>
+            <Stack direction='row' justifyContent='center' sx={{minHeight:900}}>
                 { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
                 // 'Portfolio graphic' replaces an actual portfolio infographic for now
                 hasSelectedPortfolio ? <PortfolioMainGraph portfolio={data}/> : <PortfolioPlaceHolder/>

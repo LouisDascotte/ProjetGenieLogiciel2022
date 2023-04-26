@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu';
 import {Stack,Card, Grid, Button, ThemeProvider, createTheme, Hidden, List, ListItem,ListItemText} from '@mui/material';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useParams, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { MeterList as Meters, MeterReadingList as Readings } from '../resources/Lists';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 
 
-
 const ViewMeter = () => {
   const id = useParams().meterId;
+  const nav = useNavigate();
 
   const theme = createTheme({
     palette: {
@@ -51,7 +50,7 @@ const ViewMeter = () => {
           }
         };
         const response = await axios.get(API_URL+meterId+"/readings", config);
-        console.log(response);
+
         console.log(response.data);
         setReadings(response.data);
       } catch (error) {
@@ -68,13 +67,6 @@ const ViewMeter = () => {
   const handleReadingDeletion = () => {
     alert('DELETE request sent to server');
   };
-  
-  const getReadingBytMeterId = (meterID) => {
-    const idInt = parseInt(meterID,10);
-    return Readings.filter((reading) => reading.meterId === idInt);
-  };
-  
-  const reads = getReadingBytMeterId(id);
 
   return (
     <ThemeProvider theme={theme}>
@@ -90,38 +82,20 @@ const ViewMeter = () => {
                   </Button>
                 </Link>
               <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                {reads.map((reading) => (
+                { readings.length === 0 ? <h3>No readings found</h3>
+                :
+                readings.map((reading) => (
                   <ListItem key={reading.date}>
                     <ListItemText primary={`${reading.date}`} />
-                    <Link to={`/consumption/meter/${id}/${reading.date}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                      <Button variant="contained" color='primary' onClick={() => handleMeterClick(reading.meterId)}>
+                      <Button variant="contained" color='primary' onClick={() => nav(`/consumption/meter/${id}/${reading.date}`, {state : reading})}>
                       See more
                       </Button>
-                    </Link>
-                    <Button variant="contained" color='primary' onClick={handleReadingDeletion} >
-                      <DeleteIcon />
-                    </Button>
                   </ListItem>
-                ))}
+                ))
+                }
               </List>
             </Card>
-            <Card sx={{width:'40%', m:2, height:'60%'}}>
-              <List style={{maxHeight: '100%', overflow: 'auto'}} >
-                {readings.map((reading) => (
-                  <ListItem key={reading.date}>
-                    <ListItemText primary={`${reading.date}`} />
-                    <Link to={`/consumption/meter/${id}/${reading.date}`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                      <Button variant="contained" color='primary' onClick={() => handleMeterClick(reading.ean)}>
-                      See more
-                      </Button>
-                    </Link>
-                    <Button variant="contained" color='primary' onClick={handleReadingDeletion} >
-                      <DeleteIcon />
-                    </Button>
-                  </ListItem>
-                ))}
-              </List>
-            </Card>
+            
             <ThemeProvider theme={theme}>
             <Grid item xs={12} align='center'>
                 <Link to={`/consumption/meter/${id}/import`} className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>

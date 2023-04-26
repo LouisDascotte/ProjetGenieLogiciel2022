@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import SideMenu from '../components/SideMenu'
 import {Button, Card, Grid, List, ListItem, ListItemText, Stack, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import { ClientList as Clients, MeterList as Meters} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
@@ -57,12 +57,9 @@ function ViewClient() {
 
   const pageAddress = "/client/:id";
   const pageName = "View Client";
+  const nav = useNavigate();
 
   const [openDialog, setOpenDialog] = React.useState(false);
-
-  function getClientName() {
-    return client.name;
-  }
 
   const handleRemoveClient = () => {
     alert("DELETE request sent to server ");
@@ -75,6 +72,10 @@ function ViewClient() {
   const handleClose = () => {
     console.log("close dialog");
     setOpenDialog(false);
+  };
+
+  const getClientName = () => {
+    return client.firstName + " " + client.lastName;
   };
 
   const getMetersByClientId = (id) => {
@@ -117,37 +118,19 @@ function ViewClient() {
                 paddingLeft={4}
                 paddingBottom={2}
                 >
-                  <Grid item xs={5}>
+                  <Grid item xs={7}>
                     <Typography variant="h6" component="h4" align="left" fontWeight={800} >
                       Client ID: {client.id}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography component="h2" align="left" >
-                      Email: 
-                    </Typography>
-                  </Grid>
-                  <Grid item xs >
-                  </Grid>
                   <Grid item xs={5}>
+                  </Grid>
+                  <Grid item xs={7}>
                     <Typography component="h2" align="left" >
                       Name: {getClientName()}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography component="h2" align="left" >
-                      Phone: 
-                    </Typography>
-                  </Grid>
-                  <Grid item xs >
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography component="h2" align="left" fontWeight={800} >
-                      Client's address:
-                    </Typography>
-                    <Typography component="h2" align="left" >
-                     
-                    </Typography>
+                  <Grid item xs={5}>
                   </Grid>
                 </Grid>
               </Box>
@@ -158,11 +141,9 @@ function ViewClient() {
             alignItems='center'
             >
               <Grid item xs={6} >
-                <Link to={`/clients/${client.clientId}/link-meter`} className='link-3' style={{display: 'inline-block', mt:2, width:'60%', mb:5}}>
-                  <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
+                  <Button  variant='outlined' color='secondary' onClick={ () => nav(`/clients/${client.id}/link-meter`, {state : client})} sx={{mt:2, width:'100%', mb:5}} >
                     Link Meter
                   </Button>
-                </Link>
               </Grid>
               <Grid item xs={6} >
                 <Button  variant='outlined' color='secondary' onClick={handleClickOpen} sx={{mt:2, width:'60%', mb:5}}>

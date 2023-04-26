@@ -7,13 +7,15 @@ import TopMenu from "../components/TopMenu";
 import SideMenu from "../components/SideMenu";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Offer from '../components/Offer';
+import {useTranslation} from 'react-i18next';
 
 
 const OffersPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const {t} = useTranslation();
   const pageAddress = "/offers";
-  const pageName = "Offers";
+  const pageName = t('offers');
   const CONTRACT_URL = "http://localhost:8080/api/contract";
 
   const jwt = localStorage.getItem("jwt");
@@ -24,7 +26,6 @@ const OffersPage = () => {
 
   useEffect(() => {
     if (location.state.body.energyType === "ELECTRICITY_AND_GAS"){
-      console.log("BON ENDROIT")
       const response = axios.get("http://localhost:8080/api/contract/offers/gaz_elec", {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
@@ -64,8 +65,6 @@ const OffersPage = () => {
     parameters = location.state.body;
   }
 
-  console.log(location.state.body)
-
   const [selectedOffer, setSelectedOffer] = useState("");
   
   const selectOffer = (offer_id) => {
@@ -89,20 +88,37 @@ const OffersPage = () => {
     setSuccess(false);
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     console.log(parameters)
     try{
-      const req = axios.post(CONTRACT_URL, parameters, {
-        headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      , params : {
-        offerId : selectedOffer
-      }}).then(response => {
-        console.log(response.data);
-
-        navigate("/manage-contracts");
-      })
+      if (parameters.energyType === "ELECTRICITY_AND_GAS"){
+        const req = await axios.post("http://localhost:8080/api/contract/gaz_elec", parameters, {
+          headers : {
+            "Content-Type":"application/json",
+            "Authorization" : `Bearer ${jwt}`,
+            "Access-Control-Allow-Origin":true
+          }, params : {
+            offerId : selectedOffer,
+          }
+        }).then(response => {
+          setSuccess(true);
+          setOpen(false);
+          setTimeout(()=>{
+            navigate("/manage-contracts");
+          }, 2000)
+        })
+      } else {
+        const req =await  axios.post(CONTRACT_URL, parameters, {
+          headers : {"Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true}
+        , params : {
+          offerId : selectedOffer
+        }}).then(response => {
+          navigate("/manage-contracts");
+        })
+      }
+      
     } catch (err){
       console.log(err);
     }
@@ -115,28 +131,30 @@ const OffersPage = () => {
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
         <IconButton onClick={() => navigate(-1)} sx={{mt:2}}>
           <ArrowBackIcon/>
-          <div> back</div>
+          <div>{t('back')}</div>
         </IconButton>
         <Paper sx={{width:"60%", height:"60vh"}} component={Stack} direction='column' justifyContent={'center'}>
           <Dialog open={open} onClose={()=> setOpen(false)}>
-            <DialogTitle>Offer {selectedOffer}</DialogTitle>
+            <DialogTitle>{t('offer')} {selectedOffer}</DialogTitle>
             <DialogContent>
-              <h1>Do you want to confirm this contract request ?</h1>
+              <h1>{t('confirm_contract_request')}</h1>
               <Stack direction='row' alignItems='center' justifyContent={'space-evenly'}>
                 <Button onClick={handleCancel}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button onClick={handleConfirm}>
-                  Confirm
+                  {t('confirm')}
                 </Button>
               </Stack>
             </DialogContent>
           </Dialog>
-          <Carousel>
-            {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
-          </Carousel>
+           {offers.length === 0 ? <h1 alignItems='center' justifyContent='center' style={{textAlign:"center"}}>{t('no_offers')}</h1> :
+           <Carousel>
+           {offers.map(item => <Offer key={item.offer_id} offer={item} selectOffer={selectOffer} />)}
+         </Carousel> }
+          
           <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity='success'>Portfolio successfully created !</Alert>
+            <Alert onClose={handleClose} severity='success'> {t('contract_request_success')}</Alert>
           </Snackbar>
         </Paper>
       </Stack>

@@ -26,6 +26,7 @@ import ImportConsumption from "./pages/ImportConsumption";
 import ViewMeter from "./pages/ViewMeter";
 import ManageOffer from "./pages/ManageOffer";
 import NewOffer from "./pages/NewOffer";
+import Notification from './components/notifications/Notification';
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
                   <Route path='/consumption/meter/:meterId/import' element={<PrivateRoute><ImportConsumption/></PrivateRoute>}/>
                   <Route path='/offers' element={<PrivateRoute><ManageOffer/></PrivateRoute>}/>
                   <Route path='/offers/new' element={<PrivateRoute><NewOffer/></PrivateRoute>}/>
+                  <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

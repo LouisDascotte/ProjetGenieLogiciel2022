@@ -11,12 +11,13 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 
-
+import {useTranslation} from 'react-i18next';
 
 
 const SideMenu = (mainPage) => {
     const { collapseSidebar } = useProSidebar(); 
     const [page, setPage] = useState("");
+    const {t} = useTranslation();
     const changePage = (event) => {
         setPage(event.target.value);
         
@@ -43,27 +44,22 @@ const SideMenu = (mainPage) => {
                 </MenuItem>
                 <Link to="/main-page" className='link' >
                     <MenuItem icon={<VisibilityOutlinedIcon />} onClick={()=>{}}>
-                        General overview
+                        {t('general_overview')}
                     </MenuItem>
                 </Link>
                 <Link to="/manage-portfolios" className='link'>
                     <MenuItem icon={<AccountBalanceWalletOutlinedIcon />} onClick={()=>{}}>
-                        Manage portfolios
+                        {t('manage_portfolios')}
                     </MenuItem>
                 </Link>
                 <Link to="/manage-meters" className='link'>
                     <MenuItem icon={<ElectricMeterOutlinedIcon />}>
-                        Manage meters
+                        {t('manage_meters')}
                     </MenuItem>
                 </Link>
                 <Link to="/manage-contracts" className='link'>
                     <MenuItem icon={<AssignmentIndOutlinedIcon />}>
-                        Manage contracts
-                    </MenuItem>
-                </Link>
-                <Link to="/manage-invoices" className='link'>
-                    <MenuItem icon={<ReceiptOutlinedIcon />} >
-                        Manage invoices
+                        {t('manage_contracts')}
                     </MenuItem>
                 </Link>
             </Menu>

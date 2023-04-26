@@ -4,6 +4,7 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import{Card, Stack} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
+import {useTranslation} from "react-i18next";
 
 const URL = "http://localhost:8080/api/meter/allocations";
 const jwt = localStorage.getItem("jwt");
@@ -11,6 +12,7 @@ const jwt = localStorage.getItem("jwt");
 
 const AssignmentHistoryPage = () => {
 
+  const {t} = useTranslation();
   
 
   const [data, setData] = React.useState([]);
@@ -61,7 +63,7 @@ const AssignmentHistoryPage = () => {
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
-        <TopMenu pageAddress={"/assignment-history"} pageName={"Assignment History"}/>
+        <TopMenu pageAddress={"/assignment-history"} pageName={t('assignment_history')}/>
         <Card sx={{m:5, height:'100%', width:"90%"}}>
           <DataGrid 
           rows={rows} 

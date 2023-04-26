@@ -180,7 +180,7 @@ const ManageOffer = () => {
                               >
                                 <Grid item xs={12}>
                                   <Typography variant="body1" gutterBottom>
-                                    {item.energyType === "ELEC" ? "Elec" : item.energyType === "GAS" ? "Gas" : "Water"}: {(item.cost)}€/{item.energyType === "ELEC" ? "kWh" : "m3"}
+                                    {item.energyType === "ELEC" ? "Elec" : item.energyType === "GAZ" ? "Gas" : "Water"}: {(item.cost)}€/{item.energyType === "ELEC" ? "kWh" : "m3"}
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -210,7 +210,7 @@ const ManageOffer = () => {
                             </Grid>
                             <Grid item xs={12}>
                               <Typography variant="body1" gutterBottom>
-                                Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAS" ? "Gas" : item.energyType === "WATER" ? "Water" : "Electricity and Gas"}
+                                Energy type: {item.energyType === "ELEC" ? "Electricity" : item.energyType === "GAZ" ? "Gas" : item.energyType === "WATER" ? "Water" : "Electricity and Gas"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>

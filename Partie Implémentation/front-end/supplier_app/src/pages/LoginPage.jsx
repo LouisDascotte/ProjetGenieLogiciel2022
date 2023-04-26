@@ -181,15 +181,6 @@ const LoginPage = () => {
                 </Button>
             </ThemeProvider>
             </form>
-            <Link 
-              className='link-2' 
-              to='/reset-passwd'
-              >
-              <Typography 
-                variant="h7" >
-                Forgot your password ? Click here to reset.
-              </Typography>
-            </Link>
           </Stack>
         </Card>
       </Grid>

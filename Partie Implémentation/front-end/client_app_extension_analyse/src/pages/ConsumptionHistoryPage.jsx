@@ -1,18 +1,24 @@
 import React, { useEffect , useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from "../api/axios";
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {DataGrid, GridToolbar, GridToolbarContainer,
+  GridToolbarExportContainer,
+  GridCsvExportMenuItem,
+  useGridApiContext,
+  gridFilteredSortedRowIdsSelector,
+  gridVisibleColumnFieldsSelector,} from '@mui/x-data-grid';
 import{Card, Stack, ButtonGroup, Button, IconButton, Box} from "@mui/material";
 import SideMenu from '../components/SideMenu';
 import TopMenu from '../components/TopMenu';
 import PortfolioMainGraph from '../components/PortfolioMainGraph';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 const ConsumptionHistoryPage = () => {
   
   const {id} = useParams();
-
+  const {t} = useTranslation();
   const jwt = localStorage.getItem("jwt");
   const URL2 = `http://localhost:8080/api/portfolio/${id}/consumption`
   const [data, setData] = useState({});
@@ -34,6 +40,18 @@ const ConsumptionHistoryPage = () => {
         setData(response.data);
       })
   }, [])
+
+  // Snippet of code obtained on stackOverflow
+  const exportData = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(data)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "consumption.json";
+
+    link.click();
+  };
 
 
   const columns = [
@@ -60,7 +78,7 @@ if (!(data.ELEC === undefined)){
     ean : row.ean,
     date : row.date, 
     id : row.id, 
-    value : row.value,
+    value : (row.value === undefined ? row.dayValue + row.nightValue : row.value),
     energy : "ELEC"
   }))
 } else {
@@ -99,28 +117,32 @@ if (!(data.WATER === undefined)){
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >
       <SideMenu/>
-      <Stack sx={{display:'flex', width:"100%"}} >
-        <TopMenu pageAddress={"/consumption-history"} pageName={"Consumption History"}/>
+      <Stack sx={{display:'flex', width:"100%", height:'100%'}} >
+        <TopMenu pageAddress={"/consumption-history"} pageName={t('consumption_history')}/>
         <Stack justifyContent='center' alignContent="center" alignItems='center' sx={{display:'flex'}}>
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Box sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}>
-            {type === "TABLE" ? 
-            <DataGrid 
-            rows={rows} 
-            columns={columns} 
-            pageSize={10} 
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            /> : <PortfolioMainGraph portfolio={data}/>
-          }
-            
-          </Box>
+          <Stack alignItems="center" justifyContent='center' alignContent='center'>
+
+           {type === "TABLE" ? 
+           <Card sx={{mt:5, mb:2, minHeight:'60vh', width:"90%"}}>
+              <DataGrid 
+              rows={rows} 
+              columns={columns} 
+              pageSize={10} 
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              /> </Card>: <Stack sx={{mt:5, minHeight:'60vh', width:"90%"}}><PortfolioMainGraph portfolio={data}/></Stack> 
+            }      
+          </Stack>
           <ButtonGroup variant="contained">
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>
+            <Button variant="contained" onClick={exportData}>
+                {t('export_json')}
+            </Button>
           </ButtonGroup>
         </Stack>
       </Stack>

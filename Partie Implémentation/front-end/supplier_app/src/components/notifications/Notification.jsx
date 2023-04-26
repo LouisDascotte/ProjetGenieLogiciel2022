@@ -1,8 +1,8 @@
 import React from 'react'
 import TopMenu from '../TopMenu'
 import SideMenu from '../SideMenu'
-import {Stack, Box, Typography, IconButton} from '@mui/material'
-import {useLocation, useNavigate} from 'react-router-dom'
+import {Stack, Box, Typography, IconButton, Button} from '@mui/material'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios'
 import  ArrowBackIcon  from '@mui/icons-material/ArrowBack'
 import { useTranslation } from 'react-i18next'
@@ -22,20 +22,12 @@ const Notification = () => {
         return "Your reading entry has been sent.";
       case "CONTRACT_REQUEST_NOTIFICATION":
         return "Your contract request has been sent.";
-      case "ACCEPT_CONTRACT_NOTIFICATION":
-        return "Your contract request has been accepted."
       case "CANCEL_CONTRACT_REQUEST_NOTIFICATION":
         return "Your contract cancellation request has been sent."
-      case "END_CONTRACT_NOTIFICATION":
-        return "Your contract has ended."
-      case "CANCEL_CONTRACT_NOTIFICATION": 
-        return "Your contract has been cancelled."
-      case "LINK_METER_NOTIFICATION"  :
-        return "Your meter has been linked."
-      case "UNLINK_METER_NOTIFICATION":
-        return "Your meter has been unlinked."
       case "NOTIFICATION":
         return "You received a notification."
+      default :
+        return "You received a notification.";
     }
   }
   
@@ -63,6 +55,20 @@ const Notification = () => {
               <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
                 <strong> {t('sender')} :</strong> {location.state.senderId}
               </Typography>
+
+              { location.state.type === "CONTRACT_REQUEST_NOTIFICATION" ?
+                <Button variant='contained' color='primary' sx={{m:2}} onClick={() => navigate(`/contracts/requests/${location.state.contract.id}`, {state : location.state.contract})} >
+              {t('Click to be redirected')}
+                </Button>
+              : null }
+              { location.state.type === "CANCEL_CONTRACT_REQUEST_NOTIFICATION" ?
+                <Button variant='contained' color='primary' sx={{m:2}} onClick={() => navigate(`/contracts/${location.state.contract.id}`, {state : location.state.contract})} >
+              {t('Click to be redirected')}
+                </Button>
+              : null }
+
+              { location.state.type === "READING_NOTIFICATION" ?  null
+              : null}
             </Stack>
           </Box>
         </Stack>

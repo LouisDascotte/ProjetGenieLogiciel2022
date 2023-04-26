@@ -1,4 +1,4 @@
-import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup } from '@mui/material';
+import { Button, FormControl, Select, Box,  IconButton, Card, MenuItem, Stack,Dialog, DialogTitle, DialogContent, Typography, Grid, ButtonGroup, Snackbar, Alert } from '@mui/material';
 import {React, useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from '../../api/axios';
@@ -6,10 +6,12 @@ import TopMenu from '../TopMenu';
 import SideMenu from '../SideMenu';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {useTranslation} from 'react-i18next';
 
 const METER_URL = "http://localhost:8080/api/meter/all";
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio";
 export const Portfolio2 = () => {
+  const {t} = useTranslation();
   const {id} = useParams();
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ export const Portfolio2 = () => {
   });
   const [meters, setMeters] = useState([]);
   const pageAddress = "";
-  const pageName= "Manage portfolio"; 
+  const pageName= t('manage_portfolio'); 
   const [activeMeters, setActiveMeters] = useState([]);
   const [activeProductionPoints, setActiveProductionPoints] = useState([]);
   const [state, setState] = useState(0);
@@ -55,29 +57,47 @@ export const Portfolio2 = () => {
   const [selectedMeters, setSelectedMeters] = useState([]);
   const [selectedMetersToRemove, setSelectedMetersToRemove] = useState([]);
   const [tempMeter, setTempMeter] = useState("");
-  
+
+  // used to display the error message
+  const[problemMeter, setProblemMeter] = useState("");
+  const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
   }
 
   function checkMeter(ean){
-    
-    meters.map(meter=>{
-      if (meter.ean === ean){
-        return false; 
+    for (let i = 0; i < meters.length; i++){
+      if (meters[i].ean === ean){
+        return true; 
       }
-    })
-    return true;
+    }
+    return false; 
+  }
+
+  function inActiveMeters(meter){
+    for (let i = 0; i < activeMeters.length; i++){
+      if (activeMeters[i].ean === meter){
+        return true; 
+      }
+    }
+    return false; 
   }
 
   const handleConfirm = () => {
-    if ((!selectedMeters.includes(tempMeter))){
-     
-      if (checkMeter(tempMeter)){
-        
-        selectedMeters.push(tempMeter);
+    if (selectedMeters.includes(tempMeter) === false){
+      if (inActiveMeters(tempMeter) === false){
+        if (checkMeter(tempMeter)){
+          if (tempMeter !== "")
+            selectedMeters.push(tempMeter);
+        }
+      } else if (inActiveMeters(tempMeter) === true){
+        console.log("pass")
+        setProblemMeter(tempMeter);
+        setAlreadyInPortfolio(true);
       }
+      
     }
     setOpen(false);
   }
@@ -87,6 +107,7 @@ export const Portfolio2 = () => {
     setOpen(false);
   }
 
+
   const removeSelected = (meter) => {
     const index = selectedMeters.indexOf(meter);
     if (index > -1) {
@@ -95,7 +116,7 @@ export const Portfolio2 = () => {
     setState(state+1);
   }
 
-  const update = () => {
+  const update = async () => {
     
     let body = [];
     selectedMeters.map(meter => {
@@ -106,18 +127,20 @@ export const Portfolio2 = () => {
         }
       }
     });
+    console.log(meters)
 
-    
-
+    const responses = [];
+   
     for (let i = 0; i < body.length; i++) {
-      
-      const req = axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(body[i]), {
+      let newBod = {
+        "EAN": body[i].ean,
+        "type" : "SUPPLY_POINT"
+      }
+      responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(newBod), {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
-      }).then(req => {
-        
-      })
+      }))
     }
 
     let body2 = [];
@@ -130,13 +153,11 @@ export const Portfolio2 = () => {
     })
 
     for (let i = 0; i < body2.length; i++) {
-      const req = axios.delete(PORTFOLIO_URL + `/${id}/supply_point/${body2[i].ean}`, {
+      responses.push( await axios.delete(PORTFOLIO_URL + `/${id}/supply_point/${body2[i].ean}`, {
         headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
-      }).then(req => {
-        
-      })
+      }))
     }
 
     setState(state+1);
@@ -145,8 +166,11 @@ export const Portfolio2 = () => {
   }
 
   const deleteMeter = (ean) => {
-    selectedMetersToRemove.push(ean);
-    setState(state+1);
+    if (selectedMetersToRemove.includes(ean) === false){
+      selectedMetersToRemove.push(ean);
+      setState(state+1);
+    }
+
   }
 
 
@@ -164,12 +188,12 @@ export const Portfolio2 = () => {
             <Grid container spacing={0} alignItems={"center"} alignContent={"center"} justifyContent={"center"}>
               <Typography variant="h4">{portfolio.name}</Typography>
             </Grid>
-            <Typography variant="h5" sx={{m:2}}>
-              Linked supply points :
+            <Typography variant="h5" sx={{m:1}}>
+              {t('linked_meters')} :
             </Typography>
             {activeMeters.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}} value={meter.id}>• {meter.ean}</Typography>
+              <Typography variant="h6" sx={{m:1}} value={meter.id}>• {meter.ean}</Typography>
               <IconButton sx={{mr:2}} onClick={() => {deleteMeter(meter.ean)}}>
                 <DeleteIcon/>
               </IconButton>
@@ -177,50 +201,47 @@ export const Portfolio2 = () => {
               
             )}
             <Typography variant="h5" sx={{m:2}}>
-              Linked Production points :
-            </Typography>
-            <Typography variant="h5" sx={{m:2}}>
-              Selected supply points to add : 
+              {t('selected_meters_add')} : 
             </Typography>
             {selectedMeters.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}}>• {meter}</Typography>
+              <Typography variant="h6" sx={{m:1}}>• {meter}</Typography>
               <IconButton sx={{mr:2}} onClick={() => {removeSelected(meter)}}>
                 <DeleteIcon/>
               </IconButton>
             </Stack>
               
             )}
-            <Typography variant="h5" sx={{m:2}}>
-              Selected supply points to delete :
+            <Typography variant="h5" sx={{m:1}}>
+              {t('selected_meters_remove')} :
             </Typography>
             {selectedMetersToRemove.map(meter => 
             <Stack direction="row">
-              <Typography variant="h6" sx={{m:2}}>• {meter}</Typography>
+              <Typography variant="h6" sx={{m:1}}>• {meter}</Typography>
             </Stack>
               
             )}
            
-            <Typography variant="h5" sx={{m:2}}>
-              Address : 
+            <Typography variant="h5" sx={{m:1}}>
+              {t('address')} :
             </Typography>
-            <Typography variant="h6" sx={{m:2}}>
+            <Typography variant="h6" sx={{m:1}}>
               {portfolio.address}
             </Typography>
            
             
             <ButtonGroup sx={{mt:1, mb:1}}>
               <Button onClick={() => setOpen(true)}>
-                Add supply point
+               {t('add_meter')}
               </Button>
               <Button onClick={()=> navigate(`/consumption/${id}`)}>
-                Show consumption
+                {t('show_consumption')}
               </Button>
             </ButtonGroup>
             
             <Dialog fullWidth open={open} onClose={()=> setOpen(false)}>
               <DialogTitle>
-                Add supply point
+                {t('add_meter')}
               </DialogTitle>
               <DialogContent>
                 <FormControl fullWidth >
@@ -239,10 +260,10 @@ export const Portfolio2 = () => {
                 </FormControl>
                 <Stack direction="row" justifyContent={"center"}>
                   <Button onClick={handleConfirm}>
-                    Confirm
+                    {t('confirm')}
                   </Button>
                   <Button onClick={handleCancel}>
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </Stack>
               </DialogContent>
@@ -251,10 +272,15 @@ export const Portfolio2 = () => {
             
           </Card>
         </Stack>
-        <Button variant="outlined" onClick={update} sx={{width:"60%"}}>
-          Apply changes
+        <Button variant="outlined" onClick={update} sx={{width:"10%"}}>
+          {t('apply_changes')}
         </Button>
       </Stack>
+      <Snackbar open={alreadyInPortfolio} autoHideDuration={6000} onClose={() => setAlreadyInPortfolio(false)}>
+          <Alert severity="warning">
+            {t('meter_already_linked', {ean : problemMeter})}
+          </Alert>
+        </Snackbar>
     </Stack>
   )
 }

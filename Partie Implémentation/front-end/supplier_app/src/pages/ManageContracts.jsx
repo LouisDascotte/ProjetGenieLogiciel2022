@@ -34,7 +34,7 @@ const ManageContracts = () => {
         const jwt = localStorage.getItem("jwt");
         const config = {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            "Authorization": `Bearer ${jwt}`,
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": true,
           }
@@ -76,13 +76,7 @@ const ManageContracts = () => {
                 </List>
               </Box>
             </Card> 
-            <Grid item xs={12} align='center'>
-              <Link to='/contracts/new' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
-                <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
-                  New contract
-                </Button>
-              </Link>
-            </Grid>
+
             <Grid item xs={12} align='center'>
               <Link to='/contracts/requests' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
                 <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>

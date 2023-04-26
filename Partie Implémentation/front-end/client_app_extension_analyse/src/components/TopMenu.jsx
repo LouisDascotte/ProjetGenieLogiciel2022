@@ -26,17 +26,3 @@ const TopMenu = ({pageAddress, pageName}) => {
 }
 
 export default TopMenu
-/**
- * 
- * <Grid container justifyContent="space-around" sx={{p:2}} direction="row">
-        <Grid justifyContent="center" item xs="auto">
-          <Link to={'/main-page'} className='link'><img src={logo} alt='logo' width={50} height={50}/></Link>
-        </Grid>
-        <Grid item xs={"auto"}>
-          <h1 className='title'>{pageName}</h1>
-        </Grid>
-        <Grid item xs>
-          <AccountMenu/>
-        </Grid>
-      </Grid>
- */

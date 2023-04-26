@@ -25,7 +25,7 @@ const MainPage = () => {
     const handleChange = (e) => {
         const{value} = e.target; 
         setPage(value);
-    }  
+    }
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>

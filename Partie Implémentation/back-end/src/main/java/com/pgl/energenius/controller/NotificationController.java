@@ -23,6 +23,32 @@ public class NotificationController {
     private NotificationService notificationService;
 
     /**
+     * PUT method to put a notification the current authenticated user as read.
+     *
+     * @return OK and Authenticated user's notification was changed to read. Otherwise, an appropriate HTTP status code.
+     */
+    @PutMapping("/{id}/read")
+    public ResponseEntity<?> readNotification(@PathVariable("id") ObjectId notificationId) {
+
+        try {
+            notificationService.readNotification(notificationId);
+            return ResponseEntity.ok().build();
+
+        } catch (ObjectNotValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * GET method to get the notification of the current authenticated user.
      *
      * @return OK and authenticated user's notifications if successful. Otherwise, an appropriate HTTP status code.
@@ -42,19 +68,16 @@ public class NotificationController {
     }
 
     /**
-     * PUT method to put a notification the current authenticated user as read.
+     * DELETE method to delete a notification of the current authenticated user.
      *
-     * @return OK and Authenticated user's notification was changed to read. Otherwise, an appropriate HTTP status code.
+     * @return OK if successfully deleted notification. Otherwise, an appropriate HTTP status code.
      */
-    @PutMapping("/{id}/read")
-    public ResponseEntity<?> readNotification(@PathVariable ObjectId id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteNotification(@PathVariable("id") ObjectId notificationId) {
 
         try {
-            notificationService.readNotification(id);
+            notificationService.deleteNotification(notificationId);
             return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -82,4 +82,30 @@ public class NotificationService {
         notification.setStatus(Notification.Status.READ);
         saveNotification(notification);
     }
+
+    public void deleteNotification(ObjectId notificationId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        try {
+            Client client = securityUtils.getCurrentClientLogin().getClient();
+
+            Notification notification = notificationRepository.findById(notificationId)
+                    .orElseThrow(() -> new ObjectNotFoundException("Notification not found of id:" + notificationId));
+
+            if (!Objects.equals(notification.getReceiverId(), client.getId())) {
+                throw new UnauthorizedAccessException("The authenticated client cannot access this notification");
+            }
+            notificationRepository.delete(notification);
+
+        } catch (InvalidUserDetailsException ignored) {}
+
+        Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ObjectNotFoundException("Notification not found of id:" + notificationId));
+
+        if (!Objects.equals(notification.getReceiverId(), supplier.getId())) {
+            throw new UnauthorizedAccessException("The authenticated supplier cannot access this notification");
+        }
+        notificationRepository.delete(notification);
+    }
 }

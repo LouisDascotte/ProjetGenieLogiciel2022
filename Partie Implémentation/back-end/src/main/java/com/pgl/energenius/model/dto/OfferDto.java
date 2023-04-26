@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The OfferDto class represents a DTO for the GazElecContract object.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

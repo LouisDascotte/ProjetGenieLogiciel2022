@@ -12,26 +12,20 @@ import {useTranslation } from 'react-i18next';
 
 const ProductionHistoryPage = () => {
   
-  const {id} = useParams();
+  const {id, ean} = useParams();
   const {t} = useTranslation();
   const jwt = localStorage.getItem("jwt");
-  const URL2 = `http://localhost:8080/api/portfolio/${id}/production`
-  const [data, setData] = useState({});
-  const [elec, setElec] = useState([]);
-  const [gas, setGas] = useState([]);
-  const [water, setWater] = useState([]);
+  const [data, setData] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(()=>{
-    const response = axios.get(URL2, {
+    const response = axios.get(`http://localhost:8080/api/portfolio/${id}/supply_point/${ean}/consumption`, {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
-        setElec(response.data.ELEC);
-        /*setGas(response.data.GAZ);
-        setWater(response.data.WATER);*/
+        console.log(response.data)
         setData(response.data);
       })
   }, [])
@@ -52,48 +46,21 @@ const ProductionHistoryPage = () => {
     }
   ]
 
-let elec_rows = []
-let gas_rows = []
-let water_rows = []
+let data_rows = []
 
-if (!(data.ELEC === undefined)){
-  elec_rows = elec.map((row)=>({
+if (data !== []){
+  data_rows = data.map((row)=>({
     ean : row.ean,
     date : row.date, 
     id : row.id, 
     value : row.value,
-    energy : "ELEC"
+    energy : "ELEC", 
+    threshold : row.threshold
   }))
 } else {
-  elec_rows = []
+  data_rows = []
 }
 
-if (!(data.GAZ === undefined)){
-  gas_rows = gas.map((row)=>({
-    ean : row.ean,
-    date : row.date,
-    id : row.id,
-    value : row.value,
-    energy : "GAS"
-  }))
-} else {
-  gas_rows = []
-}
-
-if (!(data.WATER === undefined)){
-  water_rows = water.map((row)=>({
-    ean : row.ean,
-    date : row.date,
-    id : row.id,
-    value : row.value,
-    energy : "WATER"
-  }))
-} else {
-  water_rows = []
-}
-
-
-  const rows = elec_rows.concat(gas_rows, water_rows);
 
   const [type, setType] = useState("TABLE");
 
@@ -106,19 +73,19 @@ if (!(data.WATER === undefined)){
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Box sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}>
+          <Card >
             {type === "TABLE" ? 
-            <DataGrid 
-            rows={rows} 
+           <Stack sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}> <DataGrid 
+            rows={data_rows} 
             columns={columns} 
             pageSize={10} 
             slots={{
               toolbar: GridToolbar,
             }}
-            /> : <PortfolioMainGraph portfolio={data} type={"prod"}/>
+            /> </Stack>:  <PortfolioMainGraph portfolio={data} type={"prod"}/>
           }
             
-          </Box>
+          </Card>
           <ButtonGroup variant="contained">
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>

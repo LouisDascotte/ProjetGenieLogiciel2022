@@ -150,5 +150,8 @@
   "double_contract" : "Gas and electricity contract",
   "cons_kwh" : "Consumption (kWh)",
   "cons_m3" : "Consumption (m3)",
-  "date_error" : "The selected date must be at most today's date."
+  "date_error" : "The selected date must be at most today's date.", 
+  "elec_prod" : "Electricity production", 
+  "prod" : "Production (kWh)", 
+  "green_cert_error" : "You can't request a green certificate for this production point."
 } 

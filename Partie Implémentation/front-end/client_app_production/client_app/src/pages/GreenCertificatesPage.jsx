@@ -15,11 +15,15 @@ const jwt = localStorage.getItem("jwt");
 
 const GreenCertificatesPage = () => {
   const {t} = useTranslation();
-  const {id} = useParams();
+  const {id, ean} = useParams();
   const navigate = useNavigate();
   const [data, setData] = React.useState([]);
   const [open, setOpen] = React.useState(false); 
   const [success, setSuccess] = React.useState(false); 
+  const [prod, setProd] = React.useState([]);
+  const [threshold, setThreshold] = React.useState(0);
+  const [error, setError] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState("");
 
   useEffect(()=>{
     const response = axios.get(URL + `${id}/green_certificates`, {
@@ -28,6 +32,22 @@ const GreenCertificatesPage = () => {
       "Access-Control-Allow-Origin":true}
       }).then(response=>{
         setData(response.data)
+      })
+  }, [])
+
+
+  useEffect(()=>{
+    const response = axios.get(`http://localhost:8080/api/portfolio/${id}/supply_point/${ean}/consumption`, {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+      }).then(response=>{
+        setProd(response.data);
+        const max = response.data.reduce(function(prev, current){
+          return (prev.threshold > current.threshold) ? prev : current
+        }).threshold        
+        setThreshold(max);
+
       })
   }, [])
 
@@ -57,22 +77,31 @@ const GreenCertificatesPage = () => {
   }))
 
   const requestConfirmation = async () => {
-    // TODO : request green certificate
-    const request = await axios.post('http://localhost:8080/api/portfolio/' + `${id}/request_green_certificate`, null, {
-      headers : {
-        "Content-Type" : "application/json", 
-        "Authorization" : `Bearer ${jwt}`, 
-        "Access-Control-Allow-Origin" : true
-      }
-    }).then(request => {
+
+    if ( threshold >= 1000) {
+      const request = await axios.post('http://localhost:8080/api/portfolio/' + `${id}/request_green_certificate`, null, {
+        headers : {
+          "Content-Type" : "application/json", 
+          "Authorization" : `Bearer ${jwt}`, 
+          "Access-Control-Allow-Origin" : true
+        }
+      }).then(request => {
+        setOpen(false);
+        setSuccess(true);
+      }).catch(err=>{
+  
+      })
+    } else {
       setOpen(false);
-      setSuccess(true);
-    }).catch(err=>{
-      console.log(err.data);
-    })
+      setErrorMsg(t('green_cert_error'));
+      setError(true);
+    } 
+   
       
     
   }
+
+  
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
@@ -119,7 +148,11 @@ const GreenCertificatesPage = () => {
           <Snackbar open={success} autoHideDuration={3000} onClose={()=> setSuccess(false)}>
             <Alert severity='success'>{t('request_success')}</Alert>
           </Snackbar>
+          <Snackbar open={error} autoHideDuration={3000} onClose={()=> setError(false)}>
+            <Alert severity='error'>{errorMsg}</Alert>
+          </Snackbar>
         </Stack>
+
       </Stack>
     </Stack>
   )

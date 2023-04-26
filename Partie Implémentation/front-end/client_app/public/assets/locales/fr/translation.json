@@ -149,5 +149,7 @@
   "cost_gaz_night": "Coût du gaz la nuit",
   "offer_type": "Type d'offre", 
   "simple_contract" : "Contrat simple", 
-  "double_contract" : "Contrat gaz et électricité"
+  "double_contract" : "Contrat gaz et électricité", 
+  "cons_kwh" : "Consommation (kWh)", 
+  "cons_m3" : "Consommation (m3)"
 }

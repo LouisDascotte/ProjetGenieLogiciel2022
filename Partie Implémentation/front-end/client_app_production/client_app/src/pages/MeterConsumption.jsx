@@ -1,6 +1,6 @@
 import {React, useState} from 'react';
 import axios from "../api/axios";
-import {Card, Stack, Button, TextField, InputAdornment, IconButton} from "@mui/material";
+import {Card, Stack, Button, TextField, InputAdornment, IconButton, Snackbar, Alert} from "@mui/material";
 import { useNavigate, Link , useLocation} from 'react-router-dom';
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -27,6 +27,8 @@ const MeterConsumption = () => {
   const [nightValue, setNightValue] = useState("");
   const meter_ean = location.state.ean; 
   const navigate = useNavigate();
+
+  const [success, setSuccess] = useState(false);
 
   console.log(location.state)
 
@@ -56,7 +58,10 @@ const MeterConsumption = () => {
           value : data.value,
           overwrite : true
         }}).then(response=>{
-          console.log(response.data);
+          setSuccess(true);
+          setTimeout(()=>{
+            navigate(-1);
+          }, 3000)
           
         })
       } catch(err){
@@ -81,16 +86,21 @@ const MeterConsumption = () => {
           nightValue : data.nightValue,
           overwrite : true
         }}).then(response=>{
-          console.log(response.data);
+          setSuccess(true);
+          setTimeout(()=>{
+            navigate(-1);
+          }, 3000)
           
         })
       } catch (err){
 
       }
     }
-
-    
-    
+  }
+  const handleKeyDown = (event) => {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
+      event.preventDefault();
+    }
   }
 
   return (
@@ -110,17 +120,17 @@ const MeterConsumption = () => {
               </LocalizationProvider>
             </Stack>
             <Stack>
-              {location.state.hourType === "SIMPLE" ? <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label={t('enter_meter_consumption')} onChange={(event)=> {
+              {location.state.hourType === "SIMPLE" ? <TextField sx={{m:1}} type="number"  onKeyDown={handleKeyDown} label={t('enter_meter_consumption')} onChange={(event)=> {
                 setValue(event.target.value);
               }} InputProps={{
                 endAdornment: <InputAdornment position="end">{location.state.energyType === "ELEC" ? 'kWh' : 'm3'}</InputAdornment>
               }}/>: <Stack>
-                <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label={t('enter_day_consumption')} onChange={(event)=> {
+                <TextField sx={{m:1}} type="number" onKeyDown={handleKeyDown} label={t('enter_day_consumption')} onChange={(event)=> {
                 setDayValue(event.target.value);
               }} InputProps={{
                 endAdornment: <InputAdornment position="end">kWh</InputAdornment>
               }}/>
-              <TextField sx={{m:1}} type="number"  onkeydown="return event.keyCode !== 69" label={t('enter_night_consumption')} onChange={(event)=> {
+              <TextField sx={{m:1}} type="number"  onKeyDown={handleKeyDown} label={t('enter_night_consumption')} onChange={(event)=> {
                 setNightValue(event.target.value);
               }} InputProps={{
                 endAdornment: <InputAdornment position="end">kWh</InputAdornment>
@@ -135,6 +145,9 @@ const MeterConsumption = () => {
             </Button>
         </Stack>
       </Stack>
+      <Snackbar open={success} autoHideDuration={3000} onClose={()=>setSuccess(false)}>
+        <Alert severity="success">{t('request_success')}</Alert>
+      </Snackbar>
     </Stack>
   );
 }

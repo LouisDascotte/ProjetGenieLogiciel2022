@@ -157,7 +157,7 @@ const MainPage = () => {
             </Sidebar>
         <Stack sx={{display:'flex', width:"100%"}}>  
             <TopMenu pageAddress={pageAddress} pageName = {pageName}/>
-            <Stack direction='row' justifyContent='center'>
+            <Stack direction='row' justifyContent='center' sx={{minHeight:900}}>
                 { // if the user created a portfolio, print 'Portfolio graphic', otherwise print the creation message
                 // 'Portfolio graphic' replaces an actual portfolio infographic for now
                 hasSelectedPortfolio ? <PortfolioMainGraph portfolio={data}/> : <PortfolioPlaceHolder/>

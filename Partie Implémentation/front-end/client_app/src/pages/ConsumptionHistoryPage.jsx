@@ -117,25 +117,28 @@ if (!(data.WATER === undefined)){
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}} >
       <SideMenu/>
-      <Stack sx={{display:'flex', width:"100%"}} >
+      <Stack sx={{display:'flex', width:"100%", height:'100%'}} >
         <TopMenu pageAddress={"/consumption-history"} pageName={t('consumption_history')}/>
         <Stack justifyContent='center' alignContent="center" alignItems='center' sx={{display:'flex'}}>
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Box sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}>
-            {type === "TABLE" ? 
-            <DataGrid 
-            rows={rows} 
-            columns={columns} 
-            pageSize={10} 
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            /> : <PortfolioMainGraph portfolio={data}/>
-          }
+          <Stack alignItems="center" justifyContent='center' alignContent='center' sx={{height:800}}>
+           
+              {type === "TABLE" ? 
+              <DataGrid 
+              rows={rows} 
+              columns={columns} 
+              pageSize={10} 
+              slots={{
+                toolbar: GridToolbar,
+              }}
+              /> : <PortfolioMainGraph portfolio={data}/>
+            }
+              
             
-          </Box>
+          </Stack>
+          
           <ButtonGroup variant="contained">
             <Button onClick={()=> setType("TABLE")}>Table</Button>
             <Button onClick={()=> setType("GRAPH")}>Graph</Button>

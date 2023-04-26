@@ -10,6 +10,7 @@ import com.pgl.energenius.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/client")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ClientController {
 
     @Autowired
@@ -26,6 +27,12 @@ public class ClientController {
     @Autowired
     private SecurityUtils securityUtils;
 
+    /**
+     * GET method to retrieve the current client's login details.
+     *
+     * @return OK and Client's login details if successful. Otherwise, an appropriate HTTP status code.
+     */
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/me")
     public ResponseEntity<?> getClient() {
 
@@ -40,6 +47,13 @@ public class ClientController {
         }
     }
 
+    /**
+     * GUT method to edit the current client's preferences.
+     *
+     * @param clientPreferencesDto DTO containing the new preferences of the client.
+     * @return OK and Client's details if successful. Otherwise, an appropriate HTTP status code.
+     */
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PutMapping("/me")
     public ResponseEntity<?> editPreferences(@RequestBody ClientPreferencesDto clientPreferencesDto) {
 

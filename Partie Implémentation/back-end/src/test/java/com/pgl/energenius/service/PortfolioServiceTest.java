@@ -117,13 +117,13 @@ public class PortfolioServiceTest {
         portfolio.getSupplyPoints().add(supplyPoint);
 
         Meter meter = Meter.builder().EAN("EAN1234").energyType(EnergyType.ELEC).build();
-        when(meterService.getMeter("EAN1234")).thenReturn(meter);
+        when(meterService.getMeterWithoutCheck("EAN1234")).thenReturn(meter);
 
         SimpleReading simpleReading = SimpleReading.builder()
                 .value(123)
                 .EAN("EAN1234")
                 .build();
-        when(readingService.getReadings("EAN1234")).thenReturn(List.of(simpleReading));
+        when(readingService.getReadingsClient("EAN1234", portfolio.getClientId())).thenReturn(List.of(simpleReading));
 
         HashMap<EnergyType, List<Reading>> result = portfolioService.getPortfolioConsumption(portfolio.getId());
         assertEquals(simpleReading, result.get(EnergyType.ELEC).get(0));

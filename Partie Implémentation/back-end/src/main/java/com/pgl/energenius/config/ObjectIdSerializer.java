@@ -7,6 +7,9 @@ import org.bson.types.ObjectId;
 
 import java.io.IOException;
 
+/**
+ * This class is a custom Jackson serializer for converting ObjectIds to strings.
+ */
 public class ObjectIdSerializer extends JsonSerializer<ObjectId> {
 
     @Override

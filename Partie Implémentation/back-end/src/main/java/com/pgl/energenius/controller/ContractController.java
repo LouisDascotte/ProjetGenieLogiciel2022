@@ -13,14 +13,22 @@ import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.dto.*;
 import com.pgl.energenius.service.ContractService;
 
+/**
+ * The ContractController class handles all HTTP requests related to Contracts
+ */
 @RestController
 @RequestMapping("/api/contract")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ContractController {
 
     @Autowired
     private ContractService contractService;
 
+    /**
+     * GET method to get the contracts of the current authenticated user.
+     *
+     * @return OK and Authenticated user's contracts if successful. Otherwise, an appropriate HTTP status code.
+     */
     @GetMapping("/all")
     public ResponseEntity<?> getContracts() {
 
@@ -35,6 +43,14 @@ public class ContractController {
         }
     }
 
+    /**
+     * GET method to get simple offers with the specified parameters
+     *
+     * @param hourType the hour type of the offers
+     * @param energyType the energy type of the offers
+     * @param address the address where the offers should be operating
+     * @return OK and the offers with the specified parameters. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers")
     public ResponseEntity<?> getSimpleOffers(@RequestParam HourType hourType, @RequestParam EnergyType energyType, @RequestParam String address) {
@@ -50,6 +66,13 @@ public class ContractController {
         }
     }
 
+    /**
+     * GET method to get gaz elec offers with the specified parameters
+     *
+     * @param hourType the hour type of the offers
+     * @param address the address where the offers should be operating
+     * @return OK and the offers with the specified parameters. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers/gaz_elec")
     public ResponseEntity<?> getGazElecOffers(@RequestParam HourType hourType, @RequestParam String address) {
@@ -65,6 +88,13 @@ public class ContractController {
         }
     }
 
+    /**
+     * POST method to create a simple contract request.
+     *
+     * @param contractRequest DTO that contains the infos for the request
+     * @param offerId The id of the chosen offer
+     * @return CREATED if the request was created. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
     public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
@@ -90,6 +120,13 @@ public class ContractController {
         }
     }
 
+    /**
+     * POST method to create a gaz elec contract request.
+     *
+     * @param contractRequest DTO that contains the infos for the request
+     * @param offerId The id of the chosen offer
+     * @return CREATED if the request was created. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/gaz_elec")
     public ResponseEntity<?> createGazElecContractRequest(@RequestBody GazElecContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
@@ -115,6 +152,13 @@ public class ContractController {
         }
     }
 
+    /**
+     * DELETE method to create a request to the supplier if the authenticated user is a client,
+     * otherwise cancels the contract and send a notification to the client.
+     *
+     * @param contractId  id of the contract to be canceled.
+     * @return OK if the request was created or if the contract was canceled. Otherwise, an appropriate HTTP status code.
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<?> cancelContract(@PathVariable("id") ObjectId contractId) {
 
@@ -136,6 +180,11 @@ public class ContractController {
         }
     }
 
+    /**
+     * GET method to get the current authenticated supplier offers.
+     *
+     * @return OK And the offers of the authenticated supplier. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @GetMapping("/supplier_offers")
     public ResponseEntity<?> getSupplierOffers() {
@@ -147,10 +196,17 @@ public class ContractController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * Private method used by createSimpleOffer and createGazElecOffer to create
+     * an offer for the current authenticated supplier.
+     *
+     * @param offerDto DTO that contains the infos for the new offer
+     * @return OK if the offer was created. Otherwise, an appropriate HTTP status code.
+     */
     private ResponseEntity<?> createOffer(OfferDto offerDto) {
 
         try {
@@ -167,18 +223,36 @@ public class ContractController {
         }
     }
 
+    /**
+     * POST method to create a simple offer.
+     *
+     * @param offerDto DTO that contains the infos for the offer
+     * @return OK if the offer was created. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PostMapping("/offer")
     public ResponseEntity<?> createSimpleOffer(@RequestBody SimpleOfferDto offerDto) {
         return createOffer(offerDto);
     }
 
+    /**
+     * POST method to create a gaz elec offer.
+     *
+     * @param offerDto DTO that contains the infos for the offer
+     * @return OK if the offer was created. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PostMapping("/offer_gaz_elec")
     public ResponseEntity<?> createGazElecOffer(@RequestBody GazElecOfferDto offerDto) {
         return createOffer(offerDto);
     }
 
+    /**
+     * GET method to get an offer by its id.
+     *
+     * @param offerId The id of the offer
+     * @return OK and the offer if succeeded. Otherwise, an appropriate HTTP status code.
+     */
     @GetMapping("/offer/{id}")
     public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {
 
@@ -193,6 +267,12 @@ public class ContractController {
         }
     }
 
+    /**
+     * DELETE method to delete an offer.
+     *
+     * @param offerId The id of the offer to be deleted.
+     * @return OK if the offer was deleted. Otherwise, an appropriate HTTP status code.
+     */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @DeleteMapping("/offer/{id}")
     public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) {
@@ -212,6 +292,13 @@ public class ContractController {
         }
     }
 
+    /**
+     * PUT method to accept a contract request.
+     *
+     * @param contractId The id of the contract to be accepted.
+     * @return OK if the contract was accepted. Otherwise, an appropriate HTTP status code.
+     */
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/{id}/accept")
     public ResponseEntity<?> acceptContract(@PathVariable("id") ObjectId contractId) {
 

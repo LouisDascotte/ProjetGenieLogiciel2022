@@ -1,0 +1,40 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+
+
+\subsection{Instructions d'installation}
+
+Pour tester l'application sur votre ordinateur, il est nécessaire de posséder les outils suivants : 
+
+\begin{itemize}
+    \item Nodejs (version 18 ou supérieure)
+    \item Gradle (version 7.5.1 ou supérieure)
+    \item Java (version 17 ou supérieure)
+\end{itemize}
+
+Pour lancer l'application, il faudra dans un premier temps se rendre dans le dossier \textit{back\_end}. Une fois dans ce dossier, il faudra lancer la commande suivante : 
+
+\begin{lstlisting}
+  gradle bootRun
+\end{lstlisting}
+
+pour démarrer le serveur. Celui ci va démarrer sur le port 8080. Si une autre application utilise ce port, l'application ne pourra pas se lancer.
+
+Une fois le serveur démarré, il faudra se rendre dans le dossier \textit{front\_end}. Une fois dans ce dossier, il faudra se rendre dans un des sous dossiers, parmi lesquels : \textit{client\_app\_commune}, \textit{client\_app\_extension\_facturation} et toutes les autres extensions représentées par leurs noms respectifs.
+
+Une fois dans un de ces sous dossiers, il faudra lancer la commande suivante : 
+
+\begin{lstlisting}
+  npm install
+\end{lstlisting}
+
+Cette commander permettra d'installer toutes les dépendances nécessaires au bon fonctionnement de l'application client. Une fois les dépendances installées, il faudra lancer l'application avec la commande : 
+
+\begin{lstlisting}
+  npm start
+\end{lstlisting}
+
+L'application se lancera sur le port 3000. Si une autre application utilise ce port, l'application ne pourra pas se lancer.
+
+\end{document}

@@ -35,6 +35,16 @@ const GreenCertificatesPage = () => {
       })
   }, [])
 
+  /*useEffect(()=>{
+    const response = axios.get("http://localhost:8080/api/portfolio/all", {
+      headers : {"Content-Type":"application/json",
+      "Authorization" : `Bearer ${jwt}`,
+      "Access-Control-Allow-Origin":true}
+    }).then(response => {
+      console.log(response.data)
+    })
+  })*/
+
 
   useEffect(()=>{
     const response = axios.get(`http://localhost:8080/api/portfolio/${id}/supply_point/${ean}/consumption`, {
@@ -68,12 +78,10 @@ const GreenCertificatesPage = () => {
   ]
 
   const rows = data.length === 0 ? null : data.map((row)=>({
-    ean : row.ean, 
-    assignment_date : row.beginDate, 
-    supplier : row.supplierName,
-    id : row.ean + row.beginDate,
-    expiration_date : row.endDate,
-    status : row.status
+    id : row.id,
+    date : row.date,
+    status : row.status,
+    portfolio_id : row.portfolioId
   }))
 
   const requestConfirmation = async () => {
@@ -112,18 +120,18 @@ const GreenCertificatesPage = () => {
           <IconButton onClick={()=>navigate(-1)}>
             <ArrowBackIcon/>
           </IconButton>
-          <Card sx={{m:5, height:'80%', width:"90%"}}>
+          
             <Stack justifyContent={'center'} alignItems='center' alignContent='center'>
-              {data.length === 0 ? <Typography variant='h4'> {t('no_green')}</Typography> : <DataGrid 
+              {data.length === 0 ? <Typography variant='h4'> {t('no_green')}</Typography> : <Stack sx={{m:5, minHeight:'40vh', width:"90%", backgroundColor:"white"}}><DataGrid 
               rows={rows} 
               columns={columns} 
               pageSize={10} 
               slots={{
                 toolbar: GridToolbar,
               }}
-              />}
+              /> </Stack>}
             </Stack>
-          </Card>
+          
           <Button variant='contained' sx={{width:"50%"}} onClick={()=>setOpen(true)}>
             {t('request_green')}
           </Button>

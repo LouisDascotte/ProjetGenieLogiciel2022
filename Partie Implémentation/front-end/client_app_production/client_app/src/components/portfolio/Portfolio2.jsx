@@ -230,6 +230,27 @@ export const Portfolio2 = () => {
     }
   }
 
+  const [prodPointError, setProdPointError] = useState(false);
+  const [alreadyInPortfolioProd, setAlreadyInPortfolioProd] = useState(false);
+
+  const setProductionPointValue = (e) => {
+    const reg = new RegExp(/^\d{18}$/);
+    if (reg.test(e.target.value)){
+      setProdPointError(false);
+      if(productionPoint.ean === undefined){
+        setTempProductionPoint(e.target.value);
+      } else {
+        setAlreadyInPortfolioProd(true);
+        setTempProductionPoint("");
+      }
+      
+      } else {
+        setTempProductionPoint("");
+        setProdPointError(true);
+      }
+  }
+  
+
 
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
@@ -358,9 +379,10 @@ export const Portfolio2 = () => {
                 {t('add_production_point')}
               </DialogTitle>
               <DialogContent>
-                <TextField onChange={e => setTempProductionPoint(e.target.value)} type='number'  onKeyDown={handleKeyDown} InputProps={{
+                <TextField onChange={setProductionPointValue} type='number'  onKeyDown={handleKeyDown} InputProps={{
                   startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
-                }}/>  
+                }}/>
+                {prodPointError ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
                 <TextField onChange={e => setSupplier(e.target.value)} />
                 <Stack>
                     <Button onClick={()=>setOpenProd(false)}>
@@ -386,6 +408,11 @@ export const Portfolio2 = () => {
       <Snackbar open={alreadyInPortfolio} autoHideDuration={6000} onClose={() => setAlreadyInPortfolio(false)}>
           <Alert severity="warning">
             {t('meter_already_linked', {ean : problemMeter})}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={alreadyInPortfolioProd} autoHideDuration={6000} onClose={() => setAlreadyInPortfolioProd(false)}>
+          <Alert severity="warning">
+            {t('production_point_already_linked')}
           </Alert>
         </Snackbar>
     </Stack>

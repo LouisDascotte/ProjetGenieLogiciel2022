@@ -121,20 +121,4 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    @Autowired
-    private SecurityUtils securityUtils;
-    
-    @GetMapping("/me")
-    public ResponseEntity<?> getSupplier() {
-        
-        try {
-            return new ResponseEntity<>(securityUtils.getCurrentSupplierLogin(), HttpStatus.OK);
-       
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-       
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

@@ -6,8 +6,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link, useNavigate} from 'react-router-dom';
 import TopMenu from '../components/TopMenu';
 import axios from '../api/axios';
+import { useTranslation } from 'react-i18next';
 
 const ManageClients = () => {
+
+  const {t} = useTranslation();
 
   const theme = createTheme({
     palette: {
@@ -40,7 +43,7 @@ const ManageClients = () => {
       try {
         const jwt = localStorage.getItem("jwt");
         const config = {
-          headers: { Authorization: `Bearer ${jwt}`,
+          headers: { "Authorization": `Bearer ${jwt}`,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": true,
           }
@@ -65,7 +68,7 @@ const ManageClients = () => {
             <Card sx={{width:'50%', m:2, height:'60%' }} >
               <Box sx={{height:'auto', width:'100%'}} alignment='center' marginBottom={4} paddingBottom={4}>
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
-                  Client List
+                  t('Client List')
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
                   {clients.length === 0 ?
@@ -77,7 +80,7 @@ const ManageClients = () => {
                     <ListItem key={client.id}>
                     <ListItemText primary={capitalizeFirstLetter(client.firstName)+" "+capitalizeFirstLetter(client.lastName)} />
                       <Button variant="contained" onClick={() => nav(`/clients/${client.id}`, { state : client })} >
-                        See Details
+                        t('See Details')
                       </Button>
                     </ListItem>
                   ))}

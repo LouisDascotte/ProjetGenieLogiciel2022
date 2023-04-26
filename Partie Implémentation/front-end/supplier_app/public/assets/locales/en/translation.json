@@ -2,6 +2,7 @@
   "login" : "Login", 
   "sign_in_to_account" : "Sign in to your account",
   "register" : "Register new account",
+"See details" : "See details",
   "login_success" : "Login successful!", 
   "invalid_creds" : "Invalid mail or password.", 
   "error" : "An error occured.", 

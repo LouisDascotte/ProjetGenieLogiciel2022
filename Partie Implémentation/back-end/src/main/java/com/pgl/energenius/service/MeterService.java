@@ -67,8 +67,7 @@ public class MeterService {
 
     public Meter getMeter(String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        Meter meter =  meterRepository.findById(EAN)
-                .orElseThrow(() -> new ObjectNotFoundException("Meter not found with EAN: " + EAN));
+        Meter meter =  getMeterWithoutCheck(EAN);
 
         try {
             Client client = securityUtils.getCurrentClientLogin().getClient();
@@ -86,6 +85,11 @@ public class MeterService {
             return meter;
 
         throw new UnauthorizedAccessException("Authenticated employee does not own the requested meter");
+    }
+
+    public Meter getMeterWithoutCheck(String EAN) throws ObjectNotFoundException {
+        return  meterRepository.findById(EAN)
+                .orElseThrow(() -> new ObjectNotFoundException("Meter not found with EAN: " + EAN));
     }
 
     public List<Meter> getMeters() throws InvalidUserDetailsException {
@@ -134,6 +138,10 @@ public class MeterService {
 
         Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
         return meterAllocationRepository.findBySupplierNameAndEAN(supplier.getName(), EAN);
+    }
+
+    public List<MeterAllocation> getMeterAllocationsClient(String EAN, ObjectId clientId) {
+        return meterAllocationRepository.findByClientIdAndEAN(clientId, EAN);
     }
 
     public void deleteMeterIf_AWAITING_APPROVAL(String EAN) throws ObjectNotFoundException {

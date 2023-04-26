@@ -132,6 +132,12 @@ public class JwtUtil implements Serializable {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    /**
+     * Generates a new password reset JWT token for the specified email.
+     *
+     * @param email the email to generate the token with
+     * @return the generated token
+     */
     public String generatePasswordResetToken(String email) {
 
         return Jwts.builder()
@@ -141,6 +147,12 @@ public class JwtUtil implements Serializable {
                 .compact();
     }
 
+    /**
+     * Validates a password reset JWT token for a given user.
+     *
+     * @param token the password reset JWT token to validate
+     * @return true if the token is valid, false otherwise
+     */
     public Boolean validatePasswordResetToken(String token) {
 
         try {

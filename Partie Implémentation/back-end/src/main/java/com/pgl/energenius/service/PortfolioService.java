@@ -7,12 +7,15 @@ import com.pgl.energenius.enums.MeterType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.ProductionPointDto;
+import com.pgl.energenius.model.dto.StatsPortfolio;
 import com.pgl.energenius.model.dto.SupplyPointDto;
 import com.pgl.energenius.model.notification.Notification;
 import com.pgl.energenius.model.notification.ProductionPointNotification;
 import com.pgl.energenius.model.projection.PortfolioProjection;
+import com.pgl.energenius.model.reading.DoubleReading;
 import com.pgl.energenius.model.reading.ProductionReading;
 import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.model.reading.SimpleReading;
 import com.pgl.energenius.repository.GreenCertificateRepository;
 import com.pgl.energenius.repository.MeterAllocationRepository;
 import com.pgl.energenius.repository.PortfolioRepository;
@@ -24,6 +27,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.events.StartDocument;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -105,16 +109,21 @@ public class PortfolioService {
     public HashMap<EnergyType, List<Reading>> getPortfolioConsumption(ObjectId portfolioId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException{
 
         Portfolio portfolio = getPortfolio(portfolioId);
+        return getPortfolioConsumption(portfolio);
+    }
+
+    private HashMap<EnergyType, List<Reading>> getPortfolioConsumption(Portfolio portfolio) throws ObjectNotFoundException {
+
         HashMap<EnergyType, List<Reading>> readings = new HashMap<>();
 
         for (SupplyPoint sp: portfolio.getSupplyPoints()) {
 
-            Meter meter = meterService.getMeter(sp.getEAN());
+            Meter meter = meterService.getMeterWithoutCheck(sp.getEAN());
 
             if (!readings.containsKey(meter.getEnergyType())) {
                 readings.put(meter.getEnergyType(), new ArrayList<>());
             }
-            readings.get(meter.getEnergyType()).addAll(readingService.getReadings(sp.getEAN()));
+            readings.get(meter.getEnergyType()).addAll(readingService.getReadingsClient(sp.getEAN(), portfolio.getClientId()));
         }
 
         return readings;
@@ -156,7 +165,7 @@ public class PortfolioService {
         Portfolio portfolio = getPortfolio(portfolioId);
         Meter meter;
 
-        if (supplyPointDto.getType() != SupplyPoint.Type.PRODUCTION_POINT) { // Changé depuis  == SupplyPoint.type.SUPPLY_POINT. Probablement à corriger 
+        if (supplyPointDto.getType() != SupplyPoint.Type.PRODUCTION_POINT) {
 
             meter = meterService.getMeter(supplyPointDto.getEAN());
 
@@ -353,5 +362,93 @@ public class PortfolioService {
 
         getPortfolio(portfolioId);
         return greenCertificateRepository.findByPortfolioId(portfolioId);
+    }
+
+    public HashMap<EnergyType, StatsPortfolio> getPortfolioStats(ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+        Portfolio portfolio = getPortfolio(portfolioId);
+        return getPortfolioStats(portfolio);
+    }
+
+    public HashMap<EnergyType, StatsPortfolio> getPortfolioStats(Portfolio portfolio) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        HashMap<EnergyType, List<Reading>> consumptions = getPortfolioConsumption(portfolio);
+        HashMap<EnergyType, StatsPortfolio> stats = new HashMap<>();
+
+        for (EnergyType e : consumptions.keySet()) {
+
+            if (e == EnergyType.ELEC_PRODUCTION)
+                continue;
+
+            List<Reading> readings = consumptions.get(e);
+
+            int[] values = new int[readings.size()];
+
+            if (readings.get(0) instanceof SimpleReading firstReading) {
+                values[0] = firstReading.getValue();
+
+            } else {
+                DoubleReading firstReading = (DoubleReading) readings.get(0);
+                values[0] = firstReading.getDayValue() + firstReading.getNightValue();
+            }
+
+            int max = 0;
+            int min = Integer.MAX_VALUE;
+            int sum = 0;
+            int delta;
+
+            for (int i = 1; i < readings.size(); i++) {
+
+                if (readings.get(i) instanceof SimpleReading reading) {
+
+                    delta = reading.getValue() - values[i - 1];
+                    values[i] = reading.getValue();
+
+                } else {
+                    DoubleReading reading = (DoubleReading) readings.get(i);
+
+                    delta = (reading.getDayValue() + reading.getNightValue()) - values[i - 1];
+                    values[i] = reading.getDayValue() + reading.getNightValue();
+                }
+
+                min = Math.min(min, delta);
+                max = Math.max(max, delta);
+                sum += delta;
+            }
+
+            int average = sum / readings.size();
+
+            int sumOfDeltaMinusAverage = 0;
+
+            for (int value : values) {
+
+                sumOfDeltaMinusAverage = (value - average)^2;
+            }
+
+            int standard_deviation = (int) Math.round(Math.sqrt((double) sumOfDeltaMinusAverage / readings.size()));
+
+            stats.put(e, new StatsPortfolio(average, max, min, standard_deviation));
+        }
+        return stats;
+    }
+
+    public HashMap<EnergyType, Integer> getAverageOfAllPortfolios() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
+
+        List<Portfolio> portfolios = portfolioRepository.findAll();
+
+        HashMap<EnergyType, Integer> averageStatOfAllPortfolios = new HashMap<>();
+        HashMap<EnergyType, Integer> nbrOfStatsByEnergyType = new HashMap<>();
+
+        for (Portfolio p : portfolios) {
+
+            HashMap<EnergyType, StatsPortfolio> statsP = getPortfolioStats(p);
+
+             for (EnergyType e : statsP.keySet()) {
+                 averageStatOfAllPortfolios.put(e, averageStatOfAllPortfolios.get(e) + statsP.get(e).getAverage());
+                 nbrOfStatsByEnergyType.put(e, nbrOfStatsByEnergyType.get(e) + 1);
+             }
+        }
+
+        averageStatOfAllPortfolios.replaceAll((e, v) -> v / nbrOfStatsByEnergyType.get(e));
+        return averageStatOfAllPortfolios;
     }
 }

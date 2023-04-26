@@ -11,14 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The NotificationController class handles all HTTP requests related to notification
+ */
 @RestController
 @RequestMapping("/api/notification")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * GET method to get the notification of the current authenticated user.
+     *
+     * @return OK and authenticated user's notifications if successful. Otherwise, an appropriate HTTP status code.
+     */
     @GetMapping("/all")
     public ResponseEntity<?> getNotifications() {
 
@@ -33,6 +41,11 @@ public class NotificationController {
         }
     }
 
+    /**
+     * PUT method to put a notification the current authenticated user as read.
+     *
+     * @return OK and Authenticated user's notification was changed to read. Otherwise, an appropriate HTTP status code.
+     */
     @PutMapping("/{id}/read")
     public ResponseEntity<?> readNotification(@PathVariable ObjectId id) {
 

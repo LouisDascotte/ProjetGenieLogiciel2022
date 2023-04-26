@@ -3,6 +3,8 @@ package com.pgl.energenius.utils;
 import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.enums.MeterType;
+import com.pgl.energenius.exception.ObjectNotFoundException;
+import com.pgl.energenius.exception.UnauthorizedAccessException;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.Meter;
@@ -18,6 +20,7 @@ import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -101,7 +104,6 @@ public class NumericMeterSimulation {
         return SimpleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.ACCEPTED)
                 .value(newVal)
                 .build();
     }
@@ -123,8 +125,8 @@ public class NumericMeterSimulation {
             nightDelta = nightValue - ((DoubleReading) beforeLastReading.get()).getNightValue();
 
         } else {
-            dayDelta = (int) Math.round(Math.random() * (10 - 1) + 1);
-            nightDelta = (int) Math.round(Math.random() * (10 - 1) + 1);
+            dayDelta = (int) Math.round(Math.random() * (6 - 1) + 1);
+            nightDelta = (int) Math.round(Math.random() * (6 - 1) + 1);
         }
 
         int newDayVal = (int) Math.round(dayValue + dayDelta * (Math.random() * (1.3 - 0.7) + 0.7));
@@ -133,7 +135,6 @@ public class NumericMeterSimulation {
         return DoubleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.ACCEPTED)
                 .dayValue(newDayVal)
                 .nightValue(newNightVal)
                 .build();
@@ -143,9 +144,11 @@ public class NumericMeterSimulation {
 
         int value = 0;
         int delta;
+        int threshold = 0;
 
         if (lastReading.isPresent()) {
             value = ((ProductionReading) lastReading.get()).getValue();
+            threshold = ((ProductionReading) lastReading.get()).getThreshold();
         }
 
         if (beforeLastReading.isPresent()) {
@@ -156,8 +159,7 @@ public class NumericMeterSimulation {
 
         int newDelta = (int) Math.round(delta * (Math.random() * (1.3 - 0.7) + 0.7));
         int newVal = value + newDelta;
-
-        int threshold = ((ProductionReading) lastReading.get()).getThreshold() + newDelta;
+        threshold += newDelta;
 
         if (threshold >= 1000) {
 
@@ -173,9 +175,56 @@ public class NumericMeterSimulation {
         return ProductionReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.ACCEPTED)
                 .value(newVal)
                 .threshold(threshold)
                 .build();
+    }
+
+    public void simulateReadingBetweenTwoDates(String EAN, String beginDate, String endDate, ObjectId clientId) throws ObjectNotFoundException {
+
+        LocalDate date = LocalDate.parse(beginDate, DateTimeFormatter.ISO_DATE);
+        String oneDayBeforeDate = date.minusDays(1).format(DateTimeFormatter.ISO_DATE);
+        String twoDaysBeforeDate = date.minusDays(2).format(DateTimeFormatter.ISO_DATE);
+        String strDate = beginDate;
+
+        Meter meter = meterRepository.findById(EAN)
+                .orElseThrow(() -> new ObjectNotFoundException("No meter found with EAN: " + EAN));
+
+        Optional<Reading> lastReading = readingRepository.findByEANAndDate(meter.getEAN(), oneDayBeforeDate);
+        Optional<Reading> beforeLastReading = readingRepository.findByEANAndDate(meter.getEAN(), twoDaysBeforeDate);
+
+        while (strDate.compareTo(endDate) <= 0) {
+
+            System.out.println(strDate);
+
+            Reading reading;
+
+            if (meter.getHourType() == HourType.SIMPLE) {
+
+                if (meter.getEnergyType() == EnergyType.ELEC_PRODUCTION) {
+                    reading = createProductionReading(lastReading, beforeLastReading, strDate, meter.getEAN(), meter.getClientId());
+
+                } else {
+                    reading = createSimpleReading(lastReading, beforeLastReading, strDate, meter.getEAN());
+                }
+            } else {
+
+                reading = createGazElecReading(lastReading, beforeLastReading, strDate, meter.getEAN());
+            }
+
+            try {
+                readingRepository.insert(reading);
+
+            } catch (DuplicateKeyException e) {
+                readingRepository.delete(readingRepository.findByEANAndDate(EAN, strDate).get());
+                readingRepository.insert(reading);
+            }
+
+            beforeLastReading = lastReading;
+            lastReading = Optional.of(reading);
+
+            date = date.plusDays(1);
+            strDate = date.format(DateTimeFormatter.ISO_DATE);
+        }
     }
 }

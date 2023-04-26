@@ -26,8 +26,7 @@ public class GreenCertificate {
 
     public enum Status {
         ACCEPTED,
-        PENDING,
-        REJECTED
+        PENDING
     }
 
     public GreenCertificate(ObjectId portfolioId, String date, Status status) {

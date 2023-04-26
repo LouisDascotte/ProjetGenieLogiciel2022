@@ -62,7 +62,6 @@ public class ReadingServiceTest {
         SimpleReading reading = SimpleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.PENDING)
                 .value(value)
                 .build();
 
@@ -91,7 +90,6 @@ public class ReadingServiceTest {
         SimpleReading reading = SimpleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.PENDING)
                 .value(value)
                 .build();
 
@@ -102,7 +100,6 @@ public class ReadingServiceTest {
         SimpleReading readingInDB = SimpleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.ACCEPTED)
                 .value(111)
                 .build();
 
@@ -134,7 +131,6 @@ public class ReadingServiceTest {
         DoubleReading reading = DoubleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.PENDING)
                 .dayValue(dayValue)
                 .nightValue(nightValue)
                 .build();
@@ -165,7 +161,6 @@ public class ReadingServiceTest {
         DoubleReading reading = DoubleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.PENDING)
                 .dayValue(dayValue)
                 .nightValue(nightValue)
                 .build();
@@ -177,7 +172,6 @@ public class ReadingServiceTest {
         DoubleReading readingInDB = DoubleReading.builder()
                 .EAN(EAN)
                 .date(date)
-                .status(Reading.Status.ACCEPTED)
                 .dayValue(111)
                 .nightValue(222)
                 .build();

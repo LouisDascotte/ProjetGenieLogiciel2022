@@ -3,6 +3,8 @@ package com.pgl.energenius.utils;
 import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.model.ClientLogin;
 import com.pgl.energenius.model.SupplierLogin;
+import com.pgl.energenius.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

@@ -32,11 +32,4 @@ public abstract class Reading {
      * the date of the reading
      */
     private String date;
-
-    private Status status;
-
-    public enum Status {
-        PENDING,
-        ACCEPTED
-    }
 }

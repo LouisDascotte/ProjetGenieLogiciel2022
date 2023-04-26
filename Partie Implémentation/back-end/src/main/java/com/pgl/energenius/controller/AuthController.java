@@ -2,18 +2,18 @@ package com.pgl.energenius.controller;
 
 
 import com.pgl.energenius.config.JwtUtil;
-import com.pgl.energenius.exception.ObjectAlreadyExitsException;
-import com.pgl.energenius.exception.ObjectNotFoundException;
-import com.pgl.energenius.exception.ObjectNotValidatedException;
+import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.ClientLogin;
+import com.pgl.energenius.model.Portfolio;
 import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.model.dto.SupplierLoginDto;
-import com.pgl.energenius.service.ClientService;
-import com.pgl.energenius.service.SupplierService;
-import com.pgl.energenius.service.UserService;
+import com.pgl.energenius.model.reading.Reading;
+import com.pgl.energenius.service.*;
+import com.pgl.energenius.utils.NumericMeterSimulation;
 import jakarta.mail.MessagingException;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -45,7 +47,6 @@ public class AuthController {
      * @param clientDto The client's information.
      * @return A message indicating that the registration has been successfully completed.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/client/register")
     public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
 
@@ -70,7 +71,6 @@ public class AuthController {
      * @return A ResponseEntity containing the client's login information and the authentication token.
      */
     @PostMapping("/client/login")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> login(@RequestBody ClientLoginDto clientLoginDto) {
 
         try {
@@ -88,6 +88,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * POST method to send a reset password request by mail
+     *
+     * @param email The user's email
+     * @return OK if the email was sent
+     */
     @PostMapping("/client/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String email) {
 
@@ -106,6 +112,13 @@ public class AuthController {
         }
     }
 
+    /**
+     * PUT method to change the current password with a new password
+     *
+     * @param newPassword The user's new password
+     * @param token the token used to validate the user trying to change the password
+     * @return OK if the password was changed
+     */
     @PutMapping("/client/change-password")
     public ResponseEntity<?> changePassword(@RequestParam String newPassword, @RequestParam String token) {
 
@@ -148,6 +161,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * GET method to verify that the token is expired or not
+     *
+     * @param token the token to verify
+     * @return True, if the token is not expired. False, otherwise
+     */
     @GetMapping("/expired_token")
     public ResponseEntity<?> isTokenExpired(@RequestParam String token) {
 
@@ -157,5 +176,23 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+//    @Autowired
+//    private NumericMeterSimulation numericMeterSimulation;
+//
+//    @GetMapping("/test")
+//    public void test() throws ObjectNotFoundException {
+//        numericMeterSimulation.simulateReadingBetweenTwoDatesOfMeter("98466848897998", "2023-01-09", "2023-04-26");
+//    }
+
+    @Autowired
+    private MeterService meterService;
+
+    @GetMapping("/test")
+    public void test() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
+
+//        meterService.linkMeter("132385238527233245", new ObjectId("642ed56206e08a0dd1611e3c"));
+//        return portfolioService.getSupplyPointConsumption(new ObjectId("643d4b6856fa760df8993239"), "98466848897998");
     }
 }

@@ -37,7 +37,7 @@ const ManageInvoices = () => {
 
           </Card>
           <ThemeProvider theme={theme}>
-            <Link to='/register-account' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
+            <Link to='/monthlyap' className='link-3' style={{display: 'inline-block', mt:2, width:'40%', mb:5}}>
               <Button  variant='outlined' color='secondary' sx={{mt:2, width:'100%', mb:5}}>
                 See monthly advance payments history
               </Button>

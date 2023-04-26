@@ -61,10 +61,6 @@ function ViewClient() {
   const nav = useNavigate();
 
   const [openDialog, setOpenDialog] = React.useState(false);
-
-  const handleRemoveClient = () => {
-    alert("DELETE request sent to server ");
-  }
   
   const handleClickOpen = () => {
     console.log("open dialog");
@@ -141,12 +137,12 @@ function ViewClient() {
             justifyContent='center'
             alignItems='center'
             >
-              <Grid item xs={6} >
+              <Grid item xs={4} >
                   <Button  variant='outlined' color='secondary' onClick={ () => nav(`/clients/${client.id}/link-meter`, {state : client})} sx={{mt:2, width:'100%', mb:5}} >
                     Link Meter
                   </Button>
               </Grid>
-              <Grid item xs={6} >
+              <Grid item xs={4} >
                 <Button  variant='outlined' color='secondary' onClick={handleClickOpen} sx={{mt:2, width:'60%', mb:5}}>
                     View Linked Meters
                 </Button>
@@ -175,11 +171,6 @@ function ViewClient() {
                   </Dialog>
                   : null
                 }         
-              </Grid>
-              <Grid item xs={12} >
-                  <Button  variant='outlined' color='error' onClick={handleRemoveClient} sx={{mt:2, width:'80%', mb:5}}>
-                    Remove Client
-                  </Button>
               </Grid>
             </Grid>
           </Grid>

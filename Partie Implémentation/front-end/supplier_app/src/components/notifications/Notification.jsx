@@ -12,9 +12,11 @@ import { useTranslation } from 'react-i18next'
 const Notification = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const notif = location.state;
   const navigate = useNavigate();
   const pageAddress = "/notification";
   const pageName = t('notifications');
+  console.log(notif);
 
   function notificationMessages(code){
     switch (code) {
@@ -30,6 +32,50 @@ const Notification = () => {
         return "You received a notification.";
     }
   }
+
+  const handleNotifDelete = () => {
+    axios.delete(`http://localhost:8080/api/notification/${location.state.id}`,
+    {headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+    "Access-Control-Allow-Origin":true}}
+    ).then(response=>{
+      console.log(response);
+      navigate('/notifications');
+    }).catch(err=>{
+      console.log(err);
+    }
+    );
+  }
+
+  const handleProdPoint = async () => {
+    await axios.put(`http://localhost:8080/api/portfolio/accept_production_point`, null, 
+    {headers : {"Content-Type":"application/json",
+    "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+    "Access-Control-Allow-Origin":true},
+    params : {EAN : notif.ean}}
+    ).then(response=>{
+      console.log(response);
+      navigate('/notifications');
+    }).catch(err=>{
+      console.log(err);
+    }
+    );
+  }
+
+  const handleGreenCert = async () => {
+  await axios.put(`http://localhost:8080/api/portfolio/${notif.portfolioId}/accept_green_certificate`, null,
+  {headers : {"Content-Type":"application/json",
+  "Authorization" : `Bearer ${localStorage.getItem("jwt")}`,
+  "Access-Control-Allow-Origin":true}}
+  ).then(response=>{
+    console.log(response);
+    navigate('/notifications');
+  }
+  ).catch(err=>{
+    console.log(err);
+  }
+  );
+}
   
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
@@ -69,6 +115,24 @@ const Notification = () => {
 
               { location.state.type === "READING_NOTIFICATION" ?  null
               : null}
+
+              { location.state.type === "PRODUCTION_POINT_REQUEST_NOTIFICATION" ?
+                <Button variant='contained' color='primary' sx={{m:2}} onClick={handleProdPoint} >
+                  Accept Request
+                </Button>
+              : null}
+
+              { location.state.type === "GREEN_CERTIFICATE_REQUEST_NOTIFICATION" ? 
+                <Button variant='contained' color='primary' sx={{m:2}} onClick={handleGreenCert} >
+                  Accept Request
+                </Button>
+              : null}
+
+              <Link to='/notifications'>
+                <Button variant='contained' onClick={handleNotifDelete} color='primary' sx={{m:2}}>
+                  {t('delete notification')}
+                </Button>
+              </Link>
             </Stack>
           </Box>
         </Stack>

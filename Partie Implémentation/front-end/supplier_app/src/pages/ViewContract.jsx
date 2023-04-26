@@ -30,6 +30,7 @@ function ViewContract() {
 
   const location = useLocation();
   const contract = location.state;
+  const jwt = localStorage.getItem('token');
 
   const pageAddress = "/contracts/:id";
   const pageName = "View Contract";
@@ -48,13 +49,73 @@ function ViewContract() {
     gasEan: contract.ean_GAZ
   }
 
-
   const [editMode, setEditMode] = React.useState(false);
   const [editableData, setEditableData] = React.useState(contractData);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
     setEditableData(contractData);
+  }
+  const handleUnlinkMeter = async () => {
+    console.log(contract.type);
+    switch (contract.type) {
+      case "GAZ_ELEC_CONTRACT":
+        await axios.put(`http://localhost:8080/api/meter/${contract.ean_ELEC}/unlink`, null, {
+          headers: {
+            "Authorization": `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          },
+          params: {
+            clientId: contract.clientId
+          }
+        })
+        .then((response) => {
+          console.log(response);
+        }
+        )
+        .catch((error) => {
+          console.log(error);
+        }
+        )
+        await axios.put(`http://localhost:8080/api/meter/${contract.ean_GAZ}/unlink`, {
+          headers: {
+            "Authorization": `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": true,
+          },
+          params: {
+            clientId: contract.clientId
+          }
+        })
+        .then((response) => {
+          console.log(response);
+        }
+        )
+        .catch((error) => {
+          console.log(error);
+        }
+        )
+        break;
+        default:
+          console.log("been there");
+          await axios.put(`http://localhost:8080/api/meter/${contract.ean}/unlink`, null, {
+            headers: {
+              "Authorization": `Bearer ${jwt}`,
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": true,
+            }
+          })
+          .then((response) => {
+            console.log(response);
+          }
+          )
+          .catch((error) => {
+            console.log(error);
+          }
+          )
+          break;
+    }
   }
 
   const handleEditableDataChange = (event) => {
@@ -282,6 +343,11 @@ function ViewContract() {
                 </Grid>
               </Box>
             </Card>
+            <Grid item xs={6} >
+              <Button  variant='outlined' color='primary' onClick={handleUnlinkMeter} sx={{mt:2, width:'80%', mb:5}}>
+                Unlink meter(s)
+              </Button>
+            </Grid>
             <Grid item xs={6} >
               <Button  variant='outlined' color='error' onClick={handleCancelContract} sx={{mt:2, width:'80%', mb:5}}>
                 Cancel Contract

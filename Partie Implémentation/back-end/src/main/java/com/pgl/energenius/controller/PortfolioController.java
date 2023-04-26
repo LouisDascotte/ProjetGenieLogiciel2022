@@ -4,6 +4,7 @@ import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Portfolio;
 import com.pgl.energenius.model.SupplyPoint;
 import com.pgl.energenius.model.dto.PortfolioDto;
+import com.pgl.energenius.model.dto.ProductionPointDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
 import com.pgl.energenius.service.PortfolioService;
 import org.bson.types.ObjectId;
@@ -129,7 +130,32 @@ public class PortfolioController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/{id}/production_point")
+    public ResponseEntity<?> createProductionPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody ProductionPointDto productionPointDto) {
+
+        try {
+            SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, productionPointDto);
+            return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
+
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException | AddressesNotEqualsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (ObjectAlreadyExitsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        } catch (ObjectNotValidatedException | BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

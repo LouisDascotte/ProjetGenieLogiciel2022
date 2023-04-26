@@ -134,5 +134,7 @@
   "request_green" : "Request green certificate",
   "request_green_confirm" : "Do you want to request a green certificate ?", 
   "show_production" : "Show production",
-  "production_point" : "Production point"
+  "production_point" : "Production point",
+  "add_production_point" : "Add production point", 
+  "production_point_add" : "Production point to add"
 } 

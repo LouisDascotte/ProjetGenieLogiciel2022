@@ -156,7 +156,7 @@ public class PortfolioService {
         Portfolio portfolio = getPortfolio(portfolioId);
         Meter meter;
 
-        if (supplyPointDto.getType() == SupplyPoint.Type.SUPPLY_POINT) {
+        if (supplyPointDto.getType() != SupplyPoint.Type.PRODUCTION_POINT) { // Changé depuis  == SupplyPoint.type.SUPPLY_POINT. Probablement à corriger 
 
             meter = meterService.getMeter(supplyPointDto.getEAN());
 

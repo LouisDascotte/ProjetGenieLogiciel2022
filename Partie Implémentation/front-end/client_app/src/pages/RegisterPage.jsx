@@ -191,6 +191,12 @@ const RegisterPage = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
+      event.preventDefault();
+    }
+  }
+
 
 
   
@@ -309,10 +315,11 @@ const RegisterPage = () => {
                   sx={{width:"90%"}} 
                   size='small' 
                   variant='outlined' 
-                  type='tel' 
+                  type='number' 
                   label={t('phone_num')}
                   margin='normal' 
                   name='phoneNumber' 
+                  onKeyDown={handleKeyDown}
                   value={form.phoneNumber} 
                   onChange={onUpdateField}
                   onBlur={onBlurField}/>

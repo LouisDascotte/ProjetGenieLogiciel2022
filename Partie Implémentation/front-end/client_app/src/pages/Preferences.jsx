@@ -88,6 +88,40 @@ const Preferences = () => {
 
   }
 
+  const [oldPasswordError, setOldPasswordError] = React.useState(false);
+  const [newPasswordError, setNewPasswordError] = React.useState(false);
+  const [confirmNewPasswordError, setConfirmNewPasswordError] = React.useState(false);
+
+  const handleOldPassword = (e) => {
+    const reg = new RegExp(/^.{8,}$/);
+    if (reg.test(e.target.value)){
+      setOldPassword(e.target.value);
+      setOldPasswordError(false);
+    } else {
+      setOldPasswordError(true);
+    }
+  }
+
+  const handleNewPassword = (e) => {
+    const reg = new RegExp(/^.{8,}$/);
+    if (reg.test(e.target.value)){
+      setNewPassword(e.target.value);
+      setNewPasswordError(false);
+    } else {
+      setNewPasswordError(true);
+    }
+  }
+
+  const handleConfirmNewPassword = (e) => {
+    const reg = new RegExp(/^.{8,}$/);
+    if (reg.test(e.target.value)){
+      setConfirmNewPassword(e.target.value);
+      setConfirmNewPasswordError(false);
+    } else {
+      setConfirmNewPasswordError(true);
+    }
+  }
+
 
 
   React.useEffect(()=>{
@@ -120,6 +154,9 @@ const Preferences = () => {
 
    
   }, [])
+
+
+
   const handleSelect = (e) => {
     setFavPortfolioId(e.target.value.id);
     setFavPortfolio(e.target.value.name)
@@ -135,16 +172,19 @@ const Preferences = () => {
           <Stack alignItems='center' justifyContent={"center"} sx={{m:4}}>
             <Stack  alignItems='center' justifyContent='center' sx={{mt:1}}>
               <Typography variant='h6' sx={{mr:1}}>{t('old_password')} : </Typography>
-              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={e=>setOldPassword(e.target.value)} />
+              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={handleOldPassword} />
+              {oldPasswordError ? <Alert severity='error'>{t('password_error_size')}</Alert> : null}
             </Stack>
             <Stack  alignItems='center' justifyContent='center' sx={{mt:1}}>
               <Typography variant='h6' sx={{mr:1}}>{t('new_password')} : </Typography>
-              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={e=>setNewPassword(e.target.value)}/>
+              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={handleNewPassword}/>
+              {newPasswordError ? <Alert severity='error'>{t('password_error_size')}</Alert> : null}
             </Stack>
             <Stack  alignItems='center' justifyContent='center' sx={{mt:1}}>
               <Typography variant='h6' sx={{mr:1}}>{t('confirm_new_password')}: </Typography>
-              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={e => setConfirmNewPassword(e.target.value)}/>
+              <TextField variant='outlined' size='small' type="password" sx={{width:"100%"}} onChange={handleConfirmNewPassword}/>
               {newPassword !== confirmNewPassword ? <Alert severity="error">{t('passwords_dont_match')}</Alert> : null }
+              {confirmNewPasswordError ? <Alert severity='error'>{t('password_error_size')}</Alert> : null}
             </Stack>
             <Button variant='outlined' size='large' sx={{mt:2}} onClick={changePassword} >{t('change_password')}</Button>
             <Divider variant="middle" color='black' sx={{ borderBottomWidth: 2 , m:2, width:'60%'}}/>

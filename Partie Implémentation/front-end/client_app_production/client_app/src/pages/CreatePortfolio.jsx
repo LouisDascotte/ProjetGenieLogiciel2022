@@ -181,7 +181,7 @@ const CreatePortfolio = () => {
 
   const navigate = useNavigate();
 
- 
+  const [error, setError] = useState(false);
 
   const onSubmitForm = async e => {
     e.preventDefault();
@@ -191,6 +191,11 @@ const CreatePortfolio = () => {
       address : data.address.street + " " + data.address.houseNo + " " +data.address.box + " " +data.address.postalCode + " " +data.address.city + " " +data.address.region + " " +data.address.country,
     }
     const jwt = localStorage.getItem("jwt");
+    const reg = new RegExp("^[0-9]{4}$");
+    if (reg.test(data.name) === false){
+      setError(true);
+      return;
+    }
     try {
       const response = axios.post(URL, JSON.stringify(body), {
         headers : {"Content-Type":"application/json",
@@ -260,6 +265,9 @@ const CreatePortfolio = () => {
           </ThemeProvider>
           <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity='success'>{t('portfolio_success')}</Alert>
+          </Snackbar>
+          <Snackbar open={error} autoHideDuration={6000} onClose={()=>setError(false)}>
+            <Alert onClose={handleClose} severity='error'>{t('portfolio_name_error')}</Alert>
           </Snackbar>
           </Stack>
           </Box>

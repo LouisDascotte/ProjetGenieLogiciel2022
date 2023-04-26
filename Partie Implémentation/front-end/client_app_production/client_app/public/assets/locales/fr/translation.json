@@ -153,6 +153,9 @@
   "date_error" : "La date choisie ne peut dépasser la date actuelle.", 
   "elec_prod" : "Production d'électricité", 
   "prod" : "Production (kWh)", 
-  "green_cert_error" : "Vous ne pouvez pas demander de certificat vert pour ce point de production."
+  "green_cert_error" : "Vous ne pouvez pas demander de certificat vert pour ce point de production.", 
+  "production_point_already_linked" : "Un point de production est déjà lié.", 
+  "PRODUCTION_POINT_ACCEPTED_NOTIFICATION" : "Votre point de production a été accepté.",
+  "GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION" : "Votre demande de certificat vert a été acceptée."
 
 }

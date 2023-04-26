@@ -1,5 +1,6 @@
 package com.pgl.energenius.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -7,23 +8,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Client Login Data Transfer Object
+ * The ClientLoginDto class represents a DTO for the ClientLogin class.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientLoginDto {
 
-    /**
-     * The email used by the client
-     */
-    @NotNull
+    @NotBlank
     private String email;
 
-    /**
-     * The password used by the client
-     */
-    @NotNull
+    @NotBlank
     @Size(min = 8)
     private String password;
 }

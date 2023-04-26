@@ -153,5 +153,8 @@
   "date_error" : "The selected date must be at most today's date.", 
   "elec_prod" : "Electricity production", 
   "prod" : "Production (kWh)", 
-  "green_cert_error" : "You can't request a green certificate for this production point."
+  "green_cert_error" : "You can't request a green certificate for this production point.",
+  "production_point_already_linked" : "A production point is already linked to this portfolio.",
+  "PRODUCTION_POINT_ACCEPTED_NOTIFICATION" :  "Your production point has been accepted.",
+  "GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION" :   "Your green certificate request has been accepted."
 } 

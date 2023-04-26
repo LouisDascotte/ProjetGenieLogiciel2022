@@ -332,7 +332,7 @@ public class ContractService {
 
         if (contract instanceof SimpleContract simpleContract) {
 
-            Meter meter = meterService.getMeter(simpleContract.getEAN());
+            Meter meter = meterService.getMeterWithoutCheck(simpleContract.getEAN());
 
             if (meter.getStatus() == Meter.Status.AFFECTED)
                 throw new UnauthorizedAccessException("Cannot cancel this contract because the meter is still affected");

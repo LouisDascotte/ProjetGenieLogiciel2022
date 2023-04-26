@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.model.Address;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Client Data Transfert Object
+ * The ClientDto class represents a DTO for the Client object.
  */
 @Data
 @Builder
@@ -20,50 +21,32 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClientDto {
 
-    /**
-     * The first name of the client
-     */
     @NotBlank
     @JsonProperty("firstName")
     private String firstName;
 
-    /**
-     * The last name of the client
-     */
     @NotBlank
     @JsonProperty("lastName")
     private String lastName;
 
-    /**
-     * The email of the client
-     */
+    @NotBlank
     @JsonProperty("email")
     private String email;
 
-    /**
-     * The phone number of the client
-     */
     @NotBlank
     @JsonProperty("phoneNumber")
     private String phoneNumber;
 
-    /**
-     * The preferred language of the client
-     */
+    @NotNull
     @JsonProperty("language")
     private Lang lang;
 
-    /**
-     * The password of the client. Minimum size of 8 characters
-     */
     @NotBlank
     @Size(min = 8)
     @JsonProperty("password")
     private String password;
 
-    /**
-     * The address of the client.
-     */
+    @NotBlank
     @JsonProperty("address")
     private String address;
 }

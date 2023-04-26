@@ -22,7 +22,7 @@ import com.pgl.energenius.utils.SecurityUtils;
  */
 @RestController
 @RequestMapping("/api/supplier")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class SupplierController {
 
     @Autowired
@@ -119,22 +119,6 @@ public class SupplierController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-    @Autowired
-    private SecurityUtils securityUtils;
-    
-    @GetMapping("/me")
-    public ResponseEntity<?> getSupplier() {
-        
-        try {
-            return new ResponseEntity<>(securityUtils.getCurrentSupplierLogin(), HttpStatus.OK);
-       
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-       
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

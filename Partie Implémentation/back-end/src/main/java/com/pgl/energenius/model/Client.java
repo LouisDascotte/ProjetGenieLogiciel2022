@@ -47,10 +47,6 @@ public class Client {
      * The address of the client
      */
     private String address;
-    /**
-     * The status of the client
-     */
-    private Status status;
 
     /**
      * The language that the client usually uses
@@ -67,8 +63,4 @@ public class Client {
      */
     @Default
     private Boolean darkMode = false;
-
-    public enum Status {
-        // TODO
-    }
 }

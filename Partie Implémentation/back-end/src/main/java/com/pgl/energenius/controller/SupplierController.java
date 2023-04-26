@@ -13,6 +13,7 @@ import com.pgl.energenius.exception.InvalidUserDetailsException;
 import com.pgl.energenius.exception.ObjectNotValidatedException;
 import com.pgl.energenius.model.dto.SupplierPreferenceDto;
 import com.pgl.energenius.service.SupplierService;
+import com.pgl.energenius.utils.SecurityUtils;
 
 /**
  * The EmployeeController class handles all HTTP requests related to employees
@@ -73,6 +74,22 @@ public class SupplierController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @Autowired
+    private SecurityUtils securityUtils;
+    
+    @GetMapping("/me")
+    public ResponseEntity<?> getSupplier() {
+        
+        try {
+            return new ResponseEntity<>(securityUtils.getCurrentSupplierLogin(), HttpStatus.OK);
+       
+        } catch (InvalidUserDetailsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+       
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

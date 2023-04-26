@@ -141,5 +141,13 @@
   "production_point_add" : "Point de production à ajouter",
   "no_green" : "Pas de certificats verts", 
   "request_success" : "Demande envoyée avec succès !", 
-  "refresh" : "Rafraîchir"
+  "refresh" : "Rafraîchir", 
+  "contract_cancelled" : "Requête d'annulation de contrat envoyée !", 
+  "cost_elec" : "Coût de l'électricité",
+  "cost_gaz" : "Coût du gaz",
+  "cost_elec_night": "Coût de l'électricité de nuit",
+  "cost_gaz_night": "Coût du gaz la nuit",
+  "offer_type": "Type d'offre", 
+  "simple_contract" : "Contrat simple", 
+  "double_contract" : "Contrat gaz et électricité"
 }

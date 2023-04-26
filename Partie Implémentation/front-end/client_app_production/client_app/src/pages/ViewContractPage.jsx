@@ -17,36 +17,9 @@ const ViewContractPage = () => {
   const [open, setOpen] = React.useState(false);
   const {t} = useTranslation();
   const pageName = t('view_contract');
-  React.useEffect(()=> {
-    let temp_meter = {}
 
-    const response = axios.get("http://localhost:8080/api/meter/all", {
-      headers: {
-        "Content-Type":"application/json",
-        "Authorization" : `Bearer ${jwt}`,
-        "Access-Control-Allow-Origin":true
-      }
-    }).then(response => {
-      response.data.map(meter => {
-        if (meter.ean === location.state.ean){
-          setAddress(meter.address)
-          setMeter(meter);
-          temp_meter = meter;
-          const request = axios.get("http://localhost:8080/api/contract/offers", {
-            headers: {
-              "Content-Type":"application/json",
-              "Authorization" : `Bearer ${jwt}`,
-              "Access-Control-Allow-Origin":true
-            }, params : {
-              hourType : temp_meter.hourType,
-              energyType : temp_meter.energyType,
-              address : temp_meter.address,
-            }
-          }).then(request => {
-            console.log(request.data)
-          } )}
-        })
-      })
+  React.useEffect( ()=>  {
+    
     }, [])
 
   
@@ -106,10 +79,7 @@ const ViewContractPage = () => {
                   <strong>EAN :</strong> {location.state.ean}
                 </Typography>
                 <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong>{t('address')} :</strong> {address}
-                </Typography>
-                <Typography variant='h5' sx={{mr:5, mt:1.5}} style={{whiteSpace:'nowrap'}}>
-                  <strong> {t('energy_type')} :</strong> {meter.energyType === 'ELEC' ? t('elec') : meter.energyType === 'GAZ' ? t('gas') : meter.energyType === 'WATER' ? t('water') : t('gas_elec')}
+                  <strong> {t('offer_type')} :</strong> {location.state.type === "SIMPLE_CONTRACT" ? t('simple_contract') : t('dual_contract')}
                 </Typography>
                 <Button variant='contained' onClick={()=> setOpen(true)} sx={{mt:2, backgroundColor:"red", width:'40%'}}>
                   {t('cancel_contract')}

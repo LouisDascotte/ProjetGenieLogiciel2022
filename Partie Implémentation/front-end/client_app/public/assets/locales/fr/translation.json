@@ -146,5 +146,8 @@
   "cost_elec" : "Coût de l'électricité",
   "cost_gaz" : "Coût du gaz",
   "cost_elec_night": "Coût de l'électricité de nuit",
-  "cost_gaz_night": "Coût du gaz la nuit"
+  "cost_gaz_night": "Coût du gaz la nuit",
+  "offer_type": "Type d'offre", 
+  "simple_contract" : "Contrat simple", 
+  "double_contract" : "Contrat gaz et électricité"
 }

@@ -139,5 +139,13 @@
   "production_point_add" : "Production point to add", 
   "no_green" : "No green certificates.", 
   "request_success" : "Request successfully sent!", 
-  "refresh" : "Refresh"
+  "refresh" : "Refresh", 
+  "contract_cancelled" : "Contract cancellation request sent!",
+  "cost_elec" :  "Electricity cost",
+  "cost_gaz" :  "Gas cost",
+  "cost_elec_night":  "Electricity night cost",
+  "cost_gaz_night":  "Gas night cost", 
+  "offer_type": "Offer type", 
+  "simple_contract" : "Simple contract",
+  "double_contract" : "Gas and electricity contract"
 } 

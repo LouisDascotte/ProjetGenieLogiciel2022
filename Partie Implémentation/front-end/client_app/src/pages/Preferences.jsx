@@ -49,10 +49,8 @@ const Preferences = () => {
   const changePassword = () => {
     const jwt = localStorage.getItem("jwt");
     const body = {
-      "lang" : lang,
       "old_password" : oldPassword,
       "new_password" : newPassword,
-      "favoritePortfolioId" : favPortfolioId
     }
     const response = axios.put("http://localhost:8080/api/client/me", JSON.stringify(body),{
       headers : {
@@ -66,13 +64,9 @@ const Preferences = () => {
   }
 
   const updateSettings = () => {
-    console.log(favPortfolioId);
-    console.log(favPortfolio);
     const jwt = localStorage.getItem("jwt");
     const body = {
-      "lang" : lang,
-      "old_password" : oldPassword,
-      "new_password" : oldPassword,
+      "lang" : Cookies.get("i18next").toUpperCase(),
       "favoritePortfolioId" : favPortfolioId
     }
 
@@ -132,7 +126,7 @@ const Preferences = () => {
         "Access-Control-Allow-Origin" : true
     }}).then(response => {
       setFavPortfolioId(response.data.client.favoritePortfolioId);
-
+      //setFavPortfolio()
       setLang(response.data.client.lang);
     })
 
@@ -192,7 +186,7 @@ const Preferences = () => {
               <Typography variant='h6' sx={{mr:1}} style={{whiteSpace:"nowrap"}}>{t('favorite_portfolio')} :  </Typography>
               <FormControl sx={{ m: 1, minWidth: "100%" }}>
                 <InputLabel sx={{width:'100%'}}>{t('favorite_portfolio')} : </InputLabel>
-                  <Select onChange={handleSelect} sx={{width:'100%'}} label={t('favorite_portfolio')}>
+                  <Select onChange={handleSelect} sx={{width:'100%'}} label={t('favorite_portfolio')} value={favPortfolio}>
                   
                   {portfolios.map(portfolio => {
                     return <MenuItem value={portfolio}>{portfolio.name}</MenuItem>

@@ -11,16 +11,12 @@ import { useTranslation } from 'react-i18next';
 
 const Notifications = () => {
   const NOTIFICATIONS_URL = "http://localhost:8080/api/notification/all"
-  //const {t} = useTranslation();
 
   const navigate = useNavigate();
   const { t } = useTranslation();
   const pageAddress = "/notifications";
   const pageName = t('notifications');
   const [data, setData] = useState([]);
-  //const jwt = localStorage.getItem("jwt");
-  //const [state, setState] = useState(0);
-
   const refresh =  () => {
     setState(state+1);
   }
@@ -70,7 +66,6 @@ const Notifications = () => {
   }, [state])
 
   const handleClick = (notification) => {
-    // METHOD TO MARK NOTIFICATION AS READ TO BE IMPLEMENTED
     const response = axios.put(`http://localhost:8080/api/notification/${notification.id}/read`, null, {
       headers : {
         "Content-Type":"application/json",
@@ -80,7 +75,8 @@ const Notifications = () => {
     }).then(response => {
       
     }).catch(err =>{
-      
+      setErrorMsg(err.message); 
+      setError(true);
     })
     navigate("/notification", {state : notification})
   }

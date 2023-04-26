@@ -18,7 +18,7 @@ import { useForceUpdate } from '../components/hooks/useForceUpdate';
 import {createBrowserHistory} from "history";
 import axios from "../api/axios";
 import { useTranslation } from "react-i18next";
-
+import i18next from 'i18next';
 
 const PORTFOLIO_URL = "http://localhost:8080/api/portfolio/all";
 
@@ -29,7 +29,7 @@ const MainPage = () => {
 
     // hardcoded const in order to test the "create portfolio message"
     const [hasSelectedPortfolio, setHasSelectedPortfolio] = useState(false);
-    const [portfolio, setPortfolio] = useState({});
+    const [portfolio, setPortfolio] = useState("");
     const [portfolios, setPortfolios] = useState([]);
     const [data, setData] = useState({});
     const [state, setState] = useState(0);
@@ -39,25 +39,6 @@ const MainPage = () => {
     const pageName = t('general_overview');
 
     const { collapseSidebar } = useProSidebar(); 
-
-
-    /*const handleChange = async (e) => {
-        
-        const value = e.target.value
-        const jwt = localStorage.getItem("jwt");
-        const selectedPortfolio = portfolios.find((portfolio) => portfolio.id === value);
-
-        const response = await axios.get(`http://localhost:8080/api/portfolio/${value}/consumption`, {
-            headers : {"Content-Type":"application/json",
-            "Authorization" : `Bearer ${jwt}`,
-            "Access-Control-Allow-Origin":true}
-        }).then(response => {
-            setData(response.data);
-            setPortfolio(selectedPortfolio);
-            setState(state+1);
-            setHasSelectedPortfolio(true);
-        })
-    }*/
 
     const handleChange = async (e) => {
         const value = e.target.value;
@@ -71,7 +52,6 @@ const MainPage = () => {
             "Access-Control-Allow-Origin": true
           }
         });
-      
         setData(response.data);
         setPortfolio(selectedPortfolio.id);
         setState(state + 1);
@@ -87,8 +67,30 @@ const MainPage = () => {
             }).then(response => {
                 setPortfolios(response.data);
             })
-
-            
+        const me = axios.get("http://localhost:8080/api/client/me", {
+            headers : {
+                "Content-Type":"application/json",
+                "Authorization" : `Bearer ${jwt}`,
+                "Access-Control-Allow-Origin":true,
+            }
+        }).then(response=>{
+            const request = axios.get(`http://localhost:8080/api/portfolio/${response.data.client.favoritePortfolioId}/consumption`, {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${jwt}`,
+                "Access-Control-Allow-Origin": true
+              }
+            }).then(request => {
+                console.log(request.data);
+                console.log(response.data);
+                i18next.changeLanguage(response.data.client.lang);
+                setData(request.data); 
+                setPortfolio(response.data.client.favoritePortfolioId);
+                setState(state + 1);
+                setHasSelectedPortfolio(true);
+            })
+        })
+          
     }, [])
 
     return (

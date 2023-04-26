@@ -32,8 +32,8 @@ const ManageContracts = () => {
       <SideMenu mainPage={"false"} />
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        <Grid align='center'>
-          <Card sx={{width:'40%', m:2, height:'60%'}}>
+        <Grid align='center' height={"auto"}>
+          <Card sx={{width:'40%', m:2, height:'auto'}}>
             <ContractsList/>
           </Card>
           <ThemeProvider theme={theme}>

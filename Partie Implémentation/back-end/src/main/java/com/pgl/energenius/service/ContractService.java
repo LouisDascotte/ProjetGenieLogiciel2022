@@ -304,7 +304,9 @@ public class ContractService {
 
             Supplier supplier = securityUtils.getCurrentSupplierLogin().getSupplier();
 
-            checkMeterNotAffected(contract);
+            if (contract.getStatus() != Contract.Status.PENDING) {
+                checkMeterNotAffected(contract);
+            }
 
             Notification notification = Notification.builder()
                     .senderId(supplier.getId())

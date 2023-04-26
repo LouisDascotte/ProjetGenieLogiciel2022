@@ -1,0 +1,19 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+\subsection{Application client}
+\subsubsection{Application pour les clients}
+\noindent \textbf{Vidéo de présentation}: \\ 
+Il est possible de retrouver une vidéo de présentation de l'application pour les clients via ce lien : . \\ \\
+\textbf{Fonctionnalités implémentées}: \\
+L'application pour les clients permet la création de portefeuilles, la visualisation des données de consommation, la gestion des contrats ainsi que l'entrée de données de consommation. 
+Le développement de l'interface graphique suit la maquette proposée pendant la phase de modélisation, à quelques différences près, à cause de contraintes techniques ou de changements d'avis. L'utilisateur peut donc se rendre sur le site et se connecter à l'aide du compte qu'il a créé dans la page de création de compte. Une fois son compte créé, il est redirigé vers la page de connexion, où il peut alors se connecter et utiliser l'application.
+\\ \\
+\textbf{Avantages et inconvénients} \\
+L'application est visuellement agréable et intuitive d'utilisation. Elle a été pensée de sorte à ce que n'importe quel utilisateur puisse l'utiliser sans soucis, peu importe son expérience sur Internet. Elle est très réactive, permettant de limiter le temps d'utilisation au maximum. Le fait d'utiliser React a permis de réutiliser certaines pages pour en créer d'autres, et donc accélérer la vitesse de développement, permettant également d'ajouter de nouvelles pages dans le futur sans trop de soucis. L'utilisation des JWT (JSON Web Tokens) permet de garder une sécurité sur le site, mais également de permettre au client de ne pas avoir à se connecter à chaque changement de page.
+
+Malheureusement, l'application contient quelques défauts, non résolus par manque de temps. 
+\\ \\
+\textbf{Fonctionnalités manquantes} \\
+Il n'a pas été possible d'utiliser le protocole HTTPS pour sécuriser les échanges de données entre l'application client et l'application serveur. Ainsi, les requêtes sont envoyées en clair, ce qui peut poser problème si un attaquant arrive à intercepter les données.
+\end{document}

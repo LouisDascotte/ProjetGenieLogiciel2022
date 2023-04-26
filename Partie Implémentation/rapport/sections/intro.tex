@@ -1,0 +1,29 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+\subsection{Préambule}
+Ce rapport présentera l'application client/serveur Energenius, ainsi que les fonctionnalités disponibles et implémentées. Il sera également présenté un petit mode d'emploi afin de permettre de lancer l'application localement.
+
+\subsection{Répartition des tâches}
+Pour réaliser ce projet, nous avons décidé de séparer les tâches de la manière suivante :
+\begin{itemize}
+  \item \textbf{Godwill Louhou} : Développement de l'application client pour les clients. 
+  \item \textbf{Gilles Jaunart} : Développement de l'application client pour les fournisseurs.
+  \item \textbf{Jérémy Delnatte} : Développement de l'application serveur/API.
+\end{itemize}
+
+De par cette séparation des tâches, il a été possible de se concentrer sur un aspect du projet à la fois et par personne, ce qui nous a permis d'améliorer nos compétences dans les domaines choisis.
+
+\subsection{Choix techniques}
+\subsubsection{Langage}
+Pour le développement de l'application serveur, il nous a été imposé d'utiliser Java. Cependant, le choix était plutôt libre vis à vis de l'application client. Après avoir envisagé différentes technologiques, nous avons opté pour JavaScript couplé au framework ReactJs. Nous avons choisi ce framework, car en plus d'être très populaire, il permet de développer des applications web de manière très efficace et rapide. De plus, il permet de développer des applications web de manière modulaire, ce qui permet de séparer les différentes parties de l'application et de les réutiliser facilement. Le fait qu'il soit si populaire a également facilité la recherche de solutions aux divers problèmes rencontrés, ainsi que la recherche de documentation.  
+
+\subsubsection{Base de données}
+Pour la base de données, nous avons choisi d'utiliser MongoDB Atlas, qui est une base de données NoSQL hébergée sur le Cloud. Cela nous a donc permis d'éviter de devoir héberger la base de données nous même, et de par l'application MongoDB Compass, il a été aisé de créer les différentes collections et de les gérer. 
+
+\subsubsection{Outils}
+Durant le développement de ce projet, certains outils ont été indispensables pour nous permettre de travailler et collaborer de façon efficace. Ainsi, l'utilisation de GitHub nous a permis de travailler facilement sur le même code, et de pouvoir le partager sans avoir à faire de transferts de fichiers. Pour nous organiser, nous avons également créé un Trello afin de suivre l'avancée dans nos différentes tâches, mais également d'en ajouter pour les autres lorsque nécessaire. Nous avons majoritairement utilisé Discord pour communiquer entre nous. L'outil Postman nous a également été très utile pour tester les différentes routes de l'API, sans avoir à tout implémenter sur l'application client.
+
+\subsubsection{Structure des applications}
+Les deux applications client sont basées sur le même schéma de fonctionnement, avec comme majoritaire différence les pages qui sont disponibles. 
+\end{document}

@@ -30,16 +30,24 @@ const MeterConsumption = () => {
 
   const [success, setSuccess] = useState(false);
 
+  const [dateError, setDateError] = useState(false);
+
   console.log(location.state)
 
   const cancel = () => {
     navigate("/manage-meters");
   }
+
+  console.log(selectedDate > dayjs(`${year}-${month}-${day}`))
   
   const submit = () => {
     const jwt = localStorage.getItem("jwt");
     
-
+    if (selectedDate > dayjs(`${year}-${month}-${day}`)) {
+      setDateError(true);
+      return;
+    }
+   
     if (location.state.hourType === "SIMPLE") {
       const data = {
         EAN : meter_ean,
@@ -97,6 +105,7 @@ const MeterConsumption = () => {
       }
     }
   }
+  
   const handleKeyDown = (event) => {
     if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
       event.preventDefault();
@@ -147,6 +156,9 @@ const MeterConsumption = () => {
       </Stack>
       <Snackbar open={success} autoHideDuration={3000} onClose={()=>setSuccess(false)}>
         <Alert severity="success">{t('request_success')}</Alert>
+      </Snackbar>
+      <Snackbar open={dateError} autoHideDuration={6000} onClose={()=>setDateError(false)}>
+        <Alert severity="error">{t('date_error')}</Alert>
       </Snackbar>
     </Stack>
   );

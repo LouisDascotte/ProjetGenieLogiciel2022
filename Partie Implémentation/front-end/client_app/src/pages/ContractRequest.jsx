@@ -160,6 +160,12 @@ const ContractRequest = () => {
     navigate("/offers-page", {state: {body: body}})
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
+      event.preventDefault();
+    }
+  }
+
   return (
     <Stack direction='row' sx={{width:"100%", height:"100%", position:'fixed'}}>
       <SideMenu/>
@@ -194,21 +200,21 @@ const ContractRequest = () => {
             </Stack>
             {energyType !== 4 ? <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>{t('meter')} EAN : </Typography>
-              <TextField type='number' onChange={setEan1Value}  onkeydown="return event.keyCode !== 69" InputProps={{
+              <TextField type='number' onChange={setEan1Value}  onKeyDown={handleKeyDown} InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
           {ean1Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
             </Stack> : <Stack>
               <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}}>{t('gas_meter')} : </Typography>
-              <TextField onChange={setEan1Value} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
+              <TextField onChange={setEan1Value} type='number'  onKeyDown={handleKeyDown} InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
           {ean1Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}
             </Stack>
             <Stack direction="row" alignItems={"center"} justifyContent={"space-evenly"} sx={{mt:3}}>
               <Typography variant='h6' sx={{mr:5}} > {t('elec_meter')} : </Typography>
-              <TextField onChange={setEan2Value} type='number'InputProps={{
+              <TextField onChange={setEan2Value} onKeyDown={handleKeyDown} type='number'InputProps={{
             startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
           }}/>
           {ean2Error ? <Alert sx={{ml: 2}}severity="error">{t('ean_length')}</Alert> : null}

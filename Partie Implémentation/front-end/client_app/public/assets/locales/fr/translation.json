@@ -151,5 +151,7 @@
   "simple_contract" : "Contrat simple", 
   "double_contract" : "Contrat gaz et électricité", 
   "cons_kwh" : "Consommation (kWh)", 
-  "cons_m3" : "Consommation (m3)"
+  "cons_m3" : "Consommation (m3)", 
+  "date_error" : "La date choisie ne peut dépasser la date actuelle."
+
 }

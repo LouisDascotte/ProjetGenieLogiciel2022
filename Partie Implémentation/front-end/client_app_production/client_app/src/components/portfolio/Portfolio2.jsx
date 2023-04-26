@@ -76,6 +76,8 @@ export const Portfolio2 = () => {
   const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
   const [openError, setOpenError] = useState(false);
 
+  const [supplier, setSupplier] = useState("");
+
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
   }
@@ -175,11 +177,11 @@ export const Portfolio2 = () => {
 
 
     // LUMINIS A CHANGER
-    if (tempProductionPoint !== ""){
+    if (tempProductionPoint !== "" && supplier !== ""){
       let prodBody = {
         "EAN" : tempProductionPoint, 
         "type" : "PRODUCTION_POINT", 
-        "supplierName" : "Luminis"
+        "supplierName" : supplier
       }
   
       const addProd = await axios.post(PORTFOLIO_URL + `/${id}/production_point`, JSON.stringify(prodBody), {
@@ -220,6 +222,12 @@ export const Portfolio2 = () => {
   const removeProductionPoint = () => {
     setRemovePp(true);
     selectedMetersToRemove.push(productionPoint);
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-' || event.key === '.' || event.key === ',') {
+      event.preventDefault();
+    }
   }
 
 
@@ -350,16 +358,18 @@ export const Portfolio2 = () => {
                 {t('add_production_point')}
               </DialogTitle>
               <DialogContent>
-                <TextField onChange={e => setTempProductionPoint(e.target.value)} type='number'  onkeydown="return event.keyCode !== 69" InputProps={{
-            startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
-          }}/>  <Stack>
-              <Button onClick={()=>setOpenProd(false)}>
-                {t('confirm')}
-              </Button>
-              <Button onClick={productionCancel}>
-                {t('cancel')}
-              </Button>
-          </Stack>
+                <TextField onChange={e => setTempProductionPoint(e.target.value)} type='number'  onKeyDown={handleKeyDown} InputProps={{
+                  startAdornment: <InputAdornment position="start">EAN</InputAdornment>,
+                }}/>  
+                <TextField onChange={e => setSupplier(e.target.value)} />
+                <Stack>
+                    <Button onClick={()=>setOpenProd(false)}>
+                      {t('confirm')}
+                    </Button>
+                    <Button onClick={productionCancel}>
+                      {t('cancel')}
+                    </Button>
+                </Stack>
               </DialogContent>
             </Dialog>
             </Stack>

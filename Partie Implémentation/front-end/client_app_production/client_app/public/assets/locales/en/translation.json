@@ -149,5 +149,6 @@
   "simple_contract" : "Simple contract",
   "double_contract" : "Gas and electricity contract",
   "cons_kwh" : "Consumption (kWh)",
-  "cons_m3" : "Consumption (m3)"
+  "cons_m3" : "Consumption (m3)",
+  "date_error" : "The selected date must be at most today's date."
 } 

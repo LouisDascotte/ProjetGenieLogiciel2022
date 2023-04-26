@@ -35,6 +35,8 @@ import ViewContractPage from './pages/ViewContractPage';
 import Notification from './components/notifications/Notification';
 import ProductionHistoryPage from './pages/ProductionHistoryPage';
 import BillingInformationsPage from './pages/BillingInformationsPage';
+import MonthlyAdvancePaymentsHistory from './pages/MonthlyAdvancePaymentsHistory';
+import ViewInvoice from './pages/ViewInvoice';
 
 function App() {
     const token = localStorage.getItem("jwt");
@@ -104,6 +106,8 @@ function App() {
                 <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
                 <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
                 <Route path="/billing-informations" exact element={<PrivateRoute><BillingInformationsPage/></PrivateRoute>}/>
+                <Route path="/monthlyap" exact element={<PrivateRoute><MonthlyAdvancePaymentsHistory/></PrivateRoute>}/>
+                <Route path='/view-invoice/:id' exact element={<PrivateRoute><ViewInvoice/></PrivateRoute>}/>
               </Routes>
             
       </BrowserRouter>

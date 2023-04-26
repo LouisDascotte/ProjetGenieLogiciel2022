@@ -27,6 +27,7 @@ import ContractRequest from './pages/ContractRequest';
 import OffersPage from './pages/OffersPage';
 import ViewContractPage from './pages/ViewContractPage';
 import Notification from './components/notifications/Notification';
+import ChartAnalysis from './pages/ChartAnalysis';
 import { createRoot } from 'react-dom/client';
 
 function App() {
@@ -92,6 +93,7 @@ function App() {
                 <Route path="/offers-page" exact element={<PrivateRoute><OffersPage/></PrivateRoute>}/>
                 <Route path="/view-contract" exact element={<PrivateRoute><ViewContractPage/></PrivateRoute>}/>
                 <Route path="/notification" exact element={<PrivateRoute><Notification/></PrivateRoute>}/>
+                <Route path="/chart" exact element={<PrivateRoute><ChartAnalysis/></PrivateRoute>}/>
             </Routes>
           
     </BrowserRouter>

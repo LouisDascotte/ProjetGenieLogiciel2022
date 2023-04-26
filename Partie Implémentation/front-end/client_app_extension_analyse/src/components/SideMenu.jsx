@@ -10,6 +10,7 @@ import WalletOutlinedIcon from '@mui/icons-material/WalletOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 import {useTranslation} from 'react-i18next';
 
@@ -60,6 +61,11 @@ const SideMenu = (mainPage) => {
                 <Link to="/manage-contracts" className='link'>
                     <MenuItem icon={<AssignmentIndOutlinedIcon />}>
                         {t('manage_contracts')}
+                    </MenuItem>
+                </Link>
+                <Link to="/chart" className='link'>
+                    <MenuItem icon={<TimelineIcon />}>
+                        {t('consumption_chart')}
                     </MenuItem>
                 </Link>
             </Menu>

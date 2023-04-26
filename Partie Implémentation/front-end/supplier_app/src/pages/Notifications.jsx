@@ -83,12 +83,12 @@ const Notifications = () => {
       <SideMenu/>
       <Stack sx={{display:'flex', width:"100%"}}>
         <TopMenu pageAddress={pageAddress} pageName={pageName}/>
-        <Card sx={{m:5, height:'80%', width:"90%"}}>
-          <Stack>
+        <Card sx={{m:5, height:'80vh', width:"90%"}}>
+          <Stack sx={{height: "100%"}} >
           <Button onClick={refresh}>
             {t('refresh')}
           </Button>
-          <Box sx={{height:'100%', width:'100%'}} alignment='center'>
+          <Box sx={{height:'80vh', width:'100%', overflow: 'auto'}} alignment='center'>
             <List style={{maxHeight: '100%', overflow: 'auto'}}>
               {notifications.map(notification =>  
               <ListItem>

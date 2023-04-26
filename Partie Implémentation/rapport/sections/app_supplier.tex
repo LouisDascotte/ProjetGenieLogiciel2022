@@ -1,0 +1,28 @@
+\documentclass[../rapport.tex]{subfiles}
+
+\begin{document}
+\subsection{Application client}
+\subsubsection{Application pour les clients}
+\noindent \textbf{Vidéo de présentation}: \\ 
+Il est possible de retrouver une vidéo de présentation de l'application pour les clients via ce lien : . \\ \\
+\textbf{Fonctionnalités implémentées}: \\
+Lors du développement de l'interface fournisseur de l'application, l'aspect visuel de la maquette a été largement respecté. Des informations non essentielles telles que les coordonnées et l'adresse d'un client ont été supprimées dans la vue détaillée du client. Cependant, d'autres informations nécessaires, comme les détails des offres, ont été ajoutées pour rendre l'application plus complète. \\ \\
+L'utilisation des composants "TextField" de Material UI revêt une grande importance en raison de leur flexibilité. En effet, ces composants permettent d'afficher les données de manière modifiable, mais également en mode lecture seule, offrant une esthétique supérieure par rapport aux composants "Typography". \\ \\
+Les fenêtres contextuelles de confirmation avant la suppression de données (telles que les données de consommation, les contrats, les offres ou les clients) ont été supprimées de l'interface graphique et ne sont pas présentes. \\ \\
+En dehors de ces modifications, les autres pages présentées dans la maquette ont été implémentées.
+\\ \\
+\textbf{Avantages et inconvénients} \\
+L'incorporation d'un menu latéral facilite la navigation entre les différentes sections principales de l'application. La présence de sous-menus permet de distinguer plus facilement les composants créés et les pages. Chaque page dispose de son propre fichier JSX, ce qui facilite le processus de débogage. \\ \\
+Le fichier App.js répertorie toutes les destinations accessibles dans l'application fournisseur.\\ \\
+L'implémentation d'un affichage dynamique lors de la création de contrats et d'offres permet à l'employé de visualiser instantanément les changements qu'il effectue. Cela lui évite également de saisir des valeurs dans des champs qui ne doivent pas être complétés.\\ \\
+L'utilisation d'une nuance de vert dans la charte graphique de l'application ajoute de la vivacité et apaise l'utilisateur lors de son utilisation.
+\textbf{Fonctionnalités manquantes} \\
+\begin{itemize}
+    \item La possibilité de créer des contrats via l'application fournisseur
+    \item L'internationalisation de l'application fournisseur par manque de temps. Cependant, l'application client en est munie.
+\end{itemize}
+\textbf{Bugs connus}\\ \\
+\begin{itemize}
+    \item Lorsqu'on est sur la page "View Client", le retour en arrière cause une page blanche
+\end{itemize}
+\end{document}

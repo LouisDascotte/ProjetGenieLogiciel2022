@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { ArrowBack } from '@mui/icons-material';
 
 
 function LinkMeter() {
@@ -38,13 +39,13 @@ function LinkMeter() {
     setEditableData(editableData);
     setEditMode(false);
     const jwt = localStorage.getItem("jwt");
-     const response = await axios.put(`http://localhost:8080/api/reading/edit_reading`, null, {
+     const response = await axios.put(`http://localhost:8080/api/meter/edit_reading`, null, {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true},
       params : {
-        readingId : "64493b0a7c723c3c5a673a05",
-        value : Number(200)
+        readingId : location.state.id,
+        value : editableData.value,
       }
       }).then(response=>{
         console.log(response);
@@ -60,7 +61,9 @@ function LinkMeter() {
       headers : {"Content-Type":"application/json",
       "Authorization" : `Bearer ${jwt}`,
       "Access-Control-Allow-Origin":true},
-      
+      params : {
+        readingId : location.state.id,
+      },
       }).then(response=>{
         console.log(response);
       }
@@ -108,6 +111,11 @@ function LinkMeter() {
           <TopMenu pageAddress={pageAddress} pageName={pageName}/>
           <Grid align='center'
           >
+            <Link to={`/consumption/meter/${meterId}`} >
+                  <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} sx={{width: "35%"}} >
+                    Retour
+                  </Button>
+                </Link>
             <Grid container
             justifyContent='center'
             alignItems='center'

@@ -331,9 +331,8 @@ public class PortfolioService {
 
             if (sp.getType() == SupplyPoint.Type.PRODUCTION_POINT) {
 
-                String dateNow = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
                 Meter meter = meterService.getMeter(sp.getEAN());
-                ProductionReading lastReading = (ProductionReading) (readingRepository.findByEANAndDate(sp.getEAN(), dateNow).get());
+                ProductionReading lastReading = (ProductionReading) (readingService.findLastReading(sp.getEAN()));
 
                 if (lastReading.getThreshold() >= 1000) {
 

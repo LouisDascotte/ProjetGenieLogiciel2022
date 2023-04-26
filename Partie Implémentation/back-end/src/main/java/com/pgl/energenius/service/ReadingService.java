@@ -16,6 +16,10 @@ import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,6 +39,9 @@ public class ReadingService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public Reading insertReading(Reading reading) throws ObjectNotValidatedException {
 
@@ -225,5 +232,14 @@ public class ReadingService {
                 .receiverId(meter.getClientId())
                 .build();
         notificationService.insertNotification(notification);
+    }
+
+    public Reading findLastReading(String EAN) {
+
+        Query query = new Query().addCriteria(Criteria.where("EAN").is(EAN));
+        query.limit(1);
+        query.with(Sort.by(Sort.Direction.DESC, "date"));
+
+        return mongoTemplate.findOne(query, Reading.class);
     }
 }

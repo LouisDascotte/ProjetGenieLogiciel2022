@@ -33,9 +33,9 @@ const MetersList = () => {
     });
   }, [])
   
-  /*meters.map(meter => {
+  meters.map(meter => {
     console.log(meter)
-  })*/
+  })
 
   const navigate = useNavigate();
 
@@ -45,19 +45,24 @@ const MetersList = () => {
         
     <List style={{maxHeight: '100%', overflow: 'auto'}}>
     {meters.map(meter =>  
-    <ListItem key={meter.ean}>
-      <ListItemButton onClick={()=>navigate("/enter-consumption", {state : meter})}>
-        <ListItemText>
-          {meter.ean}
-        </ListItemText>
-      </ListItemButton>
-      
-    </ListItem>
+        { if (meter.energyType !== 'ELEC_PRODUCTION') {
+          return (
+            <ListItem key={meter.ean}>
+              <ListItemButton onClick={()=>navigate("/enter-consumption", {state : meter})}>
+                <ListItemText>
+                  {meter.ean}
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+            )
+          } else {
+            return (null)
+          } 
+             
+        }
     )}
-  </List>
-      
-      
-    </Box>
+    </List>
+  </Box>
   )
 }
 

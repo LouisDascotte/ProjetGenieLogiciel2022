@@ -24,6 +24,20 @@ export const Portfolio2 = () => {
   const [activeMeters, setActiveMeters] = useState([]);
   const [activeProductionPoints, setActiveProductionPoints] = useState([]);
   const [state, setState] = useState(0);
+  
+  const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [supplyPoints, setSupplyPoints] = useState(portfolio.supplyPoints);  
+  const [selectedMeters, setSelectedMeters] = useState([]);
+  const [selectedMetersToRemove, setSelectedMetersToRemove] = useState([]);
+  const [tempMeter, setTempMeter] = useState("");
+
+  // used to display the error message
+  const[problemMeter, setProblemMeter] = useState("");
+  const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
+  const [openError, setOpenError] = useState(false);
+
+  
 
   useEffect(()=>{
 
@@ -50,18 +64,7 @@ export const Portfolio2 = () => {
     })
   }, [state])
     
-  
-  const [name, setName] = useState("");
-  const [open, setOpen] = useState(false);
-  const [supplyPoints, setSupplyPoints] = useState(portfolio.supplyPoints);  
-  const [selectedMeters, setSelectedMeters] = useState([]);
-  const [selectedMetersToRemove, setSelectedMetersToRemove] = useState([]);
-  const [tempMeter, setTempMeter] = useState("");
 
-  // used to display the error message
-  const[problemMeter, setProblemMeter] = useState("");
-  const [alreadyInPortfolio, setAlreadyInPortfolio] = useState(false);
-  const [openError, setOpenError] = useState(false);
 
   const handleSelect = (e) => {
     setTempMeter(e.target.value);
@@ -85,21 +88,54 @@ export const Portfolio2 = () => {
     return false; 
   }
 
+
+  function retrieveMeterData(meter){
+    for (let i = 0; i < meters.length; i++){
+      if (meters[i].ean === meter){
+        return meters[i];
+      }
+    }
+  }
+
+
+  function checkIfTypeChosen(meter){
+    for (let i = 0; i < selectedMeters.length; i++){
+      if (retrieveMeterData(selectedMeters[i]).energyType === meter.energyType){
+
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkIfTypeLinked(meter){
+    for(var i = 0; i < activeMeters.length; i++){
+      if (retrieveMeterData(activeMeters[i]).energyType === meter.energyType){
+        return true; 
+      }
+    }
+    return false;
+  }
+
+  
+
   const handleConfirm = () => {
     if (selectedMeters.includes(tempMeter) === false){
       if (inActiveMeters(tempMeter) === false){
         if (checkMeter(tempMeter)){
-          if (tempMeter !== "")
+          if (tempMeter !== "" && checkIfTypeLinked(retrieveMeterData(tempMeter)) === false && checkIfTypeChosen(retrieveMeterData(tempMeter)) === false){
+            console.log(retrieveMeterData(tempMeter));
             selectedMeters.push(tempMeter);
         }
       } else if (inActiveMeters(tempMeter) === true){
         console.log("pass")
         setProblemMeter(tempMeter);
         setAlreadyInPortfolio(true);
-      }
+        }
       
+      }
+      setOpen(false);
     }
-    setOpen(false);
   }
 
   const handleCancel = () => {
@@ -132,16 +168,19 @@ export const Portfolio2 = () => {
     const responses = [];
    
     for (let i = 0; i < body.length; i++) {
-      let newBod = {
-        "EAN": body[i].ean,
-        "type" : "SUPPLY_POINT"
+      if ( checkIfTypeLinked(body[i]) === false){
+        let newBod = {
+          "EAN": body[i].ean,
+          "type" : "SUPPLY_POINT"
+        }
+        responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(newBod), {
+          headers : {"Content-Type":"application/json",
+        "Authorization" : `Bearer ${jwt}`,
+        "Access-Control-Allow-Origin":true}
+        }))
       }
-      responses.push(await axios.post(PORTFOLIO_URL + `/${id}/supply_point`, JSON.stringify(newBod), {
-        headers : {"Content-Type":"application/json",
-      "Authorization" : `Bearer ${jwt}`,
-      "Access-Control-Allow-Origin":true}
-      }))
-    }
+      }
+     
 
     let body2 = [];
     selectedMetersToRemove.map(meter => {
@@ -172,6 +211,8 @@ export const Portfolio2 = () => {
     }
 
   }
+
+ 
 
 
   return (

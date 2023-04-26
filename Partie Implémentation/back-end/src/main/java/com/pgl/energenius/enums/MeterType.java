@@ -1,7 +1,7 @@
 package com.pgl.energenius.enums;
 
 /**
- * The type of meter
+ * The MeterType represents the different type of meter.
  */
 public enum MeterType {
     MANUAL,

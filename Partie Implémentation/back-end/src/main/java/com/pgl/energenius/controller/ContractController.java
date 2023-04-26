@@ -18,7 +18,7 @@ import com.pgl.energenius.service.ContractService;
  */
 @RestController
 @RequestMapping("/api/contract")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class ContractController {
 
     @Autowired

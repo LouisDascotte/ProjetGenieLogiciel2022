@@ -68,7 +68,7 @@ const ManageClients = () => {
             <Card sx={{width:'50%', m:2, height:'60%' }} >
               <Box sx={{height:'auto', width:'100%'}} alignment='center' marginBottom={4} paddingBottom={4}>
                 <Typography variant="h4" component="h2" align="center" fontWeight={800} >
-                  t('Client List')
+                  {t("Client List")}
                 </Typography>
                 <List style={{maxHeight: '100%', overflow: 'auto'}} >
                   {clients.length === 0 ?
@@ -80,7 +80,7 @@ const ManageClients = () => {
                     <ListItem key={client.id}>
                     <ListItemText primary={capitalizeFirstLetter(client.firstName)+" "+capitalizeFirstLetter(client.lastName)} />
                       <Button variant="contained" onClick={() => nav(`/clients/${client.id}`, { state : client })} >
-                        t('See Details')
+                        {t('See Details')}
                       </Button>
                     </ListItem>
                   ))}

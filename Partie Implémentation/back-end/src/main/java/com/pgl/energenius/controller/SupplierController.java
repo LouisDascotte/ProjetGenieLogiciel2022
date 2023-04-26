@@ -22,7 +22,7 @@ import com.pgl.energenius.utils.SecurityUtils;
  */
 @RestController
 @RequestMapping("/api/supplier")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class SupplierController {
 
     @Autowired

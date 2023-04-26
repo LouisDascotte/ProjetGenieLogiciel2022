@@ -1,14 +1,16 @@
 package com.pgl.energenius.model.contract;
 
-import com.pgl.energenius.model.offer.SimpleOffer;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
+/**
+ * The SimpleContract class represents a contract that has one energy type.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
@@ -16,8 +18,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 @NoArgsConstructor
 public class SimpleContract extends Contract {
 
-    /**
-     * The EAN of the meter linked to the contract
-     */
+    @NotNull
+    @Size(min = 18, max = 18)
     private String EAN;
 }

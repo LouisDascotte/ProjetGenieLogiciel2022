@@ -155,6 +155,7 @@
   "date_error" : "La date choisie ne peut dépasser la date actuelle.",
   "portfolio_name_error" : "Le nom du portefeuille ne peut contenir de caractères spéciaux.", 
   "password_error_size" : "Le mot de passe doit contenir au moins 8 caractères", 
-  "password_changed" : "Mot de passe changé avec succès !"
+  "password_changed" : "Mot de passe changé avec succès !",
+  "id": "identifiant"
 
 }

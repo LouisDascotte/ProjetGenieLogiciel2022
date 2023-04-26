@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class AuthController {
 
     @Autowired
@@ -157,7 +157,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -176,23 +176,5 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
-    }
-
-//    @Autowired
-//    private NumericMeterSimulation numericMeterSimulation;
-//
-//    @GetMapping("/test")
-//    public void test() throws ObjectNotFoundException {
-//        numericMeterSimulation.simulateReadingBetweenTwoDatesOfMeter("98466848897998", "2023-01-09", "2023-04-26");
-//    }
-
-    @Autowired
-    private MeterService meterService;
-
-    @GetMapping("/test")
-    public void test() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException {
-
-//        meterService.linkMeter("132385238527233245", new ObjectId("642ed56206e08a0dd1611e3c"));
-//        return portfolioService.getSupplyPointConsumption(new ObjectId("643d4b6856fa760df8993239"), "98466848897998");
     }
 }

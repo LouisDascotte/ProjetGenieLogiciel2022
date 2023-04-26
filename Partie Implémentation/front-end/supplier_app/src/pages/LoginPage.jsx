@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider} from '@mui/material';
+import {Alert, Button,  Typography, Stack, Card, Box, Grid, Divider, TextField, ThemeProvider, FormControl, Menu, MenuItem, InputLabel, Select} from '@mui/material';
 import logo from '../resources/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginFieldValidator } from '../components/hooks/useLoginFieldValidator';
@@ -9,6 +9,14 @@ import AuthContext from "../context/AuthProvider";
 import { useLocalState } from '../utils/useLocalStorage';
 import {setAuthToken} from "../utils/setAuthToken";
 import {authServices} from "../utils/services/auth-service";
+import { useTranslation } from 'react-i18next';
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+import i18next from 'i18next';
+import Cookies from "js-cookie";
+
+
+
+
 
 
 const LOGIN_URL = "http://localhost:8080/api/auth/employee/login";
@@ -18,6 +26,7 @@ const LoginPage = () => {
   // ToDo : check usefulness of this part
   const [jwt, setJwt] = useLocalState("", "jwt"); 
   const [user, setUser] = useLocalState("", "user");
+  const { t } = useTranslation();
 
   
   // Used for the redirection
@@ -93,6 +102,26 @@ const LoginPage = () => {
     }
   };
 
+  const [language, setLanguage] = React.useState(Cookies.get("i18next") || "en");
+
+
+const handleChange= (e) => {
+  setLanguage(e.target.value);
+  i18next.changeLanguage(e.target.value);
+}
+
+const languages = [
+  {
+    code : 'fr', 
+    name : 'Français', 
+    country_code : 'fr'
+  }, 
+  {
+    code : 'en', 
+    name : 'English',
+    country_code : 'gb'
+  }
+]
 
 
 
@@ -122,7 +151,7 @@ const LoginPage = () => {
             <Typography 
               className='typo' 
               variant="h4">
-              Login
+              {t("Login")}
             </Typography>
             <Typography 
               variant="h7" 
@@ -136,7 +165,7 @@ const LoginPage = () => {
                 className='login-textfield'
                 size='small' 
                 variant='outlined' 
-                label='id' 
+                label={t("id")} 
                 margin='normal' 
                 sx={{width:'80%'}} 
                 name='loginId' 
@@ -158,7 +187,7 @@ const LoginPage = () => {
                 className='login-textfield' 
                 size='small' 
                 variant='outlined' 
-                label='password' 
+                label={t("password")} 
                 margin='normal' 
                 sx={{width:'80%'}} 
                 value={form.password} 
@@ -177,10 +206,30 @@ const LoginPage = () => {
                   type='submit'
                   sx={{mt:2, width:'80%', mb:5}} 
                   >
-                  Login
+                  {t("Login")}
                 </Button>
             </ThemeProvider>
             </form>
+            <Grid container sx={{width:"100%", mb:1, ml:5}} justifyContent='center' alignContent='center' alignItems={'center'} >
+              <Grid item xs={6}>
+                <FormControl sx={{width:'100%'}}>
+                  <InputLabel id="demo-simple-select-label">{t('language')}</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={language}
+                    label={t('language')}
+                    name='language'
+                    onChange={handleChange}
+                    sx={{width:'80%'}}
+                  >
+                    {languages.map(({code, name, country_code}) => (
+                      <MenuItem key={country_code} value={code}> <span className={`fi fi-${country_code}`}></span> {name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
           </Stack>
         </Card>
       </Grid>

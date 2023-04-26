@@ -67,7 +67,7 @@ const ManageContracts = () => {
                   :
                   contracts.map((contract) => (
                     <ListItem key={contract.id}>
-                      <ListItemText primary={"contract #"+`${contract.id}`.slice(0,15)} />
+                      <ListItemText primary={"contract #"+`${contract.id}`} />
                         <Button variant="contained" onClick={() => nav(`/contracts/${contract.id}`, { state : contract})}>
                           See Details
                         </Button>

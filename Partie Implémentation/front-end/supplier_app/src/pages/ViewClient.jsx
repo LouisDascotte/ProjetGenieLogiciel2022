@@ -8,12 +8,13 @@ import { ClientList as Clients, MeterList as Meters} from '../resources/Lists';
 import { useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 import axios from '../api/axios';
+import { useTranslation } from 'react-i18next';
 
 
 
 function ViewClient() {
   const client = useLocation().state;
-  console.log(client);
+  const {t} = useTranslation();
 
   const theme = createTheme({
     palette: {
@@ -56,7 +57,7 @@ function ViewClient() {
   }, [client.id]);
 
   const pageAddress = "/client/:id";
-  const pageName = "View Client";
+  const pageName = t("View client");
   const nav = useNavigate();
 
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -104,11 +105,11 @@ function ViewClient() {
               <Box sx={{height:'100%', width:'100%'}} alignment='center' >
                 <Link to={'/clients'} >
                   <Button variant="contained" fullWidth color="primary" startIcon={<ArrowBack />} >
-                    Retour
+                    {t('back')}
                   </Button>
                 </Link>
                 <Typography variant="h4" component="h2" align="left" fontWeight={800} sx={{paddingLeft: '4px', paddingTop: '4px'}} >
-                  Client's Details
+                  {t("client's details")}
                 </Typography>
                 <Grid container 
                 spacing={2}
@@ -120,7 +121,7 @@ function ViewClient() {
                 >
                   <Grid item xs={7}>
                     <Typography variant="h6" component="h4" align="left" fontWeight={800} >
-                      Client ID: {client.id}
+                      {t("client id")}: {client.id}
                     </Typography>
                   </Grid>
                   <Grid item xs={5}>

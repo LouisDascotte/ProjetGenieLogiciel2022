@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/meter")
-@CrossOrigin(origins="*")
+@CrossOrigin({"http://localhost:3000", "http://localhost:3001"})
 public class MeterController {
 
     @Autowired

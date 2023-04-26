@@ -197,7 +197,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_createSimpleContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
+    public void test_createSimpleContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExistsException, ObjectNotValidatedException, BadRequestException {
 
         SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
@@ -288,7 +288,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_createSimpleContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
+    public void test_createSimpleContractRequest_AddressNotInArea() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExistsException, ObjectNotValidatedException, BadRequestException {
 
         SimpleContractRequestDto cr = new SimpleContractRequestDto(EnergyType.ELEC, "EAN123", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
@@ -324,7 +324,7 @@ public class ContractServiceTest {
     }
 
     @Test
-    public void test_createGazElecContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException, BadRequestException {
+    public void test_createGazElecContractRequest() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, IOException, InterruptedException, ApiException, ObjectAlreadyExistsException, ObjectNotValidatedException, BadRequestException {
 
         GazElecContractRequestDto cr = new GazElecContractRequestDto("EAN123", "EAN456", MeterType.MANUAL, "123 Rue de Test, Test", HourType.SIMPLE);
 
@@ -454,7 +454,7 @@ public class ContractServiceTest {
 
 
     @Test
-    public void test_insertContract_SimpleContract() throws ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public void test_insertContract_SimpleContract() throws ObjectAlreadyExistsException, ObjectNotValidatedException {
 
         SimpleContract contract = SimpleContract.builder().EAN("EAN123").build();
 
@@ -470,11 +470,11 @@ public class ContractServiceTest {
         SimpleContract contract = SimpleContract.builder().EAN("EAN123").build();
         when(contractRepository.findByEAN(contract.getEAN())).thenReturn(Optional.of(new SimpleContract()));
 
-        assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
+        assertThrows(ObjectAlreadyExistsException.class, () -> contractService.insertContract(contract));
     }
 
     @Test
-    public void test_insertContract_GazElecContract() throws ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public void test_insertContract_GazElecContract() throws ObjectAlreadyExistsException, ObjectNotValidatedException {
 
         GazElecContract contract = GazElecContract.builder().EAN_ELEC("EAN123").EAN_GAZ("EAN456").build();
 
@@ -491,12 +491,12 @@ public class ContractServiceTest {
         GazElecContract contract = GazElecContract.builder().EAN_ELEC("EAN123").EAN_GAZ("EAN456").build();
         when(contractRepository.findByEAN(contract.getEAN_ELEC())).thenReturn(Optional.of(new SimpleContract()));
 
-        assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
+        assertThrows(ObjectAlreadyExistsException.class, () -> contractService.insertContract(contract));
 
         when(contractRepository.findByEAN(contract.getEAN_ELEC())).thenReturn(Optional.empty());
         when(contractRepository.findByEAN(contract.getEAN_GAZ())).thenReturn(Optional.of(new SimpleContract()));
 
-        assertThrows(ObjectAlreadyExitsException.class, () -> contractService.insertContract(contract));
+        assertThrows(ObjectAlreadyExistsException.class, () -> contractService.insertContract(contract));
     }
 
     @Test

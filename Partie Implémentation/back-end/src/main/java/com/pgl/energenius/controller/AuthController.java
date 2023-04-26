@@ -4,24 +4,19 @@ package com.pgl.energenius.controller;
 import com.pgl.energenius.config.JwtUtil;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.ClientLogin;
-import com.pgl.energenius.model.Portfolio;
 import com.pgl.energenius.model.SupplierLogin;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.model.dto.SupplierLoginDto;
-import com.pgl.energenius.model.reading.Reading;
 import com.pgl.energenius.service.*;
-import com.pgl.energenius.utils.NumericMeterSimulation;
+import com.pgl.energenius.utils.SecurityUtils;
 import jakarta.mail.MessagingException;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -48,20 +43,9 @@ public class AuthController {
      * @return A message indicating that the registration has been successfully completed.
      */
     @PostMapping("/client/register")
-    public ResponseEntity<?> register(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<?> register(@RequestBody ClientDto clientDto) throws Exception {
 
-        try {
-            return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
-
-        } catch (ObjectAlreadyExitsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
     }
 
     /**
@@ -82,9 +66,6 @@ public class AuthController {
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -95,7 +76,7 @@ public class AuthController {
      * @return OK if the email was sent
      */
     @PostMapping("/client/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String email) {
+    public ResponseEntity<?> resetPassword(@RequestParam String email) throws ObjectNotFoundException {
 
         try {
             userService.resetPasswordClient(email, jwtUtil.generatePasswordResetToken(email));
@@ -103,12 +84,6 @@ public class AuthController {
 
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Couldn't send an email to this email: " + email);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -131,9 +106,6 @@ public class AuthController {
 
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -155,9 +127,6 @@ public class AuthController {
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

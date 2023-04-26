@@ -34,17 +34,10 @@ public class ClientController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/me")
-    public ResponseEntity<?> getClient() {
+    public ResponseEntity<?> getClient() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(securityUtils.getCurrentClientLogin(), HttpStatus.OK);
+        return new ResponseEntity<>(securityUtils.getCurrentClientLogin(), HttpStatus.OK);
 
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     /**
@@ -55,22 +48,8 @@ public class ClientController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PutMapping("/me")
-    public ResponseEntity<?> editPreferences(@RequestBody ClientPreferencesDto clientPreferencesDto) {
+    public ResponseEntity<?> editPreferences(@RequestBody ClientPreferencesDto clientPreferencesDto) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(clientService.editPreferences(clientPreferencesDto), HttpStatus.OK);
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(clientService.editPreferences(clientPreferencesDto), HttpStatus.OK);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.bson.types.ObjectId;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,4 +15,6 @@ import lombok.experimental.SuperBuilder;
 public class ProductionPointNotification extends Notification {
 
     private String EAN;
+
+    private ObjectId portfolioId;
 }

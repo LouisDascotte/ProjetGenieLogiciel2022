@@ -45,7 +45,7 @@ public class ReadingServiceTest {
     private ValidationUtils validationUtils;
 
     @Test
-    public void test_createSimpleReading() throws ObjectNotValidatedException, ObjectAlreadyExitsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
+    public void test_createSimpleReading() throws ObjectNotValidatedException, ObjectAlreadyExistsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
 
         String date = "2023-12-31";
         String EAN = "123";
@@ -73,7 +73,7 @@ public class ReadingServiceTest {
     }
 
     @Test
-    public void test_createSimpleReading_ObjectAlreadyExists() throws ObjectNotValidatedException, ObjectAlreadyExitsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
+    public void test_createSimpleReading_ObjectAlreadyExists() throws ObjectNotValidatedException, ObjectAlreadyExistsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
 
         String date = "2023-12-31";
         String EAN = "123";
@@ -94,7 +94,7 @@ public class ReadingServiceTest {
                 .build();
 
         when(readingRepository.insert(any(SimpleReading.class))).thenThrow(DuplicateKeyException.class);
-        assertThrows(ObjectAlreadyExitsException.class, () -> readingService.createSimpleReading(EAN, date, value, false));
+        assertThrows(ObjectAlreadyExistsException.class, () -> readingService.createSimpleReading(EAN, date, value, false));
 
 
         SimpleReading readingInDB = SimpleReading.builder()
@@ -113,7 +113,7 @@ public class ReadingServiceTest {
     }
 
     @Test
-    public void test_createDoubleReading() throws ObjectNotValidatedException, ObjectAlreadyExitsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
+    public void test_createDoubleReading() throws ObjectNotValidatedException, ObjectAlreadyExistsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
 
         String date = "2023-12-31";
         String EAN = "123";
@@ -143,7 +143,7 @@ public class ReadingServiceTest {
     }
 
     @Test
-    public void test_createDoubleReading_ObjectAlreadyExists() throws ObjectNotValidatedException, ObjectAlreadyExitsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
+    public void test_createDoubleReading_ObjectAlreadyExists() throws ObjectNotValidatedException, ObjectAlreadyExistsException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, DateFormatException {
 
         String date = "2023-12-31";
         String EAN = "123";
@@ -166,7 +166,7 @@ public class ReadingServiceTest {
                 .build();
 
         when(readingRepository.insert(any(DoubleReading.class))).thenThrow(DuplicateKeyException.class);
-        assertThrows(ObjectAlreadyExitsException.class, () -> readingService.createDoubleReading(EAN, date, dayValue, nightValue, false));
+        assertThrows(ObjectAlreadyExistsException.class, () -> readingService.createDoubleReading(EAN, date, dayValue, nightValue, false));
 
 
         DoubleReading readingInDB = DoubleReading.builder()

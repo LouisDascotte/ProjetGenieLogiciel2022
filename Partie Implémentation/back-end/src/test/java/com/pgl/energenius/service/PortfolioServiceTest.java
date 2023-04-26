@@ -5,7 +5,6 @@ import com.pgl.energenius.enums.EnergyType;
 import com.pgl.energenius.model.*;
 import com.pgl.energenius.model.dto.PortfolioDto;
 import com.pgl.energenius.model.dto.SupplyPointDto;
-import com.pgl.energenius.model.projection.PortfolioProjection;
 import com.pgl.energenius.model.reading.Reading;
 import com.pgl.energenius.model.reading.SimpleReading;
 import com.pgl.energenius.repository.PortfolioRepository;
@@ -172,7 +171,7 @@ public class PortfolioServiceTest {
     }
 
     @Test
-    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
+    public void test_createSupplyPoint() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExistsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
 
         setUp();
         Meter meter = Meter.builder().EAN("EAN1234").build();
@@ -212,7 +211,7 @@ public class PortfolioServiceTest {
 
         SupplyPointDto supplyPointDto = new SupplyPointDto("EAN1234", SupplyPoint.Type.SUPPLY_POINT);
 
-        assertThrows(ObjectAlreadyExitsException.class, () -> portfolioService.createSupplyPoint(portfolio.getId(), supplyPointDto));
+        assertThrows(ObjectAlreadyExistsException.class, () -> portfolioService.createSupplyPoint(portfolio.getId(), supplyPointDto));
     }
 
     @Test

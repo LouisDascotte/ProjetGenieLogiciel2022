@@ -1,7 +1,6 @@
 package com.pgl.energenius.service;
 
 import org.springframework.dao.DuplicateKeyException;
-import com.pgl.energenius.enums.Lang;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Client;
 import com.pgl.energenius.model.ClientLogin;
@@ -9,7 +8,6 @@ import com.pgl.energenius.model.Supplier;
 import com.pgl.energenius.model.dto.ClientDto;
 import com.pgl.energenius.model.dto.ClientLoginDto;
 import com.pgl.energenius.model.dto.ClientPreferencesDto;
-import com.pgl.energenius.model.projection.ClientProjection;
 import com.pgl.energenius.repository.ClientRepository;
 import com.pgl.energenius.config.WebSecurityConfig;
 import com.pgl.energenius.repository.ContractRepository;
@@ -24,7 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -86,7 +83,7 @@ public class ClientService {
             userService.insertUser(clientLogin);
 
         } catch (DuplicateKeyException e) {
-            throw new ObjectAlreadyExitsException("A ClientLogin already exists with email: " + clientDto.getEmail());
+            throw new ObjectAlreadyExistsException("A ClientLogin already exists with email: " + clientDto.getEmail());
         }
 
         return insertClient(client);

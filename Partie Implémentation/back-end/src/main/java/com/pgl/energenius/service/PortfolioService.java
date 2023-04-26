@@ -27,7 +27,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.stream.events.StartDocument;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -160,7 +159,7 @@ public class PortfolioService {
         return portfolioRepository.findByClientId(client.getId(), PortfolioProjection.class);
     }
 
-    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExitsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
+    public SupplyPoint createSupplyPoint(ObjectId portfolioId, SupplyPointDto supplyPointDto) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectAlreadyExistsException, ObjectNotValidatedException, AddressesNotEqualsException, BadRequestException, IOException, InterruptedException, ApiException {
 
         Portfolio portfolio = getPortfolio(portfolioId);
         Meter meter;
@@ -203,7 +202,7 @@ public class PortfolioService {
         for (SupplyPoint sp : portfolio.getSupplyPoints()) {
 
             if (EAN.equals(sp.getEAN())){
-                throw new ObjectAlreadyExitsException("A supply point already exists (in the portfolio) with EAN: " + EAN);
+                throw new ObjectAlreadyExistsException("A supply point already exists (in the portfolio) with EAN: " + EAN);
             }
         }
 
@@ -315,6 +314,7 @@ public class PortfolioService {
                             .receiverId(meter.getSupplierId())
                             .senderId(meter.getClientId())
                             .EAN(meter.getEAN())
+                            .portfolioId(portfolioId)
                             .build();
                     notificationService.insertNotification(notification);
                 }
@@ -348,6 +348,7 @@ public class PortfolioService {
                             .type(Notification.Type.GREEN_CERTIFICATE_ACCEPTED_NOTIFICATION)
                             .senderId(meter.getSupplierId())
                             .receiverId(meter.getClientId())
+                            .portfolioId(portfolioId)
                             .EAN(meter.getEAN())
                             .build();
                     notificationService.insertNotification(notification);

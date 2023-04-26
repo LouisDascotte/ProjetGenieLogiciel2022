@@ -16,13 +16,11 @@ import com.pgl.energenius.model.offer.GazElecOffer;
 import com.pgl.energenius.model.offer.Offer;
 import com.pgl.energenius.model.offer.SimpleOffer;
 import com.pgl.energenius.repository.ContractRepository;
-import com.pgl.energenius.repository.MeterRepository;
 import com.pgl.energenius.repository.OfferRepository;
 import com.pgl.energenius.utils.SecurityUtils;
 import com.pgl.energenius.utils.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -59,26 +57,26 @@ public class ContractService {
     @Autowired
     private NotificationService notificationService;
 
-    public Contract insertContract(SimpleContract contract) throws ObjectNotValidatedException, ObjectAlreadyExitsException {
+    public Contract insertContract(SimpleContract contract) throws ObjectNotValidatedException, ObjectAlreadyExistsException {
 
         validationUtils.validate(contract);
 
         if (existsByEAN(contract.getEAN())) {
-            throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN());
+            throw new ObjectAlreadyExistsException("Contrat already exists with meter of EAN: " + contract.getEAN());
         }
 
         return contractRepository.insert(contract);
     }
 
-    public Contract insertContract(GazElecContract contract) throws ObjectNotValidatedException, ObjectAlreadyExitsException {
+    public Contract insertContract(GazElecContract contract) throws ObjectNotValidatedException, ObjectAlreadyExistsException {
 
         validationUtils.validate(contract);
 
         if (existsByEAN(contract.getEAN_ELEC())) {
-            throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_ELEC());
+            throw new ObjectAlreadyExistsException("Contrat already exists with meter of EAN: " + contract.getEAN_ELEC());
 
         } else if (existsByEAN(contract.getEAN_GAZ())) {
-            throw new ObjectAlreadyExitsException("Contrat already exists with meter of EAN: " + contract.getEAN_GAZ());
+            throw new ObjectAlreadyExistsException("Contrat already exists with meter of EAN: " + contract.getEAN_GAZ());
         }
 
         return contractRepository.insert(contract);
@@ -131,7 +129,7 @@ public class ContractService {
                 .orElseThrow(() -> new ObjectNotFoundException("No offer found with id: " + offerId));
     }
 
-    public void createSimpleContractRequest(SimpleContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public void createSimpleContractRequest(SimpleContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExistsException, ObjectNotValidatedException {
 
         if (!(getOffer(offerId) instanceof SimpleOffer offer)) {
             throw new BadRequestException("Cannot create the contract request with the offer of id: " + offerId);
@@ -176,7 +174,7 @@ public class ContractService {
         notificationService.insertNotification(notification);
     }
 
-    public void createGazElecContractRequest(GazElecContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExitsException, ObjectNotValidatedException {
+    public void createGazElecContractRequest(GazElecContractRequestDto contractRequest, ObjectId offerId) throws ObjectNotFoundException, InvalidUserDetailsException, UnauthorizedAccessException, BadRequestException, IOException, InterruptedException, ApiException, ObjectAlreadyExistsException, ObjectNotValidatedException {
 
         if (!(getOffer(offerId) instanceof GazElecOffer offer)) {
             throw new BadRequestException("Cannot create the contract request with the offer of id: " + offerId);

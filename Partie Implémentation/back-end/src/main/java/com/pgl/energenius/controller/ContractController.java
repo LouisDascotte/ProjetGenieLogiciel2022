@@ -1,5 +1,6 @@
 package com.pgl.energenius.controller;
 
+import com.google.maps.errors.ApiException;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import com.pgl.energenius.enums.HourType;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.dto.*;
 import com.pgl.energenius.service.ContractService;
+
+import java.io.IOException;
 
 /**
  * The ContractController class handles all HTTP requests related to Contracts
@@ -30,17 +33,9 @@ public class ContractController {
      * @return OK and Authenticated user's contracts if successful. Otherwise, an appropriate HTTP status code.
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getContracts() {
+    public ResponseEntity<?> getContracts() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(contractService.getContracts(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(contractService.getContracts(), HttpStatus.OK);
     }
 
     /**
@@ -53,17 +48,9 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers")
-    public ResponseEntity<?> getSimpleOffers(@RequestParam HourType hourType, @RequestParam EnergyType energyType, @RequestParam String address) {
+    public ResponseEntity<?> getSimpleOffers(@RequestParam HourType hourType, @RequestParam EnergyType energyType, @RequestParam String address) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        try {
-            return new ResponseEntity<>(contractService.getSimpleOffers(hourType, energyType, address), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(contractService.getSimpleOffers(hourType, energyType, address), HttpStatus.OK);
     }
 
     /**
@@ -75,17 +62,9 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/offers/gaz_elec")
-    public ResponseEntity<?> getGazElecOffers(@RequestParam HourType hourType, @RequestParam String address) {
+    public ResponseEntity<?> getGazElecOffers(@RequestParam HourType hourType, @RequestParam String address) throws ObjectNotFoundException, IOException, InterruptedException, ApiException {
 
-        try {
-            return new ResponseEntity<>(contractService.getGazElecOffers(hourType, address), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(contractService.getGazElecOffers(hourType, address), HttpStatus.OK);
     }
 
     /**
@@ -97,27 +76,10 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping
-    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
+    public ResponseEntity<?> createSimpleContractRequest(@RequestBody SimpleContractRequestDto contractRequest, @RequestParam ObjectId offerId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException, IOException, InterruptedException, ObjectAlreadyExistsException, ApiException {
 
-        try {
-            contractService.createSimpleContractRequest(contractRequest, offerId);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        } catch (ObjectAlreadyExitsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        contractService.createSimpleContractRequest(contractRequest, offerId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -129,27 +91,10 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/gaz_elec")
-    public ResponseEntity<?> createGazElecContractRequest(@RequestBody GazElecContractRequestDto contractRequest, @RequestParam ObjectId offerId) {
+    public ResponseEntity<?> createGazElecContractRequest(@RequestBody GazElecContractRequestDto contractRequest, @RequestParam ObjectId offerId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException, IOException, InterruptedException, ObjectAlreadyExistsException, ApiException {
 
-        try {
-            contractService.createGazElecContractRequest(contractRequest, offerId);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        } catch (ObjectAlreadyExitsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        contractService.createGazElecContractRequest(contractRequest, offerId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -160,24 +105,10 @@ public class ContractController {
      * @return OK if the request was created or if the contract was canceled. Otherwise, an appropriate HTTP status code.
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<?> cancelContract(@PathVariable("id") ObjectId contractId) {
+    public ResponseEntity<?> cancelContract(@PathVariable("id") ObjectId contractId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            contractService.cancelContract(contractId);
-            return ResponseEntity.status(HttpStatus.OK).build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        contractService.cancelContract(contractId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
@@ -187,17 +118,9 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @GetMapping("/supplier_offers")
-    public ResponseEntity<?> getSupplierOffers() {
+    public ResponseEntity<?> getSupplierOffers() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(contractService.getSupplierOffers(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(contractService.getSupplierOffers(), HttpStatus.OK);
     }
 
     /**
@@ -207,20 +130,9 @@ public class ContractController {
      * @param offerDto DTO that contains the infos for the new offer
      * @return OK if the offer was created. Otherwise, an appropriate HTTP status code.
      */
-    private ResponseEntity<?> createOffer(OfferDto offerDto) {
+    private ResponseEntity<?> createOffer(OfferDto offerDto) throws ObjectNotValidatedException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(contractService.createOffer(offerDto), HttpStatus.OK);
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(contractService.createOffer(offerDto), HttpStatus.OK);
     }
 
     /**
@@ -231,7 +143,7 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PostMapping("/offer")
-    public ResponseEntity<?> createSimpleOffer(@RequestBody SimpleOfferDto offerDto) {
+    public ResponseEntity<?> createSimpleOffer(@RequestBody SimpleOfferDto offerDto) throws ObjectNotValidatedException, InvalidUserDetailsException {
         return createOffer(offerDto);
     }
 
@@ -243,7 +155,7 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PostMapping("/offer_gaz_elec")
-    public ResponseEntity<?> createGazElecOffer(@RequestBody GazElecOfferDto offerDto) {
+    public ResponseEntity<?> createGazElecOffer(@RequestBody GazElecOfferDto offerDto) throws ObjectNotValidatedException, InvalidUserDetailsException {
         return createOffer(offerDto);
     }
 
@@ -254,17 +166,9 @@ public class ContractController {
      * @return OK and the offer if succeeded. Otherwise, an appropriate HTTP status code.
      */
     @GetMapping("/offer/{id}")
-    public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) {
+    public ResponseEntity<?> getOffer(@PathVariable("id") ObjectId offerId) throws ObjectNotFoundException {
 
-        try {
-            return new ResponseEntity<>(contractService.getOffer(offerId), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(contractService.getOffer(offerId), HttpStatus.OK);
     }
 
     /**
@@ -275,21 +179,10 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @DeleteMapping("/offer/{id}")
-    public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) {
+    public ResponseEntity<?> deleteOffer(@PathVariable("id") ObjectId offerId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            contractService.deleteOffer(offerId);
-            return ResponseEntity.ok().body("Deleted");
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        contractService.deleteOffer(offerId);
+        return ResponseEntity.ok().body("Deleted");
     }
 
     /**
@@ -300,23 +193,9 @@ public class ContractController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/{id}/accept")
-    public ResponseEntity<?> acceptContract(@PathVariable("id") ObjectId contractId) {
+    public ResponseEntity<?> acceptContract(@PathVariable("id") ObjectId contractId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException {
 
-        try {
-            contractService.acceptContract(contractId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        contractService.acceptContract(contractId);
+        return ResponseEntity.ok().build();
     }
 }

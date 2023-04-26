@@ -42,7 +42,7 @@ public class ReadingController {
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException | ObjectAlreadyExitsException e) {
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException | ObjectAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (ObjectNotValidatedException | DateFormatException e) {
@@ -74,7 +74,7 @@ public class ReadingController {
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException | ObjectAlreadyExitsException e) {
+        } catch (UnauthorizedAccessException | InvalidUserDetailsException | ObjectAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 
         } catch (ObjectNotValidatedException | DateFormatException e) {

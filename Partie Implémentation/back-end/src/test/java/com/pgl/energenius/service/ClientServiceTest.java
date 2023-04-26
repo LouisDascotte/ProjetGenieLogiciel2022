@@ -90,7 +90,7 @@ public class ClientServiceTest {
                 .build();
 
         when(userService.insertUser(any(ClientLogin.class))).thenThrow(DuplicateKeyException.class);
-        assertThrows(ObjectAlreadyExitsException.class, () -> clientService.createClient(clientDto));
+        assertThrows(ObjectAlreadyExistsException.class, () -> clientService.createClient(clientDto));
     }
 
     @Test

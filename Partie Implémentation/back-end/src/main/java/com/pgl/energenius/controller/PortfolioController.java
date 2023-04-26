@@ -1,5 +1,6 @@
 package com.pgl.energenius.controller;
 
+import com.google.maps.errors.ApiException;
 import com.pgl.energenius.exception.*;
 import com.pgl.energenius.model.Portfolio;
 import com.pgl.energenius.model.SupplyPoint;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /**
  * The PortfolioController class handles all HTTP requests related to Portfolios.
@@ -31,17 +34,9 @@ public class PortfolioController {
      * @return A list of portfolios owned by the client
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getPortfolios() {
+    public ResponseEntity<?> getPortfolios() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getPortfolios(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getPortfolios(), HttpStatus.OK);
     }
 
     /**
@@ -53,21 +48,10 @@ public class PortfolioController {
     @PostMapping
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_CLIENT')")
-    public ResponseEntity<?> create(@RequestBody PortfolioDto portfolioDto){
+    public ResponseEntity<?> create(@RequestBody PortfolioDto portfolioDto) throws Exception {
 
-        try {
-            Portfolio portfolio = portfolioService.createPortfolio(portfolioDto);
-            return new ResponseEntity<>(portfolio, HttpStatus.CREATED);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        Portfolio portfolio = portfolioService.createPortfolio(portfolioDto);
+        return new ResponseEntity<>(portfolio, HttpStatus.CREATED);
     }
 
     /**
@@ -78,20 +62,9 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("{id}/consumption")
-    public ResponseEntity<?> getAllConsumption(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> getAllConsumption(@PathVariable("id") ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getPortfolioConsumption(portfolioId), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getPortfolioConsumption(portfolioId), HttpStatus.OK);
     }
 
     /**
@@ -102,21 +75,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> delete(@PathVariable("id") ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            portfolioService.deletePortfolio(portfolioId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        portfolioService.deletePortfolio(portfolioId);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -129,27 +91,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/{id}/supply_point")
-    public ResponseEntity<?> createSupplyPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody SupplyPointDto supplyPointDto) {
+    public ResponseEntity<?> createSupplyPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody SupplyPointDto supplyPointDto) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException, IOException, ObjectAlreadyExistsException, InterruptedException, AddressesNotEqualsException, ApiException {
 
-        try {
-            SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, supplyPointDto);
-            return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException | AddressesNotEqualsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (ObjectAlreadyExitsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, supplyPointDto);
+        return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
     }
 
     /**
@@ -162,27 +107,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/{id}/production_point")
-    public ResponseEntity<?> createProductionPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody ProductionPointDto productionPointDto) {
+    public ResponseEntity<?> createProductionPoint(@PathVariable("id") ObjectId portfolioId, @RequestBody ProductionPointDto productionPointDto) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException, IOException, ObjectAlreadyExistsException, InterruptedException, AddressesNotEqualsException, ApiException {
 
-        try {
-            SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, productionPointDto);
-            return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException | AddressesNotEqualsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (ObjectAlreadyExitsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        SupplyPoint supplyPoint = portfolioService.createSupplyPoint(portfolioId, productionPointDto);
+        return new ResponseEntity<>(supplyPoint, HttpStatus.CREATED);
     }
 
     /**
@@ -194,24 +122,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @DeleteMapping("/{id}/supply_point/{EAN}")
-    public ResponseEntity<?> deleteSupplyPoint(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) {
+    public ResponseEntity<?> deleteSupplyPoint(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            portfolioService.deleteSupplyPoint(portfolioId, EAN);
-            return ResponseEntity.ok().build();
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        portfolioService.deleteSupplyPoint(portfolioId, EAN);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -223,20 +137,9 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}/supply_point/{EAN}/consumption")
-    public ResponseEntity<?> getSupplyPointConsumption(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) {
+    public ResponseEntity<?> getSupplyPointConsumption(@PathVariable("id") ObjectId portfolioId, @PathVariable String EAN) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getSupplyPointConsumption(portfolioId, EAN), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getSupplyPointConsumption(portfolioId, EAN), HttpStatus.OK);
     }
 
     /**
@@ -246,46 +149,23 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/names")
-    public ResponseEntity<?> getPortfolioIdsAndNames() {
+    public ResponseEntity<?> getPortfolioIdsAndNames() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getPortfolioIdsAndNames(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getPortfolioIdsAndNames(), HttpStatus.OK);
     }
 
     /**
      * Extension 5: PUT method to accept the production point
      *
      * @param EAN The EAN of the production point to be accepted
-     * @param portfolioId The id of portfolio
      * @return OK if successfully accepted. Otherwise, an appropriate HTTP status code.
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/accept_production_point")
-    public ResponseEntity<?> acceptProductionPoint(@RequestParam String EAN, @PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> acceptProductionPoint(@RequestParam String EAN) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, BadRequestException {
 
-        try {
-            portfolioService.acceptProductionPoint(EAN);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException | BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        portfolioService.acceptProductionPoint(EAN);
+        return ResponseEntity.ok().build();
     }
 
 
@@ -297,24 +177,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/{id}/request_green_certificate")
-    public ResponseEntity<?> requestGreenCertificate(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> requestGreenCertificate(@PathVariable("id") ObjectId portfolioId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            portfolioService.requestGreenCertificate(portfolioId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        portfolioService.requestGreenCertificate(portfolioId);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -325,20 +191,9 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}/green_certificates")
-    public ResponseEntity<?> getGreenCertificates(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> getGreenCertificates(@PathVariable("id") ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getGreenCertificates(portfolioId), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        return new ResponseEntity<>(portfolioService.getGreenCertificates(portfolioId), HttpStatus.OK);
     }
 
     /**
@@ -349,24 +204,10 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/{id}/accept_green_certificate")
-    public ResponseEntity<?> acceptGreenCertificate(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> acceptGreenCertificate(@PathVariable("id") ObjectId portfolioId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            portfolioService.acceptGreenCertificate(portfolioId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        portfolioService.acceptGreenCertificate(portfolioId);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -377,20 +218,9 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}/stats")
-    public ResponseEntity<?> getPortfolioStats(@PathVariable("id") ObjectId portfolioId) {
+    public ResponseEntity<?> getPortfolioStats(@PathVariable("id") ObjectId portfolioId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getPortfolioStats(portfolioId), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getPortfolioStats(portfolioId), HttpStatus.OK);
     }
 
     /**
@@ -400,19 +230,8 @@ public class PortfolioController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}/average_stats")
-    public ResponseEntity<?> getAverageOfAllPortfolios() {
+    public ResponseEntity<?> getAverageOfAllPortfolios() throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(portfolioService.getAverageOfAllPortfolios(), HttpStatus.OK);
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(portfolioService.getAverageOfAllPortfolios(), HttpStatus.OK);
     }
 }

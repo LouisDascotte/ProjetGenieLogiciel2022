@@ -73,20 +73,9 @@ public class NotificationController {
      * @return OK if successfully deleted notification. Otherwise, an appropriate HTTP status code.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNotification(@PathVariable("id") ObjectId notificationId) {
+    public ResponseEntity<?> deleteNotification(@PathVariable("id") ObjectId notificationId) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            notificationService.deleteNotification(notificationId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        notificationService.deleteNotification(notificationId);
+        return ResponseEntity.ok().build();
     }
 }

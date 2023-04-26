@@ -30,18 +30,9 @@ public class MeterController {
      * @return OK and authenticated user's meters. Otherwise, an appropriate HTTP status code.
      */
     @GetMapping("/all")
-    public ResponseEntity<?> getMeters() {
+    public ResponseEntity<?> getMeters() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(meterService.getMeters(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
+        return new ResponseEntity<>(meterService.getMeters(), HttpStatus.OK);
     }
 
     /**
@@ -51,17 +42,9 @@ public class MeterController {
      */
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/allocations")
-    public ResponseEntity<?> getAllocations() {
+    public ResponseEntity<?> getAllocations() throws InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(meterService.getMetersAllocations(), HttpStatus.OK);
-
-        } catch (InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(meterService.getMetersAllocations(), HttpStatus.OK);
     }
 
     /**
@@ -72,17 +55,9 @@ public class MeterController {
      * @return OK and the client's linked meters. Otherwise, an appropriate HTTP status code.
      */
     @GetMapping("/linked")
-    public ResponseEntity<?> getLinkedMetersEAN(@RequestParam ObjectId clientId) {
+    public ResponseEntity<?> getLinkedMetersEAN(@RequestParam ObjectId clientId) throws UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            return new ResponseEntity<>(meterService.getLinkedMetersEAN(clientId), HttpStatus.OK);
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(meterService.getLinkedMetersEAN(clientId), HttpStatus.OK);
     }
 
     /**
@@ -94,24 +69,10 @@ public class MeterController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/{id}/link")
-    public ResponseEntity<?> linkMeter(@PathVariable("id") String EAN, @RequestParam ObjectId clientId) {
+    public ResponseEntity<?> linkMeter(@PathVariable("id") String EAN, @RequestParam ObjectId clientId) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            meterService.linkMeter(EAN, clientId);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        meterService.linkMeter(EAN, clientId);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -122,23 +83,9 @@ public class MeterController {
      */
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     @PutMapping("/{id}/unlink")
-    public ResponseEntity<?> unlinkMeter(@PathVariable("id") String EAN) {
+    public ResponseEntity<?> unlinkMeter(@PathVariable("id") String EAN) throws ObjectNotValidatedException, ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException {
 
-        try {
-            meterService.unlinkMeter(EAN);
-            return ResponseEntity.ok().build();
-
-        } catch (ObjectNotValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
-        } catch (UnauthorizedAccessException | InvalidUserDetailsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        meterService.unlinkMeter(EAN);
+        return ResponseEntity.ok().build();
     }
 }

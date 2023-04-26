@@ -55,7 +55,7 @@ public class ReadingService {
         readingRepository.save(reading);
     }
 
-    public SimpleReading createSimpleReading(String EAN, String date, int value, boolean overwrite) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException, ObjectAlreadyExitsException, DateFormatException {
+    public SimpleReading createSimpleReading(String EAN, String date, int value, boolean overwrite) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException, ObjectAlreadyExistsException, DateFormatException {
 
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
@@ -84,7 +84,7 @@ public class ReadingService {
                 saveReading(reading);
 
             } else {
-                throw new ObjectAlreadyExitsException("Reading already exits with date: " + date);
+                throw new ObjectAlreadyExistsException("Reading already exits with date: " + date);
             }
         }
 
@@ -100,7 +100,7 @@ public class ReadingService {
         return reading;
     }
 
-    public DoubleReading createDoubleReading(String EAN, String date, int dayValue, int nightValue, boolean overwrite) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException, ObjectAlreadyExitsException, DateFormatException {
+    public DoubleReading createDoubleReading(String EAN, String date, int dayValue, int nightValue, boolean overwrite) throws ObjectNotFoundException, UnauthorizedAccessException, InvalidUserDetailsException, ObjectNotValidatedException, ObjectAlreadyExistsException, DateFormatException {
 
         DateUtils.validateDateFormat(date);
         Meter meter = meterService.getMeter(EAN);
@@ -131,7 +131,7 @@ public class ReadingService {
                 saveReading(reading);
 
             } else {
-                throw new ObjectAlreadyExitsException("Reading already exits with date: " + date);
+                throw new ObjectAlreadyExistsException("Reading already exits with date: " + date);
             }
         }
 

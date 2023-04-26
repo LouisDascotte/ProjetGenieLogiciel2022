@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Service class for managing addresses
+ */
 @Service
 public class AddressService {
 
@@ -29,12 +32,24 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
+    /**
+     * Get the address from the database.
+     *
+     * @param addressStr the address string to search for
+     * @return the Address object if found
+     */
     public Address getAddress(String addressStr) throws ObjectNotFoundException {
 
         return addressRepository.findById(addressStr)
                 .orElseThrow(() -> new ObjectNotFoundException("Address not found with address: " + addressStr));
     }
 
+    /**
+     * Create an address in the database.
+     *
+     * @param addressStr the address string of the new address
+     * @return The new address
+     */
     public Address createAddress(String addressStr) throws IOException, InterruptedException, ApiException, ObjectNotFoundException {
 
         GeoApiContext context = new GeoApiContext.Builder().apiKey("AIzaSyC19i2Ez-JUS1BkuA0BjUcY0rPk0uQzBBc").build();
@@ -58,6 +73,12 @@ public class AddressService {
         return address;
     }
 
+    /**
+     * Get the formatted address from Google api.
+     *
+     * @param addressStr the address string
+     * @return The formatted address
+     */
     public String getFormattedAddress(String addressStr) throws IOException, InterruptedException, ApiException, ObjectNotFoundException {
 
         GeoApiContext context = new GeoApiContext.Builder().apiKey("AIzaSyC19i2Ez-JUS1BkuA0BjUcY0rPk0uQzBBc").build();
@@ -70,6 +91,13 @@ public class AddressService {
         return results[0].formattedAddress;
     }
 
+    /**
+     * To check if an address is in one the areas.
+     *
+     * @param address the address
+     * @param areaNames the names of areas
+     * @return true, if the address is in one of the areas. False, otherwise.
+     */
     public Boolean isAddressInOneOfAreas(List<String> areaNames, Address address) {
 
         GeoJsonPoint point = new GeoJsonPoint(new Point(address.getLng(), address.getLat()));

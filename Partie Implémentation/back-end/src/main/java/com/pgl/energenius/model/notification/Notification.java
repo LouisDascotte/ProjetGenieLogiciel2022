@@ -1,6 +1,7 @@
 package com.pgl.energenius.model.notification;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder.Default;
 import lombok.Data;
@@ -14,7 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * Notification
+ * The Notification class represents a notification.
  */
 @Data
 @SuperBuilder
@@ -27,36 +28,35 @@ public class Notification {
     @Default
     private ObjectId id = new ObjectId();
 
-    /**
-     * The ID of the person who sends the notification
-     */
+    @NotNull
     private ObjectId senderId;
 
-    /**
-     * The ID of the person who receives the notification
-     */
+    @NotNull
     private ObjectId receiverId;
 
-    /**
-     * The date at which the notification was sent
-     */
+    @NotNull
     @Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date = new Date();
 
-    /**
-     * The message of the notification
-     */
+    @NotNull
     private Type type;
 
+    @NotNull
     @Default
     private Status status = Status.UNREAD;
 
+    /**
+     * The Status enum represents the status of the notification
+     */
     public enum Status {
         UNREAD,
         READ
     }
 
+    /**
+     * The Status enum represents the type of the notification
+     */
     public enum Type {
         READING_NOTIFICATION,
         CONTRACT_REQUEST_NOTIFICATION,
